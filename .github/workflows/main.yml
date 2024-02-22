@@ -41,7 +41,7 @@ jobs:
           sed -i 's/GOOGLE_ANALITICS_TOKEN/${{ secrets.GOOGLE_ANALITICS_TOKEN }}/g' resources/views/stubs/production-index.blade.stub
           sudo cp -f resources/views/stubs/production-index.blade.stub vendor/laravel-liberu/core/stubs
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: resources
           path: |
