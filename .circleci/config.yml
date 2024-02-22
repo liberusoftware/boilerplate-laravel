@@ -1,0 +1,86 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+machine:
+  # Override /etc/hosts
+  hosts:
+    localhost: 127.0.0.1
+jobs:
+  build:
+    docker:
+      # Specify the version you desire here
+      - image: cimg/php:8.3.3
+        environment:
+          working_directory: ~/genealogy
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # Using the RAM variation mitigates I/O contention
+      # for database intensive operations.
+      - image: circleci/mysql:latest-ram
+        #  command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
+        command: mysqld
+        environment:
+          MYSQL_USER: liberu
+          MYSQL_PASSWORD: password
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_HOST: "%"
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          working_directory: ~/genealogy
+      # - image: redis:2.8.19
+    steps:
+      - checkout
+      #- setup_remote_docker:
+      #    docker_layer_caching: true
+      # - run: docker-build
+      - run: sudo apt-get update
+      - run: sudo apt-get install lsb-release
+      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo apt install -y default-mysql-client libxml2-dev libpng-dev
+          libfreetype6-dev libpng-dev libjpeg-dev libjpeg-turbo8-dev libzip-dev
+      #- run: sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-webp-dir=/usr/include/  --with-jpeg-dir=/usr/include/ && \
+      - run: sudo docker-php-ext-configure gd --with-freetype --with-jpeg
+      - run: sudo docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd
+      - run: sudo docker-php-ext-install zip pdo_mysql bcmath pcntl soap gd
+
+      #- run: pecl install xdebug && docker-php-ext-enable xdebug
+      #  - run: docker-php-ext-enable xdebug
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run: composer clearcache
+      - run: sudo composer selfupdate
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - run:
+          name: Mysql database
+          command: mysql  -h 127.0.0.1 -u root -e "create database liberu;"
+      #  - run: sudo echo "localhost 127.0.0.1" >> /etc/hosts
+      - run: cp .env.testing .env
+      - run: php artisan key:generate
+      - run: php artisan migrate --seed
+      - run: mkdir -p build/logs
+      #   - run: php artisan test
+      - run: vendor/bin/phpunit
+    # The resource_class feature allows configuring CPU and RAM resources for each job. Different resource classes are available for different executors. https://circleci.com/docs/2.0/configuration-reference/#resourceclass
+    resource_class: large
+
+#    - run: mkdir -p ~/phpunit
+#    - run: vendor/bin/phpunit --log-junit ~/phpunit/junit.xml tests
+# store_test_results:
+#          path: ~/phpunit
