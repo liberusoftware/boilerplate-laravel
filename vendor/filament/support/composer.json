@@ -1,0 +1,44 @@
+{
+    "name": "filament/support",
+    "description": "Core helper methods and foundation code for all Filament packages.",
+    "license": "MIT",
+    "homepage": "https://github.com/filamentphp/filament",
+    "support": {
+        "issues": "https://github.com/filamentphp/filament/issues",
+        "source": "https://github.com/filamentphp/filament"
+    },
+    "require": {
+        "php": "^8.1",
+        "blade-ui-kit/blade-heroicons": "^2.2.1",
+        "ext-intl": "*",
+        "illuminate/contracts": "^10.45|^11.0",
+        "illuminate/support": "^10.45|^11.0",
+        "illuminate/view": "^10.45|^11.0",
+        "livewire/livewire": "^3.2.3",
+        "ryangjchandler/blade-capture-directive": "^0.2|^0.3|^1.0",
+        "spatie/color": "^1.5",
+        "spatie/invade": "^1.0|^2.0",
+        "spatie/laravel-package-tools": "^1.9",
+        "symfony/html-sanitizer": "^6.1"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Filament\\Support\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Filament\\Support\\SupportServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

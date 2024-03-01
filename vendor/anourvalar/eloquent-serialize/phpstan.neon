@@ -1,0 +1,28 @@
+parameters:
+
+    paths:
+        - src
+        - tests
+
+    # The level 9 is the highest level
+    level: 5
+
+    ignoreErrors:
+        - '#Call to an undefined static method#'
+        - '#Call to an undefined method#'
+        - '#Call to static method#'
+        - '#Illuminate\\Database\\Eloquent\\Relations\\HasOneThrough but returns Illuminate\\Database\\Eloquent\\Relations\\HasManyThrough\.#'
+        - '#Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\PendingHasThroughRelationship\:\:has\(\)#'
+
+    excludePaths:
+
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    checkAlwaysTrueInstanceof: true
+    reportMaybesInMethodSignatures: true
+    reportStaticMethodSignatures: true
+    checkUninitializedProperties: true
+    checkDynamicProperties: true
+    reportAlwaysTrueInLastCondition: true
+    reportWrongPhpDocTypeInVarTag: true
+    checkMissingCallableSignature: true

@@ -12,8 +12,11 @@
         "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "dev-master",
+        "laravel/octane": "^2.3",
         "laravel/sanctum": "dev-master",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "spiral/roadrunner-cli": "^2.6.0",
+        "spiral/roadrunner-http": "^3.3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

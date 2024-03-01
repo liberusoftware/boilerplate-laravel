@@ -1,0 +1,55 @@
+@php
+    use Filament\Support\Facades\FilamentView;
+
+    $statePath = $getStatePath();
+@endphp
+
+<x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
+    @if ($isDisabled())
+        <div
+            class="fi-fo-markdown-editor fi-disabled prose block w-full max-w-none rounded-lg bg-gray-50 px-3 py-3 text-gray-500 shadow-sm ring-1 ring-gray-950/10 dark:prose-invert dark:bg-transparent dark:text-gray-400 dark:ring-white/10 sm:text-sm"
+        >
+            {!! str($getState())->markdown()->sanitizeHtml() !!}
+        </div>
+    @else
+        <x-filament::input.wrapper
+            :valid="! $errors->has($statePath)"
+            :attributes="
+                \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())
+                    ->class(['fi-fo-markdown-editor max-w-full overflow-hidden font-mono text-base text-gray-950 dark:text-white sm:text-sm'])
+            "
+        >
+            <div
+                ax-load="visible"
+                ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('markdown-editor', 'filament/forms') }}"
+                x-data="markdownEditorFormComponent({
+                            isLiveDebounced: @js($isLiveDebounced()),
+                            isLiveOnBlur: @js($isLiveOnBlur()),
+                            liveDebounce: @js($getNormalizedLiveDebounce()),
+                            placeholder: @js($getPlaceholder()),
+                            state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')", isOptimisticallyLive: false) }},
+                            toolbarButtons: @js($getToolbarButtons()),
+                            translations: @js(__('filament-forms::components.markdown_editor')),
+                            uploadFileAttachmentUsing: async (file, onSuccess, onError) => {
+                                $wire.upload(`componentFileAttachments.{{ $statePath }}`, file, () => {
+                                    $wire
+                                        .getFormComponentFileAttachmentUrl('{{ $statePath }}')
+                                        .then((url) => {
+                                            if (! url) {
+                                                return onError()
+                                            }
+
+                                            onSuccess(url)
+                                        })
+                                })
+                            },
+                        })"
+                x-ignore
+                wire:ignore
+                {{ $getExtraAlpineAttributeBag() }}
+            >
+                <textarea x-ref="editor" class="hidden"></textarea>
+            </div>
+        </x-filament::input.wrapper>
+    @endif
+</x-dynamic-component>
