@@ -1,0 +1,53 @@
+name: Install
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  install:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    
+    - name: Start database
+      run: sudo /etc/init.d/mysql start
+
+    - name: Create database
+      run: mysql -e "CREATE DATABASE IF NOT EXISTS liberu;" -uroot -proot
+      
+    - name: Copy environment file
+      run: cp .env.testing .env
+      
+    - name: Install dependencies
+      run: composer install
+      
+    - name: Generate application key
+      run: php artisan key:generate
+      
+    - name: Run database migrations
+      run: php artisan migrate
+      
+    - name: Seed database
+      run: php artisan db:seed
+      
+    - name: Install npm dependencies
+      run: npm install
+      
+    - name: Build frontend assets
+      run: npm run build
