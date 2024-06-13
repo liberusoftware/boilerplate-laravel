@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
+use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => view('welcome'));
+
+Route::redirect('/login', '/app/login')->name('login');
+
+Route::redirect('/register', '/app/register')->name('register');
+
+Route::redirect('/dashboard', '/app')->name('dashboard');
+
+Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
+    ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])
+    ->name('team-invitations.accept');
+require __DIR__.'/socialstream.php';

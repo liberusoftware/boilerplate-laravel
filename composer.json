@@ -11,13 +11,16 @@
         "php": "^8.3",
         "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.8",
+        "joelbutcher/socialstream": "^6.0",
         "laravel/framework": "^11.0",
+        "laravel/jetstream": "^5.1",
         "laravel/octane": "^2.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "livewire/livewire": "^3.0",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0",
-	"livewire/livewire": "^3.5"
+        "stephenjude/filament-jetstream": "^0.0.11"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
