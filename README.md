@@ -1,4 +1,4 @@
-# Liberu Laravel 11, PHP 8.3, Filamnt 3.2, Livewire 3.5,  Jetstream 5.1, Socialite 6 Boilerplate 
+# Liberu Laravel 11 Boilerplate
 
 ![](https://img.shields.io/badge/PHP-8.3-informational?style=flat&logo=php&color=4f5b93)
 ![](https://img.shields.io/badge/Laravel-11-informational?style=flat&logo=laravel&color=ef3b2d)
