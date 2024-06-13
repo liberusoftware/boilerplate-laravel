@@ -1,4 +1,4 @@
-# Liberu 
+# Liberu Laravel 11, PHP 8.3, Filamnt 3.2, Livewire 3.5,  Jetstream 5.1, Socialite 6 Boilerplate 
 
 ![](https://img.shields.io/badge/PHP-8.3-informational?style=flat&logo=php&color=4f5b93)
 ![](https://img.shields.io/badge/Laravel-11-informational?style=flat&logo=laravel&color=ef3b2d)
@@ -10,6 +10,16 @@
 [![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml)
 [![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml)
 
+## Overview
+
+*  User Authentication: Secure login and registration with Jetstream.
+* Profiles: Customizable user profiles with avatars and bio information.
+* Real-Time Notifications: Stay updated with real-time in-app notifications.
+* Private Messaging: Direct messaging between users.
+* Search: Find users, posts, and groups easily with powerful search functionality.
+* Admin Panel: Manage users, posts, and settings with Filament.
+* Responsive Design: Optimized for both desktop and mobile devices.
+* Extensible: Modular architecture for easy feature extension and customization.
 
 ## Our Projects
 
