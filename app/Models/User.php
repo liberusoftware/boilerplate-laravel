@@ -23,6 +23,16 @@ class User extends Authenticatable
     use Notifiable;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
+    use HasTeams;
+
+    /**
+     * Get the teams the user belongs to.
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user')->withTimestamps();
+    }
+    use Laravel\Jetstream\HasTeams;
 
     /**
      * The attributes that are mass assignable.
@@ -76,5 +86,13 @@ class User extends Authenticatable
         return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
             ? Attribute::get(fn () => $this->profile_photo_path)
             : $this->getPhotoUrl();
+    }
+
+    /**
+     * Get the teams the user owns.
+     */
+    public function ownedTeams()
+    {
+        return $this->hasMany(Team::class);
     }
 }
