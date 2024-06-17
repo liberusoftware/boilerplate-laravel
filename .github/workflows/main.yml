@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
         with:
-          images: liberu/genealogy
+          images: liberu/boilerplate
 
       -
         # Setting up Docker Buildx with docker-container driver is required
