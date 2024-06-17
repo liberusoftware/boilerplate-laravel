@@ -1,163 +1,64 @@
-# Accepted values: 8.3 - 8.2
-ARG PHP_VERSION=8.3
+ARG ALPINE_VERSION=3.19
+FROM alpine:${ALPINE_VERSION}
+LABEL Maintainer="Tim de Pater <code@trafex.nl>"
+LABEL Description="Lightweight container with Nginx 1.24 & PHP 8.3 based on Alpine Linux."
+# Setup document root
+WORKDIR /var/www/html
 
-ARG COMPOSER_VERSION=latest
-
-###########################################
-# Build frontend assets with NPM
-###########################################
-
-ARG NODE_VERSION=20-alpine
-
-FROM node:${NODE_VERSION} AS build
-
-ENV ROOT=/var/www/html
-
-WORKDIR ${ROOT}
-
-RUN npm config set update-notifier false && npm set progress=false
-
-COPY package*.json ./
-
-RUN if [ -f $ROOT/package-lock.json ]; \
-  then \
-    npm ci --loglevel=error --no-audit; \
-  else \
-    npm install --loglevel=error --no-audit; \
-  fi
-
-COPY . .
-
-RUN npm run build
-
-###########################################
-
-FROM composer:${COMPOSER_VERSION} AS vendor
-
-FROM php:${PHP_VERSION}-cli-bookworm AS base
-
-LABEL maintainer="Curtis Delicat <curtis.delicata@liberu.co.uk"
-LABEL org.opencontainers.image.title="Liberu Genealogy Dockerfile"
-LABEL org.opencontainers.image.description="Production-ready Dockerfile for Liberu Genealogy"
-LABEL org.opencontainers.image.source=https://github.com/liberu-genealogy/genealogy-laravel
-LABEL org.opencontainers.image.licenses=MIT
-
-ARG WWWUSER=1000
-ARG WWWGROUP=1000
-ARG TZ=UTC
-
-ENV DEBIAN_FRONTEND=noninteractive \
-  TERM=xterm-color \
-  WITH_HORIZON=false \
-  WITH_SCHEDULER=false \
-  OCTANE_SERVER=swoole \
-  USER=octane \
-  ROOT=/var/www/html \
-  COMPOSER_FUND=0 \
-  COMPOSER_MAX_PARALLEL_HTTP=24
-
-WORKDIR ${ROOT}
-
-SHELL ["/bin/bash", "-eou", "pipefail", "-c"]
-
-RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
-  && echo ${TZ} > /etc/timezone
-
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
-RUN apt-get update; \
-  apt-get upgrade -yqq; \
-  apt-get install -yqq --no-install-recommends --show-progress \
-  apt-utils \
+# Install packages and remove default server definition
+RUN apk add --no-cache \
   curl \
-  wget \
-  nano \
-  ncdu \
-  ca-certificates \
-  supervisor \
-  libsodium-dev \
-  # Install PHP extensions
-  && install-php-extensions \
-  bz2 \
-  pcntl \
-  mbstring \
-  bcmath \
-  sockets \
-  pgsql \
-  pdo_pgsql \
-  opcache \
-  exif \
-  pdo_mysql \
-  zip \
-  intl \
-  gd \
-  redis \
-  rdkafka \
-  memcached \
-  igbinary \
-  ldap \
-  swoole \
-  && apt-get -y autoremove \
-  && apt-get clean \
-  && docker-php-source delete \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && rm /var/log/lastlog /var/log/faillog
+  nginx \
+  php83 \
+  php83-ctype \
+  php83-curl \
+  php83-dom \
+  php83-fileinfo \
+  php83-fpm \
+  php83-gd \
+  php83-intl \
+  php83-mbstring \
+  php83-mysqli \
+  php83-opcache \
+  php83-openssl \
+  php83-phar \
+  php83-session \
+  php83-tokenizer \
+  php83-xml \
+  php83-xmlreader \
+  php83-xmlwriter \
+  supervisor
 
-RUN wget -q "https://github.com/aptible/supercronic/releases/download/v0.2.29/supercronic-linux-amd64" \
-  -O /usr/bin/supercronic \
-  && chmod +x /usr/bin/supercronic \
-  && mkdir -p /etc/supercronic \
-  && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --verbose --no-interaction" > /etc/supercronic/laravel
+# Configure nginx - http
+COPY .docker/config/nginx.conf /etc/nginx/nginx.conf
+# Configure nginx - default server
+COPY .docker/config/conf.d /etc/nginx/conf.d/
 
-RUN userdel --remove --force www-data \
-  && groupadd --force -g ${WWWGROUP} ${USER} \
-  && useradd -ms /bin/bash --no-log-init --no-user-group -g ${WWWGROUP} -u ${WWWUSER} ${USER}
+# Configure PHP-FPM
+ENV PHP_INI_DIR /etc/php83
+COPY .docker/config/fpm-pool.conf ${PHP_INI_DIR}/php-fpm.d/www.conf
+COPY .docker/config/php.ini ${PHP_INI_DIR}/conf.d/custom.ini
 
-RUN chown -R ${USER}:${USER} ${ROOT} /var/{log,run} \
-  && chmod -R a+rw /var/{log,run}
+# Configure supervisord
+COPY .docker/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+# Make sure files/folders needed by the processes are accessable when they run under the nobody user
+RUN chown -R nobody.nobody /var/www/html /run /var/lib/nginx /var/log/nginx
 
-USER ${USER}
+# Create symlink for php
+RUN ln -s /usr/bin/php83 /usr/bin/php
 
-COPY --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY --chown=${USER}:${USER} composer.json composer.lock ./
+# Switch to use a non-root user from here on
+USER nobody
 
-RUN composer install \
-  --no-dev \
-  --no-interaction \
-  --no-autoloader \
-  --no-ansi \
-  --no-scripts \
-  --audit
+# Add application
+COPY --chown=nobody src/ /var/www/html/
 
-COPY --chown=${USER}:${USER} . .
-COPY --chown=${USER}:${USER} --from=build ${ROOT}/public public
-
-RUN mkdir -p \
-  storage/framework/{sessions,views,cache,testing} \
-  storage/logs \
-  bootstrap/cache && chmod -R a+rw storage
-
-COPY --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
-
-RUN composer install \
-  --classmap-authoritative \
-  --no-interaction \
-  --no-ansi \
-  --no-dev \
-  && composer clear-cache \
-  && php artisan storage:link
-
-RUN chmod +x /usr/local/bin/start-container
-
-RUN cat .docker/utilities.sh >> ~/.bashrc
-
+# Expose the port nginx is reachable on
 EXPOSE 80
 
-ENTRYPOINT ["start-container"]
+# Let supervisord start nginx & php-fpm
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD php artisan octane:status || exit 1
+# Configure a healthcheck to validate that everything is up&running
+HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping || exit 1
