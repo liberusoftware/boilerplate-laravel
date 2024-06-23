@@ -6591,16 +6591,16 @@
         },
         {
             "name": "spiral/roadrunner",
-            "version": "v2024.1.4",
+            "version": "v2024.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/roadrunner-server/roadrunner.git",
-                "reference": "116621a11169e26bafe56e6ec4113c6f17bf73de"
+                "reference": "2b72bebf7e8119a9d160cc10ec182eae022136ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/roadrunner-server/roadrunner/zipball/116621a11169e26bafe56e6ec4113c6f17bf73de",
-                "reference": "116621a11169e26bafe56e6ec4113c6f17bf73de",
+                "url": "https://api.github.com/repos/roadrunner-server/roadrunner/zipball/2b72bebf7e8119a9d160cc10ec182eae022136ff",
+                "reference": "2b72bebf7e8119a9d160cc10ec182eae022136ff",
                 "shasum": ""
             },
             "type": "metapackage",
@@ -6629,7 +6629,7 @@
                 "docs": "https://roadrunner.dev/docs",
                 "forum": "https://forum.roadrunner.dev/",
                 "issues": "https://github.com/roadrunner-server/roadrunner/issues",
-                "source": "https://github.com/roadrunner-server/roadrunner/tree/v2024.1.4"
+                "source": "https://github.com/roadrunner-server/roadrunner/tree/v2024.1.5"
             },
             "funding": [
                 {
@@ -6637,7 +6637,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-13T16:43:56+00:00"
+            "time": "2024-06-20T19:03:36+00:00"
         },
         {
             "name": "spiral/roadrunner-cli",
@@ -12070,16 +12070,16 @@
         },
         {
             "name": "spatie/error-solutions",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/error-solutions.git",
-                "reference": "202108314a6988ede156fba1b3ea80a784c1734a"
+                "reference": "d60d4d2ef4b7701c86134ded959667cac6215233"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/error-solutions/zipball/202108314a6988ede156fba1b3ea80a784c1734a",
-                "reference": "202108314a6988ede156fba1b3ea80a784c1734a",
+                "url": "https://api.github.com/repos/spatie/error-solutions/zipball/d60d4d2ef4b7701c86134ded959667cac6215233",
+                "reference": "d60d4d2ef4b7701c86134ded959667cac6215233",
                 "shasum": ""
             },
             "require": {
@@ -12132,7 +12132,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/error-solutions/issues",
-                "source": "https://github.com/spatie/error-solutions/tree/1.0.0"
+                "source": "https://github.com/spatie/error-solutions/tree/1.0.1"
             },
             "funding": [
                 {
@@ -12140,7 +12140,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-12T14:49:54+00:00"
+            "time": "2024-06-21T10:09:00+00:00"
         },
         {
             "name": "spatie/flare-client-php",
