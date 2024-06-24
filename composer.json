@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "bezhansalleh/filament-shield": "^3.2",
         "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.8",
         "joelbutcher/socialstream": "^6.0",
@@ -20,7 +21,7 @@
         "livewire/livewire": "^3.0",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0",
-        "stephenjude/filament-jetstream": "^0.0.11"
+        "stephenjude/filament-jetstream": "^0.0.12"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

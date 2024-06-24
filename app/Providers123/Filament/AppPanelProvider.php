@@ -144,6 +144,10 @@ class AppPanelProvider extends PanelProvider
 
     public function shouldRegisterMenuItem(): bool
     {
-        return auth()->user()?->hasVerifiedEmail() && Filament::hasTenancy() && Filament::getTenant();
+        $hasVerifiedEmail = auth()->user()?->hasVerifiedEmail();
+
+        return Filament::hasTenancy()
+            ? $hasVerifiedEmail && Filament::getTenant()
+            : $hasVerifiedEmail;
     }
 }

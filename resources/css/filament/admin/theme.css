@@ -1,0 +1,11 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+/* .fi-body {
+    background-color: #ebebeb !important;
+}
+
+.fi-sidebar {
+    background-color: #292828 !important;
+} */
