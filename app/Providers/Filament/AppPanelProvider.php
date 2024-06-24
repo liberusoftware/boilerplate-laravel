@@ -100,6 +100,9 @@ class AppPanelProvider extends PanelProvider
                 ->tenant(Team::class)
                 ->tenantRegistration(CreateTeam::class)
                 ->tenantProfile(EditTeam::class)
+ ->plugins([
+            \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+        ]);
                 ->userMenuItems([
                     MenuItem::make()
                         ->label('Team Settings')
