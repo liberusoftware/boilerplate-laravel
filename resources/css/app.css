@@ -1,3 +1,7 @@
-@import 'tailwind.css';
-@import 'site.css';
-@import 'navbar.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
