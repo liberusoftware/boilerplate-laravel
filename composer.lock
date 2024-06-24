@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bd253f6f080c7ffb955186d902326e1",
+    "content-hash": "42840b0fd1993dfbf62455151fb3c55a",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7115,16 +7115,16 @@
         },
         {
             "name": "stephenjude/filament-jetstream",
-            "version": "0.0.11",
+            "version": "0.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stephenjude/filament-jetstream.git",
-                "reference": "567ec4bb5d1f0b79ad8ee7c55ce9e4649918dca9"
+                "reference": "9b062ce787cdccaeab6ce2c0bb8068fc2a951975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stephenjude/filament-jetstream/zipball/567ec4bb5d1f0b79ad8ee7c55ce9e4649918dca9",
-                "reference": "567ec4bb5d1f0b79ad8ee7c55ce9e4649918dca9",
+                "url": "https://api.github.com/repos/stephenjude/filament-jetstream/zipball/9b062ce787cdccaeab6ce2c0bb8068fc2a951975",
+                "reference": "9b062ce787cdccaeab6ce2c0bb8068fc2a951975",
                 "shasum": ""
             },
             "require": {
@@ -7187,7 +7187,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-12T12:45:20+00:00"
+            "time": "2024-06-20T09:20:26+00:00"
         },
         {
             "name": "symfony/clock",
