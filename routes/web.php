@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Session\Middleware\AuthenticateSession;
+use App\Http\Controllers\TeamInvitationController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +14,35 @@ use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 |
 */
 
-Route::get('/', fn () => view('welcome'));
+Route::get('/', function () {
+    return view('home');
+});
 
-Route::redirect('/login', '/app/login')->name('login');
+Route::post('/send-invitation', [TeamInvitationController::class, 'sendInvitation'])->name('send.invitation');
+Route::post('/accept-invitation/{token}', [TeamInvitationController::class, 'acceptInvitation'])->name('accept.invitation');
 
-Route::redirect('/register', '/app/register')->name('register');
+// Route::redirect('/register', '/admin/register')->name('register');
 
-Route::redirect('/dashboard', '/app')->name('dashboard');
+Route::get('/privacy', function () {
+    return view('pages.privacy');
+})->name('privacy');
+Route::get('/terms-and-conditions', function () {
+    return view('pages.termsandconditions');
+})->name('terms.and.conditions');
 
-Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
-    ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])
-    ->name('team-invitations.accept');
+Route::get('/about', function () {
+    return view('pages.aboutus');
+})->name('about');
+
+Route::get('/contact', function () { return view('contact'); });
+Route::post('/contact/send', 'App\Http\Controllers\ContactController@sendEmail');
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});

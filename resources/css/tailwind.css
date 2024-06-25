@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.form-input {
+  @apply border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500;
+
+}
+.card {
+  @apply bg-white rounded-lg shadow-md overflow-hidden;
+}
+.card-header {
+  @apply bg-gray-200 text-gray-700 font-bold py-2 px-4;
+}
+.card-body {
+  @apply p-4;
+}
+@media (min-width: 640px) {
+  .container {
+    @apply max-w-xl;
+  }
+}

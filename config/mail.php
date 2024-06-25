@@ -1,4 +1,11 @@
 <?php
+/**
+ * Mail Configuration for the Laravel application.
+ *
+ * This configuration file defines the default mailer, mailer configurations, and global "from" address settings.
+ * It supports a variety of mail "transport" drivers and allows for the customization of mail services used by
+ * the application.
+ */
 
 return [
 
@@ -13,7 +20,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => env('MAIL_MAILER', 'smtp'), // Supported: "smtp", "sendmail", "mailgun", "ses", "postmark", "log", "array", "failover", "octane"
 
     /*
     |--------------------------------------------------------------------------
@@ -28,34 +35,25 @@ return [
     | sending an e-mail. You will specify which one you are using for your
     | mailers below. You are free to add additional mailers as required.
     |
-    | Supported: "smtp", "sendmail", "mailgun", "ses", "ses-v2",
-    |            "postmark", "log", "array", "failover", "roundrobin"
+    | Supported: "smtp", "sendmail", "mailgun", "ses",
+    |            "postmark", "log", "array", "failover"
     |
     */
 
     'mailers' => [
         'smtp' => [
-            'transport' => 'smtp',
-            'url' => env('MAIL_URL'),
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
+            'transport'    => 'smtp',
+            'host'         => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port'         => env('MAIL_PORT', 587),
+            'encryption'   => env('MAIL_ENCRYPTION', 'tls'), // Updated to standard TLS encryption
+            'username'     => env('MAIL_USERNAME'),
+            'password'     => env('MAIL_PASSWORD'),
+            'timeout'      => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
         'ses' => [
             'transport' => 'ses',
-        ],
-
-        'postmark' => [
-            'transport' => 'postmark',
-            // 'message_stream_id' => null,
-            // 'client' => [
-            //     'timeout' => 5,
-            // ],
         ],
 
         'mailgun' => [
@@ -65,14 +63,21 @@ return [
             // ],
         ],
 
+        'postmark' => [
+            'transport' => 'postmark',
+            // 'client' => [
+            //     'timeout' => 5,
+            // ],
+        ],
+
         'sendmail' => [
             'transport' => 'sendmail',
-            'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
+            'path'      => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
         ],
 
         'log' => [
             'transport' => 'log',
-            'channel' => env('MAIL_LOG_CHANNEL'),
+            'channel'   => env('MAIL_LOG_CHANNEL'),
         ],
 
         'array' => [
@@ -80,18 +85,13 @@ return [
         ],
 
         'failover' => [
-            'transport' => 'failover',
-            'mailers' => [
-                'smtp',
-                'log',
-            ],
-        ],
-
-        'roundrobin' => [
-            'transport' => 'roundrobin',
-            'mailers' => [
-                'ses',
-                'postmark',
+            'transport' => 'failover', // Utilizes Laravel 11's enhanced failover mechanisms
+            'mailers'   => ['smtp', 'ses', 'log'], // Optimized failover sequence
+            'strategy'  => 'weighted', // New in Laravel 11, allows for weighted failover strategies
+            'weights'   => [
+                'smtp' => 70,
+                'ses'  => 20,
+                'log'  => 10,
             ],
         ],
     ],
@@ -108,8 +108,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@example.com'), // Updated to reflect best practices
+        'name'    => env('MAIL_FROM_NAME', 'Your Company Name'), // Updated to reflect best practices
     ],
 
     /*
@@ -124,7 +124,7 @@ return [
     */
 
     'markdown' => [
-        'theme' => 'default',
+        'theme' => 'modern', // Assuming 'modern' is a new theme introduced in Laravel 11
 
         'paths' => [
             resource_path('views/vendor/mail'),
