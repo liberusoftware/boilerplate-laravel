@@ -2527,22 +2527,23 @@
         },
         {
             "name": "joelbutcher/socialstream",
-            "version": "v6.0.3",
+            "version": "v6.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/joelbutcher/socialstream.git",
-                "reference": "ab33ab40b68603c2ee877c18d34760e314e224b3"
+                "reference": "07f7366f11c83aa2a3cc94ae5f308ac6dd1dfa68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joelbutcher/socialstream/zipball/ab33ab40b68603c2ee877c18d34760e314e224b3",
-                "reference": "ab33ab40b68603c2ee877c18d34760e314e224b3",
+                "url": "https://api.github.com/repos/joelbutcher/socialstream/zipball/07f7366f11c83aa2a3cc94ae5f308ac6dd1dfa68",
+                "reference": "07f7366f11c83aa2a3cc94ae5f308ac6dd1dfa68",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "^11.0",
                 "laravel/prompts": "^0.1.10",
                 "laravel/socialite": "^5.12",
+                "paragonie/constant_time_encoding": "^2.7",
                 "php": "^8.2"
             },
             "require-dev": {
@@ -2604,7 +2605,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-05-18T14:47:51+00:00"
+            "time": "2024-06-24T06:29:10+00:00"
         },
         {
             "name": "kirschbaum-development/eloquent-power-joins",
@@ -5208,16 +5209,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.38",
+            "version": "3.0.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "b18b8788e51156c4dd97b7f220a31149a0052067"
+                "reference": "211ebc399c6e73c225a018435fe5ae209d1d1485"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/b18b8788e51156c4dd97b7f220a31149a0052067",
-                "reference": "b18b8788e51156c4dd97b7f220a31149a0052067",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/211ebc399c6e73c225a018435fe5ae209d1d1485",
+                "reference": "211ebc399c6e73c225a018435fe5ae209d1d1485",
                 "shasum": ""
             },
             "require": {
@@ -5298,7 +5299,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.38"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.39"
             },
             "funding": [
                 {
@@ -5314,7 +5315,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-17T10:11:32+00:00"
+            "time": "2024-06-24T06:27:33+00:00"
         },
         {
             "name": "pragmarx/google2fa",
