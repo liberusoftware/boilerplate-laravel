@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages;
-use App\Filament\Admin\Pages\EditProfile;
 use App\Http\Middleware\TeamsPermission;
 use App\Listeners\CreatePersonalTeam;
 use App\Listeners\SwitchTeam;
@@ -43,26 +42,16 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login([AuthenticatedSessionController::class, 'create'])
-            ->registration([RegisteredUserController::class, 'create'])
             ->passwordReset()
             ->emailVerification()
             ->viteTheme('resources/css/Filament/Admin/theme.css')
             ->colors([
                 'primary' => Color::Gray,
             ])
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Profile')
-                    ->icon('heroicon-o-user-circle')
-                    ->url(fn () => $this->shouldRegisterMenuItem()
-                        ? url(EditProfile::getUrl())
-                        : url($panel->getPath())),
-            ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
-                FilamentPage\Dashboard::class,
-                Pages\EditProfile::class,
+                Filament\Page\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets/Home'), for: 'App\\Filament\\Admin\\Widgets\\Home')
             ->widgets([
@@ -82,39 +71,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                TeamsPermission::class,
             ])
  ->plugins([
             \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
         ]);
 
-        if (Features::hasApiFeatures()) {
-            $panel->userMenuItems([
-                MenuItem::make()
-                    ->label('API Tokens')
-                    ->icon('heroicon-o-key')
-                    ->url(fn () => $this->shouldRegisterMenuItem()
-                        ? url(Pages\ApiTokenManagerPage::getUrl())
-                        : url($panel->getPath())),
-            ]);
-        }
-
-        if (Features::hasTeamFeatures()) {
-            $panel
-                ->tenant(Team::class, ownershipRelationship: 'team')
-                ->tenantRegistration(Pages\CreateTeam::class)
-                ->tenantProfile(Pages\EditTeam::class)
-                ->userMenuItems([
-                    MenuItem::make()
-                        ->label('Team Settings')
-                        ->icon('heroicon-o-cog-6-tooth')
-                        ->url(fn () => $this->shouldRegisterMenuItem()
-                            ? url(Pages\EditTeam::getUrl())
-                            : url($panel->getPath())),
-                ]);
-        }
-
-        return $panel;
     }
 
     public function boot()
@@ -129,21 +90,6 @@ class AdminPanelProvider extends PanelProvider
          */
         Jetstream::$registersRoutes = false;
 
-        /**
-         * Listen and create personal team for new accounts.
-         */
-        Event::listen(
-            Registered::class,
-            CreatePersonalTeam::class,
-        );
-
-        /**
-         * Listen and switch team if tenant was changed.
-         */
-        Event::listen(
-            TenantSet::class,
-            SwitchTeam::class,
-        );
     }
 
     public function shouldRegisterMenuItem(): bool
