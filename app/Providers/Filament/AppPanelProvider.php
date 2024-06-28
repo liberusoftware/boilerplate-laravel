@@ -2,10 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\ApiTokens;
-use App\Filament\Pages\CreateTeam;
-use App\Filament\Pages\EditProfile;
-use App\Filament\Pages\EditTeam;
+use App\Filament\App\Pages;
+use App\Filament\App\Pages\EditProfile;
+use App\Http\Middleware\TeamsPermission;
 use App\Listeners\CreatePersonalTeam;
 use App\Listeners\SwitchTeam;
 use App\Models\Team;
@@ -16,7 +15,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
-use Filament\Pages;
+use Filament\Pages as FilamentPage;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -30,10 +29,12 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Event;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Jetstream;
 
-class AppPanelProvider extends PanelProvider
+class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
@@ -41,11 +42,11 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
-            ->login()
-            ->registration()
+            ->login([AuthenticatedSessionController::class, 'create'])
+            ->registration([RegisteredUserController::class, 'create'])
             ->passwordReset()
             ->emailVerification()
-            ->viteTheme('resources/css/app.css')
+            ->viteTheme('resources/css/Filament/App/admin/theme.css')
             ->colors([
                 'primary' => Color::Gray,
             ])
@@ -57,14 +58,13 @@ class AppPanelProvider extends PanelProvider
                         ? url(EditProfile::getUrl())
                         : url($panel->getPath())),
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
+            ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
-                Pages\Dashboard::class,
-                EditProfile::class,
-                ApiTokens::class,
+                FilamentPage\Dashboard::class,
+                Pages\EditProfile::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/App/Widgets/Home'), for: 'App\\Filament\\App\\Widgets\\Home')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -82,7 +82,11 @@ class AppPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+                TeamsPermission::class,
+            ])
+ ->plugins([
+            \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+        ]);
 
         if (Features::hasApiFeatures()) {
             $panel->userMenuItems([
@@ -90,25 +94,22 @@ class AppPanelProvider extends PanelProvider
                     ->label('API Tokens')
                     ->icon('heroicon-o-key')
                     ->url(fn () => $this->shouldRegisterMenuItem()
-                        ? url(ApiTokens::getUrl())
+                        ? url(Pages\ApiTokenManagerPage::getUrl())
                         : url($panel->getPath())),
             ]);
         }
 
         if (Features::hasTeamFeatures()) {
             $panel
-                ->tenant(Team::class)
-                ->tenantRegistration(CreateTeam::class)
-                ->tenantProfile(EditTeam::class)
- ->plugins([
-            \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-        ]);
+                ->tenant(Team::class, ownershipRelationship: 'team')
+                ->tenantRegistration(Pages\CreateTeam::class)
+                ->tenantProfile(Pages\EditTeam::class)
                 ->userMenuItems([
                     MenuItem::make()
                         ->label('Team Settings')
                         ->icon('heroicon-o-cog-6-tooth')
                         ->url(fn () => $this->shouldRegisterMenuItem()
-                            ? url(EditTeam::getUrl())
+                            ? url(Pages\EditTeam::getUrl())
                             : url($panel->getPath())),
                 ]);
         }
@@ -119,17 +120,17 @@ class AppPanelProvider extends PanelProvider
     public function boot()
     {
         /**
-         * Disable Fortify routes
+         * Disable Fortify routes.
          */
         Fortify::$registersRoutes = false;
 
         /**
-         * Disable Jetstream routes
+         * Disable Jetstream routes.
          */
         Jetstream::$registersRoutes = false;
 
         /**
-         * Listen and create personal team for new accounts
+         * Listen and create personal team for new accounts.
          */
         Event::listen(
             Registered::class,
@@ -137,7 +138,7 @@ class AppPanelProvider extends PanelProvider
         );
 
         /**
-         * Listen and switch team if tenant was changed
+         * Listen and switch team if tenant was changed.
          */
         Event::listen(
             TenantSet::class,
@@ -147,6 +148,6 @@ class AppPanelProvider extends PanelProvider
 
     public function shouldRegisterMenuItem(): bool
     {
-        return auth()->user()?->hasVerifiedEmail() && Filament::hasTenancy() && Filament::getTenant();
+        return true; //auth()->user()?->hasVerifiedEmail() && Filament::hasTenancy() && Filament::getTenant();
     }
 }
