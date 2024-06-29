@@ -73,6 +73,7 @@ class AdminPanelProvider extends PanelProvider
             \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
         ]);
 
+        return $panel;
     }
 
     public function boot()
