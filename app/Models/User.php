@@ -35,7 +35,6 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Team::class, 'team_user')->withTimestamps();
     }
-    use Laravel\Jetstream\HasTeams;
 
     /**
      * The attributes that are mass assignable.
