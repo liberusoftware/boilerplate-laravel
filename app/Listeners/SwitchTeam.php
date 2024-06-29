@@ -2,9 +2,6 @@
 
 namespace App\Listeners;
 
-use Filament\Events\TenantSet;
-use Laravel\Jetstream\Features;
-
 class SwitchTeam
 {
     /**
@@ -18,14 +15,8 @@ class SwitchTeam
     /**
      * Handle the event.
      */
-    public function handle(TenantSet $event): void
+    public function handle(object $event): void
     {
-        if (Features::hasTeamFeatures()) {
-            $user = $event->getUser();
-
-            $team = $event->getTenant();
-
-            $user->switchTeam($team);
-        }
+        // dd($event);
     }
 }
