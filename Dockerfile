@@ -26,9 +26,9 @@ RUN if [ -f $ROOT/package-lock.json ]; \
     npm install --loglevel=error --no-audit; \
   fi
 
-RUN npm run build
-
 COPY . .
+
+RUN npm run build
 
 
 ###########################################
