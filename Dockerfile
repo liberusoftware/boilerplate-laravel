@@ -146,11 +146,11 @@ RUN mkdir -p \
     storage/logs \
     bootstrap/cache && chmod -R a+rw storage
 
-COPY --link --chown=${USER}:${USER} deployment/supervisord.conf /etc/supervisor/
-COPY --link --chown=${USER}:${USER} deployment/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY --link --chown=${USER}:${USER} deployment/supervisord.*.conf /etc/supervisor/conf.d/
-COPY --link --chown=${USER}:${USER} deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY --link --chown=${USER}:${USER} deployment/start-container /usr/local/bin/start-container
+COPY --link --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
+COPY --link --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
+COPY --link --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
+COPY --link --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
+COPY --link --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
 
 RUN composer install \
     --classmap-authoritative \
