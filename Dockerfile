@@ -3,6 +3,8 @@ ARG PHP_VERSION=8.3
 
 ARG COMPOSER_VERSION=latest
 
+ARG NODE_VERSION=20-alpine
+
 ###########################################
 
 FROM composer:${COMPOSER_VERSION} AS vendor
@@ -136,8 +138,6 @@ RUN composer install \
 ###########################################
 # Build frontend assets with NPM
 ###########################################
-
-ARG NODE_VERSION=20-alpine
 
 FROM node:${NODE_VERSION} AS build
 
