@@ -134,6 +134,7 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
+COPY vendor/* ./vendor/
 
 ###########################################
 # Build frontend assets with NPM
