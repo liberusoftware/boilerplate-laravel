@@ -1,64 +1,24 @@
-ARG ALPINE_VERSION=3.19
-FROM alpine:${ALPINE_VERSION}
-LABEL Maintainer="Tim de Pater <code@trafex.nl>"
-LABEL Description="Lightweight container with Nginx 1.24 & PHP 8.3 based on Alpine Linux."
-# Setup document root
-WORKDIR /var/www/html
+FROM bitscoid/nginx-php
 
-# Install packages and remove default server definition
-RUN apk add --no-cache \
-  curl \
-  nginx \
-  php83 \
-  php83-ctype \
-  php83-curl \
-  php83-dom \
-  php83-fileinfo \
-  php83-fpm \
-  php83-gd \
-  php83-intl \
-  php83-mbstring \
-  php83-mysqli \
-  php83-opcache \
-  php83-openssl \
-  php83-phar \
-  php83-session \
-  php83-tokenizer \
-  php83-xml \
-  php83-xmlreader \
-  php83-xmlwriter \
-  supervisor
+# copy source code
+COPY . /var/www/bits
 
-# Configure nginx - http
-COPY .docker/config/nginx.conf /etc/nginx/nginx.conf
-# Configure nginx - default server
-COPY .docker/config/conf.d /etc/nginx/conf.d/
+# run.sh will replace default web root from /var/www/bits to $WEBROOT
+ENV WEBROOT /var/www/bits/public
 
-# Configure PHP-FPM
-ENV PHP_INI_DIR /etc/php83
-COPY .docker/config/fpm-pool.conf ${PHP_INI_DIR}/php-fpm.d/www.conf
-COPY .docker/config/php.ini ${PHP_INI_DIR}/conf.d/custom.ini
+# run.sh will use redis as session store with docker container name $PHP_REDIS_SESSION_HOST
+ENV REDIS_HOST redis
 
-# Configure supervisord
-COPY .docker/config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Make sure files/folders needed by the processes are accessable when they run under the nobody user
-RUN chown -R nobody.nobody /var/www/html /run /var/lib/nginx /var/log/nginx
-
-# Create symlink for php
-RUN ln -s /usr/bin/php83 /usr/bin/php
-
-# Switch to use a non-root user from here on
-USER nobody
-
-# Add application
-COPY --chown=nobody . /var/www/html/
-
-# Expose the port nginx is reachable on
-EXPOSE 80
-
-# Let supervisord start nginx & php-fpm
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
-# Configure a healthcheck to validate that everything is up&running
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping || exit 1
+# download required node/php packages, 
+# some node modules need gcc/g++ to build
+RUN cd /var/www/bits \
+    # install node modules
+    && npm install \
+    # install php composer packages
+    && composer install \
+    # clean
+    && npm run build \
+    # set .env
+    && cp .env.docker .env \
+    # change /var/www/bits user/group
+    && chown -Rf nobody:nobody /var/www/bits
