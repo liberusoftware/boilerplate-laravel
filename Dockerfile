@@ -111,7 +111,6 @@ RUN composer install \
     --audit
 
 COPY  --chown=${USER}:${USER} . .
-COPY  --chown=${USER}:${USER} --from=build ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
