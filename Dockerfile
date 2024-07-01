@@ -133,6 +133,9 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
+COPY .env.example ./.env
+
+RUN php artisan key:generate
 
 RUN chmod +x /usr/local/bin/start-container
 
