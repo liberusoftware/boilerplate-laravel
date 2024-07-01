@@ -134,31 +134,6 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
-COPY vendor/* ./vendor/
-
-###########################################
-# Build frontend assets with NPM
-###########################################
-
-FROM node:${NODE_VERSION} AS build
-
-ENV ROOT=/var/www/html
-
-WORKDIR ${ROOT}
-
-RUN npm config set update-notifier false && npm set progress=false
-
-COPY package*.json ./
-
-RUN npm install --loglevel=error --no-audit
-
-COPY  . .
-
-RUN npm run build
-
-
-
-
 
 RUN chmod +x /usr/local/bin/start-container
 
