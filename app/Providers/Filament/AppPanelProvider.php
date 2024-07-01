@@ -34,7 +34,7 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Jetstream;
 
-class AdminPanelProvider extends PanelProvider
+class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
