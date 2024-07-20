@@ -2,8 +2,15 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasDefaultTenant;
+use Filament\Models\Contracts\HasTenants;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use JoelButcher\Socialstream\HasConnectedAccounts;
@@ -14,7 +21,7 @@ use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasDefaultTenant, HasTenants, FilamentUser
 {
     use HasApiTokens;
     use HasConnectedAccounts;
@@ -27,14 +34,6 @@ class User extends Authenticatable
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use HasTeams;
-
-    /**
-     * Get the teams the user belongs to.
-     */
-    public function teams()
-    {
-        return $this->belongsToMany(Team::class, 'team_user')->withTimestamps();
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -91,10 +90,37 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the teams the user owns.
+     * @return array<Model> | Collection
      */
-    public function ownedTeams()
+    public function getTenants(Panel $panel): array|Collection
     {
-        return $this->hasMany(Team::class);
+        return $this->ownedTeams;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return true; //$this->ownedTeams->contains($tenant);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        //        return $this->hasVerifiedEmail();
+        return true;
+    }
+
+    public function canAccessFilament(): bool
+    {
+        //        return $this->hasVerifiedEmail();
+        return true;
+    }
+
+    public function getDefaultTenant(Panel $panel): ?Model
+    {
+        return $this->latestTeam;
+    }
+
+    public function latestTeam(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'current_team_id');
     }
 }
