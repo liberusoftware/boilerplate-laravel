@@ -15,7 +15,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
-use Filament\Pages as FilamentPage;
+use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -30,7 +30,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
-use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Jetstream;
 
@@ -43,10 +42,10 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login([AuthenticatedSessionController::class, 'create'])
-            ->registration([RegisteredUserController::class, 'create'])
+            ->registration()
             ->passwordReset()
             ->emailVerification()
-            ->viteTheme('resources/css/Filament/App/admin/theme.css')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
                 'primary' => Color::Gray,
             ])
@@ -61,12 +60,13 @@ class AppPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
+                Dashboard::class,
                 Pages\EditProfile::class,
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets/Home'), for: 'App\\Filament\\App\\Widgets\\Home')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -83,20 +83,20 @@ class AppPanelProvider extends PanelProvider
                 Authenticate::class,
                 TeamsPermission::class,
             ])
- ->plugins([
-            \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-        ]);
-
-        if (Features::hasApiFeatures()) {
-            $panel->userMenuItems([
-                MenuItem::make()
-                    ->label('API Tokens')
-                    ->icon('heroicon-o-key')
-                    ->url(fn () => $this->shouldRegisterMenuItem()
-                        ? url(Pages\ApiTokenManagerPage::getUrl())
-                        : url($panel->getPath())),
+            ->plugins([
+                // \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
             ]);
-        }
+
+        // if (Features::hasApiFeatures()) {
+        //     $panel->userMenuItems([
+        //         MenuItem::make()
+        //             ->label('API Tokens')
+        //             ->icon('heroicon-o-key')
+        //             ->url(fn () => $this->shouldRegisterMenuItem()
+        //                 ? url(Pages\ApiTokenManagerPage::getUrl())
+        //                 : url($panel->getPath())),
+        //     ]);
+        // }
 
         if (Features::hasTeamFeatures()) {
             $panel
