@@ -57,7 +57,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL'),
+    'asset_url' => env('ASSET_URL', '/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -160,7 +160,6 @@ return [
          * Package Service Providers...
          */
         JoelButcher\Socialstream\Filament\SocialstreamPanelProvider::class,
-        JoelButcher\Socialstream\Filament\SocialstreamPanelProvider::class,
 
         /*
          * Application Service Providers...
@@ -172,6 +171,10 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\AppPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        App\Providers\TeamServiceProvider::class,
+        App\Providers\JetstreamServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
     ])->toArray(),
 
     /*
