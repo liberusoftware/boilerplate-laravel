@@ -2527,16 +2527,16 @@
         },
         {
             "name": "joelbutcher/socialstream",
-            "version": "v6.1.1",
+            "version": "v6.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/joelbutcher/socialstream.git",
-                "reference": "8e33d60a23e188b60e5714b05b84cf225750ec0a"
+                "reference": "966b8dff3240f8da09d0e8650b3f708249d378f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/joelbutcher/socialstream/zipball/8e33d60a23e188b60e5714b05b84cf225750ec0a",
-                "reference": "8e33d60a23e188b60e5714b05b84cf225750ec0a",
+                "url": "https://api.github.com/repos/joelbutcher/socialstream/zipball/966b8dff3240f8da09d0e8650b3f708249d378f8",
+                "reference": "966b8dff3240f8da09d0e8650b3f708249d378f8",
                 "shasum": ""
             },
             "require": {
@@ -2604,7 +2604,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-19T13:32:37+00:00"
+            "time": "2024-07-25T08:47:50+00:00"
         },
         {
             "name": "kirschbaum-development/eloquent-power-joins",
