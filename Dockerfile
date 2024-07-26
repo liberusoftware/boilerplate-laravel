@@ -135,8 +135,6 @@ RUN composer install \
 
 COPY .env.example ./.env
 
-RUN php artisan key:generate
-
 RUN chmod +x /usr/local/bin/start-container
 
 RUN cat .docker/utilities.sh >> ~/.bashrc
