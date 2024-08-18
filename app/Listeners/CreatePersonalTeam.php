@@ -2,21 +2,20 @@
 
 namespace App\Listeners;
 
+use App\Services\TeamManagementService;
+use Illuminate\Auth\Events\Registered;
+
 class CreatePersonalTeam
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
+    protected $teamManagementService;
+
+    public function __construct(TeamManagementService $teamManagementService)
     {
-        //
+        $this->teamManagementService = $teamManagementService;
     }
 
-    /**
-     * Handle the event.
-     */
-    public function handle(object $event): void
+    public function handle(Registered $event): void
     {
-        //
+        $this->teamManagementService->assignUserToDefaultTeam($event->user);
     }
 }

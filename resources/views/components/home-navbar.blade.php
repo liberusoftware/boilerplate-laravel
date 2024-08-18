@@ -1,78 +1,79 @@
-<style>
-    .btn-nav:hover {
-        color: #f7f7f7; /* Couleur du texte au survol */
-    }
-</style>
+@props([
+    'user' => null,
+    'role' => null,
+    'dashboardUrl' => null,
+])
+@if (auth()->check())
+    @php
+        $user = auth()->user();
+        $role = $user->getRoleNames()->first() ?? 'user';
+        $dashboardUrl = $role === 'admin' ? '/admin' : '/' . $role;
+    @endphp
+@endif
+<nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="{{ asset('build/images/logo.png') }}" class="h-8" alt="{{ config('app.name') }}" />
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                {{ Str::upper(config('app.name')) }}</span>
+        </a>
 
-    <nav class="bg-green-900 fixed w-full z-10"  x-data="{ isOpen: false }">
-        <div class="container mx-auto flex justify-between items-center py-4">
-            <a class="navbar-brand flex items-center" href="/">
-                <img src="{{ asset('/build/images/logo1.svg') }}" alt="Logo" class="h-8">
-            </a>
-            <button onclick="toggleMenu()" class="lg:hidden text-white focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 fill-current">
-                    <path fill-rule="evenodd" d="M4 6h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 5h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 5h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path>
+
+        <div class="items-center hidden justify-between w-full  lg:flex lg:w-auto" id="navbar-cta">
+            <ul
+                class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                {!! app(App\Services\MenuService::class)->buildMenu() !!}
+            </ul>
+        </div>
+
+        <div class="flex items-center space-x-3 rtl:space-x-reverse">
+            @if (auth()->check())
+                @php
+                    $user = auth()->user();
+                    $role = $user->getRoleNames()->first() ?? 'user';
+                    $dashboardUrl = $role === 'admin' ? '/admin' : '/' . $role;
+                @endphp
+
+                <a href="{{ $dashboardUrl }}"
+                    class="hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium lg:hidden">
+                    {{ ucfirst($role) }} Dashboard
+                </a>
+            @else
+                <a href="{{ route('login') }}"
+                    class="hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium">Login</a>
+                <a href="{{ route('register') }}"
+                    class="hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium ml-2">Register</a>
+            @endif
+
+            <button id="menuToggleButton" data-collapse-toggle="menuToggle" type="button"
+                class="inline-flex items-center justify-center p-2 w-10 h-10 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                aria-controls="menuToggle" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
                 </svg>
             </button>
-            <div class="hidden lg:flex lg:items-center lg:w-auto">
-                <a href="/" class="btn-nav">Home</a>
-                <span class="mx-2"></span>
-                <a href="/contact" class="btn-nav">Contact</a>
-                <span class="mx-2"></span>
-                <a href="/about" class="btn-nav">About</a>
-                <span class="mx-2"></span>
-                @if(auth()->check())
-                    <div class="relative inline-block text-left">
-                        <button onclick="toggleDropdown()" class="btn-nav">
-                            <span class="text-white">
-                                <strong>Welcome, {{ auth()->user()->name }}</strong>
-                            </span>
-                        </button>
-                        <div class="ml-3 absolute hidden" id="moreDropdown">
-                            <a href="{{ route('filament.admin.tenant')}}" class="btn-nav">Dashboard</a>
-                        </div>
-                    </div>
-                @else
-                    <a href="/login" class="btn-nav">Login</a>
-                    <span class="mx-2"></span>
-                    <a href="/register" class="btn-nav">Register</a>
-                @endif
-            </div>
-            <div id="mobile-menu" class="mobile-menu-container fixed bg-green-700 hidden" x-show="isOpen" @click.away="isOpen = false">
-                <div class="mobile-menu-content">
-                    <!-- Navigation Links -->
-                    <a href="/home" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">Home</a>
-                    @if(auth()->check())
-                    <div class="relative inline-block text-left">
-                        <button onclick="toggleDropdown()" class="btn-nav">
-                            <span class="text-white">
-                                <strong>Welcome, {{ auth()->user()->name }}</strong>
-                            </span>
-                        </button>
-                        <div class="ml-3 absolute hidden" id="moreDropdown">
-                            <a href="{{ route('filament.admin.tenant')}}" class="btn-nav">Dashboard</a>
-                        </div>
-                    </div>
-                @else
-                    <a href="/login" class="btn-nav">Login</a>
-                    <span class="mx-2"></span>
-                    <a href="/register" class="btn-nav">Register</a>
-                @endif
-                    <a href="/about" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">About</a>
-                    <a href="/contact" class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">Contact</a>
-                </div>
-            </div>
         </div>
-    </nav>
+        @if (auth()->check())
+            <a href="{{ $dashboardUrl }}"
+                class="hover:text-blue-700 px-3 py-2 rounded-md text-sm font-medium hidden lg:block">
+                {{ ucfirst($role) }} Dashboard
+            </a>
+        @endif
+    </div>
 
-    <script>
-        function toggleDropdown() {
-            var dropdownMenu = document.getElementById("moreDropdown");
-            dropdownMenu.classList.toggle("hidden");
-        }
+    <div class="hidden lg:hidden" id="menuToggle">
+        <ul class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+            {!! app(App\Services\MenuService::class)->buildMenu() !!}
+        </ul>
+    </div>
+</nav>
 
-        function toggleMenu() {
-            var dropdownMenu = document.getElementById("mobile-menu");
-            dropdownMenu.classList.toggle("hidden");
-        }
-    </script>
+<script>
+    document.getElementById('menuToggleButton').addEventListener('click', function() {
+        var menuToggle = document.getElementById('menuToggle');
+        menuToggle.classList.toggle('hidden');
+    });
+</script>
