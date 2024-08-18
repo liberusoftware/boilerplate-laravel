@@ -1255,7 +1255,7 @@
         },
         {
             "name": "filament/actions",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/actions.git",
@@ -1308,7 +1308,7 @@
         },
         {
             "name": "filament/filament",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/panels.git",
@@ -1373,16 +1373,16 @@
         },
         {
             "name": "filament/forms",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
-                "reference": "7fc0e90e115248a2bfae440a36bddf8185c2040b"
+                "reference": "32ef8b049ac3c4577407cdc10e576082863f7e47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/forms/zipball/7fc0e90e115248a2bfae440a36bddf8185c2040b",
-                "reference": "7fc0e90e115248a2bfae440a36bddf8185c2040b",
+                "url": "https://api.github.com/repos/filamentphp/forms/zipball/32ef8b049ac3c4577407cdc10e576082863f7e47",
+                "reference": "32ef8b049ac3c4577407cdc10e576082863f7e47",
                 "shasum": ""
             },
             "require": {
@@ -1425,11 +1425,11 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2024-08-13T12:35:49+00:00"
+            "time": "2024-08-15T19:37:09+00:00"
         },
         {
             "name": "filament/infolists",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/infolists.git",
@@ -1480,7 +1480,7 @@
         },
         {
             "name": "filament/notifications",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/notifications.git",
@@ -1532,7 +1532,7 @@
         },
         {
             "name": "filament/support",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/support.git",
@@ -1591,7 +1591,7 @@
         },
         {
             "name": "filament/tables",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
@@ -1643,7 +1643,7 @@
         },
         {
             "name": "filament/widgets",
-            "version": "v3.2.101",
+            "version": "v3.2.102",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/widgets.git",
@@ -3315,16 +3315,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "df09d5b6a4188f8f3c3ab2e43a109076a5eeb767"
+                "reference": "b650144166dfa7703e62a22e493b853b58d874b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/df09d5b6a4188f8f3c3ab2e43a109076a5eeb767",
-                "reference": "df09d5b6a4188f8f3c3ab2e43a109076a5eeb767",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/b650144166dfa7703e62a22e493b853b58d874b0",
+                "reference": "b650144166dfa7703e62a22e493b853b58d874b0",
                 "shasum": ""
             },
             "require": {
@@ -3337,8 +3337,8 @@
             },
             "require-dev": {
                 "cebe/markdown": "^1.0",
-                "commonmark/cmark": "0.31.0",
-                "commonmark/commonmark.js": "0.31.0",
+                "commonmark/cmark": "0.31.1",
+                "commonmark/commonmark.js": "0.31.1",
                 "composer/package-versions-deprecated": "^1.8",
                 "embed/embed": "^4.4",
                 "erusev/parsedown": "^1.0",
@@ -3417,7 +3417,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-14T10:56:57+00:00"
+            "time": "2024-08-16T11:46:16+00:00"
         },
         {
             "name": "league/config",
