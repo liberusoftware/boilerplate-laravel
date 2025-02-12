@@ -16,6 +16,6 @@
         "vite": "^6.1.0"
     },
     "dependencies": {
-        "vite-plugin-static-copy": "^1.0.6"
+        "vite-plugin-static-copy": "^2.2.0"
     }
 }
