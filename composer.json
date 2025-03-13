@@ -22,7 +22,7 @@
         "spatie/laravel-menu": "^4.2",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0",
-        "stephenjude/filament-jetstream": "^0.0.12"
+        "stephenjude/filament-jetstream": "^0.0.16"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
