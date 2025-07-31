@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Event;
+use Illuminate\Auth\Events\Registered;
+use App\Listeners\CreatePersonalTeam;
 use App\Actions\Jetstream\AddTeamMember;
 use App\Actions\Jetstream\CreateTeam;
 use App\Actions\Jetstream\DeleteTeam;
@@ -38,9 +41,9 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::deleteUsersUsing(DeleteUser::class);
     
         // Use our modified CreatePersonalTeam listener
-        \Illuminate\Support\Facades\Event::listen(
-            \Illuminate\Auth\Events\Registered::class,
-            \App\Listeners\CreatePersonalTeam::class
+        Event::listen(
+            Registered::class,
+            CreatePersonalTeam::class
         );
     }
 

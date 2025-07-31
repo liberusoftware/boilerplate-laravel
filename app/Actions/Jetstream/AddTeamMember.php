@@ -2,6 +2,7 @@
 
 namespace App\Actions\Jetstream;
 
+use Illuminate\Contracts\Validation\Rule;
 use App\Models\Team;
 use App\Models\User;
 use Closure;
@@ -54,7 +55,7 @@ class AddTeamMember implements AddsTeamMembers
     /**
      * Get the validation rules for adding a team member.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, Rule|array|string>
      */
     protected function rules(): array
     {
