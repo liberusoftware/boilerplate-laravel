@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Modules\ModuleManager;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -91,7 +92,7 @@ class ModuleCommand extends Command
 
             $this->error("Module '{$name}' not found.");
             return 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("Failed to enable module '{$name}': " . $e->getMessage());
             return 1;
         }
@@ -115,7 +116,7 @@ class ModuleCommand extends Command
 
             $this->error("Module '{$name}' not found.");
             return 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("Failed to disable module '{$name}': " . $e->getMessage());
             return 1;
         }
@@ -139,7 +140,7 @@ class ModuleCommand extends Command
 
             $this->error("Module '{$name}' not found.");
             return 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("Failed to install module '{$name}': " . $e->getMessage());
             return 1;
         }
@@ -170,7 +171,7 @@ class ModuleCommand extends Command
 
             $this->error("Module '{$name}' not found.");
             return 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("Failed to uninstall module '{$name}': " . $e->getMessage());
             return 1;
         }

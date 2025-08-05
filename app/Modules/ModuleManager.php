@@ -2,6 +2,7 @@
 
 namespace App\Modules;
 
+use Exception;
 use App\Modules\Contracts\ModuleInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -71,7 +72,7 @@ class ModuleManager
 
         // Check dependencies
         if (!$this->checkDependencies($module)) {
-            throw new \Exception("Module {$name} has unmet dependencies.");
+            throw new Exception("Module {$name} has unmet dependencies.");
         }
 
         $module->enable();
@@ -91,7 +92,7 @@ class ModuleManager
 
         // Check if other modules depend on this one
         if ($this->hasDependents($name)) {
-            throw new \Exception("Cannot disable module {$name} as other modules depend on it.");
+            throw new Exception("Cannot disable module {$name} as other modules depend on it.");
         }
 
         $module->disable();
@@ -111,7 +112,7 @@ class ModuleManager
 
         // Check dependencies
         if (!$this->checkDependencies($module)) {
-            throw new \Exception("Module {$name} has unmet dependencies.");
+            throw new Exception("Module {$name} has unmet dependencies.");
         }
 
         $module->install();
@@ -131,7 +132,7 @@ class ModuleManager
 
         // Check if other modules depend on this one
         if ($this->hasDependents($name)) {
-            throw new \Exception("Cannot uninstall module {$name} as other modules depend on it.");
+            throw new Exception("Cannot uninstall module {$name} as other modules depend on it.");
         }
 
         $module->uninstall();

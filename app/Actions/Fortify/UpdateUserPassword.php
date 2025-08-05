@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +18,8 @@ class UpdateUserPassword implements UpdatesUserPasswords
      * Validate and update the user's password.
      *
      * @param  array<string, string>  $input
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Exception
+     * @throws ValidationException
+     * @throws Exception
      */
     public function update(User $user, array $input): void
     {
@@ -35,7 +36,7 @@ class UpdateUserPassword implements UpdatesUserPasswords
             ])->save();
 
             Log::info('User password updated successfully', ['user_id' => $user->id]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             Log::error('Password update validation failed', [
                 'user_id' => $user->id,
                 'errors' => $e->errors(),

@@ -1,38 +1,51 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\BulkAction;
+use App\Filament\Admin\Resources\ModuleResource\Pages\ListModules;
+use App\Filament\Admin\Resources\ModuleResource\Pages\ViewModule;
 use App\Modules\ModuleManager;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Admin\Resources\ModuleResource\Pages;
 
 class ModuleResource extends Resource
 {
     protected static ?string $model = null;
 
-    protected static ?string $navigationIcon = 'heroicon-o-puzzle-piece';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-puzzle-piece';
 
-    protected static ?string $navigationGroup = 'System';
+    protected static string | \UnitEnum | null $navigationGroup = 'System';
 
     protected static ?string $navigationLabel = 'Modules';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->disabled(),
-                Forms\Components\TextInput::make('version')
+                TextInput::make('version')
                     ->disabled(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->disabled(),
-                Forms\Components\Toggle::make('enabled')
+                Toggle::make('enabled')
                     ->required(),
             ]);
     }
@@ -42,25 +55,25 @@ class ModuleResource extends Resource
         return $table
             ->query(static::getEloquentQuery())
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('version')
+                TextColumn::make('version')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->limit(50),
-                Tables\Columns\IconColumn::make('enabled')
+                IconColumn::make('enabled')
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
                     ->trueColor('success')
                     ->falseColor('danger'),
-                Tables\Columns\TextColumn::make('dependencies')
+                TextColumn::make('dependencies')
                     ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->limit(30),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('enabled')
+                TernaryFilter::make('enabled')
                     ->label('Status')
                     ->trueLabel('Enabled')
                     ->falseLabel('Disabled')
@@ -69,8 +82,8 @@ class ModuleResource extends Resource
                         false: fn (Builder $query) => $query->where('enabled', false),
                     ),
             ])
-            ->actions([
-                Tables\Actions\Action::make('toggle')
+            ->recordActions([
+                Action::make('toggle')
                     ->label(fn ($record) => $record->enabled ? 'Disable' : 'Enable')
                     ->icon(fn ($record) => $record->enabled ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
                     ->color(fn ($record) => $record->enabled ? 'danger' : 'success')
@@ -84,7 +97,7 @@ class ModuleResource extends Resource
                         }
                     })
                     ->requiresConfirmation(),
-                Tables\Actions\Action::make('install')
+                Action::make('install')
                     ->label('Install')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
@@ -94,7 +107,7 @@ class ModuleResource extends Resource
                     })
                     ->visible(fn ($record) => !$record->enabled)
                     ->requiresConfirmation(),
-                Tables\Actions\Action::make('uninstall')
+                Action::make('uninstall')
                     ->label('Uninstall')
                     ->icon('heroicon-o-trash')
                     ->color('danger')
@@ -104,11 +117,11 @@ class ModuleResource extends Resource
                     })
                     ->visible(fn ($record) => $record->enabled)
                     ->requiresConfirmation(),
-                Tables\Actions\ViewAction::make(),
+                ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\BulkAction::make('enable')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    BulkAction::make('enable')
                         ->label('Enable Selected')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
@@ -119,7 +132,7 @@ class ModuleResource extends Resource
                             }
                         })
                         ->requiresConfirmation(),
-                    Tables\Actions\BulkAction::make('disable')
+                    BulkAction::make('disable')
                         ->label('Disable Selected')
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
@@ -179,8 +192,8 @@ class ModuleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListModules::route('/'),
-            'view' => Pages\ViewModule::route('/{record}'),
+            'index' => ListModules::route('/'),
+            'view' => ViewModule::route('/{record}'),
         ];
     }
 }

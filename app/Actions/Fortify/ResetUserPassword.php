@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +18,8 @@ class ResetUserPassword implements ResetsUserPasswords
      * Validate and reset the user's forgotten password.
      *
      * @param  array<string, string>  $input
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Exception
+     * @throws ValidationException
+     * @throws Exception
      */
     public function reset(User $user, array $input): void
     {
@@ -32,7 +33,7 @@ class ResetUserPassword implements ResetsUserPasswords
             ])->save();
 
             Log::info('User password reset successfully', ['user_id' => $user->id]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             Log::error('Password reset validation failed', [
                 'user_id' => $user->id,
                 'errors' => $e->errors(),

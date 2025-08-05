@@ -2,6 +2,8 @@
 
 namespace App\Modules;
 
+use ReflectionClass;
+use Artisan;
 use App\Modules\Contracts\ModuleInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -131,7 +133,7 @@ abstract class BaseModule implements ModuleInterface
      */
     protected function getModulePath(): string
     {
-        $reflection = new \ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
         return dirname($reflection->getFileName());
     }
 
@@ -143,7 +145,7 @@ abstract class BaseModule implements ModuleInterface
         $migrationsPath = $this->getModulePath() . '/database/migrations';
         
         if (File::exists($migrationsPath)) {
-            \Artisan::call('migrate', [
+            Artisan::call('migrate', [
                 '--path' => 'app/Modules/' . $this->name . '/database/migrations',
                 '--force' => true,
             ]);
@@ -164,7 +166,7 @@ abstract class BaseModule implements ModuleInterface
      */
     protected function publishAssets(): void
     {
-        \Artisan::call('vendor:publish', [
+        Artisan::call('vendor:publish', [
             '--tag' => strtolower($this->name) . '-assets',
             '--force' => true,
         ]);
