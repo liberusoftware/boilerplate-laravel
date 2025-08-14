@@ -11,7 +11,7 @@
         "autoprefixer": "^10.4.16",
         "laravel-vite-plugin": "^2.0.0",
         "postcss-nesting": "^13.0.2",
-        "tailwindcss": "^4.1.11",
+        "tailwindcss": "^4.1.12",
         "vite": "^7.0.6"
     },
     "dependencies": {
