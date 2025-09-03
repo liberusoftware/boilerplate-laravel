@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb39f81f56962b57a35cec3185296c64",
+    "content-hash": "bd526e8f544fea890df9047aaccab375",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2702,16 +2702,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.26.4",
+            "version": "v12.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "085a367a32ba86fcfa647bfc796098ae6f795b09"
+                "reference": "3fdcf8f3788fcb154df12ebf1fe0dd4a199e92a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/085a367a32ba86fcfa647bfc796098ae6f795b09",
-                "reference": "085a367a32ba86fcfa647bfc796098ae6f795b09",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3fdcf8f3788fcb154df12ebf1fe0dd4a199e92a8",
+                "reference": "3fdcf8f3788fcb154df12ebf1fe0dd4a199e92a8",
                 "shasum": ""
             },
             "require": {
@@ -2915,7 +2915,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-08-29T14:15:53+00:00"
+            "time": "2025-09-02T15:32:28+00:00"
         },
         {
             "name": "laravel/jetstream",
