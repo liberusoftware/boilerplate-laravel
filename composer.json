@@ -13,7 +13,7 @@
         "filament/filament": "~4.0",
         "guzzlehttp/guzzle": "^7.8",
         "joelbutcher/socialstream": "^6.0",
-        "laravel/framework": "12.26.4",
+        "laravel/framework": "12.28.0",
         "laravel/jetstream": "^5.1",
         "laravel/octane": "^2.3",
         "laravel/sanctum": "^4.0",
