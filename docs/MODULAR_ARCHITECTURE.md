@@ -276,14 +276,46 @@ Edit `config/modules.php` to customize:
 - Module discovery path
 - Caching settings
 - Auto-discovery behavior
-- Default enabled modules
+- Development mode (for debugging)
+- Module requirements (PHP 8.4, Laravel 12.0)
+
+### Module Persistence
+
+Module metadata and state are persisted in the `modules` database table. This ensures:
+- Module enabled/disabled state is maintained across requests
+- Version and dependency information is tracked
+- Configuration is stored in the database
+
+Run the migration to create the modules table:
+```bash
+php artisan migrate
+```
+
+### Module Events
+
+The module system dispatches lifecycle events:
+- `ModuleEnabled` - When a module is enabled
+- `ModuleDisabled` - When a module is disabled
+- `ModuleInstalled` - When a module is installed
+- `ModuleUninstalled` - When a module is uninstalled
+
+You can listen to these events to react to module state changes.
 
 ### Environment Variables
 
 ```env
 MODULES_CACHE=true
+MODULES_DEVELOPMENT=false
 APP_DEBUG=false
 ```
+
+### Autoload Helper
+
+After creating or modifying modules, run:
+```bash
+php artisan module:dump-autoload
+```
+This refreshes the Composer autoload mapping for module classes.
 
 ## Troubleshooting
 
