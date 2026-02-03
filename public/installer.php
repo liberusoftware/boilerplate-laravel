@@ -60,7 +60,9 @@ if (!check_key()) {
         // redirect with key in query for convenient requests (short-lived)
         $key = urlencode($_POST['key']);
         $uri = strtok($_SERVER["REQUEST_URI"], '?');
-        header("Location: {$uri}?key={$key}");
+        header("Location: {
+$uri}?key={
+$key}");
         exit;
     }
     echo '<!doctype html><html><body style="font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif">';
@@ -105,6 +107,7 @@ if ($action) {
         'npm_build',
         'save_settings',
         'create_users',
+        'test_db',
         'status',
     ];
     if (!in_array($action, $allowed, true)) {
@@ -184,6 +187,14 @@ if ($action) {
             $appUrl = $body['app_url'] ?? null;
             $adminEmail = $body['admin_email'] ?? null;
 
+            // DB fields (optional)
+            $dbConnection = $body['db_connection'] ?? null;
+            $dbHost = $body['db_host'] ?? null;
+            $dbPort = $body['db_port'] ?? null;
+            $dbDatabase = $body['db_database'] ?? null;
+            $dbUsername = $body['db_username'] ?? null;
+            $dbPassword = $body['db_password'] ?? null;
+
             $envPath = $projectRoot . '/.env';
             if (!file_exists($envPath)) {
                 // create
@@ -194,6 +205,14 @@ if ($action) {
                 'APP_NAME' => $appName,
                 'APP_URL' => $appUrl,
                 'ADMIN_EMAIL' => $adminEmail,
+
+                // Persist DB values (new)
+                'DB_CONNECTION' => $dbConnection,
+                'DB_HOST' => $dbHost,
+                'DB_PORT' => $dbPort,
+                'DB_DATABASE' => $dbDatabase,
+                'DB_USERNAME' => $dbUsername,
+                'DB_PASSWORD' => $dbPassword,
             ];
             foreach ($replacements as $k => $v) {
                 if ($v === null || $v === '') continue;
@@ -214,6 +233,45 @@ if ($action) {
             exit;
         }
 
+        if ($action === 'test_db') {
+            // Accept JSON body with DB params (do not persist), or fall back to .env values
+            $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+            $dbConnection = $body['db_connection'] ?? dotenv_get('DB_CONNECTION') ?: 'mysql';
+            $dbHost = $body['db_host'] ?? dotenv_get('DB_HOST') ?: '127.0.0.1';
+            $dbPort = $body['db_port'] ?? dotenv_get('DB_PORT') ?: ($dbConnection === 'pgsql' ? '5432' : '3306');
+            $dbDatabase = $body['db_database'] ?? dotenv_get('DB_DATABASE') ?: '';
+            $dbUsername = $body['db_username'] ?? dotenv_get('DB_USERNAME') ?: '';
+            $dbPassword = $body['db_password'] ?? dotenv_get('DB_PASSWORD') ?? '';
+
+            try {
+                $dsn = '';
+                if (strpos($dbConnection, 'mysql') !== false) {
+                    $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbDatabase};charset=utf8mb4";
+                } elseif (strpos($dbConnection, 'pgsql') !== false || strpos($dbConnection, 'postgres') !== false) {
+                    $dsn = "pgsql:host={$dbHost};port={$dbPort};dbname={$dbDatabase}";
+                } else {
+                    // Try generic PDO DSN, but most likely unsupported
+                    echo json_encode(['ok' => false, 'message' => 'Unsupported DB_CONNECTION: ' . $dbConnection]);
+                    exit;
+                }
+                // Try connecting with PDO
+                $opts = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
+                if (defined('PDO::ATTR_TIMEOUT')) $opts[PDO::ATTR_TIMEOUT] = 5;
+                $pdo = new PDO($dsn, $dbUsername, $dbPassword, $opts);
+                // simple query to ensure connection usable
+                if (strpos($dbConnection, 'mysql') !== false) {
+                    $pdo->exec('SELECT 1');
+                } else {
+                    $pdo->query('SELECT 1');
+                }
+                echo json_encode(['ok' => true, 'message' => 'Connection successful']);
+                exit;
+            } catch (Throwable $th) {
+                echo json_encode(['ok' => false, 'message' => 'Connection failed: ' . $th->getMessage()]);
+                exit;
+            }
+        }
+
         if ($action === 'create_users') {
             $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
             $users = $body['users'] ?? null;
@@ -232,7 +290,7 @@ if ($action) {
             }
             $scriptPath = $scriptDir . '/create_users.php';
             // Write helper script (idempotent)
-            $helper = <<<'PHP'
+            $helper = <<< 'PHP'
 <?php
 // storage/installer/create_users.php
 // Usage: php create_users.php <base64_json_of_users>
@@ -388,8 +446,27 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
               <input id="app_url" placeholder="https://example.com">
               <label style="margin-top:8px">Admin Email</label>
               <input id="admin_email" placeholder="admin@example.com">
+
+              <!-- Database settings (new) -->
+              <hr style="margin:12px 0">
+              <strong>Database</strong>
+              <label style="margin-top:8px">DB Connection</label>
+              <input id="db_connection" placeholder="mysql">
+              <label style="margin-top:8px">DB Host</label>
+              <input id="db_host" placeholder="127.0.0.1">
+              <label style="margin-top:8px">DB Port</label>
+              <input id="db_port" placeholder="3306">
+              <label style="margin-top:8px">DB Database</label>
+              <input id="db_database" placeholder="database_name">
+              <label style="margin-top:8px">DB Username</label>
+              <input id="db_username" placeholder="db_user">
+              <label style="margin-top:8px">DB Password</label>
+              <input id="db_password" type="password" placeholder="password">
+              <!-- end DB settings -->
+
               <div class="row" style="margin-top:8px;">
                 <button onclick="saveSettings()" class="btn-ghost">Save Settings</button>
+                <button onclick="testDb()" class="btn-ghost">Test DB connection</button>
               </div>
             </div>
           </div>
@@ -475,6 +552,14 @@ function saveSettings(){
     app_name: document.getElementById('app_name').value,
     app_url: document.getElementById('app_url').value,
     admin_email: document.getElementById('admin_email').value,
+
+    // DB fields (new)
+    db_connection: document.getElementById('db_connection').value,
+    db_host: document.getElementById('db_host').value,
+    db_port: document.getElementById('db_port').value,
+    db_database: document.getElementById('db_database').value,
+    db_username: document.getElementById('db_username').value,
+    db_password: document.getElementById('db_password').value,
   };
   append("Saving settings...");
   fetch(window.location.pathname + '?action=save_settings&key=' + encodeURIComponent(getKey()), {
@@ -484,7 +569,29 @@ function saveSettings(){
   }).then(r=>r.json()).then(j=>{
     append(JSON.stringify(j));
     checkStatus();
-  }).catch(e=>append("Error: "+e));
+  }).catch(e=>{
+    append("Save failed: " + e.message);
+  });
+}
+
+function testDb(){
+  const payload = {
+    db_connection: document.getElementById('db_connection').value,
+    db_host: document.getElementById('db_host').value,
+    db_port: document.getElementById('db_port').value,
+    db_database: document.getElementById('db_database').value,
+    db_username: document.getElementById('db_username').value,
+    db_password: document.getElementById('db_password').value,
+  };
+  append("Testing DB connection...");
+  fetch(window.location.pathname + '?action=test_db&key=' + encodeURIComponent(getKey()), {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).then(r=>r.json()).then(j=>{
+    append(JSON.stringify(j));
+    checkStatus();
+  }).catch(e=>append("Error: "+e.message));
 }
 
 function addUserRow(){
