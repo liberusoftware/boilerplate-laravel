@@ -58,7 +58,17 @@ abstract class BaseModule implements ModuleInterface
      */
     public function isEnabled(): bool
     {
-        return Cache::get("module.{$this->name}.enabled", false);
+        try {
+            $record = \App\Models\Module::findByName($this->getName());
+            if ($record !== null) {
+                return (bool) $record->enabled;
+            }
+        } catch (\Throwable $e) {
+            \Log::debug("Could not read module state from DB for {$this->getName()}: " . $e->getMessage());
+        }
+
+        // Fallback to property if present
+        return $this->config['enabled'] ?? false;
     }
 
     /**
@@ -66,8 +76,25 @@ abstract class BaseModule implements ModuleInterface
      */
     public function enable(): void
     {
-        Cache::put("module.{$this->name}.enabled", true);
-        $this->onEnable();
+        if ($this->isEnabled()) {
+            return;
+        }
+
+        // Run onEnable hook
+        if (method_exists($this, 'onEnable')) {
+            try {
+                $this->onEnable();
+            } catch (\Throwable $e) {
+                \Log::warning("onEnable failed for {$this->getName()}: " . $e->getMessage());
+            }
+        }
+
+        // Dispatch event
+        try {
+            event(new \App\Modules\Events\ModuleEnabled($this->getName()));
+        } catch (\Throwable $e) {
+            \Log::debug("Failed to dispatch ModuleEnabled event for {$this->getName()}: " . $e->getMessage());
+        }
     }
 
     /**
@@ -75,8 +102,23 @@ abstract class BaseModule implements ModuleInterface
      */
     public function disable(): void
     {
-        Cache::put("module.{$this->name}.enabled", false);
-        $this->onDisable();
+        if (!$this->isEnabled()) {
+            return;
+        }
+
+        if (method_exists($this, 'onDisable')) {
+            try {
+                $this->onDisable();
+            } catch (\Throwable $e) {
+                \Log::warning("onDisable failed for {$this->getName()}: " . $e->getMessage());
+            }
+        }
+
+        try {
+            event(new \App\Modules\Events\ModuleDisabled($this->getName()));
+        } catch (\Throwable $e) {
+            \Log::debug("Failed to dispatch ModuleDisabled event for {$this->getName()}: " . $e->getMessage());
+        }
     }
 
     /**

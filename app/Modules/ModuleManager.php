@@ -65,17 +65,31 @@ class ModuleManager
     public function enable(string $name): bool
     {
         $module = $this->get($name);
-        
+
         if (!$module) {
             return false;
         }
 
         // Check dependencies
         if (!$this->checkDependencies($module)) {
-            throw new Exception("Module {$name} has unmet dependencies.");
+            throw new \Exception("Module {$name} has unmet dependencies.");
         }
 
         $module->enable();
+
+        // Persist enabled state
+        try {
+            $mdl = \App\Models\Module::firstOrNew(['name' => $module->getName()]);
+            $mdl->enabled = true;
+            $mdl->version = $module->getVersion();
+            $mdl->description = $module->getDescription();
+            $mdl->dependencies = $module->getDependencies();
+            $mdl->config = $module->getConfig();
+            $mdl->save();
+        } catch (\Throwable $e) {
+            \Log::warning("Failed to persist enabled state for module '{$name}': " . $e->getMessage());
+        }
+
         return true;
     }
 
@@ -85,17 +99,27 @@ class ModuleManager
     public function disable(string $name): bool
     {
         $module = $this->get($name);
-        
+
         if (!$module) {
             return false;
         }
 
         // Check if other modules depend on this one
         if ($this->hasDependents($name)) {
-            throw new Exception("Cannot disable module {$name} as other modules depend on it.");
+            throw new \Exception("Cannot disable module {$name} as other modules depend on it.");
         }
 
         $module->disable();
+
+        // Persist enabled state
+        try {
+            $mdl = \App\Models\Module::firstOrNew(['name' => $module->getName()]);
+            $mdl->enabled = false;
+            $mdl->save();
+        } catch (\Throwable $e) {
+            \Log::warning("Failed to persist disabled state for module '{$name}': " . $e->getMessage());
+        }
+
         return true;
     }
 
@@ -172,12 +196,47 @@ class ModuleManager
     protected function loadModule(string $moduleName, string $modulePath): void
     {
         $moduleClass = "App\\Modules\\{$moduleName}\\{$moduleName}Module";
-        
+
+        // If class isn't autoloadable, try requiring the module main file directly.
+        if (!class_exists($moduleClass)) {
+            $mainFile = $modulePath . "/{$moduleName}Module.php";
+            if (File::exists($mainFile)) {
+                try {
+                    require_once $mainFile;
+                } catch (\Throwable $e) {
+                    \Log::warning("Failed requiring main file for module {$moduleName}: " . $e->getMessage());
+                }
+            }
+        }
+
         if (class_exists($moduleClass)) {
-            $module = new $moduleClass();
+            try {
+                $module = new $moduleClass();
+            } catch (\Throwable $e) {
+                \Log::warning("Failed instantiating module class {$moduleClass}: " . $e->getMessage());
+                return;
+            }
+
             if ($module instanceof ModuleInterface) {
                 $this->register($module);
+
+                // Persist module metadata to DB (create or update)
+                try {
+                    \App\Models\Module::updateOrCreate(
+                        ['name' => $module->getName()],
+                        [
+                            'version' => $module->getVersion(),
+                            'description' => $module->getDescription(),
+                            'dependencies' => $module->getDependencies(),
+                            'config' => $module->getConfig(),
+                        ]
+                    );
+                } catch (\Throwable $e) {
+                    \Log::warning("Failed to persist module '{$moduleName}' metadata: " . $e->getMessage());
+                }
             }
+        } else {
+            \Log::warning("Module class {$moduleClass} not found for module path {$modulePath}.");
         }
     }
 
