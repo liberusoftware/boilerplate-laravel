@@ -1,10 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import '/vendor/filament/filament/resources/css/theme.css';
+@config './tailwind.config.js';
 
+@import 'tailwindcss';
 
-@config 'tailwind.config.js';
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
 
 /* .fi-body {
     background-color: #ebebeb !important;

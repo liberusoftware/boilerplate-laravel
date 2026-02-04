@@ -8,20 +8,20 @@
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
             @if (Laravel\Fortify\Features::canUpdateProfileInformation())
-                @livewire(\Laravel\Jetstream\Http\Livewire\UpdateProfileInformationForm::class)
+                <livewire:profile.update-profile-information-form />
 
                 <x-section-border />
             @endif
 
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()) && ! is_null($user->getAuthPassword()))
                 <div class="mt-10 sm:mt-0">
-                    @livewire(\Laravel\Jetstream\Http\Livewire\UpdatePasswordForm::class)
+                    <livewire:profile.update-password-form />
                 </div>
 
                 <x-section-border />
             @else
                 <div class="mt-10 sm:mt-0">
-                    @livewire(\Laravel\Jetstream\Http\Livewire\SetPasswordForm::class)
+                    <livewire:profile.set-password-form />
                 </div>
 
                 <x-section-border />
@@ -29,7 +29,7 @@
 
             @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication() && ! is_null($user->getAuthPassword()))
                 <div class="mt-10 sm:mt-0">
-                    @livewire(\Laravel\Jetstream\Http\Livewire\TwoFactorAuthenticationForm::class)
+                    <livewire:profile.two-factor-authentication-form />
                 </div>
 
                 <x-section-border />
@@ -37,7 +37,7 @@
 
             @if (JoelButcher\Socialstream\Socialstream::show())
                 <div class="mt-10 sm:mt-0">
-                    @livewire(\Laravel\Jetstream\Http\Livewire\ConnectedAccountsForm::class)
+                    <livewire:profile.connected-accounts-form />
                 </div>
             @endif
 
@@ -46,7 +46,7 @@
                 <x-section-border />
 
                 <div class="mt-10 sm:mt-0">
-                    @livewire(\Laravel\Jetstream\Http\Livewire\LogoutOtherBrowserSessionsForm::class)
+                    <livewire:profile.logout-other-browser-sessions-form />
                 </div>
             @endif
 
@@ -54,7 +54,7 @@
                 <x-section-border />
 
                 <div class="mt-10 sm:mt-0">
-                    @livewire(\Laravel\Jetstream\Http\Livewire\DeleteUserForm::class)
+                    <livewire:profile.delete-user-form />
                 </div>
             @endif
         </div>
