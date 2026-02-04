@@ -6,6 +6,11 @@
 ![Filament 4.0](https://img.shields.io/badge/Filament-4.0-informational?style=flat)
 ![Livewire 3.5](https://img.shields.io/badge/Livewire-3.5-informational?style=flat&color=fb70a9)
 
+[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg)](hhttps://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml)
+[![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/workflows/tests.yml)
+[![Docker](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/liberusoftware/boilerplate-laravel/graph/badge.svg?token=K7TWB1QF1L)](https://codecov.io/gh/liberusoftware/boilerplate-laravel)
+
 A production-ready SaaS starter built with Laravel 12, PHP 8.4, Filament, Livewire, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications.
 
 Website: https://www.liberu.co.uk
