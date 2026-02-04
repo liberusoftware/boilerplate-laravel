@@ -7,7 +7,7 @@
 
     <div>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            @livewire('api.api-token-manager')
+            @livewire(\Laravel\Jetstream\Http\Livewire\ApiTokenManager::class)
         </div>
     </div>
 </x-app-layout>
