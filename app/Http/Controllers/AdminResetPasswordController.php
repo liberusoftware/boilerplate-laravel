@@ -42,8 +42,3 @@ class AdminResetPasswordController extends AuthenticatedSessionController
             : back()->withErrors(['email' => [__($status)]]);
     }
 }
-
-class ResetPasswordController extends AdminResetPasswordController
-{
-    // Thin shim for backwards compatibility with older references.
-}

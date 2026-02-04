@@ -39,8 +39,3 @@ class AdminLoginController extends Controller
         return redirect('/admin/login');
     }
 }
-
-class LoginController extends AdminLoginController
-{
-    // Thin shim for backwards compatibility with older references.
-}

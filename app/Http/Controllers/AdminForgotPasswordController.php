@@ -26,8 +26,3 @@ class AdminForgotPasswordController extends AuthenticatedSessionController
             : back()->withErrors(['email' => __($status)]);
     }
 }
-
-class ForgotPasswordController extends AdminForgotPasswordController
-{
-    // Thin shim for backwards compatibility with older references.
-}
