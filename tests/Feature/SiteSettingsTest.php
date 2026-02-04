@@ -1,15 +1,22 @@
 <?php
 
-use App\Models\SiteSettings;
+use App\Settings\SiteSettings;
 
-it('can create and read site settings model', function () {
-    $settings = SiteSettings::create([
-        'name' => 'Acme',
-        'email' => 'info@acme.test'
-    ]);
+beforeEach(function () {
+    config(['settings.driver' => 'array']);
+});
 
-    $found = SiteSettings::find($settings->id);
-    expect($found)->not->toBeNull();
-    expect($found->name)->toBe('Acme');
-    expect($found->email)->toBe('info@acme.test');
+it('can create and read site settings via Spatie typed settings', function () {
+    /** @var SiteSettings $settings */
+    $settings = app(SiteSettings::class);
+    $settings->site_name = 'Acme';
+    $settings->email = 'info@acme.test';
+
+    if (method_exists($settings, 'save')) {
+        $settings->save();
+    }
+
+    $loaded = app(SiteSettings::class);
+    expect($loaded->site_name)->toBe('Acme');
+    expect($loaded->email)->toBe('info@acme.test');
 });
