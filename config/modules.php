@@ -28,6 +28,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Development Mode
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, additional debugging information will be available
+    | and modules will be reloaded on each request.
+    |
+    */
+
+    'development' => env('MODULES_DEVELOPMENT', env('APP_DEBUG', false)),
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Modules
     |--------------------------------------------------------------------------
     |
@@ -62,93 +74,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Module Namespace
-    |--------------------------------------------------------------------------
-    |
-    | The base namespace for modules.
-    |
-    */
-
-    'namespace' => 'App\\Modules',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Enabled Modules
-    |--------------------------------------------------------------------------
-    |
-    | List of modules that should be enabled by default. This is useful
-    | for ensuring critical modules are always available.
-    |
-    */
-
-    'enabled' => [
-        // 'ExampleModule',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Module Assets
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for module assets publishing.
-    |
-    */
-
-    'assets' => [
-        'path' => public_path('modules'),
-        'url' => '/modules',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Module Views
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for module views.
-    |
-    */
-
-    'views' => [
-        'namespace_prefix' => 'module',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Module Translations
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for module translations.
-    |
-    */
-
-    'translations' => [
-        'namespace_prefix' => 'module',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Development Mode
-    |--------------------------------------------------------------------------
-    |
-    | When enabled, additional debugging information will be available
-    | and modules will be reloaded on each request.
-    |
-    */
-
-    'development' => env('APP_DEBUG', false),
-
-    /*
-    |--------------------------------------------------------------------------
     | Module Requirements
     |--------------------------------------------------------------------------
     |
-    | Global requirements that all modules must meet.
+    | Global requirements that modules must meet.
     |
     */
 
     'requirements' => [
-        'php' => '8.1',
-        'laravel' => '11.0',
+        'php' => '8.4',
+        'laravel' => '12.0',
     ],
 
 ];
