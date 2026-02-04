@@ -19,7 +19,8 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^4.0",
-        "raza9798/siteconfig": "^3.2",
+        "spatie/laravel-settings": "^3.0",
+        "filament/spatie-laravel-settings-plugin": "^1.0",
         "spatie/laravel-menu": "^4.2",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0"

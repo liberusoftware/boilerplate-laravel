@@ -3,19 +3,22 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\SiteSettings;
+use App\Settings\SiteSettings;
 
 class SiteSettingsSeeder extends Seeder
 {
     public function run()
     {
-        SiteSettings::create([
-            'name' => config('app.name', 'Liberu Real Estate'),
-            'currency' => '£',
-            'default_language' => 'en',
-            'address' => '123 Real Estate St, London, UK',
-            'country' => 'United Kingdom',
-            'email' => 'info@liberurealestate.com',
-        ]);
+        $settings = app(SiteSettings::class);
+        $settings->site_name = config('app.name', 'Liberu Real Estate');
+        $settings->currency = '£';
+        $settings->default_language = 'en';
+        $settings->address = '123 Real Estate St, London, UK';
+        $settings->country = 'United Kingdom';
+        $settings->email = 'info@liberurealestate.com';
+
+        if (method_exists($settings, 'save')) {
+            $settings->save();
+        }
     }
 }
