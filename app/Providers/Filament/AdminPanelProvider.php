@@ -96,11 +96,12 @@ class AdminPanelProvider extends PanelProvider
         }
 
         if (class_exists(\Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::class)) {
-            $panel->plugins([\Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::make()
-                ->settings([
-                    \App\Settings\SiteSettings::class,
-                ])
-            );
+            $panel->plugins([
+                \Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::make()
+                    ->settings([
+                        \App\Settings\SiteSettings::class,
+                    ]),
+            ]);
         }
 
         return $panel;
