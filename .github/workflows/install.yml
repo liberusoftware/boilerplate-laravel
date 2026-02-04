@@ -35,8 +35,8 @@ jobs:
       run: cp .env.testing .env
       
     - name: Install dependencies
-      run: composer install
-      
+      run: composer install --with-all-dependencies --no-interaction
+
     - name: Generate application key
       run: php artisan key:generate
       

@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-abstract class TestCase extends BaseTestCase
+class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
+    // Minimal base TestCase for Pest unit tests that don't require Laravel bootstrapping.
 }

@@ -16,7 +16,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: mbstring, bcmath, pdo, mysql, dom, curl
 
       - name: Start database
@@ -29,7 +29,7 @@ jobs:
         run: cp .env.testing .env
 
       - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
+        run: composer install --no-progress --prefer-dist --with-all-dependencies
 
       - name: Generate application key
         run: php artisan key:generate
@@ -48,7 +48,7 @@ jobs:
         run: php artisan db:seed
 
       - name: Run tests
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: vendor/bin/pest --coverage --coverage-clover=coverage.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

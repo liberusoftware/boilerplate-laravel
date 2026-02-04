@@ -165,8 +165,13 @@ Sail notes:
 Running tests
 -------------
 This repository includes automated tests (see /tests). Run tests with:
+
 ```bash
-# Local
+# Local (uses Pest)
+composer install --dev
+vendor/bin/pest
+
+# Or via Laravel's test runner which proxies to Pest
 php artisan test
 
 # With Sail
