@@ -1,138 +1,224 @@
-# [Liberu Software - Laravel 12, Filament 4.0, Livewire, Jetstream SaaS Boilerplate](https://www.liberu.co.uk) ![Open Source Love](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)
+# Liberu Software — Laravel 12 SaaS Boilerplate
 
-![](https://img.shields.io/badge/PHP-8.4-informational?style=flat&logo=php&color=4f5b93)
-![](https://img.shields.io/badge/Laravel-12-informational?style=flat&logo=laravel&color=ef3b2d)
-![](https://img.shields.io/badge/Filament-4.0-informational?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48cGF0aCBkPSJNMCAwaDQ4djQ4SDBWMHoiIGZpbGw9IiNmNGIyNWUiLz48cGF0aCBkPSJNMjggN2wtMSA2LTMuNDM3LjgxM0wyMCAxNWwtMSAzaDZ2NWgtN2wtMyAxOEg4Yy41MTUtNS44NTMgMS40NTQtMTEuMzMgMy0xN0g4di01bDUtMSAuMjUtMy4yNUMxNCAxMSAxNCAxMSAxNS40MzggOC41NjMgMTkuNDI5IDYuMTI4IDIzLjQ0MiA2LjY4NyAyOCA3eiIgZmlsbD0iIzI4MjQxZSIvPjxwYXRoIGQ9Ik0zMCAxOGg0YzIuMjMzIDUuMzM0IDIuMjMzIDUuMzM0IDEuMTI1IDguNUwzNCAyOWMtLjE2OCAzLjIwOS0uMTY4IDMuMjA5IDAgNmwtMiAxIDEgM2gtNXYyaC0yYy44NzUtNy42MjUuODc1LTcuNjI1IDItMTFoMnYtMmgtMnYtMmwyLTF2LTQtM3oiIGZpbGw9IiMyYTIwMTIiLz48cGF0aCBkPSJNMzUuNTYzIDYuODEzQzM4IDcgMzggNyAzOSA4Yy4xODggMi40MzguMTg4IDIuNDM4IDAgNWwtMiAyYy0yLjYyNS0uMzc1LTIuNjI1LS4zNzUtNS0xLS42MjUtMi4zNzUtLjYyNS0yLjM3NS0xLTUgMi0yIDItMiA0LjU2My0yLjE4N3oiIGZpbGw9IiM0MDM5MzEiLz48cGF0aCBkPSJNMzAgMThoNGMyLjA1NSA1LjMxOSAyLjA1NSA1LjMxOSAxLjgxMyA4LjMxM0wzNSAyOGwtMyAxdi0ybC00IDF2LTJsMi0xdi00LTN6IiBmaWxsPSIjMzEyODFlIi8+PHBhdGggZD0iTTI5IDI3aDN2MmgydjJoLTJ2MmwtNC0xdi0yaDJsLTEtM3oiIGZpbGw9IiMxNTEzMTAiLz48cGF0aCBkPSJNMzAgMThoNHYzaC0ydjJsLTMgMSAxLTZ6IiBmaWxsPSIjNjA0YjMyIi8+PC9zdmc+&&color=fdae4b&link=https://filamentphp.com)
-![Jetstream](https://img.shields.io/badge/Jetstream-5-purple.svg)
-![Socialite](https://img.shields.io/badge/Socialite-latest-brightgreen.svg)
-![](https://img.shields.io/badge/Livewire-3.5-informational?style=flat&logo=Livewire&color=fb70a9)
-![](https://img.shields.io/badge/JavaScript-ECMA2020-informational?style=flat&logo=JavaScript&color=F7DF1E)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![PHP 8.4](https://img.shields.io/badge/PHP-8.4-informational?style=flat&logo=php&color=4f5b93)
+![Laravel 12](https://img.shields.io/badge/Laravel-12-informational?style=flat&logo=laravel&color=ef3b2d)
+![Filament 4.0](https://img.shields.io/badge/Filament-4.0-informational?style=flat)
+![Livewire 3.5](https://img.shields.io/badge/Livewire-3.5-informational?style=flat&color=fb70a9)
 
+A production-ready SaaS starter built with Laravel 12, PHP 8.4, Filament, Livewire, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications.
 
-[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml)
-[![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml)
-[![Docker](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml)
+Website: https://www.liberu.co.uk
 
+---
 
-# [Managed web hosting for our application packages](https://liberu.co.uk)
+Table of contents
+- Overview
+- Key features
+- Prerequisites
+- Standard (local) install
+- Docker / Sail install
+- Running tests
+- Troubleshooting
+- Contributing
+- License
 
+---
 
-## Overview
+Overview
+--------
+This repository provides a modern Laravel-based boilerplate with common SaaS building blocks: authentication (Jetstream), admin (Filament), real-time interactions (Livewire), social login (Socialite), user profiles, notifications, messaging and more. It's structured to be extensible and production-oriented.
 
-*  User Authentication: Secure login and registration with Jetstream.
-* Profiles: Customizable user profiles with avatars and bio information.
-* Real-Time Notifications: Stay updated with real-time in-app notifications.
-* Private Messaging: Direct messaging between users.
-* Search: Find users, posts, and groups easily with powerful search functionality.
-* Admin Panel: Manage users, posts, and settings with Filament.
-* Responsive Design: Optimized for both desktop and mobile devices.
-* Extensible: Modular architecture for easy feature extension and customization.
+Key features
+------------
+- Jetstream authentication and user profiles
+- Filament admin panel for resource management
+- Livewire-powered UI for reactive components
+- Social login via Socialite
+- Database seeders and example data (optional)
+- Docker and Laravel Sail support for containerized development
 
-## Our Projects
+Prerequisites
+-------------
+- PHP 8.4
+- Composer
+- Node.js (recommended: LTS) and npm or yarn (for front-end assets)
+- MySQL / PostgreSQL or another supported DB
+- Docker (if using Docker or Sail)
 
-* https://github.com/liberu-accounting/accounting-laravel
-* https://github.com/liberu-automation/automation-laravel
-* https://github.com/liberu-billing/billing-laravel
-* https://github.com/liberusoftware/boilerplate
-* https://github.com/liberu-browser-game/browser-game-laravel
-* https://github.com/liberu-cms/cms-laravel
-* https://github.com/liberu-control-panel/control-panel-laravel
-* https://github.com/liberu-crm/crm-laravel
-* https://github.com/liberu-ecommerce/ecommerce-laravel
-* https://github.com/liberu-genealogy/genealogy-laravel
-* https://github.com/liberu-maintenance/maintenance-laravel
-* https://github.com/liberu-real-estate/real-estate-laravel
-* https://github.com/liberu-social-network/social-network-laravel
+Standard (local) install
+------------------------
+These steps assume you want to run the application on your machine (not in Docker). They are intentionally clear and safe — back up any existing .env before overriding.
 
+1. Clone the repo
+   ```bash
+   git clone https://github.com/liberusoftware/boilerplate-laravel.git
+   cd boilerplate-laravel
+   ```
 
-## Setup
+2. Install PHP dependencies
+   ```bash
+   composer install
+   ```
 
-1. Ensure your environment is set up with PHP 8.3 and Composer installed.
-2. Download the project files from this GitHub repository.
-3. Open a terminal in the project folder. If you are on Windows and have Git Bash installed, you can use it for the following steps.
-4. Run the following command:
+3. Copy the example env and configure
+   ```bash
+   cp .env.example .env
+   # Edit .env to set DB_*, APP_URL and other settings
+   ```
 
+4. Generate application key
+   ```bash
+   php artisan key:generate
+   ```
+
+5. Install front-end dependencies (if you plan to build assets)
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
+
+6. Build front-end assets (development or production)
+   ```bash
+   npm run dev   # development
+   npm run build # production
+   ```
+
+7. Run migrations and seeders
+   - IMPORTANT: Seeders will add example data. Skip seeding if you don't want that.
+   ```bash
+   php artisan migrate
+   # When you want seed data:
+   php artisan migrate --seed
+   ```
+
+8. Run the application
+   ```bash
+   php artisan serve --host=127.0.0.1 --port=8000
+   ```
+   Open: http://127.0.0.1:8000 (or your configured APP_URL)
+
+Optional: Setup script
+- This repository includes a convenience script `setup.sh` that runs common steps automatically. The script will prompt before overwriting `.env`. Use it only if you accept the actions it performs.
 ```bash
 ./setup.sh
 ```
 
-and everything should be installed automatically if you are using Linux you just run the script as you normally run scripts in the terminal.
+Notes
+- Configure mail and social provider settings in `.env` for production use.
+- If you use a different DB (e.g., PostgreSQL), update `.env` accordingly.
 
-NOTE 1: The script will ask you if you want to have your .env be overwritten by .env.example, in case you have already an .env configuration available please answer with "n" (No).
+Docker install
+--------------
+Two recommended Docker approaches are provided: manual Docker image and Laravel Sail.
 
-NOTE 2: This script will run seeders, please make sure you are aware of this and don't run this script if you don't want this to happen.
-```bash
-composer install
-php artisan key:generate
-php artisan migrate --seed
-```
-This will install the necessary dependencies, generate an application key, and set up your database with initial data.
-
-NOTE 3: Ensure your `.env` file is correctly configured with your database connection details before running migrations.
-
-## Building with Docker
-
-Alternatively, you can build and run the project using Docker. To build the Dockerfile, follow these steps:
-
-1. Ensure you have Docker installed on your system.
-2. Open a terminal in the project folder.
-3. Run the following command to build the Docker image:
-   ```
+A. Using the repository Dockerfile (image build)
+1. Build the image from the project root:
+   ```bash
    docker build -t boilerplate-laravel .
    ```
-4. Once the image is built, you can run the container with:
+2. Create an env file for the container or use your `.env`:
+   ```bash
+   # Ensure .env contains correct DB and APP_URL values
    ```
-   docker run -p 8000:8000 boilerplate-laravel
+3. Run the container (example: mapped port 8000):
+   ```bash
+   docker run --name boilerplate-app --env-file .env -p 8000:8000 -d boilerplate-laravel
    ```
-
-NOTE 3: Ensure your `.env` file is correctly configured with your database connection details before running migrations.
-
-### Using Laravel Sail
-
-This project also includes support for Laravel Sail, which provides a Docker-based development environment. To use Laravel Sail, follow these steps:
-
-1. Ensure you have Docker installed on your system.
-2. Open a terminal in the project folder.
-3. Run the following command to start the Laravel Sail environment:
+4. Run migrations inside the running container:
+   ```bash
+   docker exec -it boilerplate-app php artisan migrate --seed
    ```
-   ./vendor/bin/sail up
+5. Visit: http://localhost:8000
+
+Notes for Docker image:
+- When building a standalone image, ensure your Dockerfile handles running queue workers, scheduler, and any entrypoint tasks you need. For development, using docker run with volume mounts can be more convenient.
+
+B. Recommended: Use Laravel Sail (Docker Compose wrapper)
+1. Start Sail from project root:
+   ```bash
+   # Linux / macOS
+   ./vendor/bin/sail up -d
+   # Windows (PowerShell)
+   vendor/bin/sail up -d
    ```
-4. Once the containers are running, you can access the application at `http://localhost`.
-5. To stop the Sail environment, press `Ctrl+C` in the terminal.
+2. Run migrations and seeders using Sail:
+   ```bash
+   ./vendor/bin/sail artisan migrate --seed
+   ```
+3. Build front-end assets inside Sail (if needed):
+   ```bash
+   ./vendor/bin/sail npm install
+   ./vendor/bin/sail npm run dev
+   ```
+4. Visit: http://localhost
 
-For more information on using Laravel Sail, refer to the [official documentation](https://laravel.com/docs/sail).
+Sail notes:
+- Sail creates a complete development environment with services (DB, Redis, mailhog) and is the recommended containerized development workflow.
 
+Running tests
+-------------
+This repository includes automated tests (see /tests). Run tests with:
+```bash
+# Local
+php artisan test
 
-### Description
+# With Sail
+./vendor/bin/sail test
+```
 
-### Licensed under MIT, use for any personal or commercial project.
+Troubleshooting
+---------------
+- "Permission denied" when running storage or bootstrap cache: adjust filesystem ownership
+  ```bash
+  sudo chown -R $USER:www-data storage bootstrap/cache
+  chmod -R 775 storage bootstrap/cache
+  ```
+- DB connection errors: verify `.env` DB_* values and ensure the DB service is running (Sail or local).
+- If assets not updating: clear caches
+  ```bash
+  php artisan config:clear
+  php artisan cache:clear
+  php artisan view:clear
+  ```
 
-<!--/h-->
+Contributing
+------------
+Contributions are welcome. If you'd like to contribute:
+1. Fork the repository
+2. Create a feature branch
+3. Make changes and add tests where applicable
+4. Open a pull request describing your changes
 
-## Demostration website
-<!--/h-->
+Please follow the repository's code style and include clear commit messages.
 
-### Contributions
+License
+-------
+This project is licensed under the MIT License — use it in personal or commercial projects.
 
-We warmly welcome new contributions from the community! We believe in the power of collaboration and appreciate any involvement you'd like to have in improving our project. Whether you prefer submitting pull requests with code enhancements or raising issues to help us identify areas of improvement, we value your participation.
+Credits & Related Projects
+--------------------------
+- Liberu Software: https://www.liberu.co.uk
 
-If you have code changes or feature enhancements to propose, pull requests are a fantastic way to share your ideas with us. We encourage you to fork the project, make the necessary modifications, and submit a pull request for our review. Our team will diligently review your changes and work together with you to ensure the highest quality outcome.
+## Related projects
 
-However, we understand that not everyone is comfortable with submitting code directly. If you come across any issues or have suggestions for improvement, we greatly appreciate your input. By raising an issue, you provide valuable insights that help us identify and address potential problems or opportunities for growth.
+The Liberu ecosystem contains a number of companion repositories and packages that extend or demonstrate functionality used in this boilerplate. Below is a concise, professional list of those projects with quick descriptions — follow the links to learn more or to contribute.
 
-Whether through pull requests or issues, your contributions play a vital role in making our project even better. We believe in fostering an inclusive and collaborative environment where everyone's ideas are valued and respected.
+| Project | Repository | Short description |
+|---|---:|---|
+| Accounting | [liberu-accounting/accounting-laravel](https://github.com/liberu-accounting/accounting-laravel) | Accounting and invoicing features tailored for Laravel applications. |
+| Automation | [liberu-automation/automation-laravel](https://github.com/liberu-automation/automation-laravel) | Automation tooling and workflow integrations for Laravel projects. |
+| Billing | [liberu-billing/billing-laravel](https://github.com/liberu-billing/billing-laravel) | Subscription and billing management integrations (payments, invoices). |
+| Boilerplate (core) | [liberusoftware/boilerplate](https://github.com/liberusoftware/boilerplate) | Core starter and shared utilities used across Liberu projects. |
+| Browser Game | [liberu-browser-game/browser-game-laravel](https://github.com/liberu-browser-game/browser-game-laravel) | Example Laravel-based browser game platform and mechanics. |
+| CMS | [liberu-cms/cms-laravel](https://github.com/liberu-cms/cms-laravel) | Content management features and modular page administration. |
+| Control Panel | [liberu-control-panel/control-panel-laravel](https://github.com/liberu-control-panel/control-panel-laravel) | Administration/control-panel components for managing services. |
+| CRM | [liberu-crm/crm-laravel](https://github.com/liberu-crm/crm-laravel) | Customer relationship management features and integrations. |
+| E‑commerce | [liberu-ecommerce/ecommerce-laravel](https://github.com/liberu-ecommerce/ecommerce-laravel) | E‑commerce storefront, product and order management. |
+| Genealogy | [liberu-genealogy/genealogy-laravel](https://github.com/liberu-genealogy/genealogy-laravel) | Family tree and genealogy features built on Laravel. |
+| Maintenance | [liberu-maintenance/maintenance-laravel](https://github.com/liberu-maintenance/maintenance-laravel) | Scheduling, tracking and reporting for maintenance tasks. |
+| Real Estate | [liberu-real-estate/real-estate-laravel](https://github.com/liberu-real-estate/real-estate-laravel) | Property listings and real-estate management features. |
+| Social Network | [liberu-social-network/social-network-laravel](https://github.com/liberu-social-network/social-network-laravel) | Social features, profiles, feeds and messaging for Laravel apps. |
 
-We look forward to your involvement, and together, we can create a vibrant and thriving project. Thank you for considering contributing to our community!
-<!--/h-->
-
-### License
-
-This project is licensed under the MIT license, granting you the freedom to utilize it for both personal and commercial projects. The MIT license ensures that you have the flexibility to adapt, modify, and distribute the project as per your needs. Feel free to incorporate it into your own ventures, whether they are personal endeavors or part of a larger commercial undertaking. The permissive nature of the MIT license empowers you to leverage this project without any unnecessary restrictions. Enjoy the benefits of this open and accessible license as you embark on your creative and entrepreneurial pursuits.
-<!--/h-->
-
-## Contributors
-
-
-<a href = "https://github.com/liberusoftware/boilerplate-laravel/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo=liberusoftware/boilerplate-laravel"/>
+If you maintain or use one of these projects and would like a more detailed description or a different categorisation, open an issue or submit a pull request and we'll update the list. Contributions and cross-repo collaboration are warmly encouraged.
