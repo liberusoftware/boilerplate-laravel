@@ -3,6 +3,7 @@
     "file": "assets/app-tn0RQdqM.css",
     "src": "resources/css/app.css",
     "isEntry": true,
+    "name": "theme",
     "names": [
       "app.css",
       "theme.css"
@@ -12,6 +13,7 @@
     "file": "assets/app-tn0RQdqM.css",
     "src": "resources/css/app.css",
     "isEntry": true,
+    "name": "theme",
     "names": [
       "app.css",
       "theme.css"

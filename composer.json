@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.5",
+        "php": "^8.4",
         "bezhansalleh/filament-shield": "~4.0",
         "filament/filament": "~5.1",
         "guzzlehttp/guzzle": "^7.8",

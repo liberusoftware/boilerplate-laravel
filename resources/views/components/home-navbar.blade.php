@@ -22,7 +22,7 @@
         <div class="items-center hidden justify-between w-full  lg:flex lg:w-auto" id="navbar-cta">
             <ul
                 class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                {!! app(App\Services\MenuService::class)->buildMenu() !!}
+                {{-- {!! app(App\Services\MenuService::class)->buildMenu() !!} --}}
             </ul>
         </div>
 
@@ -66,7 +66,7 @@
 
     <div class="hidden lg:hidden" id="menuToggle">
         <ul class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-            {!! app(App\Services\MenuService::class)->buildMenu() !!}
+            {{-- {!! app(App\Services\MenuService::class)->buildMenu() !!} --}}
         </ul>
     </div>
 </nav>
