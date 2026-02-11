@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
 @section('content')
-    <div class="h-full flex flex-col sm:justify-center items-center pt-3 sm:pt-0 my-8">
+    <div class="h-full flex flex-col sm:justify-center items-center pt-15 sm:pt-5 my-20">
         <div class="w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
 
             <div class="mb-4 text-sm text-gray-600">
