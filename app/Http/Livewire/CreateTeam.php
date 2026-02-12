@@ -2,8 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Actions\Jetstream\CreateTeam;
+use App\Actions\Jetstream\CreateTeam as CreateTeamAction;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Http\Livewire\CreateTeamForm;
 
 class CreateTeam extends CreateTeamForm
@@ -13,11 +14,11 @@ class CreateTeam extends CreateTeamForm
      *
      * @return void
      */
-    public function createTeam()
+    public function createTeam(CreatesTeams $creator)
     {
         $this->validate();
 
-        $team = app(CreateTeam::class)->create(
+        $team = app(CreateTeamAction::class)->create(
             Auth::user(),
             ['name' => $this->state['name']]
         );
