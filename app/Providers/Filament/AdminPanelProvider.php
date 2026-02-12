@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\App\Pages;
+use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Http\Middleware\TeamsPermission;
 use App\Models\Team;
 use Filament\Facades\Filament;
@@ -89,20 +91,20 @@ class AdminPanelProvider extends PanelProvider
                     MenuItem::make()
                         ->label('Team Settings')
                         ->icon('heroicon-o-cog-6-tooth')
-                        ->url(fn () => $this->shouldRegisterMenuItem()
+                        ->url(fn() => $this->shouldRegisterMenuItem()
                             ? url(Pages\EditTeam::getUrl())
                             : url($panel->getPath())),
                 ]);
         }
 
-        if (class_exists(\Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::class)) {
-            $panel->plugins([
-                \Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::make()
-                    ->settings([
-                        \App\Settings\SiteSettings::class,
-                    ]),
-            ]);
-        }
+
+        $panel->plugins([
+            FilamentShieldPlugin::make()
+
+        ])->tenantMiddleware([
+            SyncShieldTenant::class,
+        ], isPersistent: true);
+
 
         return $panel;
     }

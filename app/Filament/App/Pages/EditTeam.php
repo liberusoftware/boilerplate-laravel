@@ -19,11 +19,6 @@ class EditTeam extends EditTenantProfile
         return 'Edit Team';
     }
 
-    public function mount(): void
-    {
-        abort_unless($this->user()->canCreateTeams(), 403);
-    }
-
     protected function getFormSchema(): array
     {
         return [
@@ -55,10 +50,5 @@ class EditTeam extends EditTenantProfile
         return [
             url()->current() => 'Create Team',
         ];
-    }
-
-    private function user(): User
-    {
-        return Filament::auth()->user();
     }
 }
