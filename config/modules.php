@@ -86,4 +86,31 @@ return [
         'laravel' => '12.0',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | External Module Paths
+    |--------------------------------------------------------------------------
+    |
+    | Additional paths to scan for modules. Useful for loading modules from
+    | composer packages or custom locations.
+    |
+    */
+
+    'external_paths' => [
+        // Add custom paths here, e.g.:
+        // base_path('vendor/your-vendor/your-package/modules'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Load Composer Modules
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, the system will automatically scan vendor packages for
+    | modules in their modules/ subdirectory.
+    |
+    */
+
+    'load_composer_modules' => env('MODULES_LOAD_COMPOSER', false),
+
 ];
