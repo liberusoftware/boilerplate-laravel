@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use JoelButcher\Socialstream\HasConnectedAccounts;
@@ -122,5 +123,21 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
     public function latestTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'current_team_id');
+    }
+
+    /**
+     * Get the messages sent by the user.
+     */
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    /**
+     * Get the messages received by the user.
+     */
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'recipient_id');
     }
 }
