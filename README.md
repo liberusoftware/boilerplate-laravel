@@ -49,13 +49,17 @@ Overview
 --------
 This repository provides a modern Laravel-based boilerplate with common SaaS building blocks: authentication (Jetstream), admin (Filament), real-time interactions (Livewire), social login (Socialite), user profiles, notifications, messaging and more. It's structured to be extensible and production-oriented.
 
+**New:** This boilerplate now includes a complete **Private Messaging System** that allows users to send secure, encrypted messages to each other. See [MESSAGING.md](MESSAGING.md) and [SETUP_MESSAGING.md](SETUP_MESSAGING.md) for detailed documentation.
+
 Key features
 ------------
-- Jetstream authentication and user profiles
+- Jetstream authentication and user profiles with avatar uploads
 - Filament admin panel for resource management
 - Livewire-powered UI for reactive components
 - Social login via Socialite
 - **Real-time notifications with Pusher/Laravel Echo** (see [docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md))
+- **Modular architecture** for easy custom module integration
+- **Private Messaging System** - Secure end-to-end encrypted messaging between users
 - Database seeders and example data (optional)
 - Docker and Laravel Sail support for containerized development
 
@@ -114,7 +118,12 @@ These steps assume you want to run the application on your machine (not in Docke
    php artisan migrate --seed
    ```
 
-8. Run the application
+8. Create storage symlink (required for profile photos)
+   ```bash
+   php artisan storage:link
+   ```
+
+9. Run the application
    ```bash
    php artisan serve --host=127.0.0.1 --port=8000
    ```
@@ -150,6 +159,7 @@ A. Using the repository Dockerfile (image build)
 4. Run migrations inside the running container:
    ```bash
    docker exec -it boilerplate-app php artisan migrate --seed
+   docker exec -it boilerplate-app php artisan storage:link
    ```
 5. Visit: http://localhost:8000
 
@@ -167,6 +177,7 @@ B. Recommended: Use Laravel Sail (Docker Compose wrapper)
 2. Run migrations and seeders using Sail:
    ```bash
    ./vendor/bin/sail artisan migrate --seed
+   ./vendor/bin/sail artisan storage:link
    ```
 3. Build front-end assets inside Sail (if needed):
    ```bash
@@ -208,6 +219,67 @@ Troubleshooting
   php artisan cache:clear
   php artisan view:clear
   ```
+
+Modular Architecture
+--------------------
+This boilerplate features a powerful modular architecture that allows you to easily create and integrate custom modules for specific project requirements.
+
+### Quick Start with Modules
+
+Create a new module:
+```bash
+php artisan module create YourModule
+```
+
+Manage modules:
+```bash
+php artisan module list              # List all modules
+php artisan module enable MyModule   # Enable a module
+php artisan module disable MyModule  # Disable a module
+php artisan module install MyModule  # Install a module (migrations + enable)
+php artisan module info MyModule     # Show module information
+```
+
+### Module Features
+
+- **Self-contained structure** - Each module has its own controllers, models, views, routes, migrations, and configuration
+- **Lifecycle hooks** - Enable, disable, install, and uninstall hooks for custom logic
+- **Dependency management** - Declare dependencies on other modules
+- **Hook system** - Extensible hook system for custom functionality
+- **Auto-discovery** - Modules are automatically discovered and registered
+- **Configuration management** - Easy configuration with the Configurable trait
+- **Database migrations** - Automatic migration running during installation
+- **Asset publishing** - Assets are automatically published to public directory
+
+### Documentation
+
+- [Module Development Guide](docs/MODULE_DEVELOPMENT.md) - Comprehensive guide for developing custom modules
+- [Quick Start Guide](docs/MODULE_QUICK_START.md) - Get started with modules in minutes
+- Example module: `app/Modules/BlogModule/` - Reference implementation
+
+### Module Structure
+
+```
+app/Modules/YourModule/
+├── YourModuleModule.php          # Main module class
+├── module.json                    # Module metadata
+├── Providers/
+│   └── YourModuleServiceProvider.php
+├── Http/Controllers/
+├── Models/
+├── Services/
+├── routes/
+│   ├── web.php
+│   ├── api.php
+│   └── admin.php
+├── database/migrations/
+├── resources/
+│   ├── views/
+│   ├── lang/
+│   └── assets/
+├── config/
+└── tests/
+```
 
 Contributing
 ------------
