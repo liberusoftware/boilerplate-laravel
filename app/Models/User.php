@@ -126,6 +126,30 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
     }
 
     /**
+     * Get the posts authored by the user.
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'author_id');
+    }
+
+    /**
+     * Get the groups owned by the user.
+     */
+    public function groups(): HasMany
+    {
+        return $this->hasMany(Group::class, 'owner_id');
+    }
+
+    /**
+     * Scope a query to search by name or email.
+     */
+    public function scopeSearch($query, string $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
      * Get the messages sent by the user.
      */
     public function sentMessages(): HasMany

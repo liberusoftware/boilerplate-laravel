@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Search API routes
+Route::prefix('search')->name('search.')->group(function () {
+    Route::get('/users', [SearchController::class, 'users'])->name('users');
+    Route::get('/posts', [SearchController::class, 'posts'])->name('posts');
+    Route::get('/groups', [SearchController::class, 'groups'])->name('groups');
+    Route::get('/all', [SearchController::class, 'all'])->name('all');
 Route::middleware('auth:sanctum')->group(function () {
     // Message routes
     Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index']);
