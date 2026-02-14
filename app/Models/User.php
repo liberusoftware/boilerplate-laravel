@@ -150,5 +150,18 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
             $q->where('name', 'like', "%{$search}%")
               ->orWhere('email', 'like', "%{$search}%");
         });
+     * Get the messages sent by the user.
+     */
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    /**
+     * Get the messages received by the user.
+     */
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'recipient_id');
     }
 }
