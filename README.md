@@ -55,6 +55,7 @@ Key features
 - Filament admin panel for resource management
 - Livewire-powered UI for reactive components
 - Social login via Socialite
+- **Modular architecture** for easy custom module integration
 - Database seeders and example data (optional)
 - Docker and Laravel Sail support for containerized development
 
@@ -207,6 +208,67 @@ Troubleshooting
   php artisan cache:clear
   php artisan view:clear
   ```
+
+Modular Architecture
+--------------------
+This boilerplate features a powerful modular architecture that allows you to easily create and integrate custom modules for specific project requirements.
+
+### Quick Start with Modules
+
+Create a new module:
+```bash
+php artisan module create YourModule
+```
+
+Manage modules:
+```bash
+php artisan module list              # List all modules
+php artisan module enable MyModule   # Enable a module
+php artisan module disable MyModule  # Disable a module
+php artisan module install MyModule  # Install a module (migrations + enable)
+php artisan module info MyModule     # Show module information
+```
+
+### Module Features
+
+- **Self-contained structure** - Each module has its own controllers, models, views, routes, migrations, and configuration
+- **Lifecycle hooks** - Enable, disable, install, and uninstall hooks for custom logic
+- **Dependency management** - Declare dependencies on other modules
+- **Hook system** - Extensible hook system for custom functionality
+- **Auto-discovery** - Modules are automatically discovered and registered
+- **Configuration management** - Easy configuration with the Configurable trait
+- **Database migrations** - Automatic migration running during installation
+- **Asset publishing** - Assets are automatically published to public directory
+
+### Documentation
+
+- [Module Development Guide](docs/MODULE_DEVELOPMENT.md) - Comprehensive guide for developing custom modules
+- [Quick Start Guide](docs/MODULE_QUICK_START.md) - Get started with modules in minutes
+- Example module: `app/Modules/BlogModule/` - Reference implementation
+
+### Module Structure
+
+```
+app/Modules/YourModule/
+├── YourModuleModule.php          # Main module class
+├── module.json                    # Module metadata
+├── Providers/
+│   └── YourModuleServiceProvider.php
+├── Http/Controllers/
+├── Models/
+├── Services/
+├── routes/
+│   ├── web.php
+│   ├── api.php
+│   └── admin.php
+├── database/migrations/
+├── resources/
+│   ├── views/
+│   ├── lang/
+│   └── assets/
+├── config/
+└── tests/
+```
 
 Contributing
 ------------
