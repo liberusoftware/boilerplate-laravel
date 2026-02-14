@@ -55,6 +55,7 @@ Key features
 - Filament admin panel for resource management
 - Livewire-powered UI for reactive components
 - Social login via Socialite
+- **Real-time notifications with Pusher/Laravel Echo** (see [docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md))
 - Database seeders and example data (optional)
 - Docker and Laravel Sail support for containerized development
 
