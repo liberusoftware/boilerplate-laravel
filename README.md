@@ -57,6 +57,7 @@ Key features
 - Filament admin panel for resource management
 - Livewire-powered UI for reactive components
 - Social login via Socialite
+- **Real-time notifications with Pusher/Laravel Echo** (see [docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md))
 - **Modular architecture** for easy custom module integration
 - **Private Messaging System** - Secure end-to-end encrypted messaging between users
 - Database seeders and example data (optional)
