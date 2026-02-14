@@ -5,11 +5,15 @@ namespace App\Modules;
 use ReflectionClass;
 use Artisan;
 use App\Modules\Contracts\ModuleInterface;
+use App\Modules\Traits\HasModuleHooks;
+use App\Modules\Traits\Configurable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 
 abstract class BaseModule implements ModuleInterface
 {
+    use HasModuleHooks, Configurable;
+
     protected string $name;
     protected string $version;
     protected string $description;
@@ -80,6 +84,9 @@ abstract class BaseModule implements ModuleInterface
             return;
         }
 
+        // Execute before_enable hook
+        $this->executeHook('before_enable', $this);
+
         // Run onEnable hook
         if (method_exists($this, 'onEnable')) {
             try {
@@ -95,6 +102,9 @@ abstract class BaseModule implements ModuleInterface
         } catch (\Throwable $e) {
             \Log::debug("Failed to dispatch ModuleEnabled event for {$this->getName()}: " . $e->getMessage());
         }
+
+        // Execute after_enable hook
+        $this->executeHook('after_enable', $this);
     }
 
     /**
@@ -105,6 +115,9 @@ abstract class BaseModule implements ModuleInterface
         if (!$this->isEnabled()) {
             return;
         }
+
+        // Execute before_disable hook
+        $this->executeHook('before_disable', $this);
 
         if (method_exists($this, 'onDisable')) {
             try {
@@ -119,6 +132,9 @@ abstract class BaseModule implements ModuleInterface
         } catch (\Throwable $e) {
             \Log::debug("Failed to dispatch ModuleDisabled event for {$this->getName()}: " . $e->getMessage());
         }
+
+        // Execute after_disable hook
+        $this->executeHook('after_disable', $this);
     }
 
     /**
@@ -126,10 +142,16 @@ abstract class BaseModule implements ModuleInterface
      */
     public function install(): void
     {
+        // Execute before_install hook
+        $this->executeHook('before_install', $this);
+
         $this->runMigrations();
         $this->publishAssets();
         $this->onInstall();
         $this->enable();
+
+        // Execute after_install hook
+        $this->executeHook('after_install', $this);
     }
 
     /**
@@ -137,10 +159,16 @@ abstract class BaseModule implements ModuleInterface
      */
     public function uninstall(): void
     {
+        // Execute before_uninstall hook
+        $this->executeHook('before_uninstall', $this);
+
         $this->disable();
         $this->rollbackMigrations();
         $this->removeAssets();
         $this->onUninstall();
+
+        // Execute after_uninstall hook
+        $this->executeHook('after_uninstall', $this);
     }
 
     /**
