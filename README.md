@@ -53,7 +53,7 @@ This repository provides a modern Laravel-based boilerplate with common SaaS bui
 
 Key features
 ------------
-- Jetstream authentication and user profiles
+- Jetstream authentication and user profiles with avatar uploads
 - Filament admin panel for resource management
 - Livewire-powered UI for reactive components
 - Social login via Socialite
@@ -117,7 +117,12 @@ These steps assume you want to run the application on your machine (not in Docke
    php artisan migrate --seed
    ```
 
-8. Run the application
+8. Create storage symlink (required for profile photos)
+   ```bash
+   php artisan storage:link
+   ```
+
+9. Run the application
    ```bash
    php artisan serve --host=127.0.0.1 --port=8000
    ```
@@ -153,6 +158,7 @@ A. Using the repository Dockerfile (image build)
 4. Run migrations inside the running container:
    ```bash
    docker exec -it boilerplate-app php artisan migrate --seed
+   docker exec -it boilerplate-app php artisan storage:link
    ```
 5. Visit: http://localhost:8000
 
@@ -170,6 +176,7 @@ B. Recommended: Use Laravel Sail (Docker Compose wrapper)
 2. Run migrations and seeders using Sail:
    ```bash
    ./vendor/bin/sail artisan migrate --seed
+   ./vendor/bin/sail artisan storage:link
    ```
 3. Build front-end assets inside Sail (if needed):
    ```bash
