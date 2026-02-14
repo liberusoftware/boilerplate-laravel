@@ -123,4 +123,15 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
     {
         return $this->belongsTo(Team::class, 'current_team_id');
     }
+
+    /**
+     * Scope a query to search users by name or email.
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
 }
