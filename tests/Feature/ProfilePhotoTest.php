@@ -72,7 +72,7 @@ it('validates profile photo file type', function () {
 it('validates profile photo file size', function () {
     $user = User::factory()->create();
     
-    $largeFile = UploadedFile::fake()->image('avatar.jpg')->size(2048); // 2MB
+    $largeFile = UploadedFile::fake()->image('avatar.jpg')->size(2048); // 2MB (exceeds 1MB limit)
     
     $this->actingAs($user);
     
