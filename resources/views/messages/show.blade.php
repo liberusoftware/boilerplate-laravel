@@ -73,7 +73,7 @@ function conversationApp(recipientId) {
         sending: false,
         error: '',
         recipientId: recipientId,
-        currentUserId: {{ Auth::id() }},
+        currentUserId: @json(Auth::id()),
 
         init() {
             this.loadMessages();

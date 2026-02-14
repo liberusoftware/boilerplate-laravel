@@ -137,7 +137,6 @@ function messagesApp() {
             try {
                 const response = await fetch('/api/messages', {
                     headers: {
-                        'Authorization': 'Bearer ' + this.getToken(),
                         'Accept': 'application/json'
                     }
                 });
@@ -153,7 +152,6 @@ function messagesApp() {
             try {
                 const response = await fetch('/api/messages/users', {
                     headers: {
-                        'Authorization': 'Bearer ' + this.getToken(),
                         'Accept': 'application/json'
                     }
                 });
@@ -176,7 +174,6 @@ function messagesApp() {
                 const response = await fetch('/api/messages', {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + this.getToken(),
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
@@ -196,12 +193,6 @@ function messagesApp() {
             } finally {
                 this.sending = false;
             }
-        },
-
-        getToken() {
-            // For sanctum auth, we'll use cookie-based authentication
-            // So we don't need a token for same-domain requests
-            return '';
         },
 
         formatDate(dateString) {

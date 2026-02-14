@@ -68,6 +68,11 @@ class Message extends Model
 
     /**
      * Scope a query to only include messages between two users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $userId1
+     * @param int $userId2
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeBetween($query, int $userId1, int $userId2)
     {
@@ -80,6 +85,9 @@ class Message extends Model
 
     /**
      * Scope a query to only include unread messages.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeUnread($query)
     {
