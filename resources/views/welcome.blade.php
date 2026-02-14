@@ -1,12 +1,12 @@
 @extends('layouts.guest')
 
 @section('content')
-<div class="min-h-full max-w-7xl mx-auto px-6 lg:px-8 pt-15 lg:pt-18 pb-30">
+<div class="min-h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-15 lg:pt-18 pb-15 sm:pb-30">
     <div class="flex justify-center">
-        <h1 class="text-6xl md:text-8xl font-bold text-white mb-10 leading-tight text-center">
+        <h1 class="text-3xl sm:text-5xl md:text-8xl font-bold text-white mb-10 leading-tight text-center">
             <span class="text-[#ff0] drop-shadow-lg">Liberu</span>
             <br>
-            <span class="text-4xl md:text-6xl text-neutral-300 font-light">Enterprise Laravel Platform</span>
+            <span class="text-2xl sm:text-3xl md:text-6xl text-neutral-300 font-light">Enterprise Laravel Platform</span>
         </h1>
 
     </div>
