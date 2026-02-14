@@ -49,6 +49,8 @@ Overview
 --------
 This repository provides a modern Laravel-based boilerplate with common SaaS building blocks: authentication (Jetstream), admin (Filament), real-time interactions (Livewire), social login (Socialite), user profiles, notifications, messaging and more. It's structured to be extensible and production-oriented.
 
+**New:** This boilerplate now includes a complete **Private Messaging System** that allows users to send secure, encrypted messages to each other. See [MESSAGING.md](MESSAGING.md) and [SETUP_MESSAGING.md](SETUP_MESSAGING.md) for detailed documentation.
+
 Key features
 ------------
 - Jetstream authentication and user profiles
@@ -56,6 +58,7 @@ Key features
 - Livewire-powered UI for reactive components
 - Social login via Socialite
 - **Modular architecture** for easy custom module integration
+- **Private Messaging System** - Secure end-to-end encrypted messaging between users
 - Database seeders and example data (optional)
 - Docker and Laravel Sail support for containerized development
 

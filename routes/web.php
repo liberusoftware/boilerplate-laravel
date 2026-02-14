@@ -17,6 +17,17 @@ use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 
 Route::get('/', fn () => view('welcome'));
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/messages', function () {
+        return view('messages.index');
+    })->name('messages.index');
+    
+    Route::get('/messages/{user}', function ($userId) {
+        $user = \App\Models\User::findOrFail($userId);
+        return view('messages.show', compact('user'));
+    })->name('messages.show');
+});
+
 Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
     ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])
     ->name('team-invitations.accept');
