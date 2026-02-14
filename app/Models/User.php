@@ -126,6 +126,9 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
     }
 
     /**
+     * Scope a query to search users by name or email.
+     */
+    public function scopeSearch($query, $search)
      * Get the posts authored by the user.
      */
     public function posts(): HasMany
