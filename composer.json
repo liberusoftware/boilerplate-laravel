@@ -10,7 +10,9 @@
     "require": {
         "php": "^8.4",
         "bezhansalleh/filament-shield": "~4.0",
+        "biostate/filament-menu-builder": "^5.0",
         "filament/filament": "~5.1",
+        "filament/spatie-laravel-settings-plugin": "^5.0",
         "guzzlehttp/guzzle": "^7.8",
         "joelbutcher/socialstream": "^6.0",
         "laravel/framework": "^12.0",
@@ -19,7 +21,6 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^4.0",
-        "filament/spatie-laravel-settings-plugin": "^5.0",
         "spatie/laravel-menu": "^4.2",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0"

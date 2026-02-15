@@ -2,3 +2,4 @@
 
 @source '../../../../app/Filament/Admin/**/*';
 @source '../../../../resources/views/filament/admin/**/*';
+@source '../../../../vendor/biostate/filament-menu-builder/resources/views/**/*';
