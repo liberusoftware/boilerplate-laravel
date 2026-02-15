@@ -458,7 +458,10 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
     body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f3f4f6; color:#111827; }
     .wrap { max-width:1000px;margin:32px auto;background:#fff;padding:20px;border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
     button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #e5e7eb; background:#111827;color:#fff; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
     .btn-ghost{ background:#fff;color:#111827;border:1px solid #e5e7eb; }
+    .btn-success{ background:#10b981;color:#fff;border:1px solid #059669; }
+    .btn-warning{ background:#f59e0b;color:#fff;border:1px solid #d97706; }
     pre { background:#0b1220; color:#9ae6b4; padding:12px; border-radius:6px; overflow:auto; height:240px; }
     input, select { padding:8px;border:1px solid #e5e7eb;border-radius:6px;width:100%; }
     .grid { display:grid; grid-template-columns: 1fr 320px; gap:16px; }
@@ -466,6 +469,8 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
     .row { display:flex; gap:8px; }
     label { font-size:13px; color:#374151; }
     .muted{ color:#6b7280; font-size:13px; }
+    .progress-indicator { display:none; margin-top:4px; color:#6366f1; font-size:12px; }
+    .progress-indicator.active { display:block; }
   </style>
 </head>
 <body>

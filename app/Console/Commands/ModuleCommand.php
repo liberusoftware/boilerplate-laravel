@@ -102,15 +102,30 @@ class ModuleCommand extends Command
         }
 
         try {
-            if ($this->moduleManager->enable($name)) {
-                $this->info("Module '{$name}' has been enabled.");
+            $module = $this->moduleManager->find($name);
+            if (!$module) {
+                $this->error("Module '{$name}' not found.");
+                return 1;
+            }
+
+            if ($module->isEnabled()) {
+                $this->info("Module '{$name}' is already enabled.");
                 return 0;
             }
 
-            $this->error("Module '{$name}' not found.");
+            if ($this->moduleManager->enable($name)) {
+                $this->info("Module '{$name}' has been enabled.");
+                $this->comment("Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.");
+                return 0;
+            }
+
+            $this->error("Failed to enable module '{$name}'.");
             return 1;
         } catch (Exception $e) {
             $this->error("Failed to enable module '{$name}': " . $e->getMessage());
+            if ($this->option('verbose')) {
+                $this->line($e->getTraceAsString());
+            }
             return 1;
         }
     }
@@ -126,15 +141,30 @@ class ModuleCommand extends Command
         }
 
         try {
-            if ($this->moduleManager->disable($name)) {
-                $this->info("Module '{$name}' has been disabled.");
+            $module = $this->moduleManager->find($name);
+            if (!$module) {
+                $this->error("Module '{$name}' not found.");
+                return 1;
+            }
+
+            if (!$module->isEnabled()) {
+                $this->info("Module '{$name}' is already disabled.");
                 return 0;
             }
 
-            $this->error("Module '{$name}' not found.");
+            if ($this->moduleManager->disable($name)) {
+                $this->info("Module '{$name}' has been disabled.");
+                $this->comment("Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.");
+                return 0;
+            }
+
+            $this->error("Failed to disable module '{$name}'.");
             return 1;
         } catch (Exception $e) {
             $this->error("Failed to disable module '{$name}': " . $e->getMessage());
+            if ($this->option('verbose')) {
+                $this->line($e->getTraceAsString());
+            }
             return 1;
         }
     }
@@ -150,15 +180,32 @@ class ModuleCommand extends Command
         }
 
         try {
-            if ($this->moduleManager->install($name)) {
-                $this->info("Module '{$name}' has been installed and enabled.");
+            $module = $this->moduleManager->find($name);
+            if (!$module) {
+                $this->error("Module '{$name}' not found.");
+                return 1;
+            }
+
+            if ($module->isEnabled()) {
+                $this->info("Module '{$name}' is already installed and enabled.");
                 return 0;
             }
 
-            $this->error("Module '{$name}' not found.");
+            $this->info("Installing module '{$name}'...");
+            
+            if ($this->moduleManager->install($name)) {
+                $this->info("Module '{$name}' has been installed and enabled.");
+                $this->comment("Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.");
+                return 0;
+            }
+
+            $this->error("Failed to install module '{$name}'.");
             return 1;
         } catch (Exception $e) {
             $this->error("Failed to install module '{$name}': " . $e->getMessage());
+            if ($this->option('verbose')) {
+                $this->line($e->getTraceAsString());
+            }
             return 1;
         }
     }
