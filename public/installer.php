@@ -658,6 +658,11 @@ function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
+// JavaScript escape helper for inline event handlers
+function escapeJs(text) {
+  return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+}
+
 async function checkStatus(){
   try {
     const res = await fetch(window.location.pathname + '?action=status&key=' + encodeURIComponent(getKey()));
@@ -808,6 +813,7 @@ function displayModulesFromJson(modules) {
     const statusColor = isEnabled ? '#10b981' : '#ef4444';
     const statusText = isEnabled ? 'Enabled' : 'Disabled';
     const safeName = escapeHtml(module.name);
+    const jsName = escapeJs(module.name);
     
     html += '<tr>';
     html += `<td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td>`;
@@ -816,8 +822,8 @@ function displayModulesFromJson(modules) {
     html += '<td style="padding:4px;border:1px solid #e5e7eb;">';
     
     if (!isEnabled) {
-      html += `<button onclick="enableModule('${safeName}')" style="padding:2px 6px;font-size:10px;margin-right:4px;" class="btn-ghost">Enable</button>`;
-      html += `<button onclick="installModule('${safeName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+      html += `<button onclick="enableModule('${jsName}')" style="padding:2px 6px;font-size:10px;margin-right:4px;" class="btn-ghost">Enable</button>`;
+      html += `<button onclick="installModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
     } else {
       html += '<span style="color:#6b7280;font-size:10px;">Active</span>';
     }
@@ -845,14 +851,16 @@ function displayModulesTable(output) {
       // Data row
       const parts = line.split(/[│|]/).map(p => p.trim()).filter(p => p);
       if (parts.length >= 2) {
-        const name = escapeHtml(parts[0]);
+        const name = parts[0];
+        const safeName = escapeHtml(name);
+        const jsName = escapeJs(name);
         const status = parts[2] || 'Unknown';
         const isEnabled = status.toLowerCase().includes('enabled');
         const color = isEnabled ? '#10b981' : '#ef4444';
-        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${name}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${escapeHtml(status)}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
+        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${escapeHtml(status)}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
         if (!isEnabled) {
-          html += `<button onclick="enableModule('${name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Enable</button> `;
-          html += `<button onclick="installModule('${name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+          html += `<button onclick="enableModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Enable</button> `;
+          html += `<button onclick="installModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
         }
         html += '</td></tr>';
       }

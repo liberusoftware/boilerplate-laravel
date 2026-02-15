@@ -9,6 +9,7 @@ use App\Modules\Traits\HasModuleHooks;
 use App\Modules\Traits\Configurable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseModule implements ModuleInterface
 {
@@ -68,7 +69,7 @@ abstract class BaseModule implements ModuleInterface
                 return (bool) $record->enabled;
             }
         } catch (\Throwable $e) {
-            \Log::debug("Could not read module state from DB for {$this->getName()}: " . $e->getMessage());
+            Log::debug("Could not read module state from DB for {$this->getName()}: " . $e->getMessage());
         }
 
         // Fallback to property if present
@@ -81,11 +82,11 @@ abstract class BaseModule implements ModuleInterface
     public function enable(): void
     {
         if ($this->isEnabled()) {
-            \Log::info("Module {$this->getName()} is already enabled, skipping enable operation.");
+            Log::info("Module {$this->getName()} is already enabled, skipping enable operation.");
             return;
         }
 
-        \Log::info("Enabling module: {$this->getName()}");
+        Log::info("Enabling module: {$this->getName()}");
 
         // Execute before_enable hook
         $this->executeHook('before_enable', $this);
@@ -94,9 +95,9 @@ abstract class BaseModule implements ModuleInterface
         if (method_exists($this, 'onEnable')) {
             try {
                 $this->onEnable();
-                \Log::info("Module {$this->getName()} onEnable hook executed successfully.");
+                Log::info("Module {$this->getName()} onEnable hook executed successfully.");
             } catch (\Throwable $e) {
-                \Log::warning("onEnable failed for {$this->getName()}: " . $e->getMessage());
+                Log::warning("onEnable failed for {$this->getName()}: " . $e->getMessage());
                 throw $e; // Re-throw to allow caller to handle
             }
         }
@@ -104,9 +105,9 @@ abstract class BaseModule implements ModuleInterface
         // Dispatch event
         try {
             event(new \App\Modules\Events\ModuleEnabled($this->getName()));
-            \Log::info("ModuleEnabled event dispatched for {$this->getName()}");
+            Log::info("ModuleEnabled event dispatched for {$this->getName()}");
         } catch (\Throwable $e) {
-            \Log::debug("Failed to dispatch ModuleEnabled event for {$this->getName()}: " . $e->getMessage());
+            Log::debug("Failed to dispatch ModuleEnabled event for {$this->getName()}: " . $e->getMessage());
         }
 
         // Execute after_enable hook
@@ -129,14 +130,14 @@ abstract class BaseModule implements ModuleInterface
             try {
                 $this->onDisable();
             } catch (\Throwable $e) {
-                \Log::warning("onDisable failed for {$this->getName()}: " . $e->getMessage());
+                Log::warning("onDisable failed for {$this->getName()}: " . $e->getMessage());
             }
         }
 
         try {
             event(new \App\Modules\Events\ModuleDisabled($this->getName()));
         } catch (\Throwable $e) {
-            \Log::debug("Failed to dispatch ModuleDisabled event for {$this->getName()}: " . $e->getMessage());
+            Log::debug("Failed to dispatch ModuleDisabled event for {$this->getName()}: " . $e->getMessage());
         }
 
         // Execute after_disable hook
@@ -148,24 +149,24 @@ abstract class BaseModule implements ModuleInterface
      */
     public function install(): void
     {
-        \Log::info("Installing module: {$this->getName()}");
+        Log::info("Installing module: {$this->getName()}");
 
         // Execute before_install hook
         $this->executeHook('before_install', $this);
 
         try {
             $this->runMigrations();
-            \Log::info("Migrations completed for module: {$this->getName()}");
+            Log::info("Migrations completed for module: {$this->getName()}");
         } catch (\Throwable $e) {
-            \Log::error("Migration failed for module {$this->getName()}: " . $e->getMessage());
+            Log::error("Migration failed for module {$this->getName()}: " . $e->getMessage());
             throw $e;
         }
 
         try {
             $this->publishAssets();
-            \Log::info("Assets published for module: {$this->getName()}");
+            Log::info("Assets published for module: {$this->getName()}");
         } catch (\Throwable $e) {
-            \Log::warning("Asset publishing failed for module {$this->getName()}: " . $e->getMessage());
+            Log::warning("Asset publishing failed for module {$this->getName()}: " . $e->getMessage());
             // Continue anyway - assets are optional
         }
 
@@ -175,7 +176,7 @@ abstract class BaseModule implements ModuleInterface
         // Execute after_install hook
         $this->executeHook('after_install', $this);
         
-        \Log::info("Module {$this->getName()} installed successfully");
+        Log::info("Module {$this->getName()} installed successfully");
     }
 
     /**
@@ -238,7 +239,7 @@ abstract class BaseModule implements ModuleInterface
     {
         // Validate module name to prevent path traversal
         if (!preg_match('/^[a-zA-Z0-9_-]+$/', $this->name)) {
-            \Log::error("Invalid module name for migrations: {$this->name}");
+            Log::error("Invalid module name for migrations: {$this->name}");
             throw new \InvalidArgumentException("Invalid module name: {$this->name}");
         }
 
@@ -259,7 +260,7 @@ abstract class BaseModule implements ModuleInterface
     {
         // Validate module name to prevent path traversal
         if (!preg_match('/^[a-zA-Z0-9_-]+$/', $this->name)) {
-            \Log::error("Invalid module name for migration rollback: {$this->name}");
+            Log::error("Invalid module name for migration rollback: {$this->name}");
             throw new \InvalidArgumentException("Invalid module name: {$this->name}");
         }
 
@@ -275,7 +276,7 @@ abstract class BaseModule implements ModuleInterface
                 '--force' => true,
             ]);
         } catch (\Throwable $e) {
-            \Log::warning("Failed to rollback migrations for {$this->getName()}: " . $e->getMessage());
+            Log::warning("Failed to rollback migrations for {$this->getName()}: " . $e->getMessage());
         }
     }
 
