@@ -400,7 +400,11 @@ PHP;
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
-            $php = getenv('PHP_BINARY') ?: 'php';
+            $php = getenv('PHP_BINARY') ?: '/usr/bin/php';
+            // Validate PHP binary path for security
+            if (!is_executable($php) || !preg_match('/php[0-9.]*$/', basename($php))) {
+                $php = 'php'; // Fallback to system PHP
+            }
             $cmd = [
                 $php,
                 'artisan',
@@ -660,7 +664,14 @@ function escapeHtml(text) {
 
 // JavaScript escape helper for inline event handlers
 function escapeJs(text) {
-  return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\//g, '\\/');
+  return String(text)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\//g, '\\/')
+    .replace(/</g, '\\x3c');
 }
 
 async function checkStatus(){

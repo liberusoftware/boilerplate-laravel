@@ -246,12 +246,21 @@ abstract class BaseModule implements ModuleInterface
 
         $migrationsPath = $this->getModulePath() . '/database/migrations';
         
-        if (File::exists($migrationsPath)) {
-            Artisan::call('migrate', [
-                '--path' => 'app/Modules/' . $this->name . '/database/migrations',
-                '--force' => true,
-            ]);
+        if (!File::exists($migrationsPath)) {
+            return;
         }
+
+        // Double-check the path is within app/Modules for defense in depth
+        $expectedPath = app_path('Modules/' . $this->name);
+        if (strpos(realpath($this->getModulePath()), realpath($expectedPath)) !== 0) {
+            Log::error("Module path validation failed for: {$this->name}");
+            throw new \RuntimeException("Invalid module path");
+        }
+
+        Artisan::call('migrate', [
+            '--path' => 'app/Modules/' . $this->name . '/database/migrations',
+            '--force' => true,
+        ]);
     }
 
     /**
@@ -269,6 +278,13 @@ abstract class BaseModule implements ModuleInterface
         
         if (!File::exists($migrationsPath)) {
             return;
+        }
+
+        // Double-check the path is within app/Modules for defense in depth
+        $expectedPath = app_path('Modules/' . $this->name);
+        if (strpos(realpath($this->getModulePath()), realpath($expectedPath)) !== 0) {
+            Log::error("Module path validation failed for: {$this->name}");
+            throw new \RuntimeException("Invalid module path");
         }
 
         try {
