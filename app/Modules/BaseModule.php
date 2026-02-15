@@ -97,8 +97,9 @@ abstract class BaseModule implements ModuleInterface
                 $this->onEnable();
                 Log::info("Module {$this->getName()} onEnable hook executed successfully.");
             } catch (\Throwable $e) {
-                Log::warning("onEnable failed for {$this->getName()}: " . $e->getMessage());
-                throw $e; // Re-throw to allow caller to handle
+                $message = "Failed to enable module {$this->getName()}: " . $e->getMessage();
+                Log::error($message, ['module' => $this->getName(), 'exception' => $e]);
+                throw new \RuntimeException($message, 0, $e);
             }
         }
 

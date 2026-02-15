@@ -660,7 +660,7 @@ function escapeHtml(text) {
 
 // JavaScript escape helper for inline event handlers
 function escapeJs(text) {
-  return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+  return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\//g, '\\/');
 }
 
 async function checkStatus(){
@@ -848,16 +848,16 @@ function displayModulesTable(output) {
       // Header row
       html += '<tr style="background:#f3f4f6;font-weight:bold;"><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Name</th><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Status</th><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Action</th></tr>';
     } else if (line.includes('│') || line.includes('|')) {
-      // Data row
+      // Data row - table format: Name | Version | Status | Description
       const parts = line.split(/[│|]/).map(p => p.trim()).filter(p => p);
-      if (parts.length >= 2) {
+      if (parts.length >= 3) { // Need at least Name, Version, Status
         const name = parts[0];
         const safeName = escapeHtml(name);
         const jsName = escapeJs(name);
-        const status = parts[2] || 'Unknown';
-        const isEnabled = status.toLowerCase().includes('enabled');
+        const status = parts[2]; // Status is at index 2 (Name=0, Version=1, Status=2)
+        const isEnabled = status && status.toLowerCase().includes('enabled');
         const color = isEnabled ? '#10b981' : '#ef4444';
-        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${escapeHtml(status)}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
+        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${escapeHtml(status || 'Unknown')}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
         if (!isEnabled) {
           html += `<button onclick="enableModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Enable</button> `;
           html += `<button onclick="installModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;

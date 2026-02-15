@@ -19,6 +19,11 @@ class ModuleCommand extends Command
      */
     protected $description = 'Manage application modules';
 
+    /**
+     * Cache clear instruction message.
+     */
+    protected const CACHE_CLEAR_MESSAGE = "Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.";
+
     protected ModuleManager $moduleManager;
 
     public function __construct(ModuleManager $moduleManager)
@@ -115,7 +120,7 @@ class ModuleCommand extends Command
 
             if ($this->moduleManager->enable($name)) {
                 $this->info("Module '{$name}' has been enabled.");
-                $this->comment("Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.");
+                $this->comment(self::CACHE_CLEAR_MESSAGE);
                 return 0;
             }
 
@@ -154,7 +159,7 @@ class ModuleCommand extends Command
 
             if ($this->moduleManager->disable($name)) {
                 $this->info("Module '{$name}' has been disabled.");
-                $this->comment("Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.");
+                $this->comment(self::CACHE_CLEAR_MESSAGE);
                 return 0;
             }
 
@@ -195,7 +200,7 @@ class ModuleCommand extends Command
             
             if ($this->moduleManager->install($name)) {
                 $this->info("Module '{$name}' has been installed and enabled.");
-                $this->comment("Run 'php artisan config:clear' and 'php artisan route:clear' to apply changes.");
+                $this->comment(self::CACHE_CLEAR_MESSAGE);
                 return 0;
             }
 
