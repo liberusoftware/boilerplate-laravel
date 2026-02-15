@@ -381,10 +381,18 @@ PHP;
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = escapeshellcmd($php) . ' artisan module list --format=json';
+            $cmd = escapeshellcmd($php) . ' artisan module list --format=json 2>&1';
             $out = null;
             $code = run_cmd($cmd, $out);
-            echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            
+            // Try to parse JSON output
+            $jsonData = json_decode($out, true);
+            if ($jsonData !== null && isset($jsonData['modules'])) {
+                echo json_encode(['ok' => true, 'modules' => $jsonData['modules']]);
+            } else {
+                // Fallback to raw output
+                echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            }
             exit;
         }
 
@@ -695,14 +703,62 @@ async function listModules(){
   try {
     const res = await fetch(window.location.pathname + '?action=list_modules&key=' + encodeURIComponent(getKey()), { method: 'POST' });
     const j = await res.json();
-    if (j.output) {
+    
+    if (j.modules) {
+      // We have structured JSON data
+      displayModulesFromJson(j.modules);
+      append(`Found ${j.modules.length} module(s)`);
+    } else if (j.output) {
+      // Fallback to parsing text output
       append(j.output);
       displayModulesTable(j.output);
     }
+    
     if (j.message) append(j.message);
   } catch (e) {
     append("Error: " + e.message);
   }
+}
+
+function displayModulesFromJson(modules) {
+  const listEl = document.getElementById('modules-list');
+  
+  if (!modules || modules.length === 0) {
+    listEl.innerHTML = '<div style="padding:8px;color:#6b7280;">No modules found</div>';
+    return;
+  }
+  
+  let html = '<table style="width:100%;font-size:11px;border-collapse:collapse;">';
+  html += '<tr style="background:#f3f4f6;font-weight:bold;">';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Name</th>';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Version</th>';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Status</th>';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Action</th>';
+  html += '</tr>';
+  
+  modules.forEach(module => {
+    const isEnabled = module.enabled;
+    const statusColor = isEnabled ? '#10b981' : '#ef4444';
+    const statusText = isEnabled ? 'Enabled' : 'Disabled';
+    
+    html += '<tr>';
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${module.name}</td>`;
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${module.version}</td>`;
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;color:${statusColor};">${statusText}</td>`;
+    html += '<td style="padding:4px;border:1px solid #e5e7eb;">';
+    
+    if (!isEnabled) {
+      html += `<button onclick="enableModule('${module.name}')" style="padding:2px 6px;font-size:10px;margin-right:4px;" class="btn-ghost">Enable</button>`;
+      html += `<button onclick="installModule('${module.name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+    } else {
+      html += '<span style="color:#6b7280;font-size:10px;">Active</span>';
+    }
+    
+    html += '</td></tr>';
+  });
+  
+  html += '</table>';
+  listEl.innerHTML = html;
 }
 
 function displayModulesTable(output) {

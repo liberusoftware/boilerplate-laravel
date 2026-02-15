@@ -12,7 +12,7 @@ class ModuleCommand extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'module {action} {name?} {--force}';
+    protected $signature = 'module {action} {name?} {--force} {--format=text}';
 
     /**
      * The console command description.
@@ -55,21 +55,38 @@ class ModuleCommand extends Command
         $modules = $this->moduleManager->all();
 
         if ($modules->isEmpty()) {
-            $this->info('No modules found.');
+            if ($this->option('format') === 'json') {
+                $this->line(json_encode(['modules' => []]));
+            } else {
+                $this->info('No modules found.');
+            }
             return 0;
         }
 
-        $this->table(
-            ['Name', 'Version', 'Status', 'Description'],
-            $modules->map(function ($module) {
-                return [
-                    $module->getName(),
-                    $module->getVersion(),
-                    $module->isEnabled() ? '<fg=green>Enabled</>' : '<fg=red>Disabled</>',
-                    $module->getDescription(),
-                ];
-            })->toArray()
-        );
+        $moduleData = $modules->map(function ($module) {
+            return [
+                'name' => $module->getName(),
+                'version' => $module->getVersion(),
+                'enabled' => $module->isEnabled(),
+                'description' => $module->getDescription(),
+            ];
+        })->toArray();
+
+        if ($this->option('format') === 'json') {
+            $this->line(json_encode(['modules' => $moduleData], JSON_PRETTY_PRINT));
+        } else {
+            $this->table(
+                ['Name', 'Version', 'Status', 'Description'],
+                array_map(function ($module) {
+                    return [
+                        $module['name'],
+                        $module['version'],
+                        $module['enabled'] ? '<fg=green>Enabled</>' : '<fg=red>Disabled</>',
+                        $module['description'],
+                    ];
+                }, $moduleData)
+            );
+        }
 
         return 0;
     }
