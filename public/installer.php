@@ -93,6 +93,26 @@ function run_cmd($cmd, &$output = null) {
     return $status;
 }
 
+// Helper to run command from array (safer than string command)
+function run_cmd_array(array $cmd, &$output = null) {
+    $descriptorspec = [
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w'],
+    ];
+    $process = @proc_open($cmd, $descriptorspec, $pipes, getcwd());
+    if (!is_resource($process)) {
+        $output = "Failed to start process";
+        return 255;
+    }
+    $out = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    $err = stream_get_contents($pipes[2]);
+    fclose($pipes[2]);
+    $status = proc_close($process);
+    $output = trim($out . PHP_EOL . $err);
+    return $status;
+}
+
 $action = $_REQUEST['action'] ?? null;
 
 if ($action) {
@@ -109,6 +129,9 @@ if ($action) {
         'create_users',
         'test_db',
         'status',
+        'list_modules',
+        'enable_module',
+        'install_module',
     ];
     if (!in_array($action, $allowed, true)) {
         echo json_encode(['ok' => false, 'message' => 'Invalid action']);
@@ -372,6 +395,99 @@ PHP;
             exit;
         }
 
+        if ($action === 'list_modules') {
+            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+                echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
+                exit;
+            }
+            $php = getenv('PHP_BINARY') ?: '/usr/bin/php';
+            // Validate PHP binary path for security
+            if (!is_executable($php) || !preg_match('/php[0-9.]*$/', basename($php))) {
+                $php = 'php'; // Fallback to system PHP
+            }
+            $cmd = [
+                $php,
+                'artisan',
+                'module',
+                'list',
+                '--format=json'
+            ];
+            $descriptorspec = [
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w'],
+            ];
+            $process = @proc_open($cmd, $descriptorspec, $pipes, $projectRoot);
+            if (!is_resource($process)) {
+                echo json_encode(['ok' => false, 'message' => 'Failed to execute command']);
+                exit;
+            }
+            $out = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $err = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+            $code = proc_close($process);
+            
+            // Try to parse JSON output
+            $jsonData = json_decode($out, true);
+            if ($jsonData !== null && isset($jsonData['modules'])) {
+                echo json_encode(['ok' => true, 'modules' => $jsonData['modules']]);
+            } else {
+                // Fallback to raw output
+                echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => trim($out . PHP_EOL . $err)]);
+            }
+            exit;
+        }
+
+        if ($action === 'enable_module') {
+            $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+            $moduleName = $body['module_name'] ?? null;
+            if (!$moduleName) {
+                echo json_encode(['ok' => false, 'message' => 'Module name is required']);
+                exit;
+            }
+            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+                echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
+                exit;
+            }
+            $php = getenv('PHP_BINARY') ?: 'php';
+            $cmd = [
+                $php,
+                'artisan',
+                'module',
+                'enable',
+                $moduleName
+            ];
+            $out = null;
+            $code = run_cmd_array($cmd, $out);
+            echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            exit;
+        }
+
+        if ($action === 'install_module') {
+            $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+            $moduleName = $body['module_name'] ?? null;
+            if (!$moduleName) {
+                echo json_encode(['ok' => false, 'message' => 'Module name is required']);
+                exit;
+            }
+            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+                echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
+                exit;
+            }
+            $php = getenv('PHP_BINARY') ?: 'php';
+            $cmd = [
+                $php,
+                'artisan',
+                'module',
+                'install',
+                $moduleName
+            ];
+            $out = null;
+            $code = run_cmd_array($cmd, $out);
+            echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            exit;
+        }
+
         echo json_encode(['ok' => false, 'message' => 'Unhandled action']);
         exit;
 
@@ -396,7 +512,10 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
     body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f3f4f6; color:#111827; }
     .wrap { max-width:1000px;margin:32px auto;background:#fff;padding:20px;border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
     button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #e5e7eb; background:#111827;color:#fff; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
     .btn-ghost{ background:#fff;color:#111827;border:1px solid #e5e7eb; }
+    .btn-success{ background:#10b981;color:#fff;border:1px solid #059669; }
+    .btn-warning{ background:#f59e0b;color:#fff;border:1px solid #d97706; }
     pre { background:#0b1220; color:#9ae6b4; padding:12px; border-radius:6px; overflow:auto; height:240px; }
     input, select { padding:8px;border:1px solid #e5e7eb;border-radius:6px;width:100%; }
     .grid { display:grid; grid-template-columns: 1fr 320px; gap:16px; }
@@ -404,6 +523,8 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
     .row { display:flex; gap:8px; }
     label { font-size:13px; color:#374151; }
     .muted{ color:#6b7280; font-size:13px; }
+    .progress-indicator { display:none; margin-top:4px; color:#6366f1; font-size:12px; }
+    .progress-indicator.active { display:block; }
   </style>
 </head>
 <body>
@@ -488,6 +609,16 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
           </div>
 
           <div>
+            <strong>Modules</strong>
+            <div style="margin-top:8px;">
+              <div class="row">
+                <button onclick="listModules()" class="btn-ghost">List Modules</button>
+              </div>
+              <div id="modules-list" style="margin-top:8px;max-height:150px;overflow-y:auto;font-size:12px;"></div>
+            </div>
+          </div>
+
+          <div>
             <strong>Console Output</strong>
             <pre id="out"></pre>
           </div>
@@ -518,6 +649,30 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
 const outEl = document.getElementById('out');
 function append(s){ outEl.textContent += s + "\n"; outEl.scrollTop = outEl.scrollHeight; }
 function clearOutput(){ outEl.textContent = ''; }
+
+// HTML escape helper to prevent XSS
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+// JavaScript escape helper for inline event handlers
+function escapeJs(text) {
+  return String(text)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\//g, '\\/')
+    .replace(/</g, '\\x3c');
+}
 
 async function checkStatus(){
   try {
@@ -624,6 +779,142 @@ function createUsers(){
     append(j.output || j.message || JSON.stringify(j));
     checkStatus();
   }).catch(e=>append("Error: "+e));
+}
+
+async function listModules(){
+  append("Listing modules...");
+  try {
+    const res = await fetch(window.location.pathname + '?action=list_modules&key=' + encodeURIComponent(getKey()), { method: 'POST' });
+    const j = await res.json();
+    
+    if (j.modules) {
+      // We have structured JSON data
+      displayModulesFromJson(j.modules);
+      append(`Found ${j.modules.length} module(s)`);
+    } else if (j.output) {
+      // Fallback to parsing text output
+      append(j.output);
+      displayModulesTable(j.output);
+    }
+    
+    if (j.message) append(j.message);
+  } catch (e) {
+    append("Error: " + e.message);
+  }
+}
+
+function displayModulesFromJson(modules) {
+  const listEl = document.getElementById('modules-list');
+  
+  if (!modules || modules.length === 0) {
+    listEl.innerHTML = '<div style="padding:8px;color:#6b7280;">No modules found</div>';
+    return;
+  }
+  
+  let html = '<table style="width:100%;font-size:11px;border-collapse:collapse;">';
+  html += '<tr style="background:#f3f4f6;font-weight:bold;">';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Name</th>';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Version</th>';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Status</th>';
+  html += '<th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Action</th>';
+  html += '</tr>';
+  
+  modules.forEach(module => {
+    const isEnabled = module.enabled;
+    const statusColor = isEnabled ? '#10b981' : '#ef4444';
+    const statusText = isEnabled ? 'Enabled' : 'Disabled';
+    const safeName = escapeHtml(module.name);
+    const jsName = escapeJs(module.name);
+    
+    html += '<tr>';
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td>`;
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${escapeHtml(module.version)}</td>`;
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;color:${statusColor};">${statusText}</td>`;
+    html += '<td style="padding:4px;border:1px solid #e5e7eb;">';
+    
+    if (!isEnabled) {
+      html += `<button onclick="enableModule('${jsName}')" style="padding:2px 6px;font-size:10px;margin-right:4px;" class="btn-ghost">Enable</button>`;
+      html += `<button onclick="installModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+    } else {
+      html += '<span style="color:#6b7280;font-size:10px;">Active</span>';
+    }
+    
+    html += '</td></tr>';
+  });
+  
+  html += '</table>';
+  listEl.innerHTML = html;
+}
+
+function displayModulesTable(output) {
+  const listEl = document.getElementById('modules-list');
+  listEl.innerHTML = '';
+  
+  // Parse the table output from artisan command
+  const lines = output.split('\n');
+  let html = '<table style="width:100%;font-size:11px;border-collapse:collapse;">';
+  
+  for (let line of lines) {
+    if (line.includes('Name') && line.includes('Status')) {
+      // Header row
+      html += '<tr style="background:#f3f4f6;font-weight:bold;"><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Name</th><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Status</th><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Action</th></tr>';
+    } else if (line.includes('│') || line.includes('|')) {
+      // Data row - table format: Name | Version | Status | Description
+      const parts = line.split(/[│|]/).map(p => p.trim()).filter(p => p);
+      if (parts.length >= 3) { // Need at least Name, Version, Status
+        const name = parts[0];
+        const safeName = escapeHtml(name);
+        const jsName = escapeJs(name);
+        const status = parts[2]; // Status is at index 2 (Name=0, Version=1, Status=2)
+        const isEnabled = status && status.toLowerCase().includes('enabled');
+        const color = isEnabled ? '#10b981' : '#ef4444';
+        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${escapeHtml(status || 'Unknown')}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
+        if (!isEnabled) {
+          html += `<button onclick="enableModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Enable</button> `;
+          html += `<button onclick="installModule('${jsName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+        }
+        html += '</td></tr>';
+      }
+    }
+  }
+  html += '</table>';
+  listEl.innerHTML = html;
+}
+
+async function enableModule(moduleName){
+  append(`Enabling module: ${moduleName}...`);
+  try {
+    const res = await fetch(window.location.pathname + '?action=enable_module&key=' + encodeURIComponent(getKey()), {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ module_name: moduleName })
+    });
+    const j = await res.json();
+    if (j.output) append(j.output);
+    if (j.message) append(j.message);
+    append("Result: " + (j.ok ? 'Success' : 'Failed'));
+    listModules(); // Refresh the list
+  } catch (e) {
+    append("Error: " + e.message);
+  }
+}
+
+async function installModule(moduleName){
+  append(`Installing module: ${moduleName}...`);
+  try {
+    const res = await fetch(window.location.pathname + '?action=install_module&key=' + encodeURIComponent(getKey()), {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ module_name: moduleName })
+    });
+    const j = await res.json();
+    if (j.output) append(j.output);
+    if (j.message) append(j.message);
+    append("Result: " + (j.ok ? 'Success' : 'Failed'));
+    listModules(); // Refresh the list
+  } catch (e) {
+    append("Error: " + e.message);
+  }
 }
 
 checkStatus();

@@ -135,6 +135,18 @@ Optional: Setup script
 ./setup.sh
 ```
 
+Optional: Web-based installer
+- A web-based installer is available at `public/installer.php` for GUI-based setup.
+- Enable it by setting `INSTALLER_ENABLED=true` in `.env`
+- Optionally set `INSTALLER_KEY` for authentication
+- The installer provides:
+  - Composer and NPM installation
+  - Database configuration and testing
+  - Migration and seeding
+  - User creation with roles
+  - **Module management** (list, install, enable modules)
+- **Important:** Disable the installer after setup by setting `INSTALLER_ENABLED=false`
+
 Notes
 - Configure mail and social provider settings in `.env` for production use.
 - If you use a different DB (e.g., PostgreSQL), update `.env` accordingly.
