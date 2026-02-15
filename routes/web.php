@@ -17,6 +17,8 @@ use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 
 Route::get('/', fn () => view('welcome'));
 
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    Route::get('/chat', fn () => view('chat'))->name('chat');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/messages', function () {
         return view('messages.index');

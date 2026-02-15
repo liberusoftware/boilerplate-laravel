@@ -1,3 +1,4 @@
+import './bootstrap';
 /**
  * Laravel Echo and Pusher configuration for real-time notifications
  */
