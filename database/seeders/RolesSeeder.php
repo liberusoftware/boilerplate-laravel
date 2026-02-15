@@ -15,19 +15,31 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $roleData = [
-            'name' => 'super_admin',
-            'guard_name' => 'web',
-        ];
+        // Define all roles that can be used in the application
+        $roles = ['super_admin', 'tenant', 'buyer', 'seller', 'landlord', 'contractor'];
 
+        $team = null;
         if (Utils::isTenancyEnabled()) {
             $team = Team::firstOrFail();
-            $roleData["team_id"] = $team->id;
         }
 
-        $adminRole = Role::firstOrCreate($roleData);
+        foreach ($roles as $roleName) {
+            $roleData = [
+                'name' => $roleName,
+                'guard_name' => 'web',
+            ];
 
-        $permissions = Permission::where('guard_name', 'web')->pluck('id')->toArray();
-        $adminRole->syncPermissions($permissions);
+            if ($team) {
+                $roleData["team_id"] = $team->id;
+            }
+
+            $role = Role::firstOrCreate($roleData);
+
+            // Only super_admin gets all permissions
+            if ($roleName === 'super_admin') {
+                $permissions = Permission::where('guard_name', 'web')->pluck('id')->toArray();
+                $role->syncPermissions($permissions);
+            }
+        }
     }
 }
