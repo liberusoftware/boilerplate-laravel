@@ -93,6 +93,26 @@ function run_cmd($cmd, &$output = null) {
     return $status;
 }
 
+// Helper to run command from array (safer than string command)
+function run_cmd_array(array $cmd, &$output = null) {
+    $descriptorspec = [
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w'],
+    ];
+    $process = @proc_open($cmd, $descriptorspec, $pipes, getcwd());
+    if (!is_resource($process)) {
+        $output = "Failed to start process";
+        return 255;
+    }
+    $out = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    $err = stream_get_contents($pipes[2]);
+    fclose($pipes[2]);
+    $status = proc_close($process);
+    $output = trim($out . PHP_EOL . $err);
+    return $status;
+}
+
 $action = $_REQUEST['action'] ?? null;
 
 if ($action) {
@@ -381,9 +401,27 @@ PHP;
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = escapeshellcmd($php) . ' artisan module list --format=json 2>&1';
-            $out = null;
-            $code = run_cmd($cmd, $out);
+            $cmd = [
+                $php,
+                'artisan',
+                'module',
+                'list',
+                '--format=json'
+            ];
+            $descriptorspec = [
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w'],
+            ];
+            $process = @proc_open($cmd, $descriptorspec, $pipes, $projectRoot);
+            if (!is_resource($process)) {
+                echo json_encode(['ok' => false, 'message' => 'Failed to execute command']);
+                exit;
+            }
+            $out = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $err = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+            $code = proc_close($process);
             
             // Try to parse JSON output
             $jsonData = json_decode($out, true);
@@ -391,7 +429,7 @@ PHP;
                 echo json_encode(['ok' => true, 'modules' => $jsonData['modules']]);
             } else {
                 // Fallback to raw output
-                echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+                echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => trim($out . PHP_EOL . $err)]);
             }
             exit;
         }
@@ -408,9 +446,15 @@ PHP;
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = escapeshellcmd($php) . ' artisan module enable ' . escapeshellarg($moduleName);
+            $cmd = [
+                $php,
+                'artisan',
+                'module',
+                'enable',
+                $moduleName
+            ];
             $out = null;
-            $code = run_cmd($cmd, $out);
+            $code = run_cmd_array($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
             exit;
         }
@@ -427,9 +471,15 @@ PHP;
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = escapeshellcmd($php) . ' artisan module install ' . escapeshellarg($moduleName);
+            $cmd = [
+                $php,
+                'artisan',
+                'module',
+                'install',
+                $moduleName
+            ];
             $out = null;
-            $code = run_cmd($cmd, $out);
+            $code = run_cmd_array($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
             exit;
         }
@@ -596,6 +646,18 @@ const outEl = document.getElementById('out');
 function append(s){ outEl.textContent += s + "\n"; outEl.scrollTop = outEl.scrollHeight; }
 function clearOutput(){ outEl.textContent = ''; }
 
+// HTML escape helper to prevent XSS
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
 async function checkStatus(){
   try {
     const res = await fetch(window.location.pathname + '?action=status&key=' + encodeURIComponent(getKey()));
@@ -745,16 +807,17 @@ function displayModulesFromJson(modules) {
     const isEnabled = module.enabled;
     const statusColor = isEnabled ? '#10b981' : '#ef4444';
     const statusText = isEnabled ? 'Enabled' : 'Disabled';
+    const safeName = escapeHtml(module.name);
     
     html += '<tr>';
-    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${module.name}</td>`;
-    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${module.version}</td>`;
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${safeName}</td>`;
+    html += `<td style="padding:4px;border:1px solid #e5e7eb;">${escapeHtml(module.version)}</td>`;
     html += `<td style="padding:4px;border:1px solid #e5e7eb;color:${statusColor};">${statusText}</td>`;
     html += '<td style="padding:4px;border:1px solid #e5e7eb;">';
     
     if (!isEnabled) {
-      html += `<button onclick="enableModule('${module.name}')" style="padding:2px 6px;font-size:10px;margin-right:4px;" class="btn-ghost">Enable</button>`;
-      html += `<button onclick="installModule('${module.name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+      html += `<button onclick="enableModule('${safeName}')" style="padding:2px 6px;font-size:10px;margin-right:4px;" class="btn-ghost">Enable</button>`;
+      html += `<button onclick="installModule('${safeName}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
     } else {
       html += '<span style="color:#6b7280;font-size:10px;">Active</span>';
     }
@@ -782,11 +845,11 @@ function displayModulesTable(output) {
       // Data row
       const parts = line.split(/[│|]/).map(p => p.trim()).filter(p => p);
       if (parts.length >= 2) {
-        const name = parts[0];
+        const name = escapeHtml(parts[0]);
         const status = parts[2] || 'Unknown';
         const isEnabled = status.toLowerCase().includes('enabled');
         const color = isEnabled ? '#10b981' : '#ef4444';
-        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${name}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${status}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
+        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${name}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${escapeHtml(status)}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
         if (!isEnabled) {
           html += `<button onclick="enableModule('${name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Enable</button> `;
           html += `<button onclick="installModule('${name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;

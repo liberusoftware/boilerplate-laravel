@@ -236,6 +236,12 @@ abstract class BaseModule implements ModuleInterface
      */
     protected function runMigrations(): void
     {
+        // Validate module name to prevent path traversal
+        if (!preg_match('/^[a-zA-Z0-9_-]+$/', $this->name)) {
+            \Log::error("Invalid module name for migrations: {$this->name}");
+            throw new \InvalidArgumentException("Invalid module name: {$this->name}");
+        }
+
         $migrationsPath = $this->getModulePath() . '/database/migrations';
         
         if (File::exists($migrationsPath)) {
@@ -251,6 +257,12 @@ abstract class BaseModule implements ModuleInterface
      */
     protected function rollbackMigrations(): void
     {
+        // Validate module name to prevent path traversal
+        if (!preg_match('/^[a-zA-Z0-9_-]+$/', $this->name)) {
+            \Log::error("Invalid module name for migration rollback: {$this->name}");
+            throw new \InvalidArgumentException("Invalid module name: {$this->name}");
+        }
+
         $migrationsPath = $this->getModulePath() . '/database/migrations';
         
         if (!File::exists($migrationsPath)) {

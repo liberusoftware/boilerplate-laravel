@@ -217,7 +217,7 @@ class ModuleServiceProvider extends ServiceProvider
                 }
             }
         } catch (\Throwable $e) {
-            \Log::warning("Failed to load external modules: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning("Failed to load external modules: " . $e->getMessage());
         }
     }
 }

@@ -73,7 +73,7 @@ class ModuleCommand extends Command
         })->toArray();
 
         if ($this->option('format') === 'json') {
-            $this->line(json_encode(['modules' => $moduleData], JSON_PRETTY_PRINT));
+            $this->line(json_encode(['modules' => $moduleData]));
         } else {
             $this->table(
                 ['Name', 'Version', 'Status', 'Description'],
