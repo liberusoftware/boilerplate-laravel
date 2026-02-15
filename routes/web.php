@@ -19,6 +19,15 @@ Route::get('/', fn () => view('welcome'));
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/chat', fn () => view('chat'))->name('chat');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/messages', function () {
+        return view('messages.index');
+    })->name('messages.index');
+    
+    Route::get('/messages/{user}', function ($userId) {
+        $user = \App\Models\User::findOrFail($userId);
+        return view('messages.show', compact('user'));
+    })->name('messages.show');
 });
 
 Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])

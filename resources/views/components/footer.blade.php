@@ -4,20 +4,20 @@
             <div class="mb-6 md:mb-0">
                 <a href="{{ url('/') }}" class="flex items-center">
                     <img src="{{ asset('build/images/logo.png') }}" class="mr-3 h-8" alt="{{ config('app.name') }}" />
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                    <span class="self-center text-xl sm:text-2xl font-semibold whitespace-nowrap dark:text-white">
                         {{ app(\App\Settings\SiteSettings::class)->site_name ?? config('app.name') }} </span>
                 </a>
                
             </div>
-            <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-6 md:grid-cols-3">
                 <div></div>
                 <div></div>
                 <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Contact Details</h2>
-                    <span class="text-xs text-gray-600">{{ app(\App\Settings\SiteSettings::class)->address ?? '' }}</span> <br>
-                    <span class="text-xs text-gray-600">UK Non-geographic: {{ app(\App\Settings\SiteSettings::class)->phone_01 ?? '' }}</span>  <br>
-                    <span class="text-xs text-gray-600">UK London: {{ app(\App\Settings\SiteSettings::class)->phone_02 ?? '' }}</span>  <br>
-                    <span class="text-xs text-gray-600">UK Mobile: {{ app(\App\Settings\SiteSettings::class)->phone_03 ?? '' }}</span>  <br>
+                    <h2 class="mb-4 sm:mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Contact Details</h2>
+                    <span class="text-xs text-gray-600 block">{{ app(\App\Settings\SiteSettings::class)->address ?? '' }}</span>
+                    <span class="text-xs text-gray-600 block">UK Non-geographic: {{ app(\App\Settings\SiteSettings::class)->phone_01 ?? '' }}</span>
+                    <span class="text-xs text-gray-600 block">UK London: {{ app(\App\Settings\SiteSettings::class)->phone_02 ?? '' }}</span>
+                    <span class="text-xs text-gray-600 block">UK Mobile: {{ app(\App\Settings\SiteSettings::class)->phone_03 ?? '' }}</span>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                     class="hover:underline">{{ app(\App\Settings\SiteSettings::class)->site_name ?? config('app.name') }}</a>. All Rights
                 Reserved.
             </span>
-            <div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
+            <div class="flex mt-4 space-x-4 sm:space-x-6 sm:justify-center sm:mt-0">
                 <a href="{{ app(\App\Settings\SiteSettings::class)->facebook ?? '#' }}"
                     class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
