@@ -109,6 +109,9 @@ if ($action) {
         'create_users',
         'test_db',
         'status',
+        'list_modules',
+        'enable_module',
+        'install_module',
     ];
     if (!in_array($action, $allowed, true)) {
         echo json_encode(['ok' => false, 'message' => 'Invalid action']);
@@ -372,6 +375,57 @@ PHP;
             exit;
         }
 
+        if ($action === 'list_modules') {
+            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+                echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
+                exit;
+            }
+            $php = getenv('PHP_BINARY') ?: 'php';
+            $cmd = escapeshellcmd($php) . ' artisan module list --format=json';
+            $out = null;
+            $code = run_cmd($cmd, $out);
+            echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            exit;
+        }
+
+        if ($action === 'enable_module') {
+            $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+            $moduleName = $body['module_name'] ?? null;
+            if (!$moduleName) {
+                echo json_encode(['ok' => false, 'message' => 'Module name is required']);
+                exit;
+            }
+            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+                echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
+                exit;
+            }
+            $php = getenv('PHP_BINARY') ?: 'php';
+            $cmd = escapeshellcmd($php) . ' artisan module enable ' . escapeshellarg($moduleName);
+            $out = null;
+            $code = run_cmd($cmd, $out);
+            echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            exit;
+        }
+
+        if ($action === 'install_module') {
+            $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+            $moduleName = $body['module_name'] ?? null;
+            if (!$moduleName) {
+                echo json_encode(['ok' => false, 'message' => 'Module name is required']);
+                exit;
+            }
+            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+                echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
+                exit;
+            }
+            $php = getenv('PHP_BINARY') ?: 'php';
+            $cmd = escapeshellcmd($php) . ' artisan module install ' . escapeshellarg($moduleName);
+            $out = null;
+            $code = run_cmd($cmd, $out);
+            echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
+            exit;
+        }
+
         echo json_encode(['ok' => false, 'message' => 'Unhandled action']);
         exit;
 
@@ -484,6 +538,16 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
             <div class="row" style="margin-top:8px;">
               <button onclick="addUserRow()" class="btn-ghost">Add user row</button>
               <button onclick="createUsers()" class="btn-ghost">Create Users</button>
+            </div>
+          </div>
+
+          <div>
+            <strong>Modules</strong>
+            <div style="margin-top:8px;">
+              <div class="row">
+                <button onclick="listModules()" class="btn-ghost">List Modules</button>
+              </div>
+              <div id="modules-list" style="margin-top:8px;max-height:150px;overflow-y:auto;font-size:12px;"></div>
             </div>
           </div>
 
@@ -624,6 +688,90 @@ function createUsers(){
     append(j.output || j.message || JSON.stringify(j));
     checkStatus();
   }).catch(e=>append("Error: "+e));
+}
+
+async function listModules(){
+  append("Listing modules...");
+  try {
+    const res = await fetch(window.location.pathname + '?action=list_modules&key=' + encodeURIComponent(getKey()), { method: 'POST' });
+    const j = await res.json();
+    if (j.output) {
+      append(j.output);
+      displayModulesTable(j.output);
+    }
+    if (j.message) append(j.message);
+  } catch (e) {
+    append("Error: " + e.message);
+  }
+}
+
+function displayModulesTable(output) {
+  const listEl = document.getElementById('modules-list');
+  listEl.innerHTML = '';
+  
+  // Parse the table output from artisan command
+  const lines = output.split('\n');
+  let html = '<table style="width:100%;font-size:11px;border-collapse:collapse;">';
+  
+  for (let line of lines) {
+    if (line.includes('Name') && line.includes('Status')) {
+      // Header row
+      html += '<tr style="background:#f3f4f6;font-weight:bold;"><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Name</th><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Status</th><th style="padding:4px;text-align:left;border:1px solid #e5e7eb;">Action</th></tr>';
+    } else if (line.includes('│') || line.includes('|')) {
+      // Data row
+      const parts = line.split(/[│|]/).map(p => p.trim()).filter(p => p);
+      if (parts.length >= 2) {
+        const name = parts[0];
+        const status = parts[2] || 'Unknown';
+        const isEnabled = status.toLowerCase().includes('enabled');
+        const color = isEnabled ? '#10b981' : '#ef4444';
+        html += `<tr><td style="padding:4px;border:1px solid #e5e7eb;">${name}</td><td style="padding:4px;border:1px solid #e5e7eb;color:${color};">${status}</td><td style="padding:4px;border:1px solid #e5e7eb;">`;
+        if (!isEnabled) {
+          html += `<button onclick="enableModule('${name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Enable</button> `;
+          html += `<button onclick="installModule('${name}')" style="padding:2px 6px;font-size:10px;" class="btn-ghost">Install</button>`;
+        }
+        html += '</td></tr>';
+      }
+    }
+  }
+  html += '</table>';
+  listEl.innerHTML = html;
+}
+
+async function enableModule(moduleName){
+  append(`Enabling module: ${moduleName}...`);
+  try {
+    const res = await fetch(window.location.pathname + '?action=enable_module&key=' + encodeURIComponent(getKey()), {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ module_name: moduleName })
+    });
+    const j = await res.json();
+    if (j.output) append(j.output);
+    if (j.message) append(j.message);
+    append("Result: " + (j.ok ? 'Success' : 'Failed'));
+    listModules(); // Refresh the list
+  } catch (e) {
+    append("Error: " + e.message);
+  }
+}
+
+async function installModule(moduleName){
+  append(`Installing module: ${moduleName}...`);
+  try {
+    const res = await fetch(window.location.pathname + '?action=install_module&key=' + encodeURIComponent(getKey()), {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ module_name: moduleName })
+    });
+    const j = await res.json();
+    if (j.output) append(j.output);
+    if (j.message) append(j.message);
+    append("Result: " + (j.ok ? 'Success' : 'Failed'));
+    listModules(); // Refresh the list
+  } catch (e) {
+    append("Error: " + e.message);
+  }
 }
 
 checkStatus();

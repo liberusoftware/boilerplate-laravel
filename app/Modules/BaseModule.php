@@ -227,8 +227,20 @@ abstract class BaseModule implements ModuleInterface
      */
     protected function rollbackMigrations(): void
     {
-        // Implementation depends on specific requirements
-        // Could use migration tags or custom rollback logic
+        $migrationsPath = $this->getModulePath() . '/database/migrations';
+        
+        if (!File::exists($migrationsPath)) {
+            return;
+        }
+
+        try {
+            Artisan::call('migrate:rollback', [
+                '--path' => 'app/Modules/' . $this->name . '/database/migrations',
+                '--force' => true,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::warning("Failed to rollback migrations for {$this->getName()}: " . $e->getMessage());
+        }
     }
 
     /**
