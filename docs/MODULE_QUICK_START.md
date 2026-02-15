@@ -446,6 +446,48 @@ class ProductController extends Controller
 }
 ```
 
+## Installing and Managing Modules via Web Installer
+
+The application includes a web-based installer that can manage modules through a graphical interface.
+
+### Enabling the Installer
+
+1. Set `INSTALLER_ENABLED=true` in your `.env` file
+2. Optionally set `INSTALLER_KEY=your-secret-key` for authentication
+3. Access the installer at `http://your-domain/installer.php`
+
+### Managing Modules in the Installer
+
+The installer provides a "Modules" section where you can:
+
+1. **List All Modules**
+   - Click "List Modules" to see all available modules
+   - View module status (Enabled/Disabled), version, and description
+
+2. **Enable a Module**
+   - Find the module in the list
+   - Click "Enable" to activate it without running migrations
+   - Useful for modules already installed
+
+3. **Install a Module**
+   - Find the module in the list
+   - Click "Install" to:
+     - Run module migrations
+     - Publish module assets
+     - Execute installation hooks
+     - Enable the module
+
+### Important Notes
+
+- The installer requires `vendor/autoload.php` to exist (run Composer install first)
+- All module operations are logged to `storage/logs/laravel.log`
+- After enabling/installing modules, clear cache:
+  ```bash
+  php artisan config:clear
+  php artisan route:clear
+  ```
+- **Security:** Disable the installer after setup by setting `INSTALLER_ENABLED=false`
+
 ## Next Steps
 
 1. Read the full [Module Development Guide](MODULE_DEVELOPMENT.md)
