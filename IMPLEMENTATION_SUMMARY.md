@@ -248,7 +248,7 @@ None - uses existing Filament Shield and Jetstream configuration
 
 ### Dependencies
 All required packages already installed:
-- filament/filament: ~5.1
+- filament/filament: ~5.2
 - bezhansalleh/filament-shield: ~4.0
 - spatie/laravel-permission (via dependencies)
 

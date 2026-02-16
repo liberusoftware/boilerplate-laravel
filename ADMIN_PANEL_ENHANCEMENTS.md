@@ -168,7 +168,7 @@ Doughnut chart showing:
 ## Technical Details
 
 ### Dependencies
-- **Filament 5.1**: Core admin panel framework
+- **Filament 5.2**: Core admin panel framework
 - **Filament Shield 4.0**: Role and permission management
 - **Spatie Permission**: Laravel permissions package
 - **Laravel Jetstream**: Team management features

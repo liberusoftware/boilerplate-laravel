@@ -372,11 +372,11 @@ All components are fully responsive:
 - ✅ **Uses existing dependencies**
 
 ### Dependencies (Already Installed)
-- Filament 5.1
+- Filament 5.2
 - Filament Shield 4.0
 - Spatie Permission (via dependencies)
 - Laravel Jetstream
-- Livewire 4.0
+- Livewire 4.1
 
 ### Deployment Steps
 1. Merge PR to main branch

@@ -26,7 +26,7 @@
 [![Docker](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/liberusoftware/boilerplate-laravel/graph/badge.svg?token=K7TWB1QF1L)](https://codecov.io/gh/liberusoftware/boilerplate-laravel)
 
-A production-ready SaaS starter built with Laravel 12, PHP 8.4, Filament, Livewire, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications.
+A production-ready SaaS starter built with Laravel 12, PHP 8.5, Filament 5.2, Livewire 4.1, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications.
 
 Website: https://www.liberu.co.uk
 
@@ -65,7 +65,7 @@ Key features
 
 Prerequisites
 -------------
-- PHP 8.4
+- PHP 8.5
 - Composer
 - Node.js (recommended: LTS) and npm or yarn (for front-end assets)
 - MySQL / PostgreSQL or another supported DB
