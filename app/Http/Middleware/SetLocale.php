@@ -48,7 +48,7 @@ class SetLocale
         }
 
         // Validate and set locale
-        $supportedLocales = config('app.supported_locales', ['en', 'es', 'fr', 'de']);
+        $supportedLocales = array_keys(config('app.supported_locales', ['en' => 'English']));
         
         if (in_array($locale, $supportedLocales)) {
             App::setLocale($locale);
@@ -71,7 +71,7 @@ class SetLocale
             return null;
         }
 
-        $supportedLocales = config('app.supported_locales', ['en', 'es', 'fr', 'de']);
+        $supportedLocales = array_keys(config('app.supported_locales', ['en' => 'English']));
         
         // Parse Accept-Language header
         $languages = [];
