@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+/* Default Theme Custom Styles */
+:root {
+    --theme-primary: theme('colors.gray.600');
+    --theme-secondary: theme('colors.slate.600');
+}
+
+@layer base {
+    body {
+        @apply bg-gray-50 dark:bg-gray-900;
+    }
+}
+
+@layer components {
+    .theme-btn-primary {
+        @apply bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded;
+    }
+}

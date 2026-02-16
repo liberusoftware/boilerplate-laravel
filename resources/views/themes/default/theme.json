@@ -1,0 +1,11 @@
+{
+    "name": "default",
+    "label": "Default Theme",
+    "description": "The default application theme",
+    "version": "1.0.0",
+    "author": "Liberu Software",
+    "colors": {
+        "primary": "gray",
+        "secondary": "slate"
+    }
+}
