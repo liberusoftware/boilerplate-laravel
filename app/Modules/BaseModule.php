@@ -105,7 +105,7 @@ abstract class BaseModule implements ModuleInterface
 
         // Dispatch event
         try {
-            event(new \App\Modules\Events\ModuleEnabled($this->getName()));
+            event(new \App\Modules\Events\ModuleEnabled($this->getName(), $this));
             Log::info("ModuleEnabled event dispatched for {$this->getName()}");
         } catch (\Throwable $e) {
             Log::debug("Failed to dispatch ModuleEnabled event for {$this->getName()}: " . $e->getMessage());
@@ -136,7 +136,7 @@ abstract class BaseModule implements ModuleInterface
         }
 
         try {
-            event(new \App\Modules\Events\ModuleDisabled($this->getName()));
+            event(new \App\Modules\Events\ModuleDisabled($this->getName(), $this));
         } catch (\Throwable $e) {
             Log::debug("Failed to dispatch ModuleDisabled event for {$this->getName()}: " . $e->getMessage());
         }
@@ -174,6 +174,12 @@ abstract class BaseModule implements ModuleInterface
         $this->onInstall();
         $this->enable();
 
+        try {
+            event(new \App\Modules\Events\ModuleInstalled($this->getName(), $this));
+        } catch (\Throwable $e) {
+            Log::debug("Failed to dispatch ModuleInstalled event for {$this->getName()}: " . $e->getMessage());
+        }
+
         // Execute after_install hook
         $this->executeHook('after_install', $this);
         
@@ -192,6 +198,12 @@ abstract class BaseModule implements ModuleInterface
         $this->rollbackMigrations();
         $this->removeAssets();
         $this->onUninstall();
+
+        try {
+            event(new \App\Modules\Events\ModuleUninstalled($this->getName(), $this));
+        } catch (\Throwable $e) {
+            Log::debug("Failed to dispatch ModuleUninstalled event for {$this->getName()}: " . $e->getMessage());
+        }
 
         // Execute after_uninstall hook
         $this->executeHook('after_uninstall', $this);

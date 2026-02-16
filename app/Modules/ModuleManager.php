@@ -5,6 +5,7 @@ namespace App\Modules;
 use Exception;
 use App\Modules\Contracts\ModuleInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -176,6 +177,16 @@ class ModuleManager
      */
     protected function loadModules(): void
     {
+        // Check if caching is enabled
+        if (config('modules.cache', true) && !config('modules.development', false)) {
+            $cachedModules = Cache::get(config('modules.cache_key', 'app.modules'));
+            
+            if ($cachedModules) {
+                $this->modules = collect($cachedModules);
+                return;
+            }
+        }
+
         $modulesPath = app_path('Modules');
         
         if (!File::exists($modulesPath)) {
@@ -187,6 +198,15 @@ class ModuleManager
         foreach ($modules as $modulePath) {
             $moduleName = basename($modulePath);
             $this->loadModule($moduleName, $modulePath);
+        }
+
+        // Cache the loaded modules
+        if (config('modules.cache', true) && !config('modules.development', false)) {
+            Cache::put(
+                config('modules.cache_key', 'app.modules'),
+                $this->modules->all(),
+                config('modules.cache_ttl', 3600)
+            );
         }
     }
 
@@ -294,5 +314,58 @@ class ModuleManager
         return $this->modules->map(function ($module) {
             return $this->getModuleInfo($module->getName());
         })->toArray();
+    }
+
+    /**
+     * Clear the module cache.
+     */
+    public function clearCache(): void
+    {
+        Cache::forget(config('modules.cache_key', 'app.modules'));
+    }
+
+    /**
+     * Check module health status.
+     */
+    public function checkHealth(string $name): array
+    {
+        $module = $this->get($name);
+        
+        if (!$module) {
+            return [
+                'healthy' => false,
+                'errors' => ['Module not found'],
+            ];
+        }
+
+        $errors = [];
+        $warnings = [];
+
+        // Check if module class exists
+        $moduleClass = get_class($module);
+        if (!class_exists($moduleClass)) {
+            $errors[] = "Module class {$moduleClass} not found";
+        }
+
+        // Check dependencies
+        foreach ($module->getDependencies() as $dependency) {
+            $dependencyModule = $this->get($dependency);
+            if (!$dependencyModule) {
+                $errors[] = "Dependency {$dependency} not found";
+            } elseif (!$dependencyModule->isEnabled()) {
+                $warnings[] = "Dependency {$dependency} is disabled";
+            }
+        }
+
+        // Check if module is enabled but has unmet dependencies
+        if ($module->isEnabled() && !$this->checkDependencies($module)) {
+            $errors[] = "Module is enabled but has unmet dependencies";
+        }
+
+        return [
+            'healthy' => empty($errors),
+            'errors' => $errors,
+            'warnings' => $warnings,
+        ];
     }
 }
