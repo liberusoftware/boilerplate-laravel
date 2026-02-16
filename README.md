@@ -132,22 +132,39 @@ These steps assume you want to run the application on your machine (not in Docke
    ```
    Open: http://127.0.0.1:8000 (or your configured APP_URL)
 
-Optional: Setup script
-- This repository includes a convenience script `setup.sh` that runs common steps automatically. The script will prompt before overwriting `.env`. Use it only if you accept the actions it performs.
+Optional: Automated installation script
+- This repository includes an interactive installation script `install.sh` that automates the setup process.
+- The script supports three installation modes:
+  1. **Standalone** - Local development/production installation
+  2. **Docker** - Containerized deployment
+  3. **Kubernetes** - K8s cluster deployment
+- Features:
+  - Automatically detects and handles missing dependencies
+  - Downloads composer.phar if composer command is not available
+  - Skips composer install if vendor/ folder exists
+  - Skips npm install if node_modules/ folder exists
+  - Provides colored output and error checking
+  - Interactive prompts for configuration
+- Usage:
 ```bash
-./setup.sh
+chmod +x install.sh
+./install.sh
 ```
+- The script will guide you through the installation process based on your chosen deployment type.
 
 Optional: Web-based installer
 - A web-based installer is available at `public/installer.php` for GUI-based setup.
 - Enable it by setting `INSTALLER_ENABLED=true` in `.env`
 - Optionally set `INSTALLER_KEY` for authentication
 - The installer provides:
-  - Composer and NPM installation
+  - **Step-by-step installation workflow** with visual progress indicators
+  - Composer and NPM installation with automatic skip if already installed
+  - **Fallback to download composer.phar** if composer command doesn't exist
   - Database configuration and testing
   - Migration and seeding
   - User creation with roles
   - **Module management** (list, install, enable modules)
+  - **"Run All Steps" button** for automated installation
 - **Important:** Disable the installer after setup by setting `INSTALLER_ENABLED=false`
 
 Notes
