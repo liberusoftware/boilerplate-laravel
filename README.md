@@ -61,6 +61,7 @@ Key features
 - Social login via Socialite
 - **Real-time notifications with Pusher/Laravel Echo** (see [docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md))
 - **Modular architecture** for easy custom module integration
+- **Custom Theme System** - Support for custom layouts, CSS, and JS per theme (see [docs/THEME_SYSTEM.md](docs/THEME_SYSTEM.md))
 - **Private Messaging System** - Secure end-to-end encrypted messaging between users
 - **Multi-Language Support** - Automated translations with language detection and user preferences (see [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md))
 - Database seeders and example data (optional)
@@ -311,6 +312,85 @@ app/Modules/YourModule/
 │   └── assets/
 ├── config/
 └── tests/
+```
+
+Custom Theme System
+-------------------
+This boilerplate includes a comprehensive theme system that allows you to create custom layouts, CSS, and JavaScript for different visual themes.
+
+### Quick Start with Themes
+
+Switch themes programmatically:
+```php
+set_theme('dark');  // Switch to dark theme
+$current = active_theme();  // Get current theme
+```
+
+Use the theme switcher component:
+```blade
+<livewire:theme-switcher />
+```
+
+### Theme Features
+
+- **Custom Layouts** - Theme-specific Blade layouts in `resources/views/themes/{theme}/`
+- **Custom CSS** - Theme-specific stylesheets in `resources/css/themes/{theme}/app.css`
+- **Custom JavaScript** - Theme-specific scripts in `resources/js/themes/{theme}/app.js`
+- **User Preferences** - Themes saved to database per user or session
+- **Dynamic Switching** - Switch themes on the fly with Livewire component
+- **Fallback System** - Automatically falls back to default files if theme doesn't have custom versions
+- **Blade Directives** - `@themeCss`, `@themeJs`, `@themeAsset()`, `@themeLayout()`
+
+### Using Themes in Views
+
+```blade
+{{-- Use theme-specific layout --}}
+@extends(theme_layout('app'))
+
+@section('content')
+    {{-- Include theme CSS and JS --}}
+    @themeCss
+    @themeJs
+    
+    {{-- Use theme assets --}}
+    <img src="{{ theme_asset('images/logo.png') }}" alt="Logo">
+@endsection
+```
+
+### Creating a New Theme
+
+1. Create theme directories:
+```bash
+mkdir -p resources/views/themes/mytheme/layouts
+mkdir -p resources/css/themes/mytheme
+mkdir -p resources/js/themes/mytheme
+```
+
+2. Create `theme.json` with metadata
+3. Create custom layout files
+4. Create custom CSS and JS
+5. Build assets: `npm run build`
+
+### Documentation
+
+- [Theme System Guide](docs/THEME_SYSTEM.md) - Complete guide for creating and using themes
+- Example themes: `resources/views/themes/default/` and `resources/views/themes/dark/`
+
+### Theme Structure
+
+```
+resources/
+├── views/themes/
+│   └── mytheme/
+│       ├── theme.json           # Theme metadata
+│       └── layouts/
+│           └── app.blade.php    # Custom layout
+├── css/themes/
+│   └── mytheme/
+│       └── app.css              # Theme CSS
+└── js/themes/
+    └── mytheme/
+        └── app.js               # Theme JavaScript
 ```
 
 Contributing
