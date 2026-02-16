@@ -246,12 +246,6 @@ if ($action) {
         }
 
         if ($action === 'npm_install') {
-            // Check if node_modules already exists
-            if (file_exists($projectRoot . '/node_modules')) {
-                echo json_encode(['ok' => true, 'message' => 'NPM dependencies already installed. Skipping.', 'skipped' => true]);
-                exit;
-            }
-            
             $npm = getenv('NPM_BINARY') ?: 'npm';
             $cmd = escapeshellcmd($npm) . ' install --no-audit --no-fund';
             $out = null;
@@ -575,39 +569,22 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
   <title>Installer - <?= $app_name ?></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f3f4f6; color:#111827; margin:0; padding:0; }
-    .wrap { max-width:1200px;margin:32px auto;background:#fff;padding:20px;border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-    button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #e5e7eb; background:#111827;color:#fff; font-size:13px; transition: all 0.2s; }
-    button:hover:not(:disabled) { background:#374151; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f3f4f6; color:#111827; }
+    .wrap { max-width:1000px;margin:32px auto;background:#fff;padding:20px;border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    button { cursor:pointer; padding:8px 12px; border-radius:6px; border:1px solid #e5e7eb; background:#111827;color:#fff; }
     button:disabled { opacity:0.5; cursor:not-allowed; }
-    button.completed { background:#10b981 !important; border-color:#059669; }
-    button.running { background:#3b82f6 !important; border-color:#2563eb; animation: pulse 1.5s infinite; }
-    button.skipped { background:#f59e0b !important; border-color:#d97706; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
     .btn-ghost{ background:#fff;color:#111827;border:1px solid #e5e7eb; }
     .btn-success{ background:#10b981;color:#fff;border:1px solid #059669; }
     .btn-warning{ background:#f59e0b;color:#fff;border:1px solid #d97706; }
-    .btn-primary{ background:#3b82f6;color:#fff;border:1px solid #2563eb; }
-    pre { background:#0b1220; color:#9ae6b4; padding:12px; border-radius:6px; overflow:auto; max-height:300px; font-size:11px; line-height:1.5; }
-    input, select { padding:8px;border:1px solid #e5e7eb;border-radius:6px;width:100%; box-sizing:border-box; }
-    .grid { display:grid; grid-template-columns: 1fr 380px; gap:20px; }
-    .steps { display:flex; flex-direction:column; gap:16px; }
-    .step-section { background:#f9fafb; padding:16px; border-radius:8px; border:1px solid #e5e7eb; }
-    .step-header { font-weight:600; font-size:14px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-    .step-number { width:24px; height:24px; border-radius:50%; background:#e5e7eb; color:#111827; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; }
-    .step-number.active { background:#3b82f6; color:#fff; }
-    .step-number.completed { background:#10b981; color:#fff; }
-    .step-number.skipped { background:#f59e0b; color:#fff; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; }
-    label { font-size:13px; color:#374151; margin-top:8px; display:block; }
+    pre { background:#0b1220; color:#9ae6b4; padding:12px; border-radius:6px; overflow:auto; height:240px; }
+    input, select { padding:8px;border:1px solid #e5e7eb;border-radius:6px;width:100%; }
+    .grid { display:grid; grid-template-columns: 1fr 320px; gap:16px; }
+    .steps { display:flex; flex-direction:column; gap:8px; }
+    .row { display:flex; gap:8px; }
+    label { font-size:13px; color:#374151; }
     .muted{ color:#6b7280; font-size:13px; }
     .progress-indicator { display:none; margin-top:4px; color:#6366f1; font-size:12px; }
     .progress-indicator.active { display:block; }
-    .status-badge { padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600; display:inline-block; }
-    .status-badge.success { background:#d1fae5; color:#065f46; }
-    .status-badge.error { background:#fee2e2; color:#991b1b; }
-    .status-badge.warning { background:#fef3c7; color:#92400e; }
-    .status-badge.info { background:#dbeafe; color:#1e40af; }
   </style>
 </head>
 <body>
@@ -628,87 +605,18 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
     <div class="grid" style="align-items:start">
       <div>
         <div class="steps">
-          <!-- Installation Steps Section -->
-          <div class="step-section">
-            <div class="step-header">
-              <span class="step-number" id="step-num-1">1</span>
-              <span>Composer Dependencies</span>
+          <div>
+            <strong>Steps</strong>
+            <div class="row" style="margin-top:8px;">
+              <button onclick="run('composer_install')" id="b-composer">1. Composer install</button>
+              <button onclick="run('php_key_generate')" id="b-key" class="btn-ghost">2. Key</button>
+              <button onclick="run('migrate_seed')" id="b-migrate" class="btn-ghost">3. Migrate & Seed</button>
             </div>
-            <p class="muted" style="margin:0 0 12px 32px;">Install PHP dependencies or skip if vendor/ folder exists</p>
-            <div style="margin-left:32px;">
-              <button onclick="run('composer_install')" id="b-composer" class="btn-primary">
-                <span id="b-composer-text">Install Composer Dependencies</span>
-              </button>
-              <div id="composer-status" style="margin-top:8px;"></div>
+            <div class="row" style="margin-top:8px;">
+              <button onclick="run('npm_install')" id="b-npm" class="btn-ghost">4. NPM Install</button>
+              <button onclick="run('npm_build')" id="b-npmbuild" class="btn-ghost">5. NPM Build</button>
             </div>
           </div>
-
-          <div class="step-section">
-            <div class="step-header">
-              <span class="step-number" id="step-num-2">2</span>
-              <span>Application Key</span>
-            </div>
-            <p class="muted" style="margin:0 0 12px 32px;">Generate Laravel application key (requires step 1)</p>
-            <div style="margin-left:32px;">
-              <button onclick="run('php_key_generate')" id="b-key" class="btn-ghost">
-                <span id="b-key-text">Generate App Key</span>
-              </button>
-              <div id="key-status" style="margin-top:8px;"></div>
-            </div>
-          </div>
-
-          <div class="step-section">
-            <div class="step-header">
-              <span class="step-number" id="step-num-3">3</span>
-              <span>Database Migration & Seeding</span>
-            </div>
-            <p class="muted" style="margin:0 0 12px 32px;">Run migrations and seed the database (requires steps 1-2)</p>
-            <div style="margin-left:32px;">
-              <button onclick="run('migrate_seed')" id="b-migrate" class="btn-ghost">
-                <span id="b-migrate-text">Migrate & Seed Database</span>
-              </button>
-              <div id="migrate-status" style="margin-top:8px;"></div>
-            </div>
-          </div>
-
-          <div class="step-section">
-            <div class="step-header">
-              <span class="step-number" id="step-num-4">4</span>
-              <span>NPM Dependencies</span>
-            </div>
-            <p class="muted" style="margin:0 0 12px 32px;">Install Node.js dependencies or skip if node_modules/ exists</p>
-            <div style="margin-left:32px;">
-              <button onclick="run('npm_install')" id="b-npm" class="btn-ghost">
-                <span id="b-npm-text">Install NPM Dependencies</span>
-              </button>
-              <div id="npm-status" style="margin-top:8px;"></div>
-            </div>
-          </div>
-
-          <div class="step-section">
-            <div class="step-header">
-              <span class="step-number" id="step-num-5">5</span>
-              <span>Build Frontend Assets</span>
-            </div>
-            <p class="muted" style="margin:0 0 12px 32px;">Build production assets with Vite (requires step 4)</p>
-            <div style="margin-left:32px;">
-              <button onclick="run('npm_build')" id="b-npmbuild" class="btn-ghost">
-                <span id="b-npmbuild-text">Build Assets</span>
-              </button>
-              <div id="npmbuild-status" style="margin-top:8px;"></div>
-            </div>
-          </div>
-
-          <!-- Quick Actions -->
-          <div style="margin-top:16px;padding:12px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;">
-            <strong style="font-size:14px;">Quick Actions</strong>
-            <div class="row" style="margin-top:12px;">
-              <button onclick="runAll()" class="btn-primary">Run All Steps</button>
-              <button onclick="checkStatus()" class="btn-ghost">Check Status</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
           <div>
             <strong>Settings</strong>
@@ -830,149 +738,28 @@ async function checkStatus(){
   try {
     const res = await fetch(window.location.pathname + '?action=status&key=' + encodeURIComponent(getKey()));
     const j = await res.json();
-    
-    // Update status display
-    let statusText = '';
-    if (j.composer_installed) {
-      statusText += '<span class="status-badge success">✓ Composer Installed</span> ';
-    } else {
-      statusText += '<span class="status-badge warning">⚠ Composer Not Installed</span> ';
-    }
-    
-    if (j.npm_installed) {
-      statusText += '<span class="status-badge success">✓ NPM Installed</span>';
-    } else {
-      statusText += '<span class="status-badge warning">⚠ NPM Not Installed</span>';
-    }
-    
-    document.getElementById('status').innerHTML = statusText;
+    document.getElementById('status').textContent = 'Composer installed: ' + (j.composer_installed ? 'yes' : 'no');
   } catch (e) {
-    document.getElementById('status').innerHTML = '<span class="status-badge error">Status unavailable</span>';
+    document.getElementById('status').textContent = 'Status unavailable';
   }
 }
-
 function getKey() {
   const qp = new URLSearchParams(window.location.search);
   return qp.get('key') || '';
 }
 
 async function run(action){
-  // Map action names to button/status IDs
-  const idMap = {
-    'composer_install': { btn: 'b-composer', status: 'composer-status' },
-    'php_key_generate': { btn: 'b-key', status: 'key-status' },
-    'migrate_seed': { btn: 'b-migrate', status: 'migrate-status' },
-    'npm_install': { btn: 'b-npm', status: 'npm-status' },
-    'npm_build': { btn: 'b-npmbuild', status: 'npmbuild-status' }
-  };
-  
-  const ids = idMap[action] || {};
-  const btn = ids.btn ? document.getElementById(ids.btn) : null;
-  const statusDiv = ids.status ? document.getElementById(ids.status) : null;
-  
-  // Set button to running state
-  if (btn) {
-    btn.disabled = true;
-    btn.classList.add('running');
-  }
-  
-  append("⏳ Starting " + action + "...");
-  
+  append("Starting " + action + "...");
   try {
     const res = await fetch(window.location.pathname + '?action=' + encodeURIComponent(action) + '&key=' + encodeURIComponent(getKey()), { method: 'POST' });
     const j = await res.json();
-    
-    if (j.skipped) {
-      append("⚠️  Skipped: " + (j.message || action));
-      if (btn) {
-        btn.classList.remove('running');
-        btn.classList.add('skipped');
-      }
-      if (statusDiv) {
-        statusDiv.innerHTML = '<span class="status-badge warning">Skipped - Already installed</span>';
-      }
-      // Update step number
-      updateStepNumber(action, 'skipped');
-    } else if (j.ok) {
-      append("✅ Success: " + action);
-      if (j.output) append(j.output);
-      if (j.message) append(j.message);
-      if (btn) {
-        btn.classList.remove('running');
-        btn.classList.add('completed');
-        btn.disabled = false;
-      }
-      if (statusDiv) {
-        statusDiv.innerHTML = '<span class="status-badge success">✓ Completed</span>';
-      }
-      // Update step number
-      updateStepNumber(action, 'completed');
-    } else {
-      append("❌ Error: " + action);
-      if (j.output) append(j.output);
-      if (j.message) append(j.message);
-      append("Exit: " + (j.exit ?? '') + " OK: false");
-      if (btn) {
-        btn.classList.remove('running');
-        btn.disabled = false;
-      }
-      if (statusDiv) {
-        statusDiv.innerHTML = '<span class="status-badge error">✗ Failed</span>';
-      }
-    }
+    if (j.output) append(j.output);
+    if (j.message) append(j.message);
+    append("Exit: " + (j.exit ?? '') + " OK: " + (j.ok ? 'true' : 'false'));
   } catch (e) {
-    append("❌ Error: " + e.message);
-    if (btn) {
-      btn.classList.remove('running');
-      btn.disabled = false;
-    }
-    if (statusDiv) {
-      statusDiv.innerHTML = '<span class="status-badge error">✗ Error</span>';
-    }
+    append("Error: " + e.message);
   }
-  
   checkStatus();
-}
-
-function updateStepNumber(action, status) {
-  const stepMap = {
-    'composer_install': 1,
-    'php_key_generate': 2,
-    'migrate_seed': 3,
-    'npm_install': 4,
-    'npm_build': 5
-  };
-  
-  const stepNum = stepMap[action];
-  if (stepNum) {
-    const stepEl = document.getElementById('step-num-' + stepNum);
-    if (stepEl) {
-      stepEl.classList.remove('active', 'completed', 'skipped');
-      if (status === 'completed') {
-        stepEl.classList.add('completed');
-        stepEl.textContent = '✓';
-      } else if (status === 'skipped') {
-        stepEl.classList.add('skipped');
-        stepEl.textContent = '⚠';
-      } else {
-        stepEl.classList.add('active');
-      }
-    }
-  }
-}
-
-async function runAll() {
-  append("🚀 Running all installation steps...");
-  
-  const steps = ['composer_install', 'php_key_generate', 'migrate_seed', 'npm_install', 'npm_build'];
-  
-  for (const step of steps) {
-    await run(step);
-    // Small delay between steps
-    await new Promise(resolve => setTimeout(resolve, 500));
-  }
-  
-  append("✅ All steps completed!");
 }
 
 function saveSettings(){
