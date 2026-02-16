@@ -51,6 +51,8 @@ This repository provides a modern Laravel-based boilerplate with common SaaS bui
 
 **New:** This boilerplate now includes a complete **Private Messaging System** that allows users to send secure, encrypted messages to each other. See [MESSAGING.md](MESSAGING.md) and [SETUP_MESSAGING.md](SETUP_MESSAGING.md) for detailed documentation.
 
+**New:** **Multi-Language Support** with automated translations is now available! The application supports English, Spanish, French, and German out of the box, with smart language detection and user preferences. See [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md) for detailed documentation.
+
 Key features
 ------------
 - Jetstream authentication and user profiles with avatar uploads
@@ -60,6 +62,7 @@ Key features
 - **Real-time notifications with Pusher/Laravel Echo** (see [docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md))
 - **Modular architecture** for easy custom module integration
 - **Private Messaging System** - Secure end-to-end encrypted messaging between users
+- **Multi-Language Support** - Automated translations with language detection and user preferences (see [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md))
 - Database seeders and example data (optional)
 - Docker and Laravel Sail support for containerized development
 
