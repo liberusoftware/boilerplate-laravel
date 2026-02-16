@@ -113,7 +113,7 @@ install_composer_dependencies() {
     
     # Run composer install
     print_info "Running: $COMPOSER_CMD install"
-    if $COMPOSER_CMD install --no-interaction --prefer-dist; then
+    if eval "$COMPOSER_CMD install --no-interaction --prefer-dist"; then
         print_success "Composer dependencies installed successfully"
         return 0
     else
