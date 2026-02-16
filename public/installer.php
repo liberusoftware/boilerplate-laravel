@@ -189,7 +189,7 @@ if ($action) {
                 $out .= "Downloaded Composer installer\n";
                 
                 // Run composer installer
-                $setupCmd = [escapeshellarg($php), 'composer-setup.php', '--quiet'];
+                $setupCmd = [$php, 'composer-setup.php', '--quiet'];
                 $setupOut = null;
                 $setupCode = run_cmd_array($setupCmd, $setupOut);
                 $out .= $setupOut . "\n";
@@ -213,9 +213,9 @@ if ($action) {
             
             // Run composer install using array form for safety
             if ($useComposerPhar) {
-                $cmd = [escapeshellarg($php), 'composer.phar', 'install', '--no-interaction', '--no-progress'];
+                $cmd = [$php, 'composer.phar', 'install', '--no-interaction', '--no-progress'];
             } else {
-                $cmd = [escapeshellarg($composer), 'install', '--no-interaction', '--no-progress'];
+                $cmd = [$composer, 'install', '--no-interaction', '--no-progress'];
             }
             $installOut = null;
             $code = run_cmd_array($cmd, $installOut);
@@ -232,7 +232,7 @@ if ($action) {
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = [escapeshellarg($php), 'artisan', 'key:generate', '--force'];
+            $cmd = [$php, 'artisan', 'key:generate', '--force'];
             $out = null;
             $code = run_cmd_array($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
@@ -245,7 +245,7 @@ if ($action) {
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = [escapeshellarg($php), 'artisan', 'migrate', '--force', '--seed'];
+            $cmd = [$php, 'artisan', 'migrate', '--force', '--seed'];
             $out = null;
             $code = run_cmd_array($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
@@ -260,7 +260,7 @@ if ($action) {
             }
             
             $npm = getenv('NPM_BINARY') ?: 'npm';
-            $cmd = [escapeshellarg($npm), 'install', '--no-audit', '--no-fund'];
+            $cmd = [$npm, 'install', '--no-audit', '--no-fund'];
             $out = null;
             $code = run_cmd_array($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
@@ -269,7 +269,7 @@ if ($action) {
 
         if ($action === 'npm_build') {
             $npm = getenv('NPM_BINARY') ?: 'npm';
-            $cmd = [escapeshellarg($npm), 'run', 'build'];
+            $cmd = [$npm, 'run', 'build'];
             $out = null;
             $code = run_cmd_array($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
