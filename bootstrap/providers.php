@@ -7,6 +7,7 @@ return [
     App\Providers\EventServiceProvider::class,
     App\Providers\Filament\AdminPanelProvider::class,
     App\Providers\Filament\AppPanelProvider::class,
+    App\Providers\ThemeServiceProvider::class,
 
     // App\Providers\SiteSettingsServiceProvider::class,
     App\Providers\SiteSettingsBridgeServiceProvider::class,
