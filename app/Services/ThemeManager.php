@@ -14,7 +14,7 @@ class ThemeManager
 
     public function __construct()
     {
-        $this->themesPath = resource_path('views/themes');
+        $this->themesPath = base_path('themes');
         $this->activeTheme = config('theme.default', 'default');
         $this->loadThemes();
     }
@@ -92,12 +92,21 @@ class ThemeManager
     }
 
     /**
+     * Get theme views path.
+     */
+    public function getThemeViewsPath(string $theme = null): string
+    {
+        $theme = $theme ?? $this->activeTheme;
+        return $this->themesPath . '/' . $theme . '/views';
+    }
+
+    /**
      * Get theme asset path (CSS/JS).
      */
     public function getThemeAssetPath(string $type, string $theme = null): ?string
     {
         $theme = $theme ?? $this->activeTheme;
-        $assetPath = resource_path("{$type}/themes/{$theme}");
+        $assetPath = $this->themesPath . '/' . $theme . '/' . $type;
 
         if (File::exists($assetPath)) {
             return $assetPath;
@@ -111,11 +120,11 @@ class ThemeManager
      */
     public function registerThemePaths(): void
     {
-        $themePath = $this->getThemePath();
+        $themeViewsPath = $this->getThemeViewsPath();
 
-        if (File::exists($themePath)) {
-            // Add theme path before the default views path
-            View::getFinder()->prependLocation($themePath);
+        if (File::exists($themeViewsPath)) {
+            // Add theme views path before the default views path
+            View::getFinder()->prependLocation($themeViewsPath);
         }
     }
 
@@ -125,7 +134,7 @@ class ThemeManager
     public function getThemeCss(string $theme = null): ?string
     {
         $theme = $theme ?? $this->activeTheme;
-        $cssPath = "resources/css/themes/{$theme}/app.css";
+        $cssPath = "themes/{$theme}/css/app.css";
 
         if (File::exists(base_path($cssPath))) {
             return $cssPath;
@@ -140,7 +149,7 @@ class ThemeManager
     public function getThemeJs(string $theme = null): ?string
     {
         $theme = $theme ?? $this->activeTheme;
-        $jsPath = "resources/js/themes/{$theme}/app.js";
+        $jsPath = "themes/{$theme}/js/app.js";
 
         if (File::exists(base_path($jsPath))) {
             return $jsPath;
@@ -173,7 +182,7 @@ class ThemeManager
     public function hasCustomLayout(string $layout, string $theme = null): bool
     {
         $theme = $theme ?? $this->activeTheme;
-        $layoutPath = $this->getThemePath($theme) . "/layouts/{$layout}.blade.php";
+        $layoutPath = $this->getThemeViewsPath($theme) . "/layouts/{$layout}.blade.php";
 
         return File::exists($layoutPath);
     }
@@ -186,7 +195,7 @@ class ThemeManager
         $theme = $theme ?? $this->activeTheme;
 
         if ($this->hasCustomLayout($layout, $theme)) {
-            return "themes.{$theme}.layouts.{$layout}";
+            return "layouts.{$layout}";
         }
 
         return "layouts.{$layout}";

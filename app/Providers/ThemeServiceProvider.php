@@ -77,7 +77,7 @@ class ThemeServiceProvider extends ServiceProvider
             return "<?php 
                 \$theme = app('theme')->getActiveTheme();
                 if (app('theme')->getThemeCss()) {
-                    echo app(\Illuminate\Foundation\Vite::class)('resources/css/themes/' . \$theme . '/app.css');
+                    echo app(\Illuminate\Foundation\Vite::class)('themes/' . \$theme . '/css/app.css');
                 }
             ?>";
         });
@@ -87,7 +87,7 @@ class ThemeServiceProvider extends ServiceProvider
             return "<?php 
                 \$theme = app('theme')->getActiveTheme();
                 if (app('theme')->getThemeJs()) {
-                    echo app(\Illuminate\Foundation\Vite::class)('resources/js/themes/' . \$theme . '/app.js');
+                    echo app(\Illuminate\Foundation\Vite::class)('themes/' . \$theme . '/js/app.js');
                 }
             ?>";
         });

@@ -333,9 +333,9 @@ Use the theme switcher component:
 
 ### Theme Features
 
-- **Custom Layouts** - Theme-specific Blade layouts in `resources/views/themes/{theme}/`
-- **Custom CSS** - Theme-specific stylesheets in `resources/css/themes/{theme}/app.css`
-- **Custom JavaScript** - Theme-specific scripts in `resources/js/themes/{theme}/app.js`
+- **Custom Layouts** - Theme-specific Blade layouts in `/themes/{theme}/views/`
+- **Custom CSS** - Theme-specific stylesheets in `/themes/{theme}/css/app.css`
+- **Custom JavaScript** - Theme-specific scripts in `/themes/{theme}/js/app.js`
 - **User Preferences** - Themes saved to database per user or session
 - **Dynamic Switching** - Switch themes on the fly with Livewire component
 - **Fallback System** - Automatically falls back to default files if theme doesn't have custom versions
@@ -361,9 +361,9 @@ Use the theme switcher component:
 
 1. Create theme directories:
 ```bash
-mkdir -p resources/views/themes/mytheme/layouts
-mkdir -p resources/css/themes/mytheme
-mkdir -p resources/js/themes/mytheme
+mkdir -p themes/mytheme/views/layouts
+mkdir -p themes/mytheme/css
+mkdir -p themes/mytheme/js
 ```
 
 2. Create `theme.json` with metadata
@@ -374,22 +374,20 @@ mkdir -p resources/js/themes/mytheme
 ### Documentation
 
 - [Theme System Guide](docs/THEME_SYSTEM.md) - Complete guide for creating and using themes
-- Example themes: `resources/views/themes/default/` and `resources/views/themes/dark/`
+- Example themes: `themes/default/` and `themes/dark/`
 
 ### Theme Structure
 
 ```
-resources/
-├── views/themes/
-│   └── mytheme/
-│       ├── theme.json           # Theme metadata
-│       └── layouts/
-│           └── app.blade.php    # Custom layout
-├── css/themes/
-│   └── mytheme/
-│       └── app.css              # Theme CSS
-└── js/themes/
-    └── mytheme/
+themes/
+└── mytheme/
+    ├── theme.json           # Theme metadata
+    ├── views/
+    │   └── layouts/
+    │       └── app.blade.php    # Custom layout
+    ├── css/
+    │   └── app.css              # Theme CSS
+    └── js/
         └── app.js               # Theme JavaScript
 ```
 

@@ -5,10 +5,10 @@ import tailwindcss from "@tailwindcss/vite";
 import { glob } from "glob";
 import path from "path";
 
-// Get all theme CSS and JS files dynamically
+// Get all theme CSS and JS files dynamically from /themes root folder
 const themeAssets = [
-	...glob.sync("resources/css/themes/*/app.css"),
-	...glob.sync("resources/js/themes/*/app.js"),
+	...glob.sync("themes/*/css/app.css"),
+	...glob.sync("themes/*/js/app.js"),
 ];
 
 export default defineConfig({
@@ -28,6 +28,7 @@ export default defineConfig({
 				"app/Infolists/Components/**",
 				"app/Providers/Filament/**",
 				"app/Tables/Columns/**",
+				"themes/**",
 			],
 		}),
 		viteStaticCopy({

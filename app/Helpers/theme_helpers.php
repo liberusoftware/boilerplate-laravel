@@ -43,6 +43,16 @@ if (!function_exists('theme_path')) {
     }
 }
 
+if (!function_exists('theme_views_path')) {
+    /**
+     * Get the full path to a theme's views directory.
+     */
+    function theme_views_path(string $theme = null): string
+    {
+        return theme()->getThemeViewsPath($theme);
+    }
+}
+
 if (!function_exists('set_theme')) {
     /**
      * Set the active theme.

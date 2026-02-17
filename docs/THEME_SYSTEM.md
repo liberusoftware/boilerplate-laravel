@@ -5,34 +5,35 @@ The Laravel Boilerplate includes a powerful, flexible theme system that allows y
 ## Overview
 
 The theme system supports:
-- **Custom Layout Files**: Theme-specific Blade layouts in `resources/views/themes/{theme_name}/`
-- **Custom CSS**: Theme-specific stylesheets in `resources/css/themes/{theme_name}/app.css`
-- **Custom JavaScript**: Theme-specific scripts in `resources/js/themes/{theme_name}/app.js`
+- **Custom Layout Files**: Theme-specific Blade layouts in `/themes/{theme_name}/views/`
+- **Custom CSS**: Theme-specific stylesheets in `/themes/{theme_name}/css/app.css`
+- **Custom JavaScript**: Theme-specific scripts in `/themes/{theme_name}/js/app.js`
 - **User Preferences**: Save theme preferences per user or in session
 - **Dynamic Theme Switching**: Switch themes on the fly with Livewire component
 
 ## Directory Structure
 
+All themes are located in a single `/themes` root folder for better organization:
+
 ```
-resources/
-├── views/themes/
-│   ├── default/
-│   │   ├── theme.json          # Theme configuration
+themes/
+├── default/
+│   ├── theme.json              # Theme configuration
+│   ├── views/
 │   │   └── layouts/
 │   │       └── app.blade.php   # Custom layout
-│   └── dark/
-│       ├── theme.json
-│       └── layouts/
-│           └── app.blade.php
-├── css/themes/
-│   ├── default/
+│   ├── css/
 │   │   └── app.css             # Theme-specific CSS
-│   └── dark/
-│       └── app.css
-└── js/themes/
-    ├── default/
-    │   └── app.js              # Theme-specific JS
-    └── dark/
+│   └── js/
+│       └── app.js              # Theme-specific JS
+└── dark/
+    ├── theme.json
+    ├── views/
+    │   └── layouts/
+    │       └── app.blade.php
+    ├── css/
+    │   └── app.css
+    └── js/
         └── app.js
 ```
 
@@ -41,14 +42,14 @@ resources/
 ### 1. Create Theme Directories
 
 ```bash
-mkdir -p resources/views/themes/mytheme/layouts
-mkdir -p resources/css/themes/mytheme
-mkdir -p resources/js/themes/mytheme
+mkdir -p themes/mytheme/views/layouts
+mkdir -p themes/mytheme/css
+mkdir -p themes/mytheme/js
 ```
 
 ### 2. Create Theme Configuration
 
-Create `resources/views/themes/mytheme/theme.json`:
+Create `themes/mytheme/theme.json`:
 
 ```json
 {
@@ -66,7 +67,7 @@ Create `resources/views/themes/mytheme/theme.json`:
 
 ### 3. Create Custom Layout
 
-Create `resources/views/themes/mytheme/layouts/app.blade.php`:
+Create `themes/mytheme/views/layouts/app.blade.php`:
 
 ```blade
 <!DOCTYPE html>
@@ -94,7 +95,7 @@ Create `resources/views/themes/mytheme/layouts/app.blade.php`:
 
 ### 4. Create Custom CSS
 
-Create `resources/css/themes/mytheme/app.css`:
+Create `themes/mytheme/css/app.css`:
 
 ```css
 @import 'tailwindcss';
@@ -114,7 +115,7 @@ Create `resources/css/themes/mytheme/app.css`:
 
 ### 5. Create Custom JavaScript
 
-Create `resources/js/themes/mytheme/app.js`:
+Create `themes/mytheme/js/app.js`:
 
 ```javascript
 console.log('My custom theme loaded');
@@ -168,6 +169,9 @@ if (theme()->themeExists('mytheme')) {
 
 // Get all themes
 $themes = theme()->getThemes();
+
+// Get theme views path
+$viewsPath = theme_views_path();
 ```
 
 ### Theme Switcher Component
@@ -201,6 +205,7 @@ The theme system provides several Blade directives:
 - `active_theme()` - Get active theme name
 - `theme_asset($path, $theme = null)` - Generate theme asset URL
 - `theme_path($theme = null)` - Get theme directory path
+- `theme_views_path($theme = null)` - Get theme views directory path
 - `set_theme($themeName)` - Set active theme
 - `theme_layout($layout)` - Get theme layout path
 
@@ -250,10 +255,10 @@ If a theme doesn't have a custom file, the system falls back to defaults:
 The system automatically discovers theme assets. Vite configuration includes:
 
 ```javascript
-// Theme assets are automatically included
+// Theme assets are automatically included from /themes folder
 const themeAssets = [
-    ...glob.sync("resources/css/themes/*/app.css"),
-    ...glob.sync("resources/js/themes/*/app.js"),
+    ...glob.sync("themes/*/css/app.css"),
+    ...glob.sync("themes/*/js/app.js"),
 ];
 ```
 
@@ -262,12 +267,12 @@ const themeAssets = [
 The boilerplate includes two example themes:
 
 ### Default Theme
-- Located in `resources/views/themes/default/`
+- Located in `themes/default/`
 - Light color scheme
 - Gray primary colors
 
 ### Dark Theme
-- Located in `resources/views/themes/dark/`
+- Located in `themes/dark/`
 - Dark color scheme
 - Indigo/purple accents
 - Forces dark mode on HTML element
@@ -276,7 +281,7 @@ The boilerplate includes two example themes:
 
 **Theme not switching:**
 - Clear cache: `php artisan cache:clear`
-- Check theme exists in `resources/views/themes/`
+- Check theme exists in `themes/` directory
 - Verify theme.json is valid JSON
 
 **Assets not loading:**
@@ -286,7 +291,7 @@ The boilerplate includes two example themes:
 
 **Layout not applying:**
 - Use `@extends(theme_layout('app'))` in views
-- Check layout file exists in theme directory
+- Check layout file exists in theme's views/layouts directory
 - Verify ThemeServiceProvider is registered
 
 ## Advanced Usage
