@@ -187,17 +187,24 @@ class ModuleManager
             }
         }
 
+        // Load from old modules directory (app/Modules)
         $modulesPath = app_path('Modules');
-        
-        if (!File::exists($modulesPath)) {
-            return;
+        if (File::exists($modulesPath)) {
+            $modules = File::directories($modulesPath);
+            foreach ($modules as $modulePath) {
+                $moduleName = basename($modulePath);
+                $this->loadModule($moduleName, $modulePath);
+            }
         }
 
-        $modules = File::directories($modulesPath);
-
-        foreach ($modules as $modulePath) {
-            $moduleName = basename($modulePath);
-            $this->loadModule($moduleName, $modulePath);
+        // Load from new modular directory (app-modules)
+        $modularPath = base_path(config('modular.modules_directory', 'app-modules'));
+        if (File::exists($modularPath)) {
+            $modules = File::directories($modularPath);
+            foreach ($modules as $modulePath) {
+                $moduleName = basename($modulePath);
+                $this->loadModularModule($moduleName, $modulePath);
+            }
         }
 
         // Cache the loaded modules
@@ -257,6 +264,106 @@ class ModuleManager
             }
         } else {
             \Log::warning("Module class {$moduleClass} not found for module path {$modulePath}.");
+        }
+    }
+
+    /**
+     * Load a modular module (internachi/modular pattern).
+     */
+    protected function loadModularModule(string $moduleName, string $modulePath): void
+    {
+        $namespace = config('modular.modules_namespace', 'Modules');
+        $moduleClass = "{$namespace}\\{$moduleName}\\{$moduleName}Module";
+
+        if (class_exists($moduleClass)) {
+            try {
+                // Create a wrapper that implements our ModuleInterface
+                $module = new class($moduleClass) implements ModuleInterface {
+                    private string $moduleClass;
+                    private bool $enabled = false;
+
+                    public function __construct(string $moduleClass)
+                    {
+                        $this->moduleClass = $moduleClass;
+                        // Check if module is enabled from database
+                        try {
+                            $dbModule = \App\Models\Module::where('name', $moduleClass::getName())->first();
+                            $this->enabled = $dbModule ? $dbModule->enabled : false;
+                        } catch (\Throwable $e) {
+                            // Ignore database errors during module loading
+                        }
+                    }
+
+                    public function getName(): string
+                    {
+                        return $this->moduleClass::getName();
+                    }
+
+                    public function getVersion(): string
+                    {
+                        return $this->moduleClass::getVersion();
+                    }
+
+                    public function getDescription(): string
+                    {
+                        return $this->moduleClass::getDescription();
+                    }
+
+                    public function getDependencies(): array
+                    {
+                        return [];
+                    }
+
+                    public function isEnabled(): bool
+                    {
+                        return $this->enabled;
+                    }
+
+                    public function enable(): void
+                    {
+                        $this->enabled = true;
+                    }
+
+                    public function disable(): void
+                    {
+                        $this->enabled = false;
+                    }
+
+                    public function install(): void
+                    {
+                        // Run migrations if needed
+                    }
+
+                    public function uninstall(): void
+                    {
+                        // Rollback migrations if needed
+                    }
+
+                    public function getConfig(): array
+                    {
+                        return config(strtolower($this->getName()), []);
+                    }
+                };
+
+                $this->register($module);
+
+                // Persist module metadata to DB
+                try {
+                    \App\Models\Module::updateOrCreate(
+                        ['name' => $module->getName()],
+                        [
+                            'version' => $module->getVersion(),
+                            'description' => $module->getDescription(),
+                            'dependencies' => $module->getDependencies(),
+                            'config' => $module->getConfig(),
+                        ]
+                    );
+                } catch (\Throwable $e) {
+                    \Log::warning("Failed to persist modular module '{$moduleName}' metadata: " . $e->getMessage());
+                }
+            } catch (\Throwable $e) {
+                \Log::warning("Failed loading modular module '{$moduleName}': " . $e->getMessage());
+            }
         }
     }
 
