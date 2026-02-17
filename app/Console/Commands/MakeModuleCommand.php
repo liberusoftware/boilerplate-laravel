@@ -288,6 +288,7 @@ PHP;
     protected function createControllerExample(string $modulePath, string $name): void
     {
         $namespace = config('modular.modules_namespace', 'Modules');
+        $kebabName = Str::kebab($name);
         
         $stub = <<<PHP
 <?php
@@ -304,7 +305,7 @@ class {$name}Controller extends Controller
      */
     public function index()
     {
-        return view('{$name}::index');
+        return view('{$kebabName}::index');
     }
 }
 PHP;
@@ -413,6 +414,7 @@ PHP;
     protected function createTestExample(string $modulePath, string $name): void
     {
         $namespace = config('modular.modules_namespace', 'Modules');
+        $kebabName = Str::kebab($name);
         
         $stub = <<<PHP
 <?php
@@ -425,7 +427,7 @@ class {$name}Test extends TestCase
 {
     public function test_module_index(): void
     {
-        \$response = \$this->get(route('{$name}.index'));
+        \$response = \$this->get(route('{$kebabName}.index'));
         \$response->assertStatus(200);
     }
 }

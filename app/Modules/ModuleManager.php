@@ -275,95 +275,114 @@ class ModuleManager
         $namespace = config('modular.modules_namespace', 'Modules');
         $moduleClass = "{$namespace}\\{$moduleName}\\{$moduleName}Module";
 
-        if (class_exists($moduleClass)) {
-            try {
-                // Create a wrapper that implements our ModuleInterface
-                $module = new class($moduleClass) implements ModuleInterface {
-                    private string $moduleClass;
-                    private bool $enabled = false;
+        if (!class_exists($moduleClass)) {
+            return;
+        }
 
-                    public function __construct(string $moduleClass)
-                    {
-                        $this->moduleClass = $moduleClass;
-                        // Check if module is enabled from database
-                        try {
-                            $dbModule = \App\Models\Module::where('name', $moduleClass::getName())->first();
+        try {
+            // Create a wrapper that implements our ModuleInterface
+            $module = new class($moduleClass) implements ModuleInterface {
+                private string $moduleClass;
+                private bool $enabled = false;
+                private $moduleInstance;
+
+                public function __construct(string $moduleClass)
+                {
+                    $this->moduleClass = $moduleClass;
+                    // Create an instance to access static methods safely
+                    if (class_exists($moduleClass)) {
+                        $this->moduleInstance = new $moduleClass();
+                    }
+                    
+                    // Check if module is enabled from database
+                    try {
+                        if ($this->moduleInstance && method_exists($this->moduleInstance, 'getName')) {
+                            $dbModule = \App\Models\Module::where('name', $this->getName())->first();
                             $this->enabled = $dbModule ? $dbModule->enabled : false;
-                        } catch (\Throwable $e) {
-                            // Ignore database errors during module loading
                         }
+                    } catch (\Throwable $e) {
+                        // Ignore database errors during module loading
                     }
-
-                    public function getName(): string
-                    {
-                        return $this->moduleClass::getName();
-                    }
-
-                    public function getVersion(): string
-                    {
-                        return $this->moduleClass::getVersion();
-                    }
-
-                    public function getDescription(): string
-                    {
-                        return $this->moduleClass::getDescription();
-                    }
-
-                    public function getDependencies(): array
-                    {
-                        return [];
-                    }
-
-                    public function isEnabled(): bool
-                    {
-                        return $this->enabled;
-                    }
-
-                    public function enable(): void
-                    {
-                        $this->enabled = true;
-                    }
-
-                    public function disable(): void
-                    {
-                        $this->enabled = false;
-                    }
-
-                    public function install(): void
-                    {
-                        // Run migrations if needed
-                    }
-
-                    public function uninstall(): void
-                    {
-                        // Rollback migrations if needed
-                    }
-
-                    public function getConfig(): array
-                    {
-                        return config(strtolower($this->getName()), []);
-                    }
-                };
-
-                $this->register($module);
-
-                // Persist module metadata to DB
-                try {
-                    \App\Models\Module::updateOrCreate(
-                        ['name' => $module->getName()],
-                        [
-                            'version' => $module->getVersion(),
-                            'description' => $module->getDescription(),
-                            'dependencies' => $module->getDependencies(),
-                            'config' => $module->getConfig(),
-                        ]
-                    );
-                } catch (\Throwable $e) {
-                    \Log::warning("Failed to persist modular module '{$moduleName}' metadata: " . $e->getMessage());
                 }
+
+                public function getName(): string
+                {
+                    if ($this->moduleInstance && method_exists($this->moduleInstance, 'getName')) {
+                        return $this->moduleInstance::getName();
+                    }
+                    return basename(str_replace('\\', '/', $this->moduleClass));
+                }
+
+                public function getVersion(): string
+                {
+                    if ($this->moduleInstance && method_exists($this->moduleInstance, 'getVersion')) {
+                        return $this->moduleInstance::getVersion();
+                    }
+                    return '1.0.0';
+                }
+
+                public function getDescription(): string
+                {
+                    if ($this->moduleInstance && method_exists($this->moduleInstance, 'getDescription')) {
+                        return $this->moduleInstance::getDescription();
+                    }
+                    return '';
+                }
+
+                public function getDependencies(): array
+                {
+                    return [];
+                }
+
+                public function isEnabled(): bool
+                {
+                    return $this->enabled;
+                }
+
+                public function enable(): void
+                {
+                    $this->enabled = true;
+                }
+
+                public function disable(): void
+                {
+                    $this->enabled = false;
+                }
+
+                public function install(): void
+                {
+                    // Run migrations if needed
+                }
+
+                public function uninstall(): void
+                {
+                    // Rollback migrations if needed
+                }
+
+                public function getConfig(): array
+                {
+                    return config(strtolower($this->getName()), []);
+                }
+            };
+
+            $this->register($module);
+
+            // Persist module metadata to DB
+            try {
+                \App\Models\Module::updateOrCreate(
+                    ['name' => $module->getName()],
+                    [
+                        'version' => $module->getVersion(),
+                        'description' => $module->getDescription(),
+                        'dependencies' => $module->getDependencies(),
+                        'config' => $module->getConfig(),
+                    ]
+                );
             } catch (\Throwable $e) {
-                \Log::warning("Failed loading modular module '{$moduleName}': " . $e->getMessage());
+                \Log::warning("Failed to persist modular module '{$moduleName}' metadata: " . $e->getMessage());
             }
+        } catch (\Throwable $e) {
+            \Log::warning("Failed loading modular module '{$moduleName}': " . $e->getMessage());
         }
     }
 
