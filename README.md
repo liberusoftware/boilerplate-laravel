@@ -255,12 +255,14 @@ Troubleshooting
 
 Modular Architecture
 --------------------
-This boilerplate features a powerful modular architecture that allows you to easily create and integrate custom modules for specific project requirements.
+This boilerplate features a powerful modular architecture based on the **internachi/modular** pattern, allowing you to easily create and integrate custom modules for specific project requirements. The system integrates seamlessly with Filament 5 and supports custom themes.
 
 ### Quick Start with Modules
 
 Create a new module:
 ```bash
+php artisan make:module YourModule
+# or
 php artisan module create YourModule
 ```
 
@@ -275,32 +277,41 @@ php artisan module info MyModule     # Show module information
 
 ### Module Features
 
+- **Composer-based autoloading** - Each module is autoloaded as a composer package
+- **Laravel package discovery** - Automatic service provider registration
+- **Filament 5 integration** - Auto-discovery of Filament resources, pages, and widgets
 - **Self-contained structure** - Each module has its own controllers, models, views, routes, migrations, and configuration
 - **Lifecycle hooks** - Enable, disable, install, and uninstall hooks for custom logic
 - **Dependency management** - Declare dependencies on other modules
-- **Hook system** - Extensible hook system for custom functionality
+- **Custom theme support** - Modules can provide their own themes and assets
 - **Auto-discovery** - Modules are automatically discovered and registered
-- **Configuration management** - Easy configuration with the Configurable trait
+- **Configuration management** - Easy configuration with dedicated config files
 - **Database migrations** - Automatic migration running during installation
 - **Asset publishing** - Assets are automatically published to public directory
+- **IDE-friendly** - Full autocomplete and code navigation support
 
 ### Documentation
 
 - [Module Development Guide](docs/MODULE_DEVELOPMENT.md) - Comprehensive guide for developing custom modules
 - [Quick Start Guide](docs/MODULE_QUICK_START.md) - Get started with modules in minutes
-- Example module: `app/Modules/BlogModule/` - Reference implementation
+- Example modules in `app-modules/` and `app/Modules/BlogModule/` - Reference implementations
 
 ### Module Structure
 
 ```
-app/Modules/YourModule/
-├── YourModuleModule.php          # Main module class
-├── module.json                    # Module metadata
-├── Providers/
-│   └── YourModuleServiceProvider.php
-├── Http/Controllers/
-├── Models/
-├── Services/
+app-modules/YourModule/
+├── composer.json                  # Module composer configuration
+├── src/
+│   ├── YourModuleModule.php      # Main module class
+│   ├── Providers/
+│   │   └── YourModuleServiceProvider.php
+│   ├── Http/Controllers/
+│   ├── Models/
+│   ├── Services/
+│   ├── Filament/                 # Filament 5 resources (auto-discovered)
+│   │   ├── Resources/
+│   │   ├── Pages/
+│   │   └── Widgets/
 ├── routes/
 │   ├── web.php
 │   ├── api.php
@@ -310,9 +321,24 @@ app/Modules/YourModule/
 │   ├── views/
 │   ├── lang/
 │   └── assets/
-├── config/
 └── tests/
 ```
+
+### Filament 5 Integration
+
+Modules automatically integrate with Filament 5:
+- Place Filament resources in `src/Filament/Resources/`
+- Create custom pages in `src/Filament/Pages/`
+- Add widgets in `src/Filament/Widgets/`
+- All components are auto-discovered and registered
+
+### Custom Theme Support
+
+Modules can provide custom themes:
+- Define themes in `resources/themes/`
+- Include custom layouts, CSS, and JavaScript
+- Themes integrate with the application theme system
+- Support for theme inheritance and overrides
 
 Custom Theme System
 -------------------
