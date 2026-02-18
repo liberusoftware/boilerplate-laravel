@@ -4,9 +4,16 @@ ARG PHP_VERSION=8.5
 ###########################################
 # Composer dependencies stage
 ###########################################
-FROM composer:latest AS composer-deps
+FROM php:${PHP_VERSION}-cli-alpine AS composer-deps
 
 WORKDIR /app
+
+# Install required extensions for composer install
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN install-php-extensions intl sockets zip
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy composer files
 COPY composer.json composer.lock ./
