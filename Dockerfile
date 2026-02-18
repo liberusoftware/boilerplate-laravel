@@ -1,4 +1,4 @@
-# Accepted values: 8.3 - 8.2
+# Supported PHP versions: 8.2, 8.3
 # Note: PHP 8.5 is not yet fully supported by all extensions (rdkafka, memcached, swoole)
 ARG PHP_VERSION=8.3
 
