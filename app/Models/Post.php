@@ -10,36 +10,6 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'title',
-        'content',
-        'status',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    /**
-     * Get the user that owns the post.
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Scope a query to search posts by title or content.
-     */
-    public function scopeSearch($query, $search)
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Post extends Model
-{
-    use HasFactory, SoftDeletes;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -59,8 +29,18 @@ class Post extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
         'published_at' => 'datetime',
     ];
+
+    /**
+     * Get the user that owns the post.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the author of the post.
