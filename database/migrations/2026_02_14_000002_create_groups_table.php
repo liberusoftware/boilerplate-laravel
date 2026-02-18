@@ -16,15 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->timestamps();
-            
-            // Add indexes for search optimization
-            $table->index('name');
-            $table->index('is_active');
-            $table->fullText(['name', 'description']);
-        });
-    }
-
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['public', 'private', 'restricted'])->default('public');
             $table->timestamps();
@@ -34,6 +25,8 @@ return new class extends Migration
             $table->index('name');
             $table->index('type');
             $table->index('owner_id');
+            $table->index('is_active');
+            $table->fullText(['name', 'description']);
         });
     }
 

@@ -16,21 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('content');
-            $table->string('status')->default('draft');
-            $table->timestamps();
-            
-            // Add indexes for search optimization
-            $table->index('title');
-            $table->index('status');
-            $table->index('created_at');
-            $table->fullText(['title', 'content']);
-        });
-    }
-
-            $table->string('title');
-            $table->text('content');
-            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
-            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
+            $table->string('status')->default('draft');            
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -38,7 +24,7 @@ return new class extends Migration
             // Indexes for search performance
             $table->index('title');
             $table->index('status');
-            $table->index('author_id');
+            $table->index('user_id');
             $table->index('published_at');
         });
     }
