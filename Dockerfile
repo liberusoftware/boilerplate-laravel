@@ -1,41 +1,61 @@
 # Accepted values: 8.3 - 8.2
 ARG PHP_VERSION=8.3
-ARG COMPOSER_VERSION=latest
-ARG NODE_VERSION=20-alpine
+ARG NODE_VERSION=20
 
 ###########################################
-# Composer dependencies stage
+# Dependencies stage - Install Composer dependencies
 ###########################################
-FROM composer:${COMPOSER_VERSION} AS vendor
+FROM php:${PHP_VERSION}-cli-alpine AS dependencies
 
 WORKDIR /app
 
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install minimal PHP extensions needed for composer
+RUN apk add --no-cache libzip-dev && docker-php-ext-install zip
+
+# Copy composer files
 COPY composer.json composer.lock ./
 
+# Install composer dependencies
 RUN composer install \
     --no-dev \
     --no-interaction \
     --no-autoloader \
     --no-ansi \
     --no-scripts \
-    --audit \
     --prefer-dist
+
+# Copy application code for autoloader
+COPY . .
+
+# Generate optimized autoloader
+RUN composer dump-autoload --classmap-authoritative --no-dev
 
 ###########################################
 # Node.js build stage for frontend assets
 ###########################################
-FROM node:${NODE_VERSION} AS node-builder
+FROM node:${NODE_VERSION}-slim AS node-builder
 
 WORKDIR /app
 
+# Copy package files
 COPY package.json package-lock.json ./
 
-RUN npm ci --only=production
+# Install npm dependencies
+RUN npm install
 
-COPY vite.config.js postcss.config.cjs ./
+# Copy necessary files for building
+COPY vite.config.js postcss.config.cjs tailwind.config.js* ./
 COPY resources ./resources
 COPY public ./public
 
+# Copy vendor directory from dependencies stage (needed for Filament theme)
+COPY --from=dependencies /app/vendor ./vendor
+COPY --from=dependencies /app/app ./app
+
+# Build frontend assets
 RUN npm run build
 
 ###########################################
@@ -131,17 +151,14 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 USER ${USER}
 
-# Copy composer binary from vendor stage
-COPY --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy composer.json and composer.lock first for better caching
-COPY --chown=${USER}:${USER} composer.json composer.lock ./
-
-# Copy vendor dependencies from vendor stage
-COPY --chown=${USER}:${USER} --from=vendor /app/vendor ./vendor
-
-# Copy the rest of the application code
+# Copy application code
 COPY --chown=${USER}:${USER} . .
+
+# Copy vendor dependencies from dependencies stage
+COPY --chown=${USER}:${USER} --from=dependencies /app/vendor ./vendor
 
 # Copy built frontend assets from node-builder stage
 COPY --chown=${USER}:${USER} --from=node-builder /app/public/build ./public/build
@@ -160,11 +177,8 @@ COPY --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
 COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
 
-RUN composer install \
-    --classmap-authoritative \
-    --no-interaction \
-    --no-ansi \
-    --no-dev \
+# Generate optimized autoloader (vendor is already installed from dependencies stage)
+RUN composer dump-autoload --classmap-authoritative --no-dev \
     && composer clear-cache
 
 COPY --chown=${USER}:${USER} .env.example ./.env

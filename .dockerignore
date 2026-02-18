@@ -57,15 +57,9 @@ phpunit.xml
 coverage/
 .coverage
 
-# Package manager files
+# Package manager files (excluding lock files needed for builds)
 npm-debug.log
 yarn-error.log
-yarn.lock
-package-lock.json
-
-# Composer
-composer.phar
-composer.lock
 
 # Laravel specific
 Homestead.yaml
