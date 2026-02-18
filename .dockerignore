@@ -1,0 +1,79 @@
+# Git files
+.git
+.github
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+docs/
+DEVELOPER_NOTES.md
+ARCHITECTURE.md
+
+# CI/CD
+.circleci
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Development files
+.env
+.env.*
+!.env.example
+.env.testing
+
+# Dependencies (will be installed in container)
+vendor/
+node_modules/
+
+# Build artifacts
+public/hot
+public/storage
+public/build/
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+!storage/framework/cache/.gitkeep
+!storage/framework/sessions/.gitkeep
+!storage/framework/views/.gitkeep
+!storage/logs/.gitkeep
+!bootstrap/cache/.gitkeep
+
+# Test files
+tests/
+phpunit.xml
+.phpunit.result.cache
+coverage/
+.coverage
+
+# Package manager files (excluding lock files needed for builds)
+npm-debug.log
+yarn-error.log
+
+# Laravel specific
+Homestead.yaml
+Homestead.json
+/.vagrant
+rr
+.rr.yaml
+
+# Backup files
+*.bak
+*.backup
+*.sql
+*.dump
+
+# Temporary files
+tmp/
+temp/
+*.tmp

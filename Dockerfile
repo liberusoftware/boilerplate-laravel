@@ -1,14 +1,28 @@
 # Accepted values: 8.3 - 8.2
 ARG PHP_VERSION=8.3
 
-ARG COMPOSER_VERSION=latest
+###########################################
+# Composer dependencies stage
+###########################################
+FROM composer:latest AS composer-deps
 
-ARG NODE_VERSION=20-alpine
+WORKDIR /app
+
+# Copy composer files
+COPY composer.json composer.lock ./
+
+# Install composer dependencies (no autoloader yet, will optimize in final stage)
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-autoloader \
+    --no-ansi \
+    --no-scripts \
+    --prefer-dist
 
 ###########################################
-
-FROM composer:${COMPOSER_VERSION} AS vendor
-
+# Main application stage
+###########################################
 FROM php:${PHP_VERSION}-cli-alpine
 
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
@@ -39,8 +53,9 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apk update; \
-    apk upgrade; \
+# Install system dependencies and PHP extensions in one layer
+RUN apk update && \
+    apk upgrade && \
     apk add --no-cache \
     curl \
     wget \
@@ -49,9 +64,8 @@ RUN apk update; \
     procps \
     ca-certificates \
     supervisor \
-    libsodium-dev \
-    # Install PHP extensions
-    && install-php-extensions \
+    libsodium-dev && \
+    install-php-extensions \
     bz2 \
     pcntl \
     mbstring \
@@ -70,9 +84,9 @@ RUN apk update; \
     memcached \
     igbinary \
     ldap \
-    swoole \
-    && docker-php-source delete \
-    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+    swoole && \
+    docker-php-source delete && \
+    rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
@@ -99,48 +113,48 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 USER ${USER}
 
-COPY  --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY  --chown=${USER}:${USER} composer.json composer.lock ./
+# Install Composer from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-autoloader \
-    --no-ansi \
-    --no-scripts \
-    --audit
+# Copy vendor from composer-deps stage for better caching
+COPY --chown=${USER}:${USER} --from=composer-deps /app/vendor ./vendor
 
-COPY  --chown=${USER}:${USER} . .
+# Copy composer files (needed for autoloader generation)
+COPY --chown=${USER}:${USER} composer.json composer.lock ./
 
+# Generate optimized autoloader with vendor already in place
+RUN composer dump-autoload --classmap-authoritative --no-dev && \
+    composer clear-cache
+
+# Copy application code
+COPY --chown=${USER}:${USER} . .
+
+# Create necessary Laravel directories
 RUN mkdir -p \
     storage/framework/sessions \
     storage/framework/views \
     storage/framework/cache \
     storage/framework/testing \
     storage/logs \
-    bootstrap/cache && chmod -R a+rw storage
+    bootstrap/cache && \
+    chmod -R a+rw storage
 
-COPY  --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
-COPY  --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY  --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
-COPY  --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY  --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
+# Copy configuration files
+COPY --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
+COPY --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
+COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
 
-RUN composer install \
-    --classmap-authoritative \
-    --no-interaction \
-    --no-ansi \
-    --no-dev \
-    && composer clear-cache
+# Copy environment file
+COPY --chown=${USER}:${USER} .env.example ./.env
 
-COPY .env.example ./.env
-
-RUN chmod +x /usr/local/bin/start-container
-
-RUN cat .docker/utilities.sh >> ~/.bashrc
+RUN chmod +x /usr/local/bin/start-container && \
+    cat .docker/utilities.sh >> ~/.bashrc
 
 EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
 HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD php artisan octane:status || exit 1
+
