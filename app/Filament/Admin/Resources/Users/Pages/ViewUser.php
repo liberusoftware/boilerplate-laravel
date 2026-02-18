@@ -6,10 +6,11 @@ use App\Filament\Admin\Resources\Users\UserResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Infolists\Infolist;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class ViewUser extends ViewRecord
 {
@@ -22,10 +23,10 @@ class ViewUser extends ViewRecord
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('User Profile')
                     ->columns(2)
                     ->schema([

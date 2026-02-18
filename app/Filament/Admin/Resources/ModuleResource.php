@@ -168,7 +168,7 @@ class ModuleResource extends Resource
                 });
             }
 
-            public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
+            public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
             {
                 return $this->modules->map(function ($module) {
                     return (object) $module;

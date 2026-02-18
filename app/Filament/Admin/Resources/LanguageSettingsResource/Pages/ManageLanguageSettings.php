@@ -14,7 +14,7 @@ class ManageLanguageSettings extends Page
 {
     protected static string $resource = LanguageSettingsResource::class;
 
-    protected static string $view = 'filament.admin.resources.language-settings-resource.pages.manage-language-settings';
+    protected string $view = 'filament.admin.resources.language-settings-resource.pages.manage-language-settings';
 
     public $supportedLanguages = [];
 

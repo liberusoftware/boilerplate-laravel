@@ -53,12 +53,14 @@ Route::prefix('search')->middleware('throttle:60,1')->group(function () {
     Route::get('/users', [UserSearchController::class, 'search'])->name('api.search.users');
     Route::get('/posts', [PostSearchController::class, 'search'])->name('api.search.posts');
     Route::get('/groups', [GroupSearchController::class, 'search'])->name('api.search.groups');
-// Search API routes
+});
+    // Search API routes
 Route::prefix('search')->name('search.')->group(function () {
     Route::get('/users', [SearchController::class, 'users'])->name('users');
     Route::get('/posts', [SearchController::class, 'posts'])->name('posts');
     Route::get('/groups', [SearchController::class, 'groups'])->name('groups');
     Route::get('/all', [SearchController::class, 'all'])->name('all');
+});
 Route::middleware('auth:sanctum')->group(function () {
     // Message routes
     Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index']);

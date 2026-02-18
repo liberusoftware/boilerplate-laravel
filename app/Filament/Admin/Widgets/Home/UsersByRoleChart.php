@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class UsersByRoleChart extends ChartWidget
 {
-    protected static ?string $heading = 'Users by Role';
+    protected ?string $heading = 'Users by Role';
 
     protected static ?int $sort = 3;
 
