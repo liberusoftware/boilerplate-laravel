@@ -9,7 +9,6 @@
 docs/
 DEVELOPER_NOTES.md
 ARCHITECTURE.md
-*.md
 
 # CI/CD
 .circleci
