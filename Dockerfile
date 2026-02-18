@@ -1,24 +1,17 @@
 # Accepted values: 8.3 - 8.2
 ARG PHP_VERSION=8.3
-ARG NODE_VERSION=20
 
 ###########################################
-# Dependencies stage - Install Composer dependencies
+# Composer dependencies stage
 ###########################################
-FROM php:${PHP_VERSION}-cli-alpine AS dependencies
+FROM composer:latest AS composer-deps
 
 WORKDIR /app
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Install minimal PHP extensions needed for composer
-RUN apk add --no-cache libzip-dev && docker-php-ext-install zip
 
 # Copy composer files
 COPY composer.json composer.lock ./
 
-# Install composer dependencies
+# Install composer dependencies (no autoloader yet, will optimize in final stage)
 RUN composer install \
     --no-dev \
     --no-interaction \
@@ -26,37 +19,6 @@ RUN composer install \
     --no-ansi \
     --no-scripts \
     --prefer-dist
-
-# Copy application code for autoloader
-COPY . .
-
-# Generate optimized autoloader
-RUN composer dump-autoload --classmap-authoritative --no-dev
-
-###########################################
-# Node.js build stage for frontend assets
-###########################################
-FROM node:${NODE_VERSION}-slim AS node-builder
-
-WORKDIR /app
-
-# Copy package files
-COPY package.json package-lock.json ./
-
-# Install npm dependencies
-RUN npm install
-
-# Copy necessary files for building
-COPY vite.config.js postcss.config.cjs tailwind.config.js* ./
-COPY resources ./resources
-COPY public ./public
-
-# Copy vendor directory from dependencies stage (needed for Filament theme)
-COPY --from=dependencies /app/vendor ./vendor
-COPY --from=dependencies /app/app ./app
-
-# Build frontend assets
-RUN npm run build
 
 ###########################################
 # Main application stage
@@ -91,8 +53,9 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apk update; \
-    apk upgrade; \
+# Install system dependencies and PHP extensions in one layer
+RUN apk update && \
+    apk upgrade && \
     apk add --no-cache \
     curl \
     wget \
@@ -101,9 +64,8 @@ RUN apk update; \
     procps \
     ca-certificates \
     supervisor \
-    libsodium-dev \
-    # Install PHP extensions
-    && install-php-extensions \
+    libsodium-dev && \
+    install-php-extensions \
     bz2 \
     pcntl \
     mbstring \
@@ -122,9 +84,9 @@ RUN apk update; \
     memcached \
     igbinary \
     ldap \
-    swoole \
-    && docker-php-source delete \
-    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+    swoole && \
+    docker-php-source delete && \
+    rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
@@ -151,44 +113,45 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 USER ${USER}
 
-# Install Composer
+# Install Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy vendor from composer-deps stage for better caching
+COPY --chown=${USER}:${USER} --from=composer-deps /app/vendor ./vendor
 
 # Copy application code
 COPY --chown=${USER}:${USER} . .
 
-# Copy vendor dependencies from dependencies stage
-COPY --chown=${USER}:${USER} --from=dependencies /app/vendor ./vendor
-
-# Copy built frontend assets from node-builder stage
-COPY --chown=${USER}:${USER} --from=node-builder /app/public/build ./public/build
-
+# Create necessary Laravel directories
 RUN mkdir -p \
     storage/framework/sessions \
     storage/framework/views \
     storage/framework/cache \
     storage/framework/testing \
     storage/logs \
-    bootstrap/cache && chmod -R a+rw storage
+    bootstrap/cache && \
+    chmod -R a+rw storage
 
+# Copy configuration files
 COPY --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
 COPY --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
 COPY --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
 COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
 
-# Generate optimized autoloader (vendor is already installed from dependencies stage)
-RUN composer dump-autoload --classmap-authoritative --no-dev \
-    && composer clear-cache
+# Generate optimized autoloader
+RUN composer dump-autoload --classmap-authoritative --no-dev && \
+    composer clear-cache
 
+# Copy environment file
 COPY --chown=${USER}:${USER} .env.example ./.env
 
-RUN chmod +x /usr/local/bin/start-container
-
-RUN cat .docker/utilities.sh >> ~/.bashrc
+RUN chmod +x /usr/local/bin/start-container && \
+    cat .docker/utilities.sh >> ~/.bashrc
 
 EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
 HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD php artisan octane:status || exit 1
+
