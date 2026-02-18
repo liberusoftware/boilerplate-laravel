@@ -1,5 +1,5 @@
 # Accepted values: 8.3 - 8.2
-ARG PHP_VERSION=8.5
+ARG PHP_VERSION=8.3
 
 ###########################################
 # Composer dependencies stage
