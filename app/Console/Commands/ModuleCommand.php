@@ -256,17 +256,12 @@ class ModuleCommand extends Command
             return 1;
         }
 
-        $modulePath = app_path("Modules/{$name}");
-
-        if (File::exists($modulePath)) {
-            $this->error("Module '{$name}' already exists.");
-            return 1;
-        }
-
-        $this->createModuleStructure($name, $modulePath);
-        $this->info("Module '{$name}' has been created successfully.");
-
-        return 0;
+        // Delegate to the new make:module command which follows internachi/modular pattern
+        $this->info("Creating module '{$name}' using modular pattern...");
+        return $this->call('make:module', [
+            'name' => $name,
+            '--force' => $this->option('force'),
+        ]);
     }
 
     /**

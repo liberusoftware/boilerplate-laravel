@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Module System Architecture](#module-system-architecture)
 - [Module Structure](#module-structure)
 - [Creating a Custom Module](#creating-a-custom-module)
 - [Module Configuration](#module-configuration)
@@ -11,42 +12,72 @@
 - [Database Migrations](#database-migrations)
 - [Views and Assets](#views-and-assets)
 - [Module Services](#module-services)
+- [Filament 5 Integration](#filament-5-integration)
+- [Custom Theme Support](#custom-theme-support)
 - [Testing Modules](#testing-modules)
 - [Best Practices](#best-practices)
 
 ## Introduction
 
-The modular architecture in this Laravel boilerplate allows you to easily create, integrate, and manage custom modules. Each module is a self-contained unit with its own controllers, models, views, routes, migrations, and configuration.
+This Laravel boilerplate now uses the **internachi/modular** pattern for module management, providing a modern, composer-based approach to modularizing your Laravel application. This system integrates seamlessly with Filament 5 for admin panel functionality and supports custom themes.
+
+### Key Features
+
+- **Composer-based autoloading**: Each module is treated as a composer package
+- **Laravel package discovery**: Automatic service provider registration
+- **Filament 5 integration**: Auto-discovery of Filament resources, pages, and widgets
+- **Custom theme support**: Modules can provide their own themes
+- **Backward compatibility**: Supports both old and new module structures
+- **IDE-friendly**: Full autocomplete and code navigation support
+
+## Module System Architecture
+
+The module system supports two directory structures:
+
+1. **New modular structure** (recommended): `app-modules/` - follows internachi/modular pattern
+2. **Legacy structure**: `app/Modules/` - for backward compatibility
+
+Both structures are supported, but new modules should use the modular pattern in `app-modules/`.
 
 ## Module Structure
 
-A typical module has the following structure:
+A typical module following the internachi/modular pattern has this structure:
 
 ```
-app/Modules/YourModule/
-├── YourModuleModule.php          # Main module class
-├── module.json                    # Module metadata
-├── Providers/
-│   └── YourModuleServiceProvider.php
-├── Http/
-│   ├── Controllers/
-│   └── Middleware/
-├── Models/
-├── Services/
+app-modules/YourModule/
+├── composer.json                  # Module composer configuration
+├── src/
+│   ├── YourModuleModule.php      # Main module class
+│   ├── Providers/
+│   │   └── YourModuleServiceProvider.php
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   └── Middleware/
+│   ├── Models/
+│   ├── Services/
+│   ├── Filament/                 # Filament 5 resources (auto-discovered)
+│   │   ├── Resources/
+│   │   ├── Pages/
+│   │   └── Widgets/
 ├── routes/
 │   ├── web.php
 │   ├── api.php
 │   └── admin.php (optional)
 ├── database/
 │   ├── migrations/
+│   ├── factories/
 │   └── seeders/
 ├── resources/
 │   ├── views/
 │   ├── lang/
 │   └── assets/
+│       ├── css/
+│       └── js/
 ├── config/
-│   └── yourmodule.php
+│   └── YourModule.php
 └── tests/
+    ├── Unit/
+    └── Feature/
 ```
 
 ## Creating a Custom Module
@@ -56,10 +87,25 @@ app/Modules/YourModule/
 The easiest way to create a new module is using the built-in Artisan command:
 
 ```bash
+php artisan make:module YourModule
+# or
 php artisan module create YourModule
 ```
 
-This will generate the complete module structure with all necessary files.
+This will create a complete module structure in `app-modules/YourModule` following the internachi/modular pattern.
+
+### What Gets Created
+
+The command will generate:
+- Complete directory structure
+- Composer.json for autoloading
+- Service provider with Laravel package discovery
+- Main module class
+- Example controller, model, and migration
+- Route files (web, api)
+- Basic view template
+- Configuration file
+- Test scaffolding
 
 ### Manual Creation
 
@@ -416,6 +462,178 @@ class YourModuleTest extends TestCase
 - Test with different PHP/Laravel versions
 - Check for breaking changes in dependencies
 - Maintain backwards compatibility when possible
+
+## Filament 5 Integration
+
+Modules can integrate seamlessly with Filament 5 by placing Filament resources, pages, and widgets in the appropriate directories. The module system will automatically discover and register them.
+
+### Creating Filament Resources
+
+Place Filament resources in `src/Filament/Resources/`:
+
+```php
+<?php
+
+namespace Modules\YourModule\Filament\Resources;
+
+use Filament\Resources\Resource;
+use Filament\Tables\Table;
+use Filament\Forms\Form;
+use Modules\YourModule\Models\YourModel;
+
+class YourModelResource extends Resource
+{
+    protected static ?string $model = YourModel::class;
+    
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    
+    protected static ?string $navigationGroup = 'Your Module';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                // Your form fields
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                // Your table columns
+            ]);
+    }
+}
+```
+
+### Filament Pages
+
+Create custom Filament pages in `src/Filament/Pages/`:
+
+```php
+<?php
+
+namespace Modules\YourModule\Filament\Pages;
+
+use Filament\Pages\Page;
+
+class CustomPage extends Page
+{
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    
+    protected static string $view = 'yourmodule::filament.pages.custom-page';
+}
+```
+
+### Filament Widgets
+
+Add widgets in `src/Filament/Widgets/`:
+
+```php
+<?php
+
+namespace Modules\YourModule\Filament\Widgets;
+
+use Filament\Widgets\Widget;
+
+class CustomWidget extends Widget
+{
+    protected static string $view = 'yourmodule::filament.widgets.custom-widget';
+}
+```
+
+### Auto-Discovery
+
+The ModularServiceProvider automatically discovers Filament components when:
+- `config('modular.filament.enabled')` is `true`
+- Components are in the correct namespace (`Modules\YourModule\Filament\*`)
+- The module is properly autoloaded via composer
+
+## Custom Theme Support
+
+Modules can provide custom themes that integrate with the application's theme system.
+
+### Module Theme Structure
+
+```
+app-modules/YourModule/
+└── resources/
+    └── themes/
+        └── your-theme/
+            ├── theme.json
+            ├── views/
+            │   └── layouts/
+            │       └── app.blade.php
+            ├── css/
+            │   └── app.css
+            └── js/
+                └── app.js
+```
+
+### Theme Configuration
+
+Create a `theme.json` file:
+
+```json
+{
+    "name": "Your Theme",
+    "version": "1.0.0",
+    "description": "Custom theme for YourModule",
+    "author": "Your Name",
+    "extends": "default"
+}
+```
+
+### Registering Theme Assets
+
+In your module's service provider:
+
+```php
+public function boot(): void
+{
+    // Register theme
+    $themePath = __DIR__ . '/../../resources/themes/your-theme';
+    
+    if (is_dir($themePath)) {
+        $this->publishes([
+            $themePath => public_path('themes/your-theme'),
+        ], 'yourmodule-themes');
+    }
+}
+```
+
+### Using Theme in Views
+
+```blade
+@extends(theme_layout('app'))
+
+@section('content')
+    @themeCss
+    
+    <h1>Your Module Content</h1>
+    
+    @themeJs
+@endsection
+```
+
+### Theme Helpers
+
+The application provides several helpers for working with themes:
+
+```php
+// Set active theme
+set_theme('your-theme');
+
+// Get active theme
+$theme = active_theme();
+
+// Get theme asset path
+$asset = theme_asset('images/logo.png');
+
+// Get theme layout
+$layout = theme_layout('app');
+```
 
 ## Managing Modules
 

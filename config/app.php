@@ -188,6 +188,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\AppPanelProvider::class,
+        App\Providers\ModularServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\TeamServiceProvider::class,
