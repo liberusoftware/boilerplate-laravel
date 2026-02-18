@@ -22,6 +22,20 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          extensions: mbstring, bcmath, pdo, mysql, dom, curl
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: 'Run Phpcpd'
         run: |
           sudo composer install
@@ -35,6 +49,20 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          extensions: mbstring, bcmath, pdo, mysql, dom, curl
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: 'Run php-insight'
         run: |
           sudo composer install
@@ -47,6 +75,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          extensions: mbstring, bcmath, pdo, mysql, dom, curl
       - name: 'Run php-insight'
         run: |
           PHP_SC_VERSION=$(curl -s "https://api.github.com/repos/fabpot/local-php-security-checker/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/;s/^v//')

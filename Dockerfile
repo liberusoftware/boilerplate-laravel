@@ -1,14 +1,46 @@
 # Accepted values: 8.3 - 8.2
 ARG PHP_VERSION=8.3
-
 ARG COMPOSER_VERSION=latest
-
 ARG NODE_VERSION=20-alpine
 
 ###########################################
-
+# Composer dependencies stage
+###########################################
 FROM composer:${COMPOSER_VERSION} AS vendor
 
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-autoloader \
+    --no-ansi \
+    --no-scripts \
+    --audit \
+    --prefer-dist
+
+###########################################
+# Node.js build stage for frontend assets
+###########################################
+FROM node:${NODE_VERSION} AS node-builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN npm ci --only=production
+
+COPY vite.config.js postcss.config.cjs ./
+COPY resources ./resources
+COPY public ./public
+
+RUN npm run build
+
+###########################################
+# Main application stage
+###########################################
 FROM php:${PHP_VERSION}-cli-alpine
 
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
@@ -99,18 +131,20 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 USER ${USER}
 
-COPY  --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY  --chown=${USER}:${USER} composer.json composer.lock ./
+# Copy composer binary from vendor stage
+COPY --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
 
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-autoloader \
-    --no-ansi \
-    --no-scripts \
-    --audit
+# Copy composer.json and composer.lock first for better caching
+COPY --chown=${USER}:${USER} composer.json composer.lock ./
 
-COPY  --chown=${USER}:${USER} . .
+# Copy vendor dependencies from vendor stage
+COPY --chown=${USER}:${USER} --from=vendor /app/vendor ./vendor
+
+# Copy the rest of the application code
+COPY --chown=${USER}:${USER} . .
+
+# Copy built frontend assets from node-builder stage
+COPY --chown=${USER}:${USER} --from=node-builder /app/public/build ./public/build
 
 RUN mkdir -p \
     storage/framework/sessions \
@@ -120,11 +154,11 @@ RUN mkdir -p \
     storage/logs \
     bootstrap/cache && chmod -R a+rw storage
 
-COPY  --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
-COPY  --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY  --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
-COPY  --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY  --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
+COPY --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
+COPY --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
+COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
 
 RUN composer install \
     --classmap-authoritative \
@@ -133,7 +167,7 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
-COPY .env.example ./.env
+COPY --chown=${USER}:${USER} .env.example ./.env
 
 RUN chmod +x /usr/local/bin/start-container
 
