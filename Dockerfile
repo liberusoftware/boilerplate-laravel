@@ -64,6 +64,8 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 # Install system dependencies and PHP extensions in one layer
+# Note: Some extensions (rdkafka, igbinary, memcached, redis, swoole) require
+# network access to pecl.php.net. Build with --network=host if these fail.
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache \
@@ -74,13 +76,7 @@ RUN apk update && \
     procps \
     ca-certificates \
     supervisor \
-    libsodium-dev \
-    php83-pecl-igbinary \
-    php83-pecl-redis \
-    php83-pecl-memcached \
-    php83-pecl-rdkafka \
-    php83-pecl-swoole \
-    php83-ldap && \
+    libsodium-dev && \
     install-php-extensions \
     bz2 \
     pcntl \
@@ -94,7 +90,13 @@ RUN apk update && \
     pdo_mysql \
     zip \
     intl \
-    gd && \
+    gd \
+    redis \
+    rdkafka \
+    memcached \
+    igbinary \
+    ldap \
+    swoole && \
     docker-php-source delete && \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 

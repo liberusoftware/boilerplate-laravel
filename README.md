@@ -176,10 +176,15 @@ Docker install
 --------------
 Two recommended Docker approaches are provided: manual Docker image and Laravel Sail.
 
+**Important Note:** Due to network connectivity requirements for downloading PHP extensions and dependencies, you may need to build with host networking enabled:
+```bash
+docker build --network=host -t boilerplate-laravel .
+```
+
 A. Using the repository Dockerfile (image build)
 1. Build the image from the project root:
    ```bash
-   docker build -t boilerplate-laravel .
+   docker build --network=host -t boilerplate-laravel .
    ```
 2. Create an env file for the container or use your `.env`:
    ```bash
