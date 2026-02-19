@@ -1,17 +1,19 @@
 # Supported PHP versions: 8.2, 8.3
-# Note: PHP 8.5 is not yet fully supported by all extensions (rdkafka, memcached, swoole)
+# Note: Using Alpine 3.22 to avoid TLS issues with Alpine 3.23
 ARG PHP_VERSION=8.3
+ARG ALPINE_VERSION=3.22
 
 ###########################################
 # Composer dependencies stage
 ###########################################
-FROM php:${PHP_VERSION}-cli-alpine AS composer-deps
+FROM php:${PHP_VERSION}-cli-alpine${ALPINE_VERSION} AS composer-deps
 
 WORKDIR /app
 
-# Install required extensions for composer install
+# Install required extensions for composer install and git for fallback
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN install-php-extensions intl sockets zip
+RUN apk add --no-cache git && \
+    install-php-extensions intl sockets zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -31,7 +33,7 @@ RUN composer install \
 ###########################################
 # Main application stage
 ###########################################
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:${PHP_VERSION}-cli-alpine${ALPINE_VERSION}
 
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
 LABEL org.opencontainers.image.title="Laravel Octane Dockerfile"
@@ -72,7 +74,13 @@ RUN apk update && \
     procps \
     ca-certificates \
     supervisor \
-    libsodium-dev && \
+    libsodium-dev \
+    php83-pecl-igbinary \
+    php83-pecl-redis \
+    php83-pecl-memcached \
+    php83-pecl-rdkafka \
+    php83-pecl-swoole \
+    php83-ldap && \
     install-php-extensions \
     bz2 \
     pcntl \
@@ -86,13 +94,7 @@ RUN apk update && \
     pdo_mysql \
     zip \
     intl \
-    gd \
-    redis \
-    rdkafka \
-    memcached \
-    igbinary \
-    ldap \
-    swoole && \
+    gd && \
     docker-php-source delete && \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
