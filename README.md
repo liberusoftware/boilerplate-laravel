@@ -5,14 +5,14 @@
 ![](https://img.shields.io/badge/PHP-8.5-informational?style=flat&logo=php&color=4f5b93)
 ![](https://img.shields.io/badge/Laravel-12-informational?style=flat&logo=laravel&color=ef3b2d)
 ![](https://img.shields.io/badge/Filament-5-informational?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48cGF0aCBkPSJNMCAwaDQ4djQ4SDBWMHoiIGZpbGw9IiNmNGIyNWUiLz48cGF0aCBkPSJNMjggN2wtMSA2LTMuNDM3LjgxM0wyMCAxNWwtMSAzaDZ2NWgtN2wtMyAxOEg4Yy41MTUtNS44NTMgMS40NTQtMTEuMzMgMy0xN0g4di01bDUtMSAuMjUtMy4yNUMxNCAxMSAxNCAxMSAxNS40MzggOC41NjMgMTkuNDI5IDYuMTI4IDIzLjQ0MiA2LjY4NyAyOCA3eiIgZmlsbD0iIzI4MjQxZSIvPjxwYXRoIGQ9Ik0zMCAxOGg0YzIuMjMzIDUuMzM0IDIuMjMzIDUuMzM0IDEuMTI1IDguNUwzNCAyOWMtLjE2OCAzLjIwOS0uMTY4IDMuMjA5IDAgNmwtMiAxIDEgM2gtNXYyaC0yYy44NzUtNy42MjUuODc1LTcuNjI1IDItMTFoMnYtMmgtMnYtMmwyLTF2LTQtM3oiIGZpbGw9IiMyYTIwMTIiLz48cGF0aCBkPSJNMzUuNTYzIDYuODEzQzM4IDcgMzggNyAzOSA4Yy4xODggMi40MzguMTg4IDIuNDM4IDAgNWwtMiAyYy0yLjYyNS0uMzc1LTIuNjI1LS4zNzUtNS0xLS42MjUtMi4zNzUtLjYyNS0yLjM3NS0xLTUgMi0yIDItMiA0LjU2My0yLjE4N3oiIGZpbGw9IiM0MDM5MzEiLz48cGF0aCBkPSJNMzAgMThoNGMyLjA1NSA1LjMxOSAyLjA1NSA1LjMxOSAxLjgxMyA4LjMxM0wzNSAyOGwtMyAxdi0ybC00IDF2LTJsMi0xdi00LTN6IiBmaWxsPSIjMzEyODFlIi8+PHBhdGggZD0iTTI5IDI3aDN2MmgydjJoLTJ2MmwtNC0xdi0yaDJsLTEtM3oiIGZpbGw9IiMxNTEzMTAiLz48cGF0aCBkPSJNMzAgMThoNHYzaC0ydjJsLTMgMSAxLTZ6IiBmaWxsPSIjNjA0YjMyIi8+PC9zdmc+&&color=fdae4b&link=https://filamentphp.com)
-![](https://img.shields.io/badge/Livewire-4.1-informational?style=flat&logo=Livewire&color=fb70a9)
+![](https://img.shields.io/badge/Livewire-4-informational?style=flat&logo=Livewire&color=fb70a9)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Open Source Love](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)
 
 
-## Welcome to Liberu, our visionary open-source initiative that marries the power of Laravel 12, PHP 8.5 and Filament 5.2 to redefine the landscape of web development.
+## Build modern SaaS applications faster — a production-ready Laravel 12 boilerplate powered by PHP 8.5, Filament 5 and Livewire 4.
 
-[![Contact us on WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/+447762430333)
+[![Contact us on WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/+441793200950)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@liberusoftware)
 [![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=Facebook&logoColor=white)](https://www.facebook.com/liberusoftware)
 [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/liberusoftware)
@@ -21,12 +21,13 @@
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://www.github.com/liberusoftware)
 
 
-[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg)](hhttps://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml)
-[![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/workflows/tests.yml)
+[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml)
+[![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml)
 [![Docker](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/liberusoftware/boilerplate-laravel/graph/badge.svg?token=K7TWB1QF1L)](https://codecov.io/gh/liberusoftware/boilerplate-laravel)
+[![Latest Release](https://img.shields.io/github/v/release/liberusoftware/boilerplate-laravel?label=Latest%20Release)](https://github.com/liberusoftware/boilerplate-laravel/releases/latest)
 
-A production-ready SaaS starter built with Laravel 12, PHP 8.4, Filament, Livewire, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications.
+A production-ready SaaS starter built with Laravel 12, PHP 8.5, Filament 5, Livewire 4, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications with minimal setup.
 
 Website: https://www.liberu.co.uk
 
@@ -37,6 +38,8 @@ Table of contents
 - Key features
 - Prerequisites
 - Standard (local) install
+- Automated installation script
+- Web-based graphical installer
 - Docker / Sail install
 - Running tests
 - Troubleshooting
@@ -47,11 +50,13 @@ Table of contents
 
 Overview
 --------
-This repository provides a modern Laravel-based boilerplate with common SaaS building blocks: authentication (Jetstream), admin (Filament), real-time interactions (Livewire), social login (Socialite), user profiles, notifications, messaging and more. It's structured to be extensible and production-oriented.
+**Liberu Software** is an open-source initiative that combines the latest versions of Laravel, PHP, Filament and Livewire to provide a solid, extensible foundation for modern web applications. This boilerplate ships with the common SaaS building blocks you need — authentication, an admin panel, real-time interactivity, social login, notifications, multi-language support and more — so you can focus on building your product rather than reinventing the wheel.
 
-**New:** This boilerplate now includes a complete **Private Messaging System** that allows users to send secure, encrypted messages to each other. See [MESSAGING.md](MESSAGING.md) and [SETUP_MESSAGING.md](SETUP_MESSAGING.md) for detailed documentation.
+Whether you are starting a new SaaS product, an internal tool, or a modular enterprise application, this boilerplate is designed to get you productive from day one. It follows Laravel best practices, supports both single-tenant and multi-tenant patterns, and is fully containerised for Docker or Kubernetes deployments.
 
-**New:** **Multi-Language Support** with automated translations is now available! The application supports English, Spanish, French, and German out of the box, with smart language detection and user preferences. See [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md) for detailed documentation.
+**Private Messaging System** — a complete secure messaging feature is built in, allowing users to exchange end-to-end encrypted messages. See [MESSAGING.md](MESSAGING.md) and [SETUP_MESSAGING.md](SETUP_MESSAGING.md) for full documentation.
+
+**Multi-Language Support** — the application supports English, Spanish, French and German out of the box with automated translations, smart language detection and per-user preferences. See [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md) for details.
 
 Key features
 ------------
@@ -69,7 +74,7 @@ Key features
 
 Prerequisites
 -------------
-- PHP 8.4
+- PHP 8.5
 - Composer
 - Node.js (recommended: LTS) and npm or yarn (for front-end assets)
 - MySQL / PostgreSQL or another supported DB
@@ -77,6 +82,8 @@ Prerequisites
 
 Standard (local) install
 ------------------------
+> **Quickstart:** The fastest way to get started is to use the bundled `install.sh` script (see *Automated installation script* below) or the browser-based graphical installer at `public/installer.php`. Both options guide you step-by-step without requiring manual configuration.
+
 These steps assume you want to run the application on your machine (not in Docker). They are intentionally clear and safe — back up any existing .env before overriding.
 
 1. Clone the repo
@@ -133,40 +140,48 @@ These steps assume you want to run the application on your machine (not in Docke
    ```
    Open: http://127.0.0.1:8000 (or your configured APP_URL)
 
-Optional: Automated installation script
-- This repository includes an interactive installation script `install.sh` that automates the setup process.
-- The script supports three installation modes:
-  1. **Standalone** - Local development/production installation
-  2. **Docker** - Containerized deployment
-  3. **Kubernetes** - K8s cluster deployment
-- Features:
-  - Automatically detects and handles missing dependencies
-  - Downloads composer.phar if composer command is not available
-  - Skips composer install if vendor/ folder exists
-  - Skips npm install if node_modules/ folder exists
-  - Provides colored output and error checking
-  - Interactive prompts for configuration
-- Usage:
+Automated installation script
+-----------------------------
+The repository includes `install.sh`, an interactive shell script that automates the entire setup process. Run it from the command line after cloning:
+
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
-- The script will guide you through the installation process based on your chosen deployment type.
 
-Optional: Web-based installer
-- A web-based installer is available at `public/installer.php` for GUI-based setup.
-- Enable it by setting `INSTALLER_ENABLED=true` in `.env`
-- Optionally set `INSTALLER_KEY` for authentication
-- The installer provides:
-  - **Step-by-step installation workflow** with visual progress indicators
-  - Composer and NPM installation with automatic skip if already installed
-  - **Fallback to download composer.phar** if composer command doesn't exist
-  - Database configuration and testing
-  - Migration and seeding
-  - User creation with roles
-  - **Module management** (list, install, enable modules)
-  - **"Run All Steps" button** for automated installation
-- **Important:** Disable the installer after setup by setting `INSTALLER_ENABLED=false`
+The script supports three installation modes:
+1. **Standalone** - Local development/production installation
+2. **Docker** - Containerised deployment
+3. **Kubernetes** - K8s cluster deployment
+
+Features of `install.sh`:
+- Automatically detects and handles missing dependencies
+- Downloads `composer.phar` if the `composer` command is not available
+- Skips `composer install` if the `vendor/` folder already exists
+- Skips `npm install` if the `node_modules/` folder already exists
+- Provides coloured output and error checking
+- Interactive prompts guide you through configuration step by step
+
+Web-based graphical installer
+------------------------------
+A browser-based graphical installer is available at `public/installer.php` for users who prefer a point-and-click setup experience. Enable it before use:
+
+```dotenv
+INSTALLER_ENABLED=true
+INSTALLER_KEY=your-secret-key   # optional: restrict access
+```
+
+The graphical installer provides:
+- **Step-by-step installation workflow** with visual progress indicators
+- Composer and NPM installation with automatic skip if already installed
+- **Fallback to download `composer.phar`** if the `composer` command is not found
+- Database configuration and connectivity testing
+- Migration and seeding
+- User creation with role assignment
+- **Module management** (list, install, enable modules)
+- **"Run All Steps" button** for fully automated one-click installation
+
+> **Important:** Disable the installer after setup by setting `INSTALLER_ENABLED=false` in `.env`.
 
 Notes
 - Configure mail and social provider settings in `.env` for production use.
@@ -419,17 +434,33 @@ themes/
 
 Contributing
 ------------
-Contributions are welcome. If you'd like to contribute:
-1. Fork the repository
-2. Create a feature branch
-3. Make changes and add tests where applicable
-4. Open a pull request describing your changes
+Contributions are welcome and warmly encouraged! To contribute:
 
-Please follow the repository's code style and include clear commit messages.
+1. **Fork** the repository on GitHub
+2. **Create a feature branch** from `main` — e.g. `git checkout -b feature/my-improvement`
+3. **Make your changes** and add or update tests where applicable
+4. **Ensure tests pass** by running `php artisan test` or `vendor/bin/pest`
+5. **Commit** with a clear, descriptive message
+6. **Open a Pull Request** against the `main` branch — describe what you changed and why
+
+Please follow the repository's code style. All pull requests are reviewed before merging. If you are planning a large change, consider opening an issue first to discuss it with the maintainers.
+
+We welcome bug fixes, new features, documentation improvements and translations. Cross-repo collaboration with other Liberu projects is especially encouraged.
 
 License
 -------
-This project is licensed under the MIT License — use it in personal or commercial projects.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for the full text.
+
+The MIT license is one of the most permissive open-source licenses available. Key benefits:
+
+- **Free to use** in personal, commercial and proprietary projects at no cost
+- **Free to modify** — you can adapt the code to your needs without restriction
+- **Free to distribute** — you may share, sell or sublicense the software
+- **No warranty obligations** — you are not required to provide support or maintenance
+- **Patent peace** — no hidden patent grants or restrictions
+- **Business-friendly** — the only requirement is to retain the original copyright notice and license text
+
+In short: take this boilerplate, build your product and ship it — the license will not get in your way.
 
 Credits & Related Projects
 --------------------------
