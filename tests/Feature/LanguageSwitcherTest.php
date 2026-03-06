@@ -1,8 +1,11 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
+
+uses(RefreshDatabase::class);
 
 test('language switcher component can switch language', function () {
     Livewire::test(\App\Livewire\LanguageSwitcher::class)

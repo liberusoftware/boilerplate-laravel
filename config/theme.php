@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'default' => env('THEME_DEFAULT', 'auto'),
+    'default' => env('THEME_DEFAULT', 'default'),
 
     /*
     |--------------------------------------------------------------------------

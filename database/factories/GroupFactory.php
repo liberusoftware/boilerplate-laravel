@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,6 +23,8 @@ class GroupFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'description' => fake()->sentence(),
+            'owner_id' => User::factory(),
+            'type' => fake()->randomElement(['public', 'private', 'restricted']),
             'is_active' => fake()->boolean(80), // 80% chance of being active
         ];
     }

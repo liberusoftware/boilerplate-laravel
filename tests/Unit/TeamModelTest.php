@@ -14,8 +14,8 @@ it('casts personal_team to boolean and fillable present', function () {
 it('relationship methods exist and are callable', function () {
     $t = new Team();
 
-    // Pick a few relationship method names that exist
-    $rels = ['addrs', 'authors', 'messages', 'people'];
+    // These relationship methods exist on Team / JetstreamTeam
+    $rels = ['owner', 'users', 'allUsers', 'teamInvitations'];
 
     foreach ($rels as $rel) {
         expect(method_exists($t, $rel))->toBeTrue();

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -26,8 +27,14 @@ return new class extends Migration
             $table->index('type');
             $table->index('owner_id');
             $table->index('is_active');
-            $table->fullText(['name', 'description']);
         });
+
+        // Fulltext index only supported on MySQL/PostgreSQL, not SQLite
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            Schema::table('groups', function (Blueprint $table) {
+                $table->fullText(['name', 'description']);
+            });
+        }
     }
 
     /**

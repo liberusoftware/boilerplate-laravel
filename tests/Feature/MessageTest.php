@@ -2,12 +2,10 @@
 
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 
-beforeEach(function () {
-    // Run migrations
-    $this->artisan('migrate:fresh');
-});
+uses(RefreshDatabase::class);
 
 it('can create a message between users', function () {
     $sender = User::factory()->create();

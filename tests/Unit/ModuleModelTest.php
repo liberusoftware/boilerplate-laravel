@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Module;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 it('casts fields correctly', function () {
     $m = Module::create([
