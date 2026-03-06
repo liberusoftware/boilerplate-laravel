@@ -62,9 +62,11 @@ it('can filter users by verified status', function () {
 
     $response->assertStatus(200)
         ->assertJsonCount(2, 'data');
-    
+
     $data = $response->json('data');
-    expect($data)->each(fn ($user) => expect($user['email_verified_at'])->not->toBeNull());
+    foreach ($data as $user) {
+        expect($user['email_verified_at'])->not->toBeNull();
+    }
 });
 
 it('can filter users by unverified status', function () {
@@ -77,9 +79,9 @@ it('can filter users by unverified status', function () {
 
 it('can filter users by creation date range', function () {
     // Update user creation dates for testing
-    $this->user1->update(['created_at' => now()->subDays(10)]);
-    $this->user2->update(['created_at' => now()->subDays(5)]);
-    $this->user3->update(['created_at' => now()->subDay()]);
+    $this->user1->forceFill(['created_at' => now()->subDays(10)])->saveQuietly();
+    $this->user2->forceFill(['created_at' => now()->subDays(5)])->saveQuietly();
+    $this->user3->forceFill(['created_at' => now()->subDay()])->saveQuietly();
 
     $from = now()->subDays(6)->toDateString();
     $to = now()->toDateString();

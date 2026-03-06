@@ -2,10 +2,10 @@
     <div class="flex-1 overflow-y-auto mb-4 space-y-3 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Real-Time Chat</h2>
         
-        @if($messages->isEmpty())
+        @if($chatMessages->isEmpty())
             <p class="text-gray-500 dark:text-gray-400 text-center py-8">No messages yet. Be the first to send a message!</p>
         @else
-            @foreach($messages as $msg)
+            @foreach($chatMessages as $msg)
                 <div class="flex items-start space-x-2 {{ $msg->user_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
                     <div class="max-w-xs lg:max-w-md {{ $msg->user_id === auth()->id() ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white' }} rounded-lg p-3">
                         <div class="flex items-center space-x-2 mb-1">

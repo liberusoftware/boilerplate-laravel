@@ -11,7 +11,7 @@ use Livewire\Attributes\On;
 class Chat extends Component
 {
     public string $message = '';
-    public $messages = [];
+    public $chatMessages = [];
 
     public function mount()
     {
@@ -20,7 +20,7 @@ class Chat extends Component
 
     public function loadMessages()
     {
-        $this->messages = ChatMessage::with('user')
+        $this->chatMessages = ChatMessage::with('user')
             ->latest()
             ->take(50)
             ->get()

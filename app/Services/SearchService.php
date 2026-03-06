@@ -57,7 +57,7 @@ class SearchService
      */
     public function searchPosts(array $filters): LengthAwarePaginator
     {
-        $query = Post::query()->with('author');
+        $query = Post::query()->with('user');
 
         // Search by title or content
         if (!empty($filters['query'])) {
@@ -105,6 +105,11 @@ class SearchService
         // Search by name or description
         if (!empty($filters['query'])) {
             $query->search($filters['query']);
+        }
+
+        // Filter by active status
+        if (!empty($filters['active_only'])) {
+            $query->active();
         }
 
         // Filter by type

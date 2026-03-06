@@ -20,7 +20,7 @@ beforeEach(function () {
     Post::create([
         'title' => 'Laravel Guide',
         'content' => 'Complete Laravel tutorial',
-        'author_id' => $this->user->id,
+        'user_id' => $this->user->id,
         'status' => 'published',
         'published_at' => now(),
     ]);
@@ -78,7 +78,7 @@ it('respects per_page limit for all searches', function () {
         Post::create([
             'title' => "Post {$i}",
             'content' => "Content {$i}",
-            'author_id' => $this->user->id,
+            'user_id' => $this->user->id,
             'status' => 'published',
             'published_at' => now(),
         ]);

@@ -1,5 +1,5 @@
 # Supported PHP versions: 8.2, 8.3
-# Note: PHP 8.5 is not yet fully supported by all extensions (rdkafka, memcached, swoole)
+# Note: PHP 8.5 is not yet fully supported by all extensions
 ARG PHP_VERSION=8.3
 
 ###########################################
@@ -46,7 +46,7 @@ ARG TZ=UTC
 ENV TERM=xterm-color \
     WITH_HORIZON=false \
     WITH_SCHEDULER=false \
-    OCTANE_SERVER=swoole \
+    OCTANE_SERVER=roadrunner \
     USER=octane \
     ROOT=/var/www/html \
     COMPOSER_FUND=0 \
@@ -88,11 +88,7 @@ RUN apk update && \
     intl \
     gd \
     redis \
-    rdkafka \
-    memcached \
-    igbinary \
-    ldap \
-    swoole && \
+    igbinary && \
     docker-php-source delete && \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
@@ -149,8 +145,10 @@ RUN mkdir -p \
 
 # Copy configuration files
 COPY --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
-COPY --chown=${USER}:${USER} .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/supervisord.*.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/octane/RoadRunner/supervisord.roadrunner.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/supervisord.horizon.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/supervisord.scheduler.conf /etc/supervisor/conf.d/
+COPY --chown=${USER}:${USER} .docker/supervisord.worker.conf /etc/supervisor/conf.d/
 COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
 

@@ -72,16 +72,18 @@ it('can filter groups by owner', function () {
 
     $response->assertStatus(200)
         ->assertJsonCount(2, 'data');
-    
+
     $data = $response->json('data');
-    expect($data)->each(fn ($group) => expect($group['owner_id'])->toBe($this->user1->id));
+    foreach ($data as $group) {
+        expect($group['owner_id'])->toBe($this->user1->id);
+    }
 });
 
 it('can filter groups by creation date range', function () {
     // Update group creation dates for testing
-    $this->group1->update(['created_at' => now()->subDays(10)]);
-    $this->group2->update(['created_at' => now()->subDays(5)]);
-    $this->group3->update(['created_at' => now()->subDay()]);
+    $this->group1->forceFill(['created_at' => now()->subDays(10)])->saveQuietly();
+    $this->group2->forceFill(['created_at' => now()->subDays(5)])->saveQuietly();
+    $this->group3->forceFill(['created_at' => now()->subDay()])->saveQuietly();
 
     $from = now()->subDays(6)->toDateString();
     $to = now()->toDateString();

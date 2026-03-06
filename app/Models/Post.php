@@ -18,7 +18,7 @@ class Post extends Model
     protected $fillable = [
         'title',
         'content',
-        'author_id',
+        'user_id',
         'status',
         'published_at',
     ];
@@ -43,11 +43,11 @@ class Post extends Model
     }
 
     /**
-     * Get the author of the post.
+     * Get the author of the post (alias for user relationship).
      */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -73,7 +73,7 @@ class Post extends Model
      */
     public function scopeByAuthor($query, int $authorId)
     {
-        return $query->where('author_id', $authorId);
+        return $query->where('user_id', $authorId);
     }
 
     /**

@@ -26,7 +26,7 @@ beforeEach(function () {
     $this->post1 = Post::create([
         'title' => 'Laravel Tutorial',
         'content' => 'Learn Laravel framework basics',
-        'author_id' => $this->user1->id,
+        'user_id' => $this->user1->id,
         'status' => 'published',
         'published_at' => now()->subDays(5),
     ]);
@@ -34,7 +34,7 @@ beforeEach(function () {
     $this->post2 = Post::create([
         'title' => 'Advanced PHP',
         'content' => 'Advanced PHP programming techniques',
-        'author_id' => $this->user2->id,
+        'user_id' => $this->user2->id,
         'status' => 'published',
         'published_at' => now()->subDays(2),
     ]);
@@ -42,7 +42,7 @@ beforeEach(function () {
     $this->post3 = Post::create([
         'title' => 'Draft Article',
         'content' => 'This is a draft',
-        'author_id' => $this->user1->id,
+        'user_id' => $this->user1->id,
         'status' => 'draft',
         'published_at' => null,
     ]);
@@ -77,9 +77,11 @@ it('excludes draft posts by default', function () {
 
     $response->assertStatus(200)
         ->assertJsonCount(2, 'data');
-    
+
     $data = $response->json('data');
-    expect($data)->each(fn ($post) => expect($post['status'])->toBe('published'));
+    foreach ($data as $post) {
+        expect($post['status'])->toBe('published');
+    }
 });
 
 it('can filter posts by author', function () {
@@ -87,7 +89,7 @@ it('can filter posts by author', function () {
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
-        ->assertJsonFragment(['author_id' => $this->user1->id]);
+        ->assertJsonFragment(['user_id' => $this->user1->id]);
 });
 
 it('can filter posts by date range', function () {
@@ -125,7 +127,7 @@ it('can paginate posts', function () {
         Post::create([
             'title' => "Post {$i}",
             'content' => "Content {$i}",
-            'author_id' => $this->user1->id,
+            'user_id' => $this->user1->id,
             'status' => 'published',
             'published_at' => now(),
         ]);

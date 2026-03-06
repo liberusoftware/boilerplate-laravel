@@ -2,11 +2,10 @@
 
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 
-beforeEach(function () {
-    $this->artisan('migrate:fresh');
-});
+uses(RefreshDatabase::class);
 
 it('can send a message via API', function () {
     $sender = User::factory()->create();

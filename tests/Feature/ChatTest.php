@@ -4,8 +4,11 @@ use App\Events\MessageSent;
 use App\Livewire\Chat;
 use App\Models\ChatMessage;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -16,8 +19,8 @@ it('can load messages', function () {
     ChatMessage::factory()->count(3)->create();
 
     Livewire::test(Chat::class)
-        ->assertViewHas('messages', function ($messages) {
-            return $messages->count() === 3;
+        ->assertViewHas('chatMessages', function ($chatMessages) {
+            return $chatMessages->count() === 3;
         });
 });
 

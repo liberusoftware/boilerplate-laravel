@@ -65,8 +65,9 @@ class SetLocale
      */
     private function detectLocaleFromBrowser(Request $request): ?string
     {
-        $acceptLanguage = $request->server('HTTP_ACCEPT_LANGUAGE');
-        
+        $acceptLanguage = $request->header('Accept-Language')
+            ?? $request->server('HTTP_ACCEPT_LANGUAGE');
+
         if (!$acceptLanguage) {
             return null;
         }

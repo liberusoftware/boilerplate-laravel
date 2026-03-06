@@ -103,6 +103,7 @@ class SearchController extends Controller
         return $request->validate([
             'query' => 'nullable|string|max:255',
             'type' => 'nullable|in:public,private,restricted',
+            'active_only' => 'nullable|boolean',
             'owner_id' => 'nullable|integer|exists:users,id',
             'created_from' => 'nullable|date',
             'created_to' => 'nullable|date',
