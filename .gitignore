@@ -27,7 +27,7 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 rr
-.rr.yaml
+# .rr.yaml is tracked in git (needed for RoadRunner configuration)
 
 # Backup files
 *.bak
