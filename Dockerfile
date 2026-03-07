@@ -126,12 +126,12 @@ COPY --chown=${USER}:${USER} --from=composer-deps /app/vendor ./vendor
 # Copy composer files (needed for autoloader generation)
 COPY --chown=${USER}:${USER} composer.json composer.lock ./
 
-# Generate optimized autoloader with vendor already in place
+# Copy application code first so autoloader can resolve all files
+COPY --chown=${USER}:${USER} . .
+
+# Generate optimized autoloader now that all app files are present
 RUN composer dump-autoload --classmap-authoritative --no-dev && \
     composer clear-cache
-
-# Copy application code
-COPY --chown=${USER}:${USER} . .
 
 # Create necessary Laravel directories
 RUN mkdir -p \

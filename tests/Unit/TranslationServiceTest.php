@@ -56,6 +56,8 @@ test('translation service uses cache', function () {
 });
 
 test('translation service handles API failures gracefully', function () {
+    Cache::flush();
+
     $service = new TranslationService();
     
     Http::fake([
