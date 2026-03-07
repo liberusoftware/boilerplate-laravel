@@ -42,7 +42,7 @@ jobs:
         run: cp .env.testing .env
 
       - name: Install dependencies
-        run: composer install --no-progress --prefer-dist --with-all-dependencies
+        run: composer install --no-progress --prefer-dist
 
       - name: Generate application key
         run: php artisan key:generate

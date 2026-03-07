@@ -65,7 +65,7 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 rr
-.rr.yaml
+# .rr.yaml should not be excluded - it's needed for RoadRunner
 
 # Backup files
 *.bak
