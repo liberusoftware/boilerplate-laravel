@@ -196,5 +196,8 @@ describe('Search Performance', function () {
         }
 
         $response->assertStatus(429);
+
+        // Clear rate limiter cache to avoid affecting subsequent tests
+        \Illuminate\Support\Facades\Cache::flush();
     });
 });
