@@ -31,7 +31,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e4288.5
         with:
-          images: liberu/crm
+          images: liberu/boilerplate
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
