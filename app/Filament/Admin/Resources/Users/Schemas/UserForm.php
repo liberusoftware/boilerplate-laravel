@@ -79,25 +79,6 @@ class UserForm
                                     ]),
                             ]),
                         
-                        Tab::make('Account Settings')
-                            ->schema([
-                                Section::make('Account Status')
-                                    ->description('Manage account verification and security settings')
-                                    ->columns(2)
-                                    ->schema([
-                                        DateTimePicker::make('email_verified_at')
-                                            ->label('Email Verified At')
-                                            ->placeholder('Not verified')
-                                            ->helperText('Mark as verified to enable full account access')
-                                            ->native(false),
-                                        
-                                        TextInput::make('current_team_id')
-                                            ->label('Current Team ID')
-                                            ->numeric()
-                                            ->placeholder('Default team')
-                                            ->helperText('The user\'s active team context'),
-                                    ]),
-                            ]),
                     ]),
             ]);
     }
