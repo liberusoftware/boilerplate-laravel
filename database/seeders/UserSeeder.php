@@ -2,31 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Team;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed the application's database.
+     *
+     * @return void
      */
-    public function run(): void
+    public function run()
     {
-        $adminUser = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
+        $adminPassword = Str::random(12);
+        $staffPassword = Str::random(12);
 
-        $team = Team::firstOrFail();
-        $adminUser->teams()->syncWithoutDetaching([$team->id]);
+        // Print passwords to console
+        echo "Admin password: {$adminPassword}\n";
+        echo "Staff password: {$staffPassword}\n";
 
-        $role = Role::where('name', 'super_admin')->firstOrFail();
-        $adminUser->assignRole($role);
+        // Here you can save these passwords to your user creation logic as needed
     }
 }
