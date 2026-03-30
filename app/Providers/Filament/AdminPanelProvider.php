@@ -2,16 +2,21 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Resources\MenuItemResource;
+use App\Filament\Admin\Resources\MenuResource;
 use App\Filament\App\Pages;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Http\Middleware\TeamsPermission;
 use App\Models\Team;
+use App\Models\Menu;
+use App\Models\MenuItem;
+use Biostate\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Pages as FilamentPage;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -88,7 +93,7 @@ class AdminPanelProvider extends PanelProvider
                 ->tenantRegistration(Pages\CreateTeam::class)
                 ->tenantProfile(Pages\EditTeam::class)
                 ->userMenuItems([
-                    MenuItem::make()
+                    Action::make()
                         ->label('Team Settings')
                         ->icon('heroicon-o-cog-6-tooth')
                         ->url(fn() => $this->shouldRegisterMenuItem()
@@ -100,7 +105,12 @@ class AdminPanelProvider extends PanelProvider
 
         $panel->plugins([
             FilamentShieldPlugin::make()
-                ->navigationGroup("Administration")
+                ->navigationGroup("Administration"),
+            FilamentMenuBuilderPlugin::make()
+                ->usingMenuModel(Menu::class)
+                ->usingMenuItemModel(MenuItem::class)
+                ->usingMenuResource(MenuResource::class)
+                ->usingMenuItemResource(MenuItemResource::class),
 
         ])->tenantMiddleware([
             SyncShieldTenant::class,

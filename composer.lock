@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a57f30bfe2ac88e67dd199e6527d2a6",
+    "content-hash": "26d0f695f4fc314b96e064397d5d96c7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -233,6 +233,90 @@
                 }
             ],
             "time": "2026-01-19T19:28:46+00:00"
+        },
+        {
+            "name": "biostate/filament-menu-builder",
+            "version": "v5.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Biostate/filament-menu-builder.git",
+                "reference": "694eef80d5fe1b7247b46dcc3c1140cec604de6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Biostate/filament-menu-builder/zipball/694eef80d5fe1b7247b46dcc3c1140cec604de6f",
+                "reference": "694eef80d5fe1b7247b46dcc3c1140cec604de6f",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^5.0",
+                "filament/forms": "^5.0",
+                "filament/tables": "^5.0",
+                "kalnoy/nestedset": "^6.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0",
+                "spatie/laravel-sluggable": "^3.6"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^8.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^9.14",
+                "pestphp/pest": "^2.1",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "FilamentMenuBuilder": "Biostate\\FilamentMenuBuilder\\Facades\\FilamentMenuBuilder"
+                    },
+                    "providers": [
+                        "Biostate\\FilamentMenuBuilder\\FilamentMenuBuilderServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Biostate\\FilamentMenuBuilder\\": "src/",
+                    "Biostate\\FilamentMenuBuilder\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Süleyman Özgür Özarpacı",
+                    "email": "oozarpac@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An Elegant Menu Builder for FilamentPHP",
+            "homepage": "https://github.com/biostate/filament-menu-builder",
+            "keywords": [
+                "Biostate",
+                "filament-menu-builder",
+                "filamentphp",
+                "laravel",
+                "menu-builder"
+            ],
+            "support": {
+                "issues": "https://github.com/biostate/filament-menu-builder/issues",
+                "source": "https://github.com/biostate/filament-menu-builder"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Biostate",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-13T18:32:57+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -608,16 +692,16 @@
         },
         {
             "name": "chillerlan/php-settings-container",
-            "version": "3.2.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chillerlan/php-settings-container.git",
-                "reference": "95ed3e9676a1d47cab2e3174d19b43f5dbf52681"
+                "reference": "a0a487cbf5344f721eb504bf0f59bada40c381b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chillerlan/php-settings-container/zipball/95ed3e9676a1d47cab2e3174d19b43f5dbf52681",
-                "reference": "95ed3e9676a1d47cab2e3174d19b43f5dbf52681",
+                "url": "https://api.github.com/repos/chillerlan/php-settings-container/zipball/a0a487cbf5344f721eb504bf0f59bada40c381b7",
+                "reference": "a0a487cbf5344f721eb504bf0f59bada40c381b7",
                 "shasum": ""
             },
             "require": {
@@ -625,11 +709,13 @@
                 "php": "^8.1"
             },
             "require-dev": {
+                "phan/phan": "^5.5.2",
                 "phpmd/phpmd": "^2.15",
-                "phpstan/phpstan": "^1.11",
-                "phpstan/phpstan-deprecation-rules": "^1.2",
+                "phpstan/phpstan": "^2.1.31",
+                "phpstan/phpstan-deprecation-rules": "^2.0.3",
                 "phpunit/phpunit": "^10.5",
-                "squizlabs/php_codesniffer": "^3.10"
+                "slevomat/coding-standard": "^8.22",
+                "squizlabs/php_codesniffer": "^4.0"
             },
             "type": "library",
             "autoload": {
@@ -654,7 +740,8 @@
                 "Settings",
                 "configuration",
                 "container",
-                "helper"
+                "helper",
+                "property hook"
             ],
             "support": {
                 "issues": "https://github.com/chillerlan/php-settings-container/issues",
@@ -670,7 +757,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2024-07-16T11:13:48+00:00"
+            "time": "2026-03-20T21:10:52+00:00"
         },
         {
             "name": "clue/redis-protocol",
@@ -3364,17 +3451,80 @@
             "time": "2026-02-15T15:06:22+00:00"
         },
         {
-            "name": "kirschbaum-development/eloquent-power-joins",
-            "version": "4.3.0",
+            "name": "kalnoy/nestedset",
+            "version": "v6.0.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kirschbaum-development/eloquent-power-joins.git",
-                "reference": "dbf2dfaa1900152f2e3dc42b30b67f67a82e7c36"
+                "url": "https://github.com/lazychaser/laravel-nestedset.git",
+                "reference": "3cfc56a9759fb592bc903056166bfc0867f9e679"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kirschbaum-development/eloquent-power-joins/zipball/dbf2dfaa1900152f2e3dc42b30b67f67a82e7c36",
-                "reference": "dbf2dfaa1900152f2e3dc42b30b67f67a82e7c36",
+                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/3cfc56a9759fb592bc903056166bfc0867f9e679",
+                "reference": "3cfc56a9759fb592bc903056166bfc0867f9e679",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/events": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "7.*|8.*|9.*|^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kalnoy\\Nestedset\\NestedSetServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "v5.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kalnoy\\Nestedset\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Kalnoy",
+                    "email": "lazychaser@gmail.com"
+                }
+            ],
+            "description": "Nested Set Model for Laravel 5.7 and up",
+            "keywords": [
+                "database",
+                "hierarchy",
+                "laravel",
+                "nested sets",
+                "nsm"
+            ],
+            "support": {
+                "issues": "https://github.com/lazychaser/laravel-nestedset/issues",
+                "source": "https://github.com/lazychaser/laravel-nestedset/tree/v6.0.6"
+            },
+            "time": "2025-04-22T19:38:02+00:00"
+        },
+        {
+            "name": "kirschbaum-development/eloquent-power-joins",
+            "version": "4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kirschbaum-development/eloquent-power-joins.git",
+                "reference": "3f77b096c1e8b5aa1fc40d7080e55e795f3430ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kirschbaum-development/eloquent-power-joins/zipball/3f77b096c1e8b5aa1fc40d7080e55e795f3430ae",
+                "reference": "3f77b096c1e8b5aa1fc40d7080e55e795f3430ae",
                 "shasum": ""
             },
             "require": {
@@ -3422,9 +3572,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kirschbaum-development/eloquent-power-joins/issues",
-                "source": "https://github.com/kirschbaum-development/eloquent-power-joins/tree/4.3.0"
+                "source": "https://github.com/kirschbaum-development/eloquent-power-joins/tree/4.3.1"
             },
-            "time": "2026-03-17T16:43:01+00:00"
+            "time": "2026-03-29T12:05:03+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -5018,16 +5168,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v4.2.1",
+            "version": "v4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "93e972fa42c1b34fff1550093ab94f778d81ea5a"
+                "reference": "71c28888f99b4bfdaad89a07a104adbc3f98c04b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/93e972fa42c1b34fff1550093ab94f778d81ea5a",
-                "reference": "93e972fa42c1b34fff1550093ab94f778d81ea5a",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/71c28888f99b4bfdaad89a07a104adbc3f98c04b",
+                "reference": "71c28888f99b4bfdaad89a07a104adbc3f98c04b",
                 "shasum": ""
             },
             "require": {
@@ -5082,7 +5232,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v4.2.1"
+                "source": "https://github.com/livewire/livewire/tree/v4.2.2"
             },
             "funding": [
                 {
@@ -5090,7 +5240,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-28T00:01:19+00:00"
+            "time": "2026-03-25T23:19:23+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -8584,6 +8734,65 @@
                 }
             ],
             "time": "2026-03-17T09:11:43+00:00"
+        },
+        {
+            "name": "spatie/laravel-sluggable",
+            "version": "3.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-sluggable.git",
+                "reference": "3624a2d7d8c8475d8561c53faf63f1af583ef76c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-sluggable/zipball/3624a2d7d8c8475d8561c53faf63f1af583ef76c",
+                "reference": "3624a2d7d8c8475d8561c53faf63f1af583ef76c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.7|^4.0",
+                "spatie/laravel-translatable": "^5.0|^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Sluggable\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Generate slugs when saving Eloquent models",
+            "homepage": "https://github.com/spatie/laravel-sluggable",
+            "keywords": [
+                "laravel-sluggable",
+                "spatie"
+            ],
+            "support": {
+                "source": "https://github.com/spatie/laravel-sluggable/tree/3.8.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-23T07:42:02+00:00"
         },
         {
             "name": "spatie/macroable",

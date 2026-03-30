@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.5",
         "bezhansalleh/filament-shield": "~4.0",
+        "biostate/filament-menu-builder": "^5.0",
         "filament/filament": "~5.1",
         "filament/spatie-laravel-settings-plugin": "^5.0",
         "guzzlehttp/guzzle": "^7.8",
