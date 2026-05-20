@@ -18,7 +18,6 @@ use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -34,7 +33,16 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
     use Notifiable;
     // use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
-    use HasTeams;
+    // Jetstream HasTeams removed to avoid trait conflicts with Spatie; provide needed team relations manually.
+    public function ownedTeams(): HasMany
+    {
+        return $this->hasMany(Team::class);
+    }
+
+    public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'team_user')->withPivot('role')->withTimestamps();
+    }
 
     /**
      * The attributes that are mass assignable.
