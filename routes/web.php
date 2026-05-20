@@ -38,4 +38,5 @@ Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, '
     ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])
     ->name('team-invitations.accept');
 
-require __DIR__.'/socialstream.php';
+// socialstream routes removed per upgrade to Laravel 13 and dependency removal
+

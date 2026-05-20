@@ -1,12 +1,4 @@
 <?php
 
-use JoelButcher\Socialstream\Providers;
-
-return [
-    'middleware' => ['web'],
-    'prompt' => 'Or Login Via',
-    'providers' => [
-        // Providers::github(),
-    ],
-    'component' => 'socialstream::components.socialstream',
-];
+// Socialstream configuration removed. The Socialstream package was removed as part of the Laravel 13 upgrade.
+return [];
