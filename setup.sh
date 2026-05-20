@@ -338,11 +338,11 @@ install_standalone() {
         case $cond in
             [Yy]* )
                 print_success "Starting server..."
-                php artisan octane:start
+                php artisan serve
                 break
                 ;;
             [Nn]* )
-                print_success "Installation complete. Start with: php artisan octane:start"
+                print_success "Installation complete. Start with: php artisan serve"
                 exit 0
                 ;;
             * )
