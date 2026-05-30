@@ -20,10 +20,12 @@ Route::get('/', fn () => view('welcome'));
 // Theme demo page
 Route::get('/theme-demo', fn () => view('theme-demo'))->name('theme.demo');
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/chat', fn () => view('chat'))->name('chat');
 });
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/home', fn () => view('home'))->name('home');
+
     Route::get('/messages', function () {
         return view('messages.index');
     })->name('messages.index');

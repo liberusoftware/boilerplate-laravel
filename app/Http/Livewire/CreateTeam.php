@@ -9,12 +9,7 @@ use Laravel\Jetstream\Http\Livewire\CreateTeamForm;
 
 class CreateTeam extends CreateTeamForm
 {
-    /**
-     * Create a new team.
-     *
-     * @return void
-     */
-    public function createTeam(CreatesTeams $creator)
+    public function createTeam(CreatesTeams $creator): void
     {
         $this->validate();
 
@@ -23,6 +18,6 @@ class CreateTeam extends CreateTeamForm
             ['name' => $this->state['name']]
         );
 
-        return redirect()->route('filament.pages.edit-team', ['team' => $team]);
+        $this->redirect(url('/app'));
     }
 }

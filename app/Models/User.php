@@ -14,25 +14,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use JoelButcher\Socialstream\HasConnectedAccounts;
-use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 use Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasDefaultTenant, HasTenants, FilamentUser
 {
     use HasApiTokens;
-    // use HasConnectedAccounts;
-    use HasRoles;
     use HasFactory;
+    use HasPasskeys;
     use HasProfilePhoto {
         HasProfilePhoto::profilePhotoUrl as getPhotoUrl;
     }
+    use HasRoles;
     use Notifiable;
-    // use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     // Jetstream HasTeams removed to avoid trait conflicts with Spatie; provide needed team relations manually.
     public function ownedTeams(): HasMany

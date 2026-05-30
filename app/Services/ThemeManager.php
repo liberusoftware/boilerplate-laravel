@@ -10,7 +10,7 @@ class ThemeManager
 {
     protected string $activeTheme;
     protected array $themes = [];
-    protected string $themesPath;
+    protected readonly string $themesPath;
 
     public function __construct()
     {

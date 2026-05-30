@@ -15,11 +15,14 @@ class Module extends Model
         'config',
     ];
 
-    protected $casts = [
-        'enabled' => 'boolean',
-        'dependencies' => 'array',
-        'config' => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'enabled'      => 'boolean',
+            'dependencies' => 'array',
+            'config'       => 'array',
+        ];
+    }
 
     public static function findByName(string $name): ?self
     {

@@ -5,18 +5,18 @@ namespace App\Providers\Filament;
 use App\Filament\Admin\Resources\MenuItemResource;
 use App\Filament\Admin\Resources\MenuResource;
 use App\Filament\App\Pages;
-use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use App\Http\Middleware\TeamsPermission;
-use App\Models\Team;
 use App\Models\Menu;
-use App\Models\MenuItem;
+use App\Models\MenuItem as MenuItemModel;
+use App\Models\Team;
+use App\Http\Middleware\TeamsPermission;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
 use Biostate\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
-use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages as FilamentPage;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -55,10 +55,9 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 FilamentPage\Dashboard::class,
                 Pages\EditProfile::class,
-                // Pages\ApiTokenManagerPage::class,
-            ])->widgets([
+            ])
+            ->widgets([
                 Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -76,65 +75,44 @@ class AdminPanelProvider extends PanelProvider
                 TeamsPermission::class,
             ]);
 
-        // if (Features::hasApiFeatures()) {
-        //     $panel->userMenuItems([
-        //         MenuItem::make()
-        //             ->label('API Tokens')
-        //             ->icon('heroicon-o-key')
-        //             ->url(fn () => $this->shouldRegisterMenuItem()
-        //                 ? url(Pages\ApiTokenManagerPage::getUrl())
-        //                 : url($panel->getPath())),
-        //     ]);
-        // }
-
         if (Features::hasTeamFeatures()) {
             $panel
                 ->tenant(Team::class, ownershipRelationship: 'team')
                 ->tenantRegistration(Pages\CreateTeam::class)
                 ->tenantProfile(Pages\EditTeam::class)
                 ->userMenuItems([
-                    Action::make()
+                    MenuItem::make()
                         ->label('Team Settings')
                         ->icon('heroicon-o-cog-6-tooth')
-                        ->url(fn() => $this->shouldRegisterMenuItem()
+                        ->url(fn () => $this->shouldRegisterMenuItem()
                             ? url(Pages\EditTeam::getUrl())
                             : url($panel->getPath())),
                 ]);
         }
 
-
         $panel->plugins([
             FilamentShieldPlugin::make()
-                ->navigationGroup("Administration"),
+                ->navigationGroup('Administration'),
             FilamentMenuBuilderPlugin::make()
                 ->usingMenuModel(Menu::class)
-                ->usingMenuItemModel(MenuItem::class)
+                ->usingMenuItemModel(MenuItemModel::class)
                 ->usingMenuResource(MenuResource::class)
                 ->usingMenuItemResource(MenuItemResource::class),
-
         ])->tenantMiddleware([
             SyncShieldTenant::class,
         ], isPersistent: true);
 
-
         return $panel;
     }
 
-    public function boot()
+    public function boot(): void
     {
-        /**
-         * Disable Fortify routes.
-         */
         Fortify::$registersRoutes = false;
-
-        /**
-         * Disable Jetstream routes.
-         */
         Jetstream::$registersRoutes = false;
     }
 
     public function shouldRegisterMenuItem(): bool
     {
-        return true; //auth()->user()?->hasVerifiedEmail() && Filament::hasTenancy() && Filament::getTenant();
+        return true;
     }
 }

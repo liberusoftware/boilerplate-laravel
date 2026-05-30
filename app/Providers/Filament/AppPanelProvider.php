@@ -8,7 +8,7 @@ use App\Http\Middleware\TeamsPermission;
 use App\Listeners\CreatePersonalTeam;
 use App\Listeners\SwitchTeam;
 use App\Models\Team;
-use Filament\Events\Auth\Registered;
+use Filament\Auth\Events\Registered;
 use Filament\Events\TenantSet;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -38,7 +38,6 @@ class AppPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         $panel
-            ->default()
             ->id('app')
             ->path('app')
             ->login([AuthenticatedSessionController::class, 'create'])
