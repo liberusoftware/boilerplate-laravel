@@ -21,6 +21,7 @@ class BlogController extends Controller
     public function index()
     {
         $posts = $this->blogService->getAllPosts();
+
         return view('blog::index', compact('posts'));
     }
 
@@ -30,8 +31,8 @@ class BlogController extends Controller
     public function show(int $id)
     {
         $post = $this->blogService->getPost($id);
-        
-        if (!$post) {
+
+        if (! $post) {
             abort(404);
         }
 

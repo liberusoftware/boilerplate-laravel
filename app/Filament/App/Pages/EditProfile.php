@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class EditProfile extends Page
 {
     protected string $view = 'filament.pages.edit-profile';
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-circle';
 
     public User $user;
@@ -20,7 +21,7 @@ class EditProfile extends Page
     {
         $this->user = Auth::user();
         $this->form->fill([
-            'name'  => $this->user->name,
+            'name' => $this->user->name,
             'email' => $this->user->email,
         ]);
     }
@@ -47,7 +48,7 @@ class EditProfile extends Page
         $state = $this->form->getState();
 
         $this->user->forceFill([
-            'name'  => $state['name'],
+            'name' => $state['name'],
             'email' => $state['email'],
         ])->save();
 

@@ -6,7 +6,6 @@ use BezhanSalleh\FilamentShield\Support\Utils;
 use Closure;
 use Filament\Facades\Filament;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class TeamsPermission
 {
@@ -15,6 +14,7 @@ class TeamsPermission
         if (Utils::isTenancyEnabled() && ($team = Filament::getTenant())) {
             setPermissionsTeamId($team->id);
         }
+
         return $next($request);
     }
 }

@@ -2,18 +2,18 @@
 
 namespace App\Actions\Fortify;
 
-use Illuminate\Validation\ValidationException;
-use Illuminate\Database\QueryException;
-use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use App\Models\Team;
 use App\Models\User;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
-use Exception;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -22,7 +22,8 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Validate and create a newly registered user.
      *
-     * @param array<string, string> $input
+     * @param  array<string, string>  $input
+     *
      * @throws ValidationException
      * @throws Exception
      */
@@ -30,7 +31,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         try {
             Validator::make($input, [
-                'name'  => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255'],
                 'email' => [
                     'required',
                     'string',
@@ -42,11 +43,10 @@ class CreateNewUser implements CreatesNewUsers
                 'role' => ['required', 'string', Rule::in(['tenant', 'buyer', 'seller', 'landlord', 'contractor'])],
             ])->validate();
 
-           
             $user = DB::transaction(function () use ($input) {
                 return tap(User::create([
-                    'name'     => $input['name'],
-                    'email'    => $input['email'],
+                    'name' => $input['name'],
+                    'email' => $input['email'],
                     'password' => Hash::make($input['password']),
                 ]), function (User $user) use ($input) {
                     $team = $this->assignOrCreateTeam($user);
@@ -70,7 +70,7 @@ class CreateNewUser implements CreatesNewUsers
                 'email' => $user->email,
                 'role' => $input['role'],
             ]);
-    
+
             return $user;
         } catch (ValidationException $e) {
             Log::error('User creation validation failed', [
@@ -101,12 +101,12 @@ class CreateNewUser implements CreatesNewUsers
             throw new Exception('An unexpected error occurred. Please try again later.');
         }
     }
-    
+
     private function getDatabaseErrorMessage(QueryException $e): string
     {
         $errorCode = $e->getCode();
         $errorMessage = $e->getMessage();
-    
+
         if (strpos($errorMessage, 'Duplicate entry') !== false) {
             return 'A user with this email already exists. Please use a different email address.';
         } elseif ($errorCode == 1045) {
@@ -114,7 +114,7 @@ class CreateNewUser implements CreatesNewUsers
         } elseif ($errorCode == 2002) {
             return 'Unable to connect to the database. Please try again later.';
         } else {
-            return 'A database error occurred. Please try again later. Error code: ' . $errorCode;
+            return 'A database error occurred. Please try again later. Error code: '.$errorCode;
         }
     }
 
@@ -126,8 +126,9 @@ class CreateNewUser implements CreatesNewUsers
     protected function assignOrCreateTeam(User $user): Team
     {
         $team = Team::first();
-    
+
         $team->users()->attach($user);
+
         return $team;
     }
 }

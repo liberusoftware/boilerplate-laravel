@@ -20,8 +20,7 @@ class ActivityNotification extends Notification implements ShouldQueue
         public ?int $actorId = null,
         public ?string $actorName = null,
         public ?array $metadata = null
-    ) {
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.

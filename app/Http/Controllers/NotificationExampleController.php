@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * Example controller demonstrating notification usage
- * 
+ *
  * This is a reference implementation showing how to use the notification system.
  * You can integrate these patterns into your actual controllers.
  */
@@ -27,7 +27,7 @@ class NotificationExampleController extends Controller
         ]);
 
         $recipient = User::findOrFail($request->recipient_id);
-        
+
         // Send notification
         $recipient->notify(new NewMessageNotification(
             messageContent: $request->message,
@@ -37,7 +37,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Notification sent successfully'
+            'message' => 'Notification sent successfully',
         ]);
     }
 
@@ -51,7 +51,7 @@ class NotificationExampleController extends Controller
         ]);
 
         $user = User::findOrFail($request->user_id);
-        
+
         // Send friend request notification
         $user->notify(new FriendRequestNotification(
             requesterId: auth()->id(),
@@ -61,7 +61,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Friend request sent'
+            'message' => 'Friend request sent',
         ]);
     }
 
@@ -77,7 +77,7 @@ class NotificationExampleController extends Controller
         ]);
 
         $user = User::findOrFail($request->user_id);
-        
+
         // Send activity notification
         $user->notify(new ActivityNotification(
             activityType: $request->activity_type,
@@ -89,7 +89,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Activity notification sent'
+            'message' => 'Activity notification sent',
         ]);
     }
 
@@ -115,7 +115,7 @@ class NotificationExampleController extends Controller
     public function getAllNotifications(Request $request)
     {
         $perPage = $request->input('per_page', 15);
-        
+
         $notifications = auth()->user()->notifications()
             ->paginate($perPage);
 
@@ -138,7 +138,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Notification marked as read'
+            'message' => 'Notification marked as read',
         ]);
     }
 
@@ -151,7 +151,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'All notifications marked as read'
+            'message' => 'All notifications marked as read',
         ]);
     }
 
@@ -168,7 +168,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Notification deleted'
+            'message' => 'Notification deleted',
         ]);
     }
 
@@ -185,7 +185,7 @@ class NotificationExampleController extends Controller
         ]);
 
         $users = User::whereIn('id', $request->user_ids)->get();
-        
+
         foreach ($users as $user) {
             $user->notify(new ActivityNotification(
                 activityType: $request->activity_type,
@@ -198,7 +198,7 @@ class NotificationExampleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Notification sent to {$users->count()} users"
+            'message' => "Notification sent to {$users->count()} users",
         ]);
     }
 }

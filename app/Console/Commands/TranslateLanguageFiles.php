@@ -52,41 +52,37 @@ class TranslateLanguageFiles extends Command
         $specificFile = $this->option('file');
         $force = $this->option('force');
 
-        $this->info("Starting translation process...");
+        $this->info('Starting translation process...');
 
         // Get source language path
         $sourcePath = lang_path($sourceLang);
-        
-        if (!File::exists($sourcePath)) {
+
+        if (! File::exists($sourcePath)) {
             $this->error("Source language directory not found: {$sourcePath}");
+
             return 1;
         }
 
         // Determine target languages
-        $targetLanguages = $targetLang 
-            ? [$targetLang] 
+        $targetLanguages = $targetLang
+            ? [$targetLang]
             : array_keys($this->translationService->getSupportedLanguages());
 
         // Remove source language from targets
-        $targetLanguages = array_filter($targetLanguages, fn($lang) => $lang !== $sourceLang);
+        $targetLanguages = array_filter($targetLanguages, fn ($lang) => $lang !== $sourceLang);
 
         foreach ($targetLanguages as $target) {
             $this->info("Translating to {$target}...");
             $this->translateLanguage($sourceLang, $target, $specificFile, $force);
         }
 
-        $this->info("Translation process completed!");
+        $this->info('Translation process completed!');
+
         return 0;
     }
 
     /**
      * Translate files from source to target language
-     *
-     * @param string $sourceLang
-     * @param string $targetLang
-     * @param string|null $specificFile
-     * @param bool $force
-     * @return void
      */
     protected function translateLanguage(string $sourceLang, string $targetLang, ?string $specificFile, bool $force): void
     {
@@ -94,7 +90,7 @@ class TranslateLanguageFiles extends Command
         $targetPath = lang_path($targetLang);
 
         // Create target directory if it doesn't exist
-        if (!File::exists($targetPath)) {
+        if (! File::exists($targetPath)) {
             File::makeDirectory($targetPath, 0755, true);
         }
 
@@ -103,17 +99,18 @@ class TranslateLanguageFiles extends Command
 
         foreach ($files as $file) {
             $fileName = $file->getFilename();
-            
+
             // Skip if specific file is specified and this is not it
             if ($specificFile && $fileName !== "{$specificFile}.php") {
                 continue;
             }
 
-            $targetFile = $targetPath . '/' . $fileName;
+            $targetFile = $targetPath.'/'.$fileName;
 
             // Skip if file exists and force is not set
-            if (File::exists($targetFile) && !$force) {
+            if (File::exists($targetFile) && ! $force) {
                 $this->line("  Skipping {$fileName} (already exists, use --force to overwrite)");
+
                 continue;
             }
 
@@ -131,21 +128,17 @@ class TranslateLanguageFiles extends Command
 
             // Save to file
             $this->saveTranslations($targetFile, $targetTranslations);
-            
+
             $this->line("  ✓ {$fileName} translated successfully");
         }
     }
 
     /**
      * Save translations to file
-     *
-     * @param string $filePath
-     * @param array $translations
-     * @return void
      */
     protected function saveTranslations(string $filePath, array $translations): void
     {
-        $content = "<?php\n\nreturn " . var_export($translations, true) . ";\n";
+        $content = "<?php\n\nreturn ".var_export($translations, true).";\n";
         File::put($filePath, $content);
     }
 }

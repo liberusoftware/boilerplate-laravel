@@ -18,8 +18,7 @@ class FriendRequestNotification extends Notification implements ShouldQueue
         public int $requesterId,
         public string $requesterName,
         public ?string $requesterAvatar = null
-    ) {
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.

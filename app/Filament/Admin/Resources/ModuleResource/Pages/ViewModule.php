@@ -2,10 +2,9 @@
 
 namespace App\Filament\Admin\Resources\ModuleResource\Pages;
 
-use Filament\Actions\Action;
-use App\Modules\ModuleManager;
 use App\Filament\Admin\Resources\ModuleResource;
-use Filament\Actions;
+use App\Modules\ModuleManager;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewModule extends ViewRecord
@@ -21,13 +20,13 @@ class ViewModule extends ViewRecord
                 ->color(fn () => $this->record->enabled ? 'danger' : 'success')
                 ->action(function () {
                     $moduleManager = app(ModuleManager::class);
-                    
+
                     if ($this->record->enabled) {
                         $moduleManager->disable($this->record->name);
                     } else {
                         $moduleManager->enable($this->record->name);
                     }
-                    
+
                     $this->redirect(static::getResource()::getUrl('index'));
                 })
                 ->requiresConfirmation(),

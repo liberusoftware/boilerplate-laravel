@@ -26,8 +26,8 @@ class Post extends Model
     protected function casts(): array
     {
         return [
-            'created_at'   => 'datetime',
-            'updated_at'   => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             'published_at' => 'datetime',
         ];
     }
@@ -85,6 +85,7 @@ class Post extends Model
         if ($endDate) {
             $query->where('published_at', '<=', $endDate);
         }
+
         return $query;
     }
 
@@ -95,7 +96,7 @@ class Post extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('title', 'like', "%{$search}%")
-              ->orWhere('content', 'like', "%{$search}%");
+                ->orWhere('content', 'like', "%{$search}%");
         });
     }
 }

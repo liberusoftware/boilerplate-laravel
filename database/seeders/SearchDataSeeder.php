@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Post;
 use App\Models\Group;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class SearchDataSeeder extends Seeder

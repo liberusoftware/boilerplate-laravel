@@ -1,5 +1,6 @@
 <?php
 
+use Biostate\FilamentMenuBuilder\Models\Menu;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -27,7 +28,7 @@ return new class extends Migration
             $table->string('wrapper_class')->nullable();
             $table->json('parameters')->nullable();
 
-            $table->foreignIdFor(\Biostate\FilamentMenuBuilder\Models\Menu::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Menu::class)->constrained()->cascadeOnDelete();
 
             $table->nestedSet();
         });

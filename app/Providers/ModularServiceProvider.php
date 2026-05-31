@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Modules\ModuleManager;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
 class ModularServiceProvider extends ServiceProvider
@@ -20,8 +21,8 @@ class ModularServiceProvider extends ServiceProvider
         );
 
         // Register module manager singleton
-        $this->app->singleton(\App\Modules\ModuleManager::class, function ($app) {
-            return new \App\Modules\ModuleManager();
+        $this->app->singleton(ModuleManager::class, function ($app) {
+            return new ModuleManager;
         });
     }
 
@@ -57,8 +58,8 @@ class ModularServiceProvider extends ServiceProvider
     protected function discoverModules(): void
     {
         $modulesPath = base_path(config('modular.modules_directory', 'app-modules'));
-        
-        if (!File::exists($modulesPath)) {
+
+        if (! File::exists($modulesPath)) {
             return;
         }
 
@@ -75,19 +76,19 @@ class ModularServiceProvider extends ServiceProvider
     protected function registerModule(string $modulePath): void
     {
         $moduleName = basename($modulePath);
-        
+
         // Register module routes
         $this->registerModuleRoutes($modulePath, $moduleName);
-        
+
         // Register module views
         $this->registerModuleViews($modulePath, $moduleName);
-        
+
         // Register module translations
         $this->registerModuleTranslations($modulePath, $moduleName);
-        
+
         // Register module migrations
         $this->registerModuleMigrations($modulePath, $moduleName);
-        
+
         // Register module service provider if exists
         $this->registerModuleServiceProvider($modulePath, $moduleName);
     }
@@ -97,30 +98,30 @@ class ModularServiceProvider extends ServiceProvider
      */
     protected function registerModuleRoutes(string $modulePath, string $moduleName): void
     {
-        $routesPath = $modulePath . '/routes';
-        
-        if (!File::exists($routesPath)) {
+        $routesPath = $modulePath.'/routes';
+
+        if (! File::exists($routesPath)) {
             return;
         }
 
         // Register web routes
-        if (File::exists($routesPath . '/web.php')) {
+        if (File::exists($routesPath.'/web.php')) {
             Route::middleware('web')
-                ->group($routesPath . '/web.php');
+                ->group($routesPath.'/web.php');
         }
 
         // Register API routes
-        if (File::exists($routesPath . '/api.php')) {
+        if (File::exists($routesPath.'/api.php')) {
             Route::prefix('api')
                 ->middleware('api')
-                ->group($routesPath . '/api.php');
+                ->group($routesPath.'/api.php');
         }
 
         // Register admin routes
-        if (File::exists($routesPath . '/admin.php')) {
+        if (File::exists($routesPath.'/admin.php')) {
             Route::prefix('admin')
                 ->middleware(['web', 'auth'])
-                ->group($routesPath . '/admin.php');
+                ->group($routesPath.'/admin.php');
         }
     }
 
@@ -129,8 +130,8 @@ class ModularServiceProvider extends ServiceProvider
      */
     protected function registerModuleViews(string $modulePath, string $moduleName): void
     {
-        $viewsPath = $modulePath . '/resources/views';
-        
+        $viewsPath = $modulePath.'/resources/views';
+
         if (File::exists($viewsPath)) {
             $this->loadViewsFrom($viewsPath, Str::kebab($moduleName));
         }
@@ -141,8 +142,8 @@ class ModularServiceProvider extends ServiceProvider
      */
     protected function registerModuleTranslations(string $modulePath, string $moduleName): void
     {
-        $langPath = $modulePath . '/resources/lang';
-        
+        $langPath = $modulePath.'/resources/lang';
+
         if (File::exists($langPath)) {
             $this->loadTranslationsFrom($langPath, Str::kebab($moduleName));
         }
@@ -153,8 +154,8 @@ class ModularServiceProvider extends ServiceProvider
      */
     protected function registerModuleMigrations(string $modulePath, string $moduleName): void
     {
-        $migrationsPath = $modulePath . '/database/migrations';
-        
+        $migrationsPath = $modulePath.'/database/migrations';
+
         if (File::exists($migrationsPath)) {
             $this->loadMigrationsFrom($migrationsPath);
         }
@@ -167,7 +168,7 @@ class ModularServiceProvider extends ServiceProvider
     {
         $namespace = config('modular.modules_namespace', 'Modules');
         $providerClass = "{$namespace}\\{$moduleName}\\Providers\\{$moduleName}ServiceProvider";
-        
+
         if (class_exists($providerClass)) {
             $this->app->register($providerClass);
         }
@@ -180,7 +181,7 @@ class ModularServiceProvider extends ServiceProvider
     {
         $themeDirectory = config('modular.theme_directory', 'themes');
         $themesPath = base_path($themeDirectory);
-        
+
         if (File::exists($themesPath)) {
             $this->publishes([
                 $themesPath => public_path($themeDirectory),
@@ -193,7 +194,7 @@ class ModularServiceProvider extends ServiceProvider
      */
     protected function registerFilamentSupport(): void
     {
-        if (!config('modular.filament.enabled', true)) {
+        if (! config('modular.filament.enabled', true)) {
             return;
         }
 
@@ -209,16 +210,16 @@ class ModularServiceProvider extends ServiceProvider
     protected function discoverFilamentResources(): void
     {
         $modulesPath = base_path(config('modular.modules_directory', 'app-modules'));
-        
-        if (!File::exists($modulesPath)) {
+
+        if (! File::exists($modulesPath)) {
             return;
         }
 
         $modules = File::directories($modulesPath);
 
         foreach ($modules as $modulePath) {
-            $filamentPath = $modulePath . '/Filament';
-            
+            $filamentPath = $modulePath.'/Filament';
+
             if (File::exists($filamentPath)) {
                 // Filament will auto-discover resources through namespace registration
                 // This is handled by the module's composer.json autoload configuration

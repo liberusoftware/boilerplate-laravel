@@ -12,13 +12,13 @@
         "autoprefixer": "^10.4.16",
         "laravel-echo": "^2.3.0",
         "laravel-vite-plugin": "^3.0.0",
-        "postcss-nesting": "^13.0.2",
+        "postcss-nesting": "^14.0.0",
         "pusher-js": "^8.4.0",
         "tailwindcss": "^4.1.18",
         "vite": "^8.0.1"
     },
     "dependencies": {
         "@tailwindcss/postcss": "^4.1.11",
-        "vite-plugin-static-copy": "3.3"
+        "vite-plugin-static-copy": "^4.1.0"
     }
 }

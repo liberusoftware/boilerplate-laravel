@@ -32,8 +32,9 @@ class MakeModuleCommand extends Command
         $force = $this->option('force');
 
         // Validate module name
-        if (!preg_match('/^[A-Z][a-zA-Z0-9]*$/', $name)) {
+        if (! preg_match('/^[A-Z][a-zA-Z0-9]*$/', $name)) {
             $this->error('Module name must start with a capital letter and contain only alphanumeric characters.');
+
             return 1;
         }
 
@@ -41,14 +42,15 @@ class MakeModuleCommand extends Command
         $modulePath = base_path("{$modulesDirectory}/{$name}");
 
         // Check if module already exists
-        if (File::exists($modulePath) && !$force) {
+        if (File::exists($modulePath) && ! $force) {
             $this->error("Module {$name} already exists. Use --force to overwrite.");
+
             return 1;
         }
 
         // Create module structure
         $this->info("Creating module: {$name}");
-        
+
         $this->createModuleStructure($modulePath, $name);
         $this->createComposerJson($modulePath, $name);
         $this->createModuleServiceProvider($modulePath, $name);
@@ -63,7 +65,7 @@ class MakeModuleCommand extends Command
 
         $this->info("Module {$name} created successfully!");
         $this->info("Run 'composer dump-autoload' to register the module.");
-        
+
         return 0;
     }
 
@@ -141,7 +143,7 @@ class MakeModuleCommand extends Command
     protected function createModuleServiceProvider(string $modulePath, string $name): void
     {
         $namespace = config('modular.modules_namespace', 'Modules');
-        
+
         $stub = <<<PHP
 <?php
 
@@ -208,7 +210,7 @@ PHP;
     protected function createModuleClass(string $modulePath, string $name): void
     {
         $namespace = config('modular.modules_namespace', 'Modules');
-        
+
         $stub = <<<PHP
 <?php
 
@@ -289,7 +291,7 @@ PHP;
     {
         $namespace = config('modular.modules_namespace', 'Modules');
         $kebabName = Str::kebab($name);
-        
+
         $stub = <<<PHP
 <?php
 
@@ -319,7 +321,7 @@ PHP;
     protected function createModelExample(string $modulePath, string $name): void
     {
         $namespace = config('modular.modules_namespace', 'Modules');
-        
+
         $stub = <<<PHP
 <?php
 
@@ -343,7 +345,7 @@ PHP;
     {
         $table = Str::snake(Str::plural($name));
         $timestamp = date('Y_m_d_His');
-        
+
         $stub = <<<PHP
 <?php
 
@@ -396,7 +398,7 @@ BLADE;
      */
     protected function createConfigFile(string $modulePath, string $name): void
     {
-        $stub = <<<PHP
+        $stub = <<<'PHP'
 <?php
 
 return [
@@ -415,7 +417,7 @@ PHP;
     {
         $namespace = config('modular.modules_namespace', 'Modules');
         $kebabName = Str::kebab($name);
-        
+
         $stub = <<<PHP
 <?php
 

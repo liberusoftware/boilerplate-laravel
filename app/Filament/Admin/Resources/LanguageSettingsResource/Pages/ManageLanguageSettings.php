@@ -59,7 +59,7 @@ class ManageLanguageSettings extends Page
                         '--source' => $data['source_language'],
                     ];
 
-                    if (!empty($data['target_language'])) {
+                    if (! empty($data['target_language'])) {
                         $options['--target'] = $data['target_language'];
                     }
 

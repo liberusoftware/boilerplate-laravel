@@ -85,7 +85,7 @@ return [
     | This is recommended for production environments.
     |
     */
-    'cache' => env('MODULAR_CACHE', !env('APP_DEBUG', false)),
+    'cache' => env('MODULAR_CACHE', ! env('APP_DEBUG', false)),
 
     /*
     |--------------------------------------------------------------------------

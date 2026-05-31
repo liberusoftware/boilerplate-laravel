@@ -17,7 +17,7 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        
+
         // Get all users the authenticated user has conversed with
         $conversations = Message::where('sender_id', $user->id)
             ->orWhere('recipient_id', $user->id)
@@ -25,8 +25,8 @@ class MessageController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy(function ($message) use ($user) {
-                return $message->sender_id === $user->id 
-                    ? $message->recipient_id 
+                return $message->sender_id === $user->id
+                    ? $message->recipient_id
                     : $message->sender_id;
             })
             ->map(function ($messages, $userId) {
@@ -34,7 +34,7 @@ class MessageController extends Controller
                 $unreadCount = $messages->where('recipient_id', Auth::id())
                     ->whereNull('read_at')
                     ->count();
-                
+
                 return [
                     'user' => User::find($userId),
                     'last_message' => $lastMessage,
@@ -52,7 +52,7 @@ class MessageController extends Controller
     public function show(Request $request, User $user)
     {
         $authUser = Auth::user();
-        
+
         // Get all messages between the two users
         $messages = Message::between($authUser->id, $user->id)
             ->with(['sender', 'recipient'])
@@ -61,6 +61,7 @@ class MessageController extends Controller
             ->map(function ($message) {
                 // Decrypt the message body for display
                 $message->body = Crypt::decryptString($message->body);
+
                 return $message;
             });
 
@@ -120,7 +121,7 @@ class MessageController extends Controller
     public function markAsRead(Message $message)
     {
         $this->authorize('view', $message);
-        
+
         if (Auth::id() !== $message->recipient_id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
@@ -154,7 +155,7 @@ class MessageController extends Controller
     public function users(Request $request)
     {
         $authUser = Auth::user();
-        
+
         // Get all users except the authenticated user
         $users = User::where('id', '!=', $authUser->id)
             ->select('id', 'name', 'email', 'profile_photo_path')

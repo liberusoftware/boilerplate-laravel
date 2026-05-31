@@ -7,9 +7,9 @@ use Filament\Resources\Resource;
 
 class LanguageSettingsResource extends Resource
 {
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-language';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-language';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
 
     protected static ?string $navigationLabel = 'Languages';
 

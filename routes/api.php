@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,16 +33,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::middleware('auth:sanctum')->group(function () {
 //     // Get unread notifications
 //     Route::get('/notifications/unread', [App\Http\Controllers\NotificationExampleController::class, 'getUnreadNotifications']);
-//     
+//
 //     // Get all notifications (paginated)
 //     Route::get('/notifications', [App\Http\Controllers\NotificationExampleController::class, 'getAllNotifications']);
-//     
+//
 //     // Mark notification as read
 //     Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationExampleController::class, 'markAsRead']);
-//     
+//
 //     // Mark all notifications as read
 //     Route::post('/notifications/read-all', [App\Http\Controllers\NotificationExampleController::class, 'markAllAsRead']);
-//     
+//
 //     // Delete notification
 //     Route::delete('/notifications/{id}', [App\Http\Controllers\NotificationExampleController::class, 'deleteNotification']);
 // });
@@ -54,11 +55,11 @@ Route::prefix('search')->name('search.')->middleware('throttle:60,1')->group(fun
 });
 Route::middleware('auth:sanctum')->group(function () {
     // Message routes
-    Route::get('/messages', [App\Http\Controllers\MessageController::class, 'index']);
-    Route::get('/messages/users', [App\Http\Controllers\MessageController::class, 'users']);
-    Route::get('/messages/unread-count', [App\Http\Controllers\MessageController::class, 'unreadCount']);
-    Route::get('/messages/{user}', [App\Http\Controllers\MessageController::class, 'show']);
-    Route::post('/messages', [App\Http\Controllers\MessageController::class, 'store']);
-    Route::patch('/messages/{message}/read', [App\Http\Controllers\MessageController::class, 'markAsRead']);
-    Route::delete('/messages/{message}', [App\Http\Controllers\MessageController::class, 'destroy']);
+    Route::get('/messages', [MessageController::class, 'index']);
+    Route::get('/messages/users', [MessageController::class, 'users']);
+    Route::get('/messages/unread-count', [MessageController::class, 'unreadCount']);
+    Route::get('/messages/{user}', [MessageController::class, 'show']);
+    Route::post('/messages', [MessageController::class, 'store']);
+    Route::patch('/messages/{message}/read', [MessageController::class, 'markAsRead']);
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
 });

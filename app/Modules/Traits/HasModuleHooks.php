@@ -4,7 +4,7 @@ namespace App\Modules\Traits;
 
 /**
  * Trait HasModuleHooks
- * 
+ *
  * Provides a flexible hook system for modules to extend functionality
  * at various lifecycle points.
  */
@@ -18,13 +18,13 @@ trait HasModuleHooks
     /**
      * Register a hook callback.
      *
-     * @param string $hookName The name of the hook
-     * @param callable $callback The callback to execute
-     * @param int $priority Priority of execution (lower = earlier)
+     * @param  string  $hookName  The name of the hook
+     * @param  callable  $callback  The callback to execute
+     * @param  int  $priority  Priority of execution (lower = earlier)
      */
     public function registerHook(string $hookName, callable $callback, int $priority = 10): void
     {
-        if (!isset($this->hooks[$hookName])) {
+        if (! isset($this->hooks[$hookName])) {
             $this->hooks[$hookName] = [];
         }
 
@@ -34,19 +34,19 @@ trait HasModuleHooks
         ];
 
         // Sort by priority
-        usort($this->hooks[$hookName], fn($a, $b) => $a['priority'] <=> $b['priority']);
+        usort($this->hooks[$hookName], fn ($a, $b) => $a['priority'] <=> $b['priority']);
     }
 
     /**
      * Execute all callbacks for a hook.
      *
-     * @param string $hookName The hook name
-     * @param mixed ...$args Arguments to pass to callbacks
+     * @param  string  $hookName  The hook name
+     * @param  mixed  ...$args  Arguments to pass to callbacks
      * @return mixed The result from the last callback, or null
      */
     public function executeHook(string $hookName, ...$args): mixed
     {
-        if (!isset($this->hooks[$hookName])) {
+        if (! isset($this->hooks[$hookName])) {
             return null;
         }
 

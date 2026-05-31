@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * Trait Configurable
- * 
+ *
  * Provides configuration management for modules.
  */
 trait Configurable
@@ -14,21 +14,21 @@ trait Configurable
     /**
      * Get a configuration value for the module.
      *
-     * @param string $key The configuration key
-     * @param mixed $default Default value if key not found
-     * @return mixed
+     * @param  string  $key  The configuration key
+     * @param  mixed  $default  Default value if key not found
      */
     public function config(string $key, mixed $default = null): mixed
     {
         $moduleName = strtolower($this->getName());
+
         return Config::get("{$moduleName}.{$key}", $default);
     }
 
     /**
      * Set a runtime configuration value for the module.
      *
-     * @param string $key The configuration key
-     * @param mixed $value The value to set
+     * @param  string  $key  The configuration key
+     * @param  mixed  $value  The value to set
      */
     public function setConfig(string $key, mixed $value): void
     {
@@ -42,6 +42,7 @@ trait Configurable
     public function hasConfig(string $key): bool
     {
         $moduleName = strtolower($this->getName());
+
         return Config::has("{$moduleName}.{$key}");
     }
 
@@ -51,6 +52,7 @@ trait Configurable
     public function getAllConfig(): array
     {
         $moduleName = strtolower($this->getName());
+
         return Config::get($moduleName, []);
     }
 

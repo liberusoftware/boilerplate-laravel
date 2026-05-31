@@ -17,7 +17,7 @@ class ScreeningDataEncryptor
             $fieldsToEncrypt = [
                 'background_check_status',
                 'credit_report_status',
-                'rental_history_status'
+                'rental_history_status',
             ];
 
             foreach ($fieldsToEncrypt as $field) {

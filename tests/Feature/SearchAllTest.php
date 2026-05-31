@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\User;
-use App\Models\Post;
 use App\Models\Group;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -43,7 +43,7 @@ it('can search all entities with a query', function () {
             'posts',
             'groups',
         ]);
-    
+
     $data = $response->json();
     expect($data['posts']['total'])->toBe(1);
     expect($data['groups']['total'])->toBe(1);
@@ -87,7 +87,7 @@ it('respects per_page limit for all searches', function () {
     $response = $this->getJson('/api/search/all?per_page=3');
 
     $response->assertStatus(200);
-    
+
     $data = $response->json();
     expect(count($data['posts']['data']))->toBeLessThanOrEqual(3);
 });
@@ -96,7 +96,7 @@ it('returns empty results when no matches found', function () {
     $response = $this->getJson('/api/search/all?query=NonExistent');
 
     $response->assertStatus(200);
-    
+
     $data = $response->json();
     expect($data['users']['total'])->toBe(0);
     expect($data['posts']['total'])->toBe(0);

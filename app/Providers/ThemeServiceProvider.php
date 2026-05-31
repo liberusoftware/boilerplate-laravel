@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Services\ThemeManager;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class ThemeServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class ThemeServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(ThemeManager::class, function ($app) {
-            return new ThemeManager();
+            return new ThemeManager;
         });
 
         $this->app->alias(ThemeManager::class, 'theme');
@@ -28,7 +28,7 @@ class ThemeServiceProvider extends ServiceProvider
     {
         // Register theme paths
         $themeManager = $this->app->make(ThemeManager::class);
-        
+
         // Set theme from config or user preference
         $theme = $this->determineActiveTheme();
         $themeManager->setTheme($theme);

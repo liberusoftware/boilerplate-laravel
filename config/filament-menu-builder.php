@@ -1,5 +1,8 @@
 <?php
 
+use Biostate\FilamentMenuBuilder\DTO\Menu;
+use Biostate\FilamentMenuBuilder\DTO\MenuItem;
+
 return [
     'models' => [
         // 'Product' => 'App\\Models\\Product',
@@ -24,7 +27,7 @@ return [
         //
     ],
     'dto' => [
-        'menu' => \Biostate\FilamentMenuBuilder\DTO\Menu::class,
-        'menu_item' => \Biostate\FilamentMenuBuilder\DTO\MenuItem::class,
+        'menu' => Menu::class,
+        'menu_item' => MenuItem::class,
     ],
 ];

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
@@ -29,9 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/messages', function () {
         return view('messages.index');
     })->name('messages.index');
-    
+
     Route::get('/messages/{user}', function ($userId) {
-        $user = \App\Models\User::findOrFail($userId);
+        $user = User::findOrFail($userId);
+
         return view('messages.show', compact('user'));
     })->name('messages.show');
 });
@@ -41,4 +43,3 @@ Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, '
     ->name('team-invitations.accept');
 
 // socialstream routes removed per upgrade to Laravel 13 and dependency removal
-

@@ -2,21 +2,26 @@
 
 namespace Tests;
 
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Laravel\Fortify\Fortify;
+use Laravel\Jetstream\Jetstream;
 
 abstract class TestCase extends BaseTestCase
 {
-    public function createApplication(): \Illuminate\Foundation\Application
+    public function createApplication(): Application
     {
         // Reset Fortify/Jetstream static route registration flags that persist
         // across test instances via static properties (set to false by Filament panel providers)
-        \Laravel\Fortify\Fortify::$registersRoutes = true;
-        if (class_exists(\Laravel\Jetstream\Jetstream::class)) {
-            \Laravel\Jetstream\Jetstream::$registersRoutes = true;
+        Fortify::$registersRoutes = true;
+        if (class_exists(Jetstream::class)) {
+            Jetstream::$registersRoutes = true;
         }
 
-        $app = require __DIR__ . '/../bootstrap/app.php';
-        $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        $app = require __DIR__.'/../bootstrap/app.php';
+        $app->make(Kernel::class)->bootstrap();
+
         return $app;
     }
 }

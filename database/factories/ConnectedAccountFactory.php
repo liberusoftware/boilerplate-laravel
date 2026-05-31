@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Providers;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ConnectedAccount>
+ * @extends Factory<ConnectedAccount>
  */
 class ConnectedAccountFactory extends Factory
 {

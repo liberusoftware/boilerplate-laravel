@@ -2,8 +2,8 @@
 
 namespace App\Modules\BlogModule;
 
-use Log;
 use App\Modules\BaseModule;
+use Log;
 
 class BlogModule extends BaseModule
 {

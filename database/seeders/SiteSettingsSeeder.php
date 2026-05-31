@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Settings\SiteSettings;
+use Illuminate\Database\Seeder;
 
 class SiteSettingsSeeder extends Seeder
 {
