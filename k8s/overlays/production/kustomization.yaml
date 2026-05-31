@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+- hpa.yaml
+
+namespace: boilerplate-laravel
+
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 3
+  target:
+    kind: Deployment
+    name: boilerplate-laravel
+
+configMapGenerator:
+- name: boilerplate-config
+  behavior: merge
+  literals:
+  - APP_ENV=production
+  - APP_DEBUG=false
+  - LOG_LEVEL=warning
+
+images:
+- name: ghcr.io/liberusoftware/boilerplate-laravel
+  newTag: latest

@@ -20,6 +20,7 @@ class Group extends Model
         'description',
         'owner_id',
         'type',
+        'is_active',
     ];
 
     protected function casts(): array

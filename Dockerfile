@@ -1,85 +1,64 @@
-# Supported PHP versions: 8.2, 8.3
-# Note: PHP 8.5 is not yet fully supported by all extensions
 ARG PHP_VERSION=8.5
+ARG COMPOSER_VERSION=2
 
-###########################################
-# Composer dependencies stage
-###########################################
-FROM php:${PHP_VERSION}-cli-alpine AS composer-deps
+FROM composer:${COMPOSER_VERSION} AS vendor
 
-WORKDIR /app
-
-# Install required extensions for composer install
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN install-php-extensions intl sockets zip
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy composer files
-COPY composer.json composer.lock ./
-
-# Install composer dependencies (no autoloader yet, will optimize in final stage)
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-autoloader \
-    --no-ansi \
-    --no-scripts \
-    --prefer-dist
-
-###########################################
-# Main application stage
-###########################################
 FROM php:${PHP_VERSION}-cli-alpine
 
-LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
-LABEL org.opencontainers.image.title="Laravel Octane Dockerfile"
-LABEL org.opencontainers.image.description="Production-ready Dockerfile for Laravel Octane"
-LABEL org.opencontainers.image.source=https://github.com/exaco/laravel-octane-dockerfile
+LABEL maintainer="Liberu Software <team@liberu.co.uk>"
+LABEL org.opencontainers.image.title="Liberu Laravel Boilerplate"
+LABEL org.opencontainers.image.description="Production-ready Dockerfile for Laravel Octane (RoadRunner / Swoole / FrankenPHP)"
+LABEL org.opencontainers.image.source=https://github.com/liberusoftware/boilerplate-laravel
 LABEL org.opencontainers.image.licenses=MIT
 
-ARG WWWUSER=1000
-ARG WWWGROUP=1000
+ARG USER_ID=1000
+ARG GROUP_ID=1000
 ARG TZ=UTC
 
 ENV TERM=xterm-color \
+    OCTANE_SERVER=roadrunner \
+    TZ=${TZ} \
+    LANG=C.UTF-8 \
+    USER=laravel \
+    ROOT=/var/www/html \
+    APP_ENV=production \
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_FUND=0 \
+    COMPOSER_MAX_PARALLEL_HTTP=48 \
     WITH_HORIZON=false \
     WITH_SCHEDULER=false \
-    OCTANE_SERVER=roadrunner \
-    USER=octane \
-    ROOT=/var/www/html \
-    COMPOSER_FUND=0 \
-    COMPOSER_MAX_PARALLEL_HTTP=24
+    WITH_REVERB=false
 
 WORKDIR ${ROOT}
 
 SHELL ["/bin/sh", "-eou", "pipefail", "-c"]
 
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
-  && echo ${TZ} > /etc/timezone
+    && echo ${TZ} > /etc/timezone
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-# Install system dependencies and PHP extensions in one layer
-RUN apk update && \
-    apk upgrade && \
+RUN apk update; \
+    apk upgrade; \
     apk add --no-cache \
     curl \
     wget \
-    nano \
+    vim \
+    tzdata \
     ncdu \
     procps \
+    unzip \
     ca-certificates \
+    bash \
     supervisor \
-    libsodium-dev && \
-    install-php-extensions \
+    libsodium-dev \
+    && install-php-extensions \
+    apcu \
     bz2 \
     pcntl \
     mbstring \
     bcmath \
     sockets \
-    pgsql \
     pdo_pgsql \
     opcache \
     exif \
@@ -88,9 +67,9 @@ RUN apk update && \
     intl \
     gd \
     redis \
-    igbinary && \
-    docker-php-source delete && \
-    rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+    igbinary \
+    && docker-php-source delete \
+    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
@@ -100,67 +79,71 @@ RUN arch="$(apk --print-arch)" \
     x86) _cronic_fname='supercronic-linux-386' ;; \
     *) echo >&2 "error: unsupported architecture: $arch"; exit 1 ;; \
     esac \
-    && wget -q "https://github.com/aptible/supercronic/releases/download/v0.2.29/${_cronic_fname}" \
+    && wget -q "https://github.com/aptible/supercronic/releases/download/v0.2.38/${_cronic_fname}" \
     -O /usr/bin/supercronic \
     && chmod +x /usr/bin/supercronic \
     && mkdir -p /etc/supercronic \
     && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --no-interaction" > /etc/supercronic/laravel
 
-RUN addgroup -g ${WWWGROUP} ${USER} \
-    && adduser -D -h ${ROOT} -G ${USER} -u ${WWWUSER} -s /bin/sh ${USER}
-
-RUN mkdir -p /var/log/supervisor /var/run/supervisor \
-    && chown -R ${USER}:${USER} ${ROOT} /var/log /var/run \
-    && chmod -R a+rw ${ROOT} /var/log /var/run
+RUN addgroup -g ${GROUP_ID} ${USER} \
+    && adduser -D -G ${USER} -u ${USER_ID} -s /bin/sh ${USER}
 
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
-USER ${USER}
+COPY --link --from=vendor /usr/bin/composer /usr/bin/composer
+COPY --link .docker/supervisord.conf /etc/
+COPY --link .docker/octane/RoadRunner/supervisord.roadrunner.conf /etc/supervisor/conf.d/
+COPY --link .docker/octane/FrankenPHP/supervisord.frankenphp.conf /etc/supervisor/conf.d/
+COPY --link .docker/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
+COPY --link .docker/supervisord.services.conf /etc/supervisor/conf.d/
+COPY --link .docker/supervisord.horizon.conf /etc/supervisor/conf.d/
+COPY --link .docker/supervisord.scheduler.conf /etc/supervisor/conf.d/
+COPY --link .docker/supervisord.reverb.conf /etc/supervisor/conf.d/
+COPY --link .docker/supervisord.worker.conf /etc/supervisor/conf.d/
+COPY --link .docker/php.ini ${PHP_INI_DIR}/conf.d/99-php.ini
+COPY --link .docker/octane/RoadRunner/.rr.prod.yaml ./.rr.yaml
+COPY --link .docker/start-container /usr/local/bin/start-container
+COPY --link .docker/healthcheck /usr/local/bin/healthcheck
+COPY --link composer.* ./
 
-# Install Composer from official image
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-autoloader \
+    --no-ansi \
+    --no-scripts \
+    --no-progress \
+    --audit
 
-# Copy vendor from composer-deps stage for better caching
-COPY --chown=${USER}:${USER} --from=composer-deps /app/vendor ./vendor
+COPY --link . .
 
-# Copy composer files (needed for autoloader generation)
-COPY --chown=${USER}:${USER} composer.json composer.lock ./
-
-# Copy application code first so autoloader can resolve all files
-COPY --chown=${USER}:${USER} . .
-
-# Generate optimized autoloader now that all app files are present
-RUN composer dump-autoload --classmap-authoritative --no-dev && \
-    composer clear-cache
-
-# Create necessary Laravel directories
 RUN mkdir -p \
     storage/framework/sessions \
     storage/framework/views \
     storage/framework/cache \
     storage/framework/testing \
     storage/logs \
-    bootstrap/cache && \
-    chmod -R a+rw storage
+    bootstrap/cache \
+    && chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck
 
-# Copy configuration files
-COPY --chown=${USER}:${USER} .docker/supervisord.conf /etc/supervisor/
-COPY --chown=${USER}:${USER} .docker/octane/RoadRunner/supervisord.roadrunner.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/supervisord.horizon.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/supervisord.scheduler.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/supervisord.worker.conf /etc/supervisor/conf.d/
-COPY --chown=${USER}:${USER} .docker/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY --chown=${USER}:${USER} .docker/start-container /usr/local/bin/start-container
+RUN composer dump-autoload \
+    --optimize \
+    --apcu \
+    --no-dev
 
-# Copy environment file
-COPY --chown=${USER}:${USER} .env.example ./.env
+RUN if composer show | grep spiral/roadrunner-cli >/dev/null 2>&1; then \
+    ./vendor/bin/rr get-binary --quiet && chmod +x rr; \
+    else echo "spiral/roadrunner-cli not found, skipping rr binary"; \
+    fi
 
-RUN chmod +x /usr/local/bin/start-container && \
-    cat .docker/utilities.sh >> ~/.bashrc
+RUN chown -R ${USER_ID}:${GROUP_ID} ${ROOT} \
+    && find / -perm /6000 -type f -exec chmod a-s {} + 2>/dev/null || true
+
+USER ${USER}
 
 EXPOSE 8000
+EXPOSE 6001
 
 ENTRYPOINT ["start-container"]
 
-HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD php artisan octane:status || exit 1
-
+HEALTHCHECK --start-period=5s --interval=1s --timeout=3s --retries=10 CMD healthcheck || exit 1

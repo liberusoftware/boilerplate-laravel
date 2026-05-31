@@ -16,6 +16,9 @@ use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 |
 */
 
+// Health check endpoint (used by Docker, Kubernetes, and Octane)
+Route::get('/up', fn () => response()->json(['status' => 'ok']))->name('health');
+
 Route::get('/', fn () => view('welcome'));
 
 // Theme demo page
@@ -41,5 +44,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
     ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])
     ->name('team-invitations.accept');
-
-// socialstream routes removed per upgrade to Laravel 13 and dependency removal

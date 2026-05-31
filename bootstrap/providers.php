@@ -10,6 +10,7 @@ use App\Providers\JetstreamServiceProvider;
 use App\Providers\ModularServiceProvider;
 use App\Providers\RouteServiceProvider;
 use App\Providers\SiteSettingsBridgeServiceProvider;
+use App\Providers\SocialstreamServiceProvider;
 use App\Providers\ThemeServiceProvider;
 
 return [
@@ -23,5 +24,6 @@ return [
     ModularServiceProvider::class,
     RouteServiceProvider::class,
     SiteSettingsBridgeServiceProvider::class,
+    SocialstreamServiceProvider::class,
     ThemeServiceProvider::class,
 ];

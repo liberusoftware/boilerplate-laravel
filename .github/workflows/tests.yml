@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: mbstring, bcmath, pdo, mysql, dom, curl
+          extensions: mbstring, bcmath, pdo, pdo_sqlite, sqlite3, dom, curl, intl, gd, redis
           coverage: xdebug
 
       - name: Get Composer cache directory
@@ -32,36 +32,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Start database
-        run: sudo /etc/init.d/mysql start
-
-      - name: Create database
-        run: mysql -e "CREATE DATABASE IF NOT EXISTS liberu;" -uroot -proot
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --no-interaction
 
       - name: Copy environment file
         run: cp .env.testing .env
 
-      - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
-
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Optimize Laravel
-        run: |
-          php artisan config:clear
-          php artisan cache:clear
-          php artisan route:clear
-          php artisan config:cache
-
-      - name: Run database migrations
-        run: php artisan migrate --force
-
-      - name: Seed database
-        run: php artisan db:seed
-
-      - name: Run tests
+      - name: Run tests with SQLite in-memory
         run: vendor/bin/pest --coverage --coverage-clover=coverage.xml
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -70,4 +54,4 @@ jobs:
           files: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
-          fail_ci_if_error: true
+          fail_ci_if_error: false

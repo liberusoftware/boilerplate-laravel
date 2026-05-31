@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: boilerplate-laravel
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- secret.yaml
+- pvc.yaml
+- mysql-statefulset.yaml
+- redis.yaml
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- network-policy.yaml
+- resource-quota.yaml
+
+commonLabels:
+  app: liberu-boilerplate
