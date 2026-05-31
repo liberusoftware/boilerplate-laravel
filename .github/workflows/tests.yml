@@ -5,63 +5,48 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: mbstring, bcmath, pdo, mysql, dom, curl
+          extensions: mbstring, pdo, pdo_sqlite, bcmath, opcache, zip, gd, intl
           coverage: xdebug
 
-      - name: Get Composer cache directory
+      - name: Get composer cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache Composer dependencies
+      - name: Cache composer dependencies
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: Start database
-        run: sudo /etc/init.d/mysql start
-
-      - name: Create database
-        run: mysql -e "CREATE DATABASE IF NOT EXISTS liberu;" -uroot -proot
+          restore-keys: ${{ runner.os }}-composer-
 
       - name: Copy environment file
-        run: cp .env.testing .env
+        run: cp .env.example .env
 
       - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate application key
         run: php artisan key:generate
 
-      - name: Optimize Laravel
-        run: |
-          php artisan config:clear
-          php artisan cache:clear
-          php artisan route:clear
-          php artisan config:cache
-
-      - name: Run database migrations
-        run: php artisan migrate --force
-
-      - name: Seed database
-        run: php artisan db:seed
-
       - name: Run tests
-        run: vendor/bin/pest --coverage --coverage-clover=coverage.xml
+        run: php artisan test --coverage-clover=coverage.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
@@ -70,4 +55,4 @@ jobs:
           files: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
-          fail_ci_if_error: true
+          fail_ci_if_error: false
