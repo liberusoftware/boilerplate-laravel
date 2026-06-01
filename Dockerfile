@@ -89,6 +89,7 @@ RUN apk update && \
     intl \
     gd \
     redis \
+    pcntl \
     igbinary && \
     docker-php-source delete && \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
