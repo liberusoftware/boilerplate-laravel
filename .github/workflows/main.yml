@@ -47,7 +47,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run tests
-        run: ./vendor/bin/phpunit --no-coverage
+        run: ./vendor/bin/pest --no-coverage
 
   docker:
     if: github.event_name == 'push'
