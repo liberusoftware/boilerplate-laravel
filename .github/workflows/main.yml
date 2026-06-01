@@ -75,7 +75,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: liberu/accounting
+          images: liberu/boilerplate
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -90,5 +90,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=liberu/accounting:buildcache
-          cache-to: type=registry,ref=liberu/accounting:buildcache,mode=max
+          cache-from: type=registry,ref=liberu/boilerplate:buildcache
+          cache-to: type=registry,ref=liberu/boilerplate:buildcache,mode=max
