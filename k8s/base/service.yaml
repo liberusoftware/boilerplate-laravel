@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: boilerplate-laravel
+  namespace: boilerplate-laravel
+  labels:
+    app: boilerplate-laravel
+spec:
+  type: ClusterIP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app: boilerplate-laravel
+    component: application

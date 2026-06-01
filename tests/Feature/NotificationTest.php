@@ -7,6 +7,7 @@ use App\Notifications\ActivityNotification;
 use App\Notifications\FriendRequestNotification;
 use App\Notifications\NewMessageNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\Events\BroadcastNotificationCreated;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -33,6 +34,7 @@ class NotificationTest extends TestCase
             NewMessageNotification::class,
             function ($notification) use ($sender) {
                 $data = $notification->toArray($notification);
+
                 return $data['sender_id'] === $sender->id &&
                        $data['sender_name'] === $sender->name &&
                        $data['type'] === 'new_message';
@@ -58,6 +60,7 @@ class NotificationTest extends TestCase
             FriendRequestNotification::class,
             function ($notification) use ($requester) {
                 $data = $notification->toArray($notification);
+
                 return $data['requester_id'] === $requester->id &&
                        $data['requester_name'] === $requester->name &&
                        $data['type'] === 'friend_request';
@@ -85,6 +88,7 @@ class NotificationTest extends TestCase
             ActivityNotification::class,
             function ($notification) use ($actor) {
                 $data = $notification->toArray($notification);
+
                 return $data['activity_type'] === 'Post Liked' &&
                        $data['actor_id'] === $actor->id &&
                        $data['type'] === 'activity' &&
@@ -161,7 +165,7 @@ class NotificationTest extends TestCase
     public function test_notification_broadcasts_event(): void
     {
         Event::fake([
-            \Illuminate\Notifications\Events\BroadcastNotificationCreated::class,
+            BroadcastNotificationCreated::class,
         ]);
 
         $user = User::factory()->create();
@@ -174,7 +178,7 @@ class NotificationTest extends TestCase
         ));
 
         Event::assertDispatched(
-            \Illuminate\Notifications\Events\BroadcastNotificationCreated::class,
+            BroadcastNotificationCreated::class,
             function ($event) use ($user) {
                 return $event->notifiable->id === $user->id;
             }

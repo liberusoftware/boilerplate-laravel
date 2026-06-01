@@ -2,8 +2,8 @@
 
 namespace App\Modules\BlogModule\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Modules\BlogModule\Services\BlogService;
+use Illuminate\Support\ServiceProvider;
 
 class BlogModuleServiceProvider extends ServiceProvider
 {
@@ -14,11 +14,11 @@ class BlogModuleServiceProvider extends ServiceProvider
     {
         // Register blog service
         $this->app->singleton(BlogService::class, function ($app) {
-            return new BlogService();
+            return new BlogService;
         });
 
         // Merge module configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/blog.php', 'blog');
+        $this->mergeConfigFrom(__DIR__.'/../config/blog.php', 'blog');
     }
 
     /**
@@ -27,23 +27,23 @@ class BlogModuleServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Load module routes
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
-        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
 
         // Load module views
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'blog');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'blog');
 
         // Load module migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         // Publish module assets
         $this->publishes([
-            __DIR__ . '/../resources/assets' => public_path('modules/blog'),
+            __DIR__.'/../resources/assets' => public_path('modules/blog'),
         ], 'blog-assets');
 
         // Publish module configuration
         $this->publishes([
-            __DIR__ . '/../config/blog.php' => config_path('blog.php'),
+            __DIR__.'/../config/blog.php' => config_path('blog.php'),
         ], 'blog-config');
     }
 }

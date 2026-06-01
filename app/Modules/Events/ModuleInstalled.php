@@ -7,6 +7,7 @@ use App\Modules\Contracts\ModuleInterface;
 class ModuleInstalled
 {
     public string $name;
+
     public ModuleInterface $module;
 
     public function __construct(string $name, ModuleInterface $module)

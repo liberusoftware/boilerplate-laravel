@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Group;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class SearchService
@@ -18,12 +17,12 @@ class SearchService
         $query = User::query();
 
         // Search by name or email
-        if (!empty($filters['query'])) {
+        if (! empty($filters['query'])) {
             $query->search($filters['query']);
         }
 
         // Filter by role
-        if (!empty($filters['role'])) {
+        if (! empty($filters['role'])) {
             $query->role($filters['role']);
         }
 
@@ -37,10 +36,10 @@ class SearchService
         }
 
         // Filter by date range
-        if (!empty($filters['created_from'])) {
+        if (! empty($filters['created_from'])) {
             $query->where('created_at', '>=', $filters['created_from']);
         }
-        if (!empty($filters['created_to'])) {
+        if (! empty($filters['created_to'])) {
             $query->where('created_at', '<=', $filters['created_to']);
         }
 
@@ -60,22 +59,22 @@ class SearchService
         $query = Post::query()->with('user');
 
         // Search by title or content
-        if (!empty($filters['query'])) {
+        if (! empty($filters['query'])) {
             $query->search($filters['query']);
         }
 
         // Filter by status
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->status($filters['status']);
         }
 
         // Filter by author
-        if (!empty($filters['author_id'])) {
+        if (! empty($filters['author_id'])) {
             $query->byAuthor($filters['author_id']);
         }
 
         // Filter by date range
-        if (!empty($filters['published_from']) || !empty($filters['published_to'])) {
+        if (! empty($filters['published_from']) || ! empty($filters['published_to'])) {
             $query->dateRange(
                 $filters['published_from'] ?? null,
                 $filters['published_to'] ?? null
@@ -83,7 +82,7 @@ class SearchService
         }
 
         // Only published posts (unless explicitly requesting all)
-        if (!isset($filters['include_drafts']) || !$filters['include_drafts']) {
+        if (! isset($filters['include_drafts']) || ! $filters['include_drafts']) {
             $query->published();
         }
 
@@ -103,30 +102,30 @@ class SearchService
         $query = Group::query()->with('owner');
 
         // Search by name or description
-        if (!empty($filters['query'])) {
+        if (! empty($filters['query'])) {
             $query->search($filters['query']);
         }
 
         // Filter by active status
-        if (!empty($filters['active_only'])) {
+        if (! empty($filters['active_only'])) {
             $query->active();
         }
 
         // Filter by type
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->type($filters['type']);
         }
 
         // Filter by owner
-        if (!empty($filters['owner_id'])) {
+        if (! empty($filters['owner_id'])) {
             $query->byOwner($filters['owner_id']);
         }
 
         // Filter by date range
-        if (!empty($filters['created_from'])) {
+        if (! empty($filters['created_from'])) {
             $query->where('created_at', '>=', $filters['created_from']);
         }
-        if (!empty($filters['created_to'])) {
+        if (! empty($filters['created_to'])) {
             $query->where('created_at', '<=', $filters['created_to']);
         }
 
@@ -149,17 +148,17 @@ class SearchService
         $perPage = $filters['per_page'] ?? 5;
 
         // Search users
-        if (!isset($filters['types']) || in_array('users', $filters['types'])) {
+        if (! isset($filters['types']) || in_array('users', $filters['types'])) {
             $results['users'] = $this->searchUsers(array_merge($filters, ['per_page' => $perPage]));
         }
 
         // Search posts
-        if (!isset($filters['types']) || in_array('posts', $filters['types'])) {
+        if (! isset($filters['types']) || in_array('posts', $filters['types'])) {
             $results['posts'] = $this->searchPosts(array_merge($filters, ['per_page' => $perPage]));
         }
 
         // Search groups
-        if (!isset($filters['types']) || in_array('groups', $filters['types'])) {
+        if (! isset($filters['types']) || in_array('groups', $filters['types'])) {
             $results['groups'] = $this->searchGroups(array_merge($filters, ['per_page' => $perPage]));
         }
 

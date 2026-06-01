@@ -11,7 +11,7 @@ use JoelButcher\Socialstream\Providers;
 use Laravel\Jetstream\Features as JetstreamFeatures;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -48,7 +48,7 @@ class UserFactory extends Factory
     /**
      * Indicate that the user should have a personal team.
      */
-    public function withPersonalTeam(callable $callback = null): static
+    public function withPersonalTeam(?callable $callback = null): static
     {
         if (! JetstreamFeatures::hasTeamFeatures()) {
             return $this->state([]);
@@ -69,7 +69,7 @@ class UserFactory extends Factory
     /**
      * Indicate that the user should have a connected account for the given provider.
      */
-    public function withConnectedAccount(string $provider, callable $callback = null): static
+    public function withConnectedAccount(string $provider, ?callable $callback = null): static
     {
         if (! Providers::enabled($provider)) {
             return $this->state([]);

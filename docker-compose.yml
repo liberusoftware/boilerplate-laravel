@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PHP_VERSION: '8.3'
-        WWWUSER: '${WWWUSER:-1000}'
-        WWWGROUP: '${WWWGROUP:-1000}'
+        PHP_VERSION: '8.5'
+        USER_ID: '${WWWUSER:-1000}'
+        GROUP_ID: '${WWWGROUP:-1000}'
     image: boilerplate-laravel:latest
     ports:
       - '${APP_PORT:-8000}:80'
@@ -29,12 +29,36 @@ services:
     networks:
       - appnet
 
+  reverb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: '8.5'
+    image: boilerplate-laravel:latest
+    environment:
+      CONTAINER_MODE: reverb
+    env_file:
+      - .env
+    volumes:
+      - storage:/var/www/html/storage/app
+      - logs:/var/www/html/storage/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - appnet
+    profiles:
+      - reverb
+
   worker:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        PHP_VERSION: '8.3'
+        PHP_VERSION: '8.5'
     image: boilerplate-laravel:latest
     environment:
       CONTAINER_MODE: worker

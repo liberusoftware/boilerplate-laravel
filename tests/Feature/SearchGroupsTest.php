@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -68,7 +68,7 @@ it('can filter groups by type', function () {
 });
 
 it('can filter groups by owner', function () {
-    $response = $this->getJson('/api/search/groups?owner_id=' . $this->user1->id);
+    $response = $this->getJson('/api/search/groups?owner_id='.$this->user1->id);
 
     $response->assertStatus(200)
         ->assertJsonCount(2, 'data');
@@ -98,7 +98,7 @@ it('can sort groups by name', function () {
     $response = $this->getJson('/api/search/groups?order_by=name&order_direction=asc');
 
     $response->assertStatus(200);
-    
+
     $names = collect($response->json('data'))->pluck('name')->all();
     expect($names[0])->toBe('Admin Team');
 });
@@ -142,7 +142,7 @@ it('validates owner_id exists', function () {
 });
 
 it('can combine multiple group filters', function () {
-    $response = $this->getJson('/api/search/groups?query=admin&type=restricted&owner_id=' . $this->user1->id);
+    $response = $this->getJson('/api/search/groups?query=admin&type=restricted&owner_id='.$this->user1->id);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')

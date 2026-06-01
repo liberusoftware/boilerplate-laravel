@@ -32,6 +32,7 @@ class BlogService
     public function getPost(int $id): ?array
     {
         $posts = $this->getAllPosts();
+
         return collect($posts)->firstWhere('id', $id);
     }
 

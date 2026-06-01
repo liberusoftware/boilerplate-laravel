@@ -7,59 +7,74 @@
 // - Optionally set INSTALLER_KEY in .env and provide ?key=... or send key in POST to authenticate.
 // - Remove/disable after use.
 
-function dotenv_get($key) {
+function dotenv_get($key)
+{
     // Try getenv first
     $v = getenv($key);
     if ($v !== false) {
         return $v;
     }
     // Fallback: parse .env if present
-    $envPath = __DIR__ . '/../.env';
-    if (!file_exists($envPath)) {
+    $envPath = __DIR__.'/../.env';
+    if (! file_exists($envPath)) {
         return false;
     }
     $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         $line = trim($line);
-        if ($line === '' || strpos($line, '#') === 0) continue;
-        if (strpos($line, '=') === false) continue;
+        if ($line === '' || strpos($line, '#') === 0) {
+            continue;
+        }
+        if (strpos($line, '=') === false) {
+            continue;
+        }
         [$k, $rest] = explode('=', $line, 2);
         $k = trim($k);
         if ($k === $key) {
             $val = trim($rest);
             $val = trim($val, "\"'");
+
             return $val;
         }
     }
+
     return false;
 }
 
-function enabled() {
+function enabled()
+{
     $val = dotenv_get('INSTALLER_ENABLED');
-    if ($val === false) return false;
-    $val = strtolower((string)$val);
-    return in_array($val, ['1','true','on','yes'], true);
+    if ($val === false) {
+        return false;
+    }
+    $val = strtolower((string) $val);
+
+    return in_array($val, ['1', 'true', 'on', 'yes'], true);
 }
 
-function check_key() {
+function check_key()
+{
     $required = dotenv_get('INSTALLER_KEY');
-    if ($required === false || $required === '') return true; // not configured
+    if ($required === false || $required === '') {
+        return true;
+    } // not configured
     $provided = $_REQUEST['key'] ?? null;
-    return is_string($provided) && hash_equals((string)$required, (string)$provided);
+
+    return is_string($provided) && hash_equals((string) $required, (string) $provided);
 }
 
-if (!enabled()) {
+if (! enabled()) {
     http_response_code(403);
-    echo "<!doctype html><html><body><h2>Installer disabled</h2><p>Set INSTALLER_ENABLED=true in your .env to enable.</p></body></html>";
+    echo '<!doctype html><html><body><h2>Installer disabled</h2><p>Set INSTALLER_ENABLED=true in your .env to enable.</p></body></html>';
     exit;
 }
 
-if (!check_key()) {
+if (! check_key()) {
     // Simple prompt page for key
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['key'])) {
         // redirect with key in query for convenient requests (short-lived)
         $key = urlencode($_POST['key']);
-        $uri = strtok($_SERVER["REQUEST_URI"], '?');
+        $uri = strtok($_SERVER['REQUEST_URI'], '?');
         header("Location: {
 $uri}?key={
 $key}");
@@ -73,15 +88,17 @@ $key}");
 }
 
 // Helper to run a shell command and return output and exit code
-function run_cmd($cmd, &$output = null) {
+function run_cmd($cmd, &$output = null)
+{
     // Use proc_open so we can capture stdout/stderr. Avoid shell injection by leaving caller to escape.
     $descriptorspec = [
         1 => ['pipe', 'w'],
         2 => ['pipe', 'w'],
     ];
     $process = @proc_open($cmd, $descriptorspec, $pipes, getcwd());
-    if (!is_resource($process)) {
+    if (! is_resource($process)) {
         $output = "Failed to start process for command: {$cmd}";
+
         return 255;
     }
     $out = stream_get_contents($pipes[1]);
@@ -89,19 +106,22 @@ function run_cmd($cmd, &$output = null) {
     $err = stream_get_contents($pipes[2]);
     fclose($pipes[2]);
     $status = proc_close($process);
-    $output = trim($out . PHP_EOL . $err);
+    $output = trim($out.PHP_EOL.$err);
+
     return $status;
 }
 
 // Helper to run command from array (safer than string command)
-function run_cmd_array(array $cmd, &$output = null) {
+function run_cmd_array(array $cmd, &$output = null)
+{
     $descriptorspec = [
         1 => ['pipe', 'w'],
         2 => ['pipe', 'w'],
     ];
     $process = @proc_open($cmd, $descriptorspec, $pipes, getcwd());
-    if (!is_resource($process)) {
-        $output = "Failed to start process";
+    if (! is_resource($process)) {
+        $output = 'Failed to start process';
+
         return 255;
     }
     $out = stream_get_contents($pipes[1]);
@@ -109,7 +129,8 @@ function run_cmd_array(array $cmd, &$output = null) {
     $err = stream_get_contents($pipes[2]);
     fclose($pipes[2]);
     $status = proc_close($process);
-    $output = trim($out . PHP_EOL . $err);
+    $output = trim($out.PHP_EOL.$err);
+
     return $status;
 }
 
@@ -133,75 +154,75 @@ if ($action) {
         'enable_module',
         'install_module',
     ];
-    if (!in_array($action, $allowed, true)) {
+    if (! in_array($action, $allowed, true)) {
         echo json_encode(['ok' => false, 'message' => 'Invalid action']);
         exit;
     }
 
     // Make sure path calculations are consistent
-    $projectRoot = realpath(__DIR__ . '/..');
+    $projectRoot = realpath(__DIR__.'/..');
     chdir($projectRoot);
 
     try {
         if ($action === 'status') {
-            $composerInstalled = file_exists($projectRoot . '/vendor/autoload.php');
-            $npmInstalled = file_exists($projectRoot . '/node_modules');
-            $composerExists = !empty(shell_exec('command -v composer 2>/dev/null'));
+            $composerInstalled = file_exists($projectRoot.'/vendor/autoload.php');
+            $npmInstalled = file_exists($projectRoot.'/node_modules');
+            $composerExists = ! empty(shell_exec('command -v composer 2>/dev/null'));
             echo json_encode([
-                'ok' => true, 
+                'ok' => true,
                 'composer_installed' => $composerInstalled,
                 'npm_installed' => $npmInstalled,
-                'composer_command_exists' => $composerExists
+                'composer_command_exists' => $composerExists,
             ]);
             exit;
         }
 
         if ($action === 'composer_install') {
             // Check if vendor already exists
-            if (file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => true, 'message' => 'Composer dependencies already installed. Skipping.', 'skipped' => true]);
                 exit;
             }
 
             // Check if composer command exists
-            $composerExists = !empty(shell_exec('command -v composer 2>/dev/null'));
-            
-            if (!$composerExists) {
+            $composerExists = ! empty(shell_exec('command -v composer 2>/dev/null'));
+
+            if (! $composerExists) {
                 // Download composer.phar
                 $out = "Composer command not found. Downloading composer.phar...\n";
-                
+
                 // Check if PHP exists
                 $php = getenv('PHP_BINARY') ?: 'php';
                 if (empty(shell_exec("command -v $php 2>/dev/null"))) {
                     echo json_encode(['ok' => false, 'message' => 'PHP is required but not found.']);
                     exit;
                 }
-                
+
                 // Download composer installer
                 $installerUrl = 'https://getcomposer.org/installer';
                 $installerContent = @file_get_contents($installerUrl);
                 if ($installerContent === false) {
-                    echo json_encode(['ok' => false, 'message' => 'Failed to download Composer installer from ' . $installerUrl]);
+                    echo json_encode(['ok' => false, 'message' => 'Failed to download Composer installer from '.$installerUrl]);
                     exit;
                 }
-                
-                file_put_contents($projectRoot . '/composer-setup.php', $installerContent);
+
+                file_put_contents($projectRoot.'/composer-setup.php', $installerContent);
                 $out .= "Downloaded Composer installer\n";
-                
+
                 // Run composer installer
                 $setupCmd = [$php, 'composer-setup.php', '--quiet'];
                 $setupOut = null;
                 $setupCode = run_cmd_array($setupCmd, $setupOut);
-                $out .= $setupOut . "\n";
-                
+                $out .= $setupOut."\n";
+
                 // Clean up installer
-                @unlink($projectRoot . '/composer-setup.php');
-                
-                if ($setupCode !== 0 || !file_exists($projectRoot . '/composer.phar')) {
+                @unlink($projectRoot.'/composer-setup.php');
+
+                if ($setupCode !== 0 || ! file_exists($projectRoot.'/composer.phar')) {
                     echo json_encode(['ok' => false, 'message' => 'Failed to install composer.phar', 'output' => $out]);
                     exit;
                 }
-                
+
                 $out .= "Composer.phar installed successfully\n";
                 // Use array form for command with composer.phar
                 $useComposerPhar = true;
@@ -210,7 +231,7 @@ if ($action) {
                 $composer = getenv('COMPOSER_BINARY') ?: 'composer';
                 $useComposerPhar = false;
             }
-            
+
             // Run composer install using array form for safety
             if ($useComposerPhar) {
                 $cmd = [$php, 'composer.phar', 'install', '--no-interaction', '--no-progress'];
@@ -219,15 +240,15 @@ if ($action) {
             }
             $installOut = null;
             $code = run_cmd_array($cmd, $installOut);
-            $out = ($out ?? '') . $installOut;
-            
+            $out = ($out ?? '').$installOut;
+
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
             exit;
         }
 
         if ($action === 'php_key_generate') {
             // php artisan key:generate requires vendor; fail gracefully if vendor missing
-            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (! file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
@@ -240,7 +261,7 @@ if ($action) {
         }
 
         if ($action === 'migrate_seed') {
-            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (! file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
@@ -254,11 +275,11 @@ if ($action) {
 
         if ($action === 'npm_install') {
             // Check if node_modules already exists
-            if (file_exists($projectRoot . '/node_modules')) {
+            if (file_exists($projectRoot.'/node_modules')) {
                 echo json_encode(['ok' => true, 'message' => 'NPM dependencies already installed. Skipping.', 'skipped' => true]);
                 exit;
             }
-            
+
             $npm = getenv('NPM_BINARY') ?: 'npm';
             $cmd = [$npm, 'install', '--no-audit', '--no-fund'];
             $out = null;
@@ -291,8 +312,8 @@ if ($action) {
             $dbUsername = $body['db_username'] ?? null;
             $dbPassword = $body['db_password'] ?? null;
 
-            $envPath = $projectRoot . '/.env';
-            if (!file_exists($envPath)) {
+            $envPath = $projectRoot.'/.env';
+            if (! file_exists($envPath)) {
                 // create
                 file_put_contents($envPath, '');
             }
@@ -311,19 +332,21 @@ if ($action) {
                 'DB_PASSWORD' => $dbPassword,
             ];
             foreach ($replacements as $k => $v) {
-                if ($v === null || $v === '') continue;
-                $escaped = (strpos($v, ' ') !== false) ? '"' . addcslashes($v, "\"") . '"' : $v;
+                if ($v === null || $v === '') {
+                    continue;
+                }
+                $escaped = (strpos($v, ' ') !== false) ? '"'.addcslashes($v, '"').'"' : $v;
                 if (preg_match("/^{$k}=.*/m", $env)) {
                     $env = preg_replace("/^{$k}=.*/m", "{$k}={$escaped}", $env);
                 } else {
-                    $env .= PHP_EOL . "{$k}={$escaped}";
+                    $env .= PHP_EOL."{$k}={$escaped}";
                 }
             }
             file_put_contents($envPath, $env);
             // try clearing config caches (works only if vendor installed)
-            if (file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (file_exists($projectRoot.'/vendor/autoload.php')) {
                 $php = getenv('PHP_BINARY') ?: 'php';
-                run_cmd(escapeshellcmd($php) . ' artisan config:clear', $o1);
+                run_cmd(escapeshellcmd($php).' artisan config:clear', $o1);
             }
             echo json_encode(['ok' => true, 'message' => '.env updated']);
             exit;
@@ -347,12 +370,14 @@ if ($action) {
                     $dsn = "pgsql:host={$dbHost};port={$dbPort};dbname={$dbDatabase}";
                 } else {
                     // Try generic PDO DSN, but most likely unsupported
-                    echo json_encode(['ok' => false, 'message' => 'Unsupported DB_CONNECTION: ' . $dbConnection]);
+                    echo json_encode(['ok' => false, 'message' => 'Unsupported DB_CONNECTION: '.$dbConnection]);
                     exit;
                 }
                 // Try connecting with PDO
                 $opts = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
-                if (defined('PDO::ATTR_TIMEOUT')) $opts[PDO::ATTR_TIMEOUT] = 5;
+                if (defined('PDO::ATTR_TIMEOUT')) {
+                    $opts[PDO::ATTR_TIMEOUT] = 5;
+                }
                 $pdo = new PDO($dsn, $dbUsername, $dbPassword, $opts);
                 // simple query to ensure connection usable
                 if (strpos($dbConnection, 'mysql') !== false) {
@@ -363,7 +388,7 @@ if ($action) {
                 echo json_encode(['ok' => true, 'message' => 'Connection successful']);
                 exit;
             } catch (Throwable $th) {
-                echo json_encode(['ok' => false, 'message' => 'Connection failed: ' . $th->getMessage()]);
+                echo json_encode(['ok' => false, 'message' => 'Connection failed: '.$th->getMessage()]);
                 exit;
             }
         }
@@ -371,20 +396,20 @@ if ($action) {
         if ($action === 'create_users') {
             $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
             $users = $body['users'] ?? null;
-            if (!$users) {
+            if (! $users) {
                 echo json_encode(['ok' => false, 'message' => 'No users provided']);
                 exit;
             }
-            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (! file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
             // Ensure storage/installer exists
-            $scriptDir = $projectRoot . '/storage/installer';
-            if (!is_dir($scriptDir)) {
+            $scriptDir = $projectRoot.'/storage/installer';
+            if (! is_dir($scriptDir)) {
                 @mkdir($scriptDir, 0755, true);
             }
-            $scriptPath = $scriptDir . '/create_users.php';
+            $scriptPath = $scriptDir.'/create_users.php';
             // Write helper script (idempotent)
             $helper = <<< 'PHP'
 <?php
@@ -461,7 +486,7 @@ PHP;
             $payload = ['users' => $users];
             $b64 = base64_encode(json_encode($payload));
             $php = getenv('PHP_BINARY') ?: 'php';
-            $cmd = escapeshellcmd($php) . ' ' . escapeshellarg($scriptPath) . ' ' . escapeshellarg($b64);
+            $cmd = escapeshellcmd($php).' '.escapeshellarg($scriptPath).' '.escapeshellarg($b64);
             $out = null;
             $code = run_cmd($cmd, $out);
             echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => $out]);
@@ -469,13 +494,13 @@ PHP;
         }
 
         if ($action === 'list_modules') {
-            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (! file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
             $php = getenv('PHP_BINARY') ?: '/usr/bin/php';
             // Validate PHP binary path for security
-            if (!is_executable($php) || !preg_match('/php[0-9.]*$/', basename($php))) {
+            if (! is_executable($php) || ! preg_match('/php[0-9.]*$/', basename($php))) {
                 $php = 'php'; // Fallback to system PHP
             }
             $cmd = [
@@ -483,14 +508,14 @@ PHP;
                 'artisan',
                 'module',
                 'list',
-                '--format=json'
+                '--format=json',
             ];
             $descriptorspec = [
                 1 => ['pipe', 'w'],
                 2 => ['pipe', 'w'],
             ];
             $process = @proc_open($cmd, $descriptorspec, $pipes, $projectRoot);
-            if (!is_resource($process)) {
+            if (! is_resource($process)) {
                 echo json_encode(['ok' => false, 'message' => 'Failed to execute command']);
                 exit;
             }
@@ -499,14 +524,14 @@ PHP;
             $err = stream_get_contents($pipes[2]);
             fclose($pipes[2]);
             $code = proc_close($process);
-            
+
             // Try to parse JSON output
             $jsonData = json_decode($out, true);
             if ($jsonData !== null && isset($jsonData['modules'])) {
                 echo json_encode(['ok' => true, 'modules' => $jsonData['modules']]);
             } else {
                 // Fallback to raw output
-                echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => trim($out . PHP_EOL . $err)]);
+                echo json_encode(['ok' => $code === 0, 'exit' => $code, 'output' => trim($out.PHP_EOL.$err)]);
             }
             exit;
         }
@@ -514,11 +539,11 @@ PHP;
         if ($action === 'enable_module') {
             $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
             $moduleName = $body['module_name'] ?? null;
-            if (!$moduleName) {
+            if (! $moduleName) {
                 echo json_encode(['ok' => false, 'message' => 'Module name is required']);
                 exit;
             }
-            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (! file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
@@ -528,7 +553,7 @@ PHP;
                 'artisan',
                 'module',
                 'enable',
-                $moduleName
+                $moduleName,
             ];
             $out = null;
             $code = run_cmd_array($cmd, $out);
@@ -539,11 +564,11 @@ PHP;
         if ($action === 'install_module') {
             $body = json_decode(file_get_contents('php://input'), true) ?? $_POST;
             $moduleName = $body['module_name'] ?? null;
-            if (!$moduleName) {
+            if (! $moduleName) {
                 echo json_encode(['ok' => false, 'message' => 'Module name is required']);
                 exit;
             }
-            if (!file_exists($projectRoot . '/vendor/autoload.php')) {
+            if (! file_exists($projectRoot.'/vendor/autoload.php')) {
                 echo json_encode(['ok' => false, 'message' => 'vendor not installed. Run composer first.']);
                 exit;
             }
@@ -553,7 +578,7 @@ PHP;
                 'artisan',
                 'module',
                 'install',
-                $moduleName
+                $moduleName,
             ];
             $out = null;
             $code = run_cmd_array($cmd, $out);
@@ -571,9 +596,9 @@ PHP;
 }
 
 // No action: render UI
-$app_name = htmlspecialchars(dotenv_get('APP_NAME') ?: 'Laravel App', ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8');
-$installer_key_configured = (bool)dotenv_get('INSTALLER_KEY');
-$example_key = substr(bin2hex(random_bytes(8)),0,16);
+$app_name = htmlspecialchars(dotenv_get('APP_NAME') ?: 'Laravel App', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$installer_key_configured = (bool) dotenv_get('INSTALLER_KEY');
+$example_key = substr(bin2hex(random_bytes(8)), 0, 16);
 ?>
 <!doctype html>
 <html>
@@ -622,15 +647,15 @@ $example_key = substr(bin2hex(random_bytes(8)),0,16);
     <h1>Standalone Installer</h1>
     <p class="muted">This installer runs common setup tasks. Make sure this is disabled (INSTALLER_ENABLED=false or remove file) after use.</p>
 
-    <?php if ($installer_key_configured): ?>
+    <?php if ($installer_key_configured) { ?>
       <div style="margin:8px 0;padding:10px;background:#fff4e6;border-left:4px solid #f59e0b;">
         <strong>Installer Key is configured.</strong> Requests must include ?key=YOUR_KEY or send key in POST/JSON.
       </div>
-    <?php else: ?>
+    <?php } else { ?>
       <div style="margin:8px 0;padding:10px;background:#eef2ff;border-left:4px solid #6366f1;">
         <strong>No INSTALLER_KEY set.</strong> For safety set INSTALLER_KEY in your .env. Example: <code>INSTALLER_KEY=<?= $example_key ?></code>
       </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <div class="grid" style="align-items:start">
       <div>

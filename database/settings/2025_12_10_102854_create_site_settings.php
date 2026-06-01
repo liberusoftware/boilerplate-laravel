@@ -17,6 +17,6 @@ return new class extends SettingsMigration
         $this->migrator->add('site.twitter_url', null);
         $this->migrator->add('site.github_url', 'https://github.com/liberusoftware/boilerplate-laravel');
         $this->migrator->add('site.youtube_url', null);
-        $this->migrator->add('site.footer_copyright', '© ' . date('Y') . ' ' . config('app.name', 'Liberu') . '. All rights reserved.');
+        $this->migrator->add('site.footer_copyright', '© '.date('Y').' '.config('app.name', 'Liberu').'. All rights reserved.');
     }
 };

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Settings\SiteSettings as SpatieSiteSettings;
+use Illuminate\Support\ServiceProvider;
 
 class SiteSettingsBridgeServiceProvider extends ServiceProvider
 {

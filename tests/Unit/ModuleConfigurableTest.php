@@ -1,7 +1,7 @@
 <?php
 
-use App\Modules\Traits\Configurable;
 use App\Modules\Contracts\ModuleInterface;
+use App\Modules\Traits\Configurable;
 use Illuminate\Support\Facades\Config;
 
 beforeEach(function () {
@@ -9,25 +9,53 @@ beforeEach(function () {
         'key1' => 'value1',
         'key2' => 'value2',
         'nested' => [
-            'key' => 'nested_value'
-        ]
+            'key' => 'nested_value',
+        ],
     ]);
 });
 
 it('can get configuration values', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $value = $module->config('key1');
@@ -35,19 +63,47 @@ it('can get configuration values', function () {
 });
 
 it('returns default when key not found', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $value = $module->config('nonexistent', 'default_value');
@@ -55,19 +111,47 @@ it('returns default when key not found', function () {
 });
 
 it('can set configuration values', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $module->setConfig('new_key', 'new_value');
@@ -76,19 +160,47 @@ it('can set configuration values', function () {
 });
 
 it('can check if configuration exists', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     expect($module->hasConfig('key1'))->toBeTrue();
@@ -96,19 +208,47 @@ it('can check if configuration exists', function () {
 });
 
 it('can get all configuration', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $allConfig = $module->getAllConfig();
@@ -119,42 +259,98 @@ it('can get all configuration', function () {
 });
 
 it('can merge configuration', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $module->mergeConfig(['key3' => 'value3', 'key4' => 'value4']);
-    
+
     expect($module->config('key3'))->toBe('value3');
     expect($module->config('key4'))->toBe('value4');
     expect($module->config('key1'))->toBe('value1'); // Original should still exist
 });
 
 it('handles nested configuration keys', function () {
-    $module = new class implements ModuleInterface {
+    $module = new class implements ModuleInterface
+    {
         use Configurable;
 
-        public function getName(): string { return 'TestModule'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Test'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return true; }
+        public function getName(): string
+        {
+            return 'TestModule';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Test';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return true;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $value = $module->config('nested.key');

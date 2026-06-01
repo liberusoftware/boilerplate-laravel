@@ -1,11 +1,11 @@
 <?php
 
-use App\Modules\Support\ExternalModuleLoader;
 use App\Modules\ModuleManager;
+use App\Modules\Support\ExternalModuleLoader;
 use Illuminate\Support\Facades\File;
 
 it('can load modules from a custom path', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     $modulesPath = app_path('Modules');
@@ -19,7 +19,7 @@ it('can load modules from a custom path', function () {
 })->skip(fn () => ! is_dir(base_path('app/Modules')), 'Modules directory does not exist');
 
 it('prevents loading the same path multiple times', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     $modulesPath = app_path('Modules');
@@ -35,7 +35,7 @@ it('prevents loading the same path multiple times', function () {
 })->skip(fn () => ! is_dir(base_path('app/Modules')), 'Modules directory does not exist');
 
 it('handles non-existent paths gracefully', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     $loader->loadFromPath('/non/existent/path', 'Test');
@@ -45,7 +45,7 @@ it('handles non-existent paths gracefully', function () {
 });
 
 it('can register a custom module', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     $blogModulePath = app_path('Modules/BlogModule');
@@ -62,7 +62,7 @@ it('can register a custom module', function () {
 })->skip(fn () => ! is_dir(base_path('app/Modules/BlogModule')), 'BlogModule does not exist');
 
 it('returns false when registering module with invalid path', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     $result = $loader->registerCustomModule(
@@ -74,7 +74,7 @@ it('returns false when registering module with invalid path', function () {
 });
 
 it('returns false when registering module with invalid class', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     $result = $loader->registerCustomModule(
@@ -86,7 +86,7 @@ it('returns false when registering module with invalid class', function () {
 });
 
 it('loads modules from composer packages if configured', function () {
-    $moduleManager = new ModuleManager();
+    $moduleManager = new ModuleManager;
     $loader = new ExternalModuleLoader($moduleManager);
 
     // This test verifies the method exists and runs without error

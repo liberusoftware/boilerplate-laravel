@@ -20,13 +20,17 @@ class Group extends Model
         'description',
         'owner_id',
         'type',
+        'is_active',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ];
+    }
 
     /**
      * Scope a query to search groups by name or description.
@@ -35,7 +39,7 @@ class Group extends Model
     {
         return $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%");
         });
     }
 
@@ -70,6 +74,4 @@ class Group extends Model
     {
         return $query->where('owner_id', $ownerId);
     }
-
-
 }

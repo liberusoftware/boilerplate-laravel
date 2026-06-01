@@ -1,7 +1,7 @@
 <?php
 
-use App\Modules\ModuleManager;
 use App\Modules\Contracts\ModuleInterface;
+use App\Modules\ModuleManager;
 use Exception;
 
 beforeEach(function () {
@@ -9,19 +9,47 @@ beforeEach(function () {
 });
 
 it('can register modules and expose them via all/has/get', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $mod = new class implements ModuleInterface {
-        public function getName(): string { return 'M1'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'd'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return false; }
+    $mod = new class implements ModuleInterface
+    {
+        public function getName(): string
+        {
+            return 'M1';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'd';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return false;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $manager->register($mod);
@@ -32,58 +60,163 @@ it('can register modules and expose them via all/has/get', function () {
 });
 
 it('filters enabled and disabled modules', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $enabled = new class implements ModuleInterface {
+    $enabled = new class implements ModuleInterface
+    {
         private $e = true;
-        public function getName(): string { return 'E'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'd'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'E';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'd';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
-    $disabled = new class implements ModuleInterface {
+    $disabled = new class implements ModuleInterface
+    {
         private $e = false;
-        public function getName(): string { return 'D'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'd'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'D';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'd';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $manager->register($enabled);
     $manager->register($disabled);
 
-    expect($manager->enabled()->contains(fn($m) => $m->getName() === 'E'))->toBeTrue();
-    expect($manager->disabled()->contains(fn($m) => $m->getName() === 'D'))->toBeTrue();
+    expect($manager->enabled()->contains(fn ($m) => $m->getName() === 'E'))->toBeTrue();
+    expect($manager->disabled()->contains(fn ($m) => $m->getName() === 'D'))->toBeTrue();
 });
 
 it('enables a module and returns true even if persisting fails', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $m = new class implements ModuleInterface {
+    $m = new class implements ModuleInterface
+    {
         private $e = false;
-        public function getName(): string { return 'P'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'd'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'P';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'd';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $manager->register($m);
@@ -94,34 +227,104 @@ it('enables a module and returns true even if persisting fails', function () {
 });
 
 it('throws when enabling a module with unmet dependencies', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $a = new class implements ModuleInterface {
+    $a = new class implements ModuleInterface
+    {
         private $e = false;
-        public function getName(): string { return 'A'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'A'; }
-        public function getDependencies(): array { return ['B']; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'A';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'A';
+        }
+
+        public function getDependencies(): array
+        {
+            return ['B'];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
-    $b = new class implements ModuleInterface {
+    $b = new class implements ModuleInterface
+    {
         private $e = false;
-        public function getName(): string { return 'B'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'B'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'B';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'B';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $manager->register($a);
@@ -132,34 +335,104 @@ it('throws when enabling a module with unmet dependencies', function () {
 });
 
 it('prevents disabling modules that have enabled dependents', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $b = new class implements ModuleInterface {
+    $b = new class implements ModuleInterface
+    {
         private $e = true;
-        public function getName(): string { return 'B'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'B'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'B';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'B';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
-    $a = new class implements ModuleInterface {
+    $a = new class implements ModuleInterface
+    {
         private $e = true;
-        public function getName(): string { return 'A'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'A'; }
-        public function getDependencies(): array { return ['B']; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'A';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'A';
+        }
+
+        public function getDependencies(): array
+        {
+            return ['B'];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $manager->register($b);
@@ -171,46 +444,141 @@ it('prevents disabling modules that have enabled dependents', function () {
 });
 
 it('install and uninstall enforce dependency rules', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $m = new class implements ModuleInterface {
-        public function getName(): string { return 'I'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'I'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return false; }
+    $m = new class implements ModuleInterface
+    {
+        public function getName(): string
+        {
+            return 'I';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'I';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return false;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
-        public function install(): void { /* perform install */ }
-        public function uninstall(): void { /* perform uninstall */ }
-        public function getConfig(): array { return []; }
+
+        public function install(): void
+        { /* perform install */
+        }
+
+        public function uninstall(): void
+        { /* perform uninstall */
+        }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
-    $dep = new class implements ModuleInterface {
+    $dep = new class implements ModuleInterface
+    {
         private $e = false;
-        public function getName(): string { return 'Dep'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'Dep'; }
-        public function getDependencies(): array { return []; }
-        public function isEnabled(): bool { return $this->e; }
-        public function enable(): void { $this->e = true; }
-        public function disable(): void { $this->e = false; }
+
+        public function getName(): string
+        {
+            return 'Dep';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Dep';
+        }
+
+        public function getDependencies(): array
+        {
+            return [];
+        }
+
+        public function isEnabled(): bool
+        {
+            return $this->e;
+        }
+
+        public function enable(): void
+        {
+            $this->e = true;
+        }
+
+        public function disable(): void
+        {
+            $this->e = false;
+        }
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
-    $mWithDep = new class implements ModuleInterface {
-        public function getName(): string { return 'Mwith'; }
-        public function getVersion(): string { return '1.0'; }
-        public function getDescription(): string { return 'has dep'; }
-        public function getDependencies(): array { return ['Dep']; }
-        public function isEnabled(): bool { return false; }
+    $mWithDep = new class implements ModuleInterface
+    {
+        public function getName(): string
+        {
+            return 'Mwith';
+        }
+
+        public function getVersion(): string
+        {
+            return '1.0';
+        }
+
+        public function getDescription(): string
+        {
+            return 'has dep';
+        }
+
+        public function getDependencies(): array
+        {
+            return ['Dep'];
+        }
+
+        public function isEnabled(): bool
+        {
+            return false;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return []; }
+
+        public function getConfig(): array
+        {
+            return [];
+        }
     };
 
     $manager->register($m);
@@ -232,19 +600,47 @@ it('install and uninstall enforce dependency rules', function () {
 });
 
 it('provides module info and aggregates all modules info', function () {
-    $manager = new ModuleManager();
+    $manager = new ModuleManager;
 
-    $m = new class implements ModuleInterface {
-        public function getName(): string { return 'Info'; }
-        public function getVersion(): string { return '9.9'; }
-        public function getDescription(): string { return 'desc'; }
-        public function getDependencies(): array { return ['X']; }
-        public function isEnabled(): bool { return false; }
+    $m = new class implements ModuleInterface
+    {
+        public function getName(): string
+        {
+            return 'Info';
+        }
+
+        public function getVersion(): string
+        {
+            return '9.9';
+        }
+
+        public function getDescription(): string
+        {
+            return 'desc';
+        }
+
+        public function getDependencies(): array
+        {
+            return ['X'];
+        }
+
+        public function isEnabled(): bool
+        {
+            return false;
+        }
+
         public function enable(): void {}
+
         public function disable(): void {}
+
         public function install(): void {}
+
         public function uninstall(): void {}
-        public function getConfig(): array { return ['a' => 'b']; }
+
+        public function getConfig(): array
+        {
+            return ['a' => 'b'];
+        }
     };
 
     $manager->register($m);
@@ -257,4 +653,3 @@ it('provides module info and aggregates all modules info', function () {
     $all = $manager->getAllModulesInfo();
     expect(array_column($all, 'name'))->toContain('Info');
 });
-

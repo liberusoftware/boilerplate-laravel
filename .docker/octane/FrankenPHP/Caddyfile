@@ -1,0 +1,59 @@
+{
+	{$CADDY_GLOBAL_OPTIONS}
+
+	admin {$CADDY_SERVER_ADMIN_HOST}:{$CADDY_SERVER_ADMIN_PORT}
+
+	auto_https off
+
+	skip_install_trust
+
+	frankenphp {
+		worker "{$APP_PUBLIC_PATH}/frankenphp-worker.php" {$CADDY_SERVER_WORKER_COUNT}
+	}
+
+	servers {
+		protocols h1
+	}
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+{$CADDY_SERVER_SERVER_NAME} {
+	log {
+		level WARN
+		format filter {
+			wrap {$CADDY_SERVER_LOGGER}
+			fields {
+				uri query {
+					replace authorization REDACTED
+				}
+			}
+		}
+	}
+
+	route {
+		root * "{$APP_PUBLIC_PATH}"
+		encode zstd br gzip
+
+		{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+		request_body {
+			max_size 500MB
+		}
+
+		@static {
+			file
+			path *.js *.css *.jpg *.jpeg *.webp *.gif *.png *.ico *.cur *.gz *.svg *.svgz *.mp4 *.mp3 *.ogg *.ogv *.woff2 *.woff
+		}
+
+		header @static Cache-Control "public, immutable, stale-while-revalidate, max-age=31536000"
+
+		@rejected `path('*.bak', '*.conf', '*.dist', '*.fla', '*.ini', '*.log', '*.orig', '*.psd', '*.sh', '*.sql', '*.swo', '*.swp') && !path('*/.well-known/*')`
+		error @rejected 401
+
+		php_server {
+			try_files {path} frankenphp-worker.php
+			resolve_root_symlink
+		}
+	}
+}

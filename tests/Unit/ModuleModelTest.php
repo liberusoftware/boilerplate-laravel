@@ -11,7 +11,7 @@ it('casts fields correctly', function () {
         'version' => '1.2',
         'description' => 'x',
         'enabled' => true,
-        'dependencies' => ['A','B'],
+        'dependencies' => ['A', 'B'],
         'config' => ['k' => 'v'],
     ]);
 

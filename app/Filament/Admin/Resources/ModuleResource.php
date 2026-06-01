@@ -2,35 +2,31 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Filters\TernaryFilter;
-use Filament\Actions\Action;
-use Filament\Actions\ViewAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\BulkAction;
 use App\Filament\Admin\Resources\ModuleResource\Pages\ListModules;
 use App\Filament\Admin\Resources\ModuleResource\Pages\ViewModule;
 use App\Modules\ModuleManager;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\ModuleResource\Pages;
 
 class ModuleResource extends Resource
 {
     protected static ?string $model = null;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-puzzle-piece';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-puzzle-piece';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'System';
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
 
     protected static ?string $navigationLabel = 'Modules';
 
@@ -89,7 +85,7 @@ class ModuleResource extends Resource
                     ->color(fn ($record) => $record->enabled ? 'danger' : 'success')
                     ->action(function ($record) {
                         $moduleManager = app(ModuleManager::class);
-                        
+
                         if ($record->enabled) {
                             $moduleManager->disable($record->name);
                         } else {
@@ -105,7 +101,7 @@ class ModuleResource extends Resource
                         $moduleManager = app(ModuleManager::class);
                         $moduleManager->install($record->name);
                     })
-                    ->visible(fn ($record) => !$record->enabled)
+                    ->visible(fn ($record) => ! $record->enabled)
                     ->requiresConfirmation(),
                 Action::make('uninstall')
                     ->label('Uninstall')
@@ -153,7 +149,8 @@ class ModuleResource extends Resource
         $modules = $moduleManager->getAllModulesInfo();
 
         // Convert modules array to a collection that can be used with Filament
-        $query = new class extends Builder {
+        $query = new class extends Builder
+        {
             protected $modules;
 
             public function __construct($modules)
@@ -182,6 +179,7 @@ class ModuleResource extends Resource
                         return $module['enabled'] === $value;
                     });
                 }
+
                 return $this;
             }
         };

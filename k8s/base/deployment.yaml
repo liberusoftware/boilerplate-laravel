@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boilerplate-laravel
+  namespace: boilerplate-laravel
+  labels:
+    app: boilerplate-laravel
+    component: application
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: boilerplate-laravel
+      component: application
+  template:
+    metadata:
+      labels:
+        app: boilerplate-laravel
+        component: application
+    spec:
+      initContainers:
+      - name: wait-for-mysql
+        image: busybox:1.36
+        command: ["sh", "-c", "until nc -z boilerplate-mysql 3306; do echo 'Waiting for MySQL...'; sleep 2; done"]
+      - name: migrations
+        image: ghcr.io/liberusoftware/boilerplate-laravel:latest
+        command: ["sh", "-c", "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache"]
+        envFrom:
+        - configMapRef:
+            name: boilerplate-config
+        - secretRef:
+            name: boilerplate-secrets
+      containers:
+      - name: app
+        image: ghcr.io/liberusoftware/boilerplate-laravel:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 6001
+          name: rpc
+        envFrom:
+        - configMapRef:
+            name: boilerplate-config
+        - secretRef:
+            name: boilerplate-secrets
+        volumeMounts:
+        - name: storage
+          mountPath: /var/www/html/storage
+        - name: cache
+          mountPath: /var/www/html/bootstrap/cache
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        startupProbe:
+          httpGet:
+            path: /up
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 30
+        livenessProbe:
+          httpGet:
+            path: /up
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /up
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 3
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: boilerplate-storage
+      - name: cache
+        emptyDir: {}
+      securityContext:
+        fsGroup: 1000

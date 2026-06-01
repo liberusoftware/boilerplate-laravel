@@ -13,7 +13,7 @@ class SiteSettingsServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('siteconfig', function () {
-            return new SiteConfig();
+            return new SiteConfig;
         });
     }
 

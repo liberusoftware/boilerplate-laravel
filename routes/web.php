@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
@@ -15,21 +16,27 @@ use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 |
 */
 
+// Health check endpoint (used by Docker, Kubernetes, and Octane)
+Route::get('/up', fn () => response()->json(['status' => 'ok']))->name('health');
+
 Route::get('/', fn () => view('welcome'));
 
 // Theme demo page
 Route::get('/theme-demo', fn () => view('theme-demo'))->name('theme.demo');
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/chat', fn () => view('chat'))->name('chat');
 });
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/home', fn () => view('home'))->name('home');
+
     Route::get('/messages', function () {
         return view('messages.index');
     })->name('messages.index');
-    
+
     Route::get('/messages/{user}', function ($userId) {
-        $user = \App\Models\User::findOrFail($userId);
+        $user = User::findOrFail($userId);
+
         return view('messages.show', compact('user'));
     })->name('messages.show');
 });
@@ -37,6 +44,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
     ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])
     ->name('team-invitations.accept');
-
-// socialstream routes removed per upgrade to Laravel 13 and dependency removal
-

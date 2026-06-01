@@ -18,8 +18,7 @@ class NewMessageNotification extends Notification implements ShouldQueue
         public string $messageContent,
         public int $senderId,
         public string $senderName
-    ) {
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.

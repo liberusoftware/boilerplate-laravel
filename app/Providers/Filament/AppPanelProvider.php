@@ -8,7 +8,8 @@ use App\Http\Middleware\TeamsPermission;
 use App\Listeners\CreatePersonalTeam;
 use App\Listeners\SwitchTeam;
 use App\Models\Team;
-use Filament\Events\Auth\Registered;
+use App\Settings\SiteSettings;
+use Filament\Auth\Events\Registered;
 use Filament\Events\TenantSet;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -18,6 +19,7 @@ use Filament\Navigation\MenuItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -38,7 +40,6 @@ class AppPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         $panel
-            ->default()
             ->id('app')
             ->path('app')
             ->login([AuthenticatedSessionController::class, 'create'])
@@ -61,7 +62,7 @@ class AppPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
                 Dashboard::class,
-                Pages\EditProfile::class,
+                EditProfile::class,
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets/Home'), for: 'App\\Filament\\App\\Widgets\\Home')
             ->widgets([
@@ -113,11 +114,11 @@ class AppPanelProvider extends PanelProvider
                 ]);
         }
 
-        if (class_exists(\Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::class)) {
+        if (class_exists(SpatieLaravelSettingsPlugin::class)) {
             $panel->plugins([
-                \Filament\SpatieLaravelSettingsPlugin\SpatieLaravelSettingsPlugin::make()
+                SpatieLaravelSettingsPlugin::make()
                     ->settings([
-                        \App\Settings\SiteSettings::class,
+                        SiteSettings::class,
                     ]),
             ]);
         }
@@ -156,6 +157,6 @@ class AppPanelProvider extends PanelProvider
 
     public function shouldRegisterMenuItem(): bool
     {
-        return true; //auth()->user()?->hasVerifiedEmail() && Filament::hasTenancy() && Filament::getTenant();
+        return true; // auth()->user()?->hasVerifiedEmail() && Filament::hasTenancy() && Filament::getTenant();
     }
 }

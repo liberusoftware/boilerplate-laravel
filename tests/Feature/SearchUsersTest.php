@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
@@ -51,7 +50,7 @@ it('can search users with partial match', function () {
 
     $response->assertStatus(200)
         ->assertJsonCount(2, 'data');
-    
+
     $names = collect($response->json('data'))->pluck('name')->all();
     expect($names)->toContain('Alice Johnson')
         ->toContain('Bob Wilson');
@@ -96,7 +95,7 @@ it('can sort users by name', function () {
     $response = $this->getJson('/api/search/users?order_by=name&order_direction=asc');
 
     $response->assertStatus(200);
-    
+
     $names = collect($response->json('data'))->pluck('name')->all();
     expect($names[0])->toBe('Alice Johnson');
 });

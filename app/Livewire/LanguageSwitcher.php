@@ -2,13 +2,14 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Livewire\Component;
 
 class LanguageSwitcher extends Component
 {
     public $currentLocale;
+
     public $availableLocales;
 
     public function mount()
@@ -21,14 +22,14 @@ class LanguageSwitcher extends Component
     {
         if (array_key_exists($locale, $this->availableLocales)) {
             Session::put('locale', $locale);
-            
+
             // Update user preference if authenticated
             if (auth()->check()) {
                 auth()->user()->update(['locale' => $locale]);
             }
-            
+
             $this->currentLocale = $locale;
-            
+
             // Redirect to refresh the page with new locale
             return redirect()->to(request()->header('Referer') ?? '/');
         }

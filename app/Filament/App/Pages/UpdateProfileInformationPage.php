@@ -3,59 +3,57 @@
 namespace App\Filament\App\Pages;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateProfileInformationPage extends Page
 {
     protected string $view = 'filament.pages.profile.update-profile-information';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Account';
+    protected static string|\UnitEnum|null $navigationGroup = 'Account';
 
     protected static ?int $navigationSort = 0;
 
     protected static ?string $title = 'Profile';
 
-    public $name;
-
-    public $email;
-
     public function mount(): void
     {
         $this->form->fill([
-            'name'  => Auth::user()->name,
+            'name' => Auth::user()->name,
             'email' => Auth::user()->email,
         ]);
     }
 
-    protected function getFormSchema(): array
+    public function form(Schema $schema): Schema
     {
-        return [
+        return $schema->components([
             TextInput::make('name')
                 ->label('Name')
                 ->required(),
             TextInput::make('email')
                 ->label('Email Address')
+                ->email()
                 ->required(),
-        ];
+        ]);
     }
 
     public function submit(): void
     {
-        $this->form->getState();
+        $state = $this->form->getState();
 
-        $state = array_filter([
-            'name'  => $this->name,
-            'email' => $this->email,
-        ]);
+        Auth::user()->forceFill(array_filter([
+            'name' => $state['name'] ?? null,
+            'email' => $state['email'] ?? null,
+        ]))->save();
 
-        $user = Auth::user();
-
-        $user->forceFill($state)->save();
-
-        session()->flash('status', 'Your profile has been updated.');
+        Notification::make()
+            ->title('Profile updated successfully.')
+            ->success()
+            ->send();
     }
 
     public function getHeading(): string
@@ -65,6 +63,6 @@ class UpdateProfileInformationPage extends Page
 
     public static function shouldRegisterNavigation(): bool
     {
-        return true; //config('filament-jetstream.show_update_profile_information_page');
+        return true;
     }
 }

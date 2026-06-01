@@ -1,9 +1,10 @@
 <?php
 
-use App\Models\User;
-use App\Models\Post;
 use App\Models\Group;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 
 uses(RefreshDatabase::class);
 
@@ -198,6 +199,6 @@ describe('Search Performance', function () {
         $response->assertStatus(429);
 
         // Clear rate limiter cache to avoid affecting subsequent tests
-        \Illuminate\Support\Facades\Cache::flush();
+        Cache::flush();
     });
 });

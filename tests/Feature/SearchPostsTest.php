@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -85,7 +85,7 @@ it('excludes draft posts by default', function () {
 });
 
 it('can filter posts by author', function () {
-    $response = $this->getJson('/api/search/posts?author_id=' . $this->user1->id);
+    $response = $this->getJson('/api/search/posts?author_id='.$this->user1->id);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
@@ -107,7 +107,7 @@ it('can sort posts by title ascending', function () {
     $response = $this->getJson('/api/search/posts?order_by=title&order_direction=asc');
 
     $response->assertStatus(200);
-    
+
     $titles = collect($response->json('data'))->pluck('title')->all();
     expect($titles[0])->toBe('Advanced PHP');
 });
@@ -116,7 +116,7 @@ it('can sort posts by date descending', function () {
     $response = $this->getJson('/api/search/posts?order_by=published_at&order_direction=desc');
 
     $response->assertStatus(200);
-    
+
     $data = $response->json('data');
     expect($data[0]['title'])->toBe('Advanced PHP');
 });

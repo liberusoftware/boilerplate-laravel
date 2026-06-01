@@ -2,15 +2,17 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Cache;
 
 class ThemeManager
 {
     protected string $activeTheme;
+
     protected array $themes = [];
-    protected string $themesPath;
+
+    protected readonly string $themesPath;
 
     public function __construct()
     {
@@ -24,7 +26,7 @@ class ThemeManager
      */
     protected function loadThemes(): void
     {
-        if (!File::exists($this->themesPath)) {
+        if (! File::exists($this->themesPath)) {
             File::makeDirectory($this->themesPath, 0755, true);
         }
 
@@ -32,7 +34,7 @@ class ThemeManager
 
         foreach ($themeDirs as $themeDir) {
             $themeName = basename($themeDir);
-            $themeConfigPath = $themeDir . '/theme.json';
+            $themeConfigPath = $themeDir.'/theme.json';
 
             if (File::exists($themeConfigPath)) {
                 $themeConfig = json_decode(File::get($themeConfigPath), true);
@@ -85,28 +87,30 @@ class ThemeManager
     /**
      * Get theme path.
      */
-    public function getThemePath(string $theme = null): string
+    public function getThemePath(?string $theme = null): string
     {
         $theme = $theme ?? $this->activeTheme;
-        return $this->themesPath . '/' . $theme;
+
+        return $this->themesPath.'/'.$theme;
     }
 
     /**
      * Get theme views path.
      */
-    public function getThemeViewsPath(string $theme = null): string
+    public function getThemeViewsPath(?string $theme = null): string
     {
         $theme = $theme ?? $this->activeTheme;
-        return $this->themesPath . '/' . $theme . '/views';
+
+        return $this->themesPath.'/'.$theme.'/views';
     }
 
     /**
      * Get theme asset path (CSS/JS).
      */
-    public function getThemeAssetPath(string $type, string $theme = null): ?string
+    public function getThemeAssetPath(string $type, ?string $theme = null): ?string
     {
         $theme = $theme ?? $this->activeTheme;
-        $assetPath = $this->themesPath . '/' . $theme . '/' . $type;
+        $assetPath = $this->themesPath.'/'.$theme.'/'.$type;
 
         if (File::exists($assetPath)) {
             return $assetPath;
@@ -131,7 +135,7 @@ class ThemeManager
     /**
      * Get theme CSS file path for Vite.
      */
-    public function getThemeCss(string $theme = null): ?string
+    public function getThemeCss(?string $theme = null): ?string
     {
         $theme = $theme ?? $this->activeTheme;
         $cssPath = "themes/{$theme}/css/app.css";
@@ -146,7 +150,7 @@ class ThemeManager
     /**
      * Get theme JS file path for Vite.
      */
-    public function getThemeJs(string $theme = null): ?string
+    public function getThemeJs(?string $theme = null): ?string
     {
         $theme = $theme ?? $this->activeTheme;
         $jsPath = "themes/{$theme}/js/app.js";
@@ -161,9 +165,10 @@ class ThemeManager
     /**
      * Get theme configuration.
      */
-    public function getThemeConfig(string $theme = null): array
+    public function getThemeConfig(?string $theme = null): array
     {
         $theme = $theme ?? $this->activeTheme;
+
         return $this->themes[$theme] ?? [];
     }
 
@@ -179,10 +184,10 @@ class ThemeManager
     /**
      * Check if theme has custom layout.
      */
-    public function hasCustomLayout(string $layout, string $theme = null): bool
+    public function hasCustomLayout(string $layout, ?string $theme = null): bool
     {
         $theme = $theme ?? $this->activeTheme;
-        $layoutPath = $this->getThemeViewsPath($theme) . "/layouts/{$layout}.blade.php";
+        $layoutPath = $this->getThemeViewsPath($theme)."/layouts/{$layout}.blade.php";
 
         return File::exists($layoutPath);
     }
@@ -190,7 +195,7 @@ class ThemeManager
     /**
      * Get the theme layout path or fall back to default.
      */
-    public function getLayout(string $layout, string $theme = null): string
+    public function getLayout(string $layout, ?string $theme = null): string
     {
         $theme = $theme ?? $this->activeTheme;
 

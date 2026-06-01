@@ -22,7 +22,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+<<<<<<< HEAD
           extensions: mbstring, pdo, pdo_sqlite, bcmath, opcache, zip, gd, intl
+=======
+          extensions: mbstring, bcmath, pdo, pdo_sqlite, sqlite3, dom, curl, intl, gd, redis
+>>>>>>> c424b4450cca672d73cd247d8c0aa549371c00b5
           coverage: xdebug
 
       - name: Get composer cache directory
@@ -34,11 +38,20 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+<<<<<<< HEAD
           restore-keys: ${{ runner.os }}-composer-
+=======
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --no-interaction
+>>>>>>> c424b4450cca672d73cd247d8c0aa549371c00b5
 
       - name: Copy environment file
         run: cp .env.example .env
 
+<<<<<<< HEAD
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
@@ -47,6 +60,16 @@ jobs:
 
       - name: Run tests
         run: php artisan test --coverage-clover=coverage.xml
+=======
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run tests with SQLite in-memory
+        run: vendor/bin/pest --coverage --coverage-clover=coverage.xml
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+>>>>>>> c424b4450cca672d73cd247d8c0aa549371c00b5
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

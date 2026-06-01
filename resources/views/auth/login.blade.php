@@ -9,13 +9,19 @@
 
             <x-validation-errors class="mb-4" />
 
+            @if (session('status'))
+                <div class="mb-4 font-medium text-sm text-green-600">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <div>
                     <x-label for="email" value="{{ __('Email') }}" />
                     <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
-                        placeholder="Enter your email" required />
+                        placeholder="Enter your email" required autofocus autocomplete="username" />
                 </div>
 
                 <div class="mt-4">
@@ -28,20 +34,28 @@
                     <label for="remember_me" class="flex items-center text-sm text-gray-700">
                         <input type="checkbox" id="remember_me" name="remember"
                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 transition duration-150" />
-                        <span class="ml-2"> {{ __('Remember me') }} </span>
+                        <span class="ml-2">{{ __('Remember me') }}</span>
                     </label>
                 </div>
 
+                <div class="flex items-center justify-between mt-4">
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}"
+                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Forgot your password?') }}
+                        </a>
+                    @endif
 
-                <div class="flex items-center justify-end mt-4">
                     <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-green-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 sm:ml-4">
+                        class="inline-flex items-center px-4 py-2 bg-green-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
                         {{ __('Log in') }}
                     </button>
                 </div>
-
-                <a href="/forgot-password" class="underline text-sm text-gray-600 hover:text-gray-900">Forgot password?</a>
             </form>
+
+            @if (JoelButcher\Socialstream\Socialstream::show())
+                <x-socialstream::socialstream />
+            @endif
         </div>
     </div>
 @endsection

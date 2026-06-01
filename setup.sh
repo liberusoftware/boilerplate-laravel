@@ -1,8 +1,8 @@
-#!/bin/bash
-# Setup script for the control-panel-laravel project.
+#!/usr/bin/env bash
+# Setup script for the boilerplate-laravel project.
 #
-# This script provides installation options for Standalone, Docker, or Kubernetes deployments.
-# It handles composer and npm installations with fallback logic and error checking.
+# Provides installation options for Standalone, Docker, or Kubernetes deployments.
+# Handles composer/npm installations with fallback logic and error checking.
 
 set -e  # Exit on error
 
@@ -305,16 +305,22 @@ install_standalone() {
     echo "=================================="
     echo ""
 
-    # Run PHPUnit tests
-    print_header "🎬 RUNNING PHPUNIT TESTS"
-    if [ -f "vendor/bin/phpunit" ]; then
-        if ./vendor/bin/phpunit; then
+    # Run test suite (Pest preferred, falls back to PHPUnit)
+    print_header "🎬 RUNNING TESTS"
+    if [ -f "vendor/bin/pest" ]; then
+        if vendor/bin/pest; then
+            print_success "Tests passed"
+        else
+            print_warning "Tests failed. Please review the errors."
+        fi
+    elif [ -f "vendor/bin/phpunit" ]; then
+        if vendor/bin/phpunit; then
             print_success "PHPUnit tests passed"
         else
             print_warning "PHPUnit tests failed. Please review the errors."
         fi
     else
-        print_warning "PHPUnit not found. Skipping tests."
+        print_warning "No test runner found. Skipping tests."
     fi
 
     echo ""
@@ -332,17 +338,30 @@ install_standalone() {
     print_success "=================================="
     echo ""
 
+    echo ""
+    print_success "=================================="
+    print_success "     INSTALLATION COMPLETE        "
+    print_success "=================================="
+    echo ""
+    echo "Useful commands:"
+    echo "  php artisan serve          - Start development server"
+    echo "  php artisan horizon        - Start queue worker dashboard"
+    echo "  php artisan reverb:start   - Start WebSocket server"
+    echo "  php artisan octane:start   - Start Octane server (production)"
+    echo "  npm run dev                - Start Vite dev server"
+    echo ""
+
     # Ask if user wants to start the server
     while true; do
-        read -p "🎬 DEV ---> DID YOU WANT TO START THE SERVER? (y/n) " cond
+        read -p "🎬 DEV ---> START THE DEV SERVER NOW? (y/n) " cond
         case $cond in
             [Yy]* )
-                print_success "Starting server..."
+                print_success "Starting server at http://localhost:8000 ..."
                 php artisan serve
                 break
                 ;;
             [Nn]* )
-                print_success "Installation complete. Start with: php artisan serve"
+                print_success "Start manually with: php artisan serve"
                 exit 0
                 ;;
             * )
@@ -452,7 +471,7 @@ install_kubernetes() {
 # Main installation menu
 main() {
     clear
-    print_header "LIBERU CONTROL PANEL - INSTALLER"
+    print_header "LIBERU BOILERPLATE LARAVEL - INSTALLER"
 
     echo "Please select installation type:"
     echo ""
