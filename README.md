@@ -1,16 +1,16 @@
-# Liberu Software — Laravel 12 SaaS Boilerplate
+# Liberu Software — Laravel 13 SaaS Boilerplate
 
 [![](https://avatars.githubusercontent.com/u/158830885?s=200&v=4)](https://www.liberu.co.uk)
 
 ![](https://img.shields.io/badge/PHP-8.5-informational?style=flat&logo=php&color=4f5b93)
-![](https://img.shields.io/badge/Laravel-12-informational?style=flat&logo=laravel&color=ef3b2d)
+![](https://img.shields.io/badge/Laravel-13-informational?style=flat&logo=laravel&color=ef3b2d)
 ![](https://img.shields.io/badge/Filament-5-informational?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48cGF0aCBkPSJNMCAwaDQ4djQ4SDBWMHoiIGZpbGw9IiNmNGIyNWUiLz48cGF0aCBkPSJNMjggN2wtMSA2LTMuNDM3LjgxM0wyMCAxNWwtMSAzaDZ2NWgtN2wtMyAxOEg4Yy41MTUtNS44NTMgMS40NTQtMTEuMzMgMy0xN0g4di01bDUtMSAuMjUtMy4yNUMxNCAxMSAxNCAxMSAxNS40MzggOC41NjMgMTkuNDI5IDYuMTI4IDIzLjQ0MiA2LjY4NyAyOCA3eiIgZmlsbD0iIzI4MjQxZSIvPjxwYXRoIGQ9Ik0zMCAxOGg0YzIuMjMzIDUuMzM0IDIuMjMzIDUuMzM0IDEuMTI1IDguNUwzNCAyOWMtLjE2OCAzLjIwOS0uMTY4IDMuMjA5IDAgNmwtMiAxIDEgM2gtNXYyaC0yYy44NzUtNy42MjUuODc1LTcuNjI1IDItMTFoMnYtMmgtMnYtMmwyLTF2LTQtM3oiIGZpbGw9IiMyYTIwMTIiLz48cGF0aCBkPSJNMzUuNTYzIDYuODEzQzM4IDcgMzggNyAzOSA4Yy4xODggMi40MzguMTg4IDIuNDM4IDAgNWwtMiAyYy0yLjYyNS0uMzc1LTIuNjI1LS4zNzUtNS0xLS42MjUtMi4zNzUtLjYyNS0yLjM3NS0xLTUgMi0yIDItMiA0LjU2My0yLjE4N3oiIGZpbGw9IiM0MDM5MzEiLz48cGF0aCBkPSJNMzAgMThoNGMyLjA1NSA1LjMxOSAyLjA1NSA1LjMxOSAxLjgxMyA4LjMxM0wzNSAyOGwtMyAxdi0ybC00IDF2LTJsMi0xdi00LTN6IiBmaWxsPSIjMzEyODFlIi8+PHBhdGggZD0iTTI5IDI3aDN2MmgydjJoLTJ2MmwtNC0xdi0yaDJsLTEtM3oiIGZpbGw9IiMxNTEzMTAiLz48cGF0aCBkPSJNMzAgMThoNHYzaC0ydjJsLTMgMSAxLTZ6IiBmaWxsPSIjNjA0YjMyIi8+PC9zdmc+&&color=fdae4b&link=https://filamentphp.com)
 ![](https://img.shields.io/badge/Livewire-4-informational?style=flat&logo=Livewire&color=fb70a9)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Open Source Love](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)
 
 
-## Build modern SaaS applications faster — a production-ready Laravel 12 boilerplate powered by PHP 8.5, Filament 5 and Livewire 4.
+## Build modern SaaS applications faster — a production-ready Laravel 13 boilerplate powered by PHP 8.5, Filament 5 and Livewire 4.
 
 [![Contact us on WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/+441793200950)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@liberusoftware)
@@ -27,7 +27,7 @@
 [![codecov](https://codecov.io/gh/liberusoftware/boilerplate-laravel/graph/badge.svg?token=K7TWB1QF1L)](https://codecov.io/gh/liberusoftware/boilerplate-laravel)
 [![Latest Release](https://img.shields.io/github/v/release/liberusoftware/boilerplate-laravel?label=Latest%20Release)](https://github.com/liberusoftware/boilerplate-laravel/releases/latest)
 
-A production-ready SaaS starter built with Laravel 12, PHP 8.5, Filament 5, Livewire 4, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications with minimal setup.
+A production-ready SaaS starter built with Laravel 13, PHP 8.5, Filament 5, Livewire 4, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications with minimal setup.
 
 Website: https://www.liberu.co.uk
 
@@ -50,7 +50,7 @@ Table of contents
 
 Overview
 --------
-**Liberu Software** is an open-source initiative that combines the latest versions of Laravel, PHP, Filament and Livewire to provide a solid, extensible foundation for modern web applications. This boilerplate ships with the common SaaS building blocks you need — authentication, an admin panel, real-time interactivity, social login, notifications, multi-language support and more — so you can focus on building your product rather than reinventing the wheel.
+**Liberu Software** is an open-source initiative that combines the latest versions of Laravel 13, PHP 8.5, Filament 5 and Livewire 4 to provide a solid, extensible foundation for modern web applications. This boilerplate ships with the common SaaS building blocks you need — authentication, an admin panel, real-time interactivity, social login, notifications, multi-language support and more — so you can focus on building your product rather than reinventing the wheel.
 
 Whether you are starting a new SaaS product, an internal tool, or a modular enterprise application, this boilerplate is designed to get you productive from day one. It follows Laravel best practices, supports both single-tenant and multi-tenant patterns, and is fully containerised for Docker or Kubernetes deployments.
 
