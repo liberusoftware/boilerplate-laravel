@@ -26,7 +26,8 @@ RUN composer install \
     --no-autoloader \
     --no-ansi \
     --no-scripts \
-    --prefer-dist
+    --prefer-dist \
+    --ignore-platform-req=ext-pcntl
 
 ###########################################
 # Main application stage
