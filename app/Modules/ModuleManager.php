@@ -54,6 +54,14 @@ class ModuleManager
     }
 
     /**
+     * Find a module by name (alias for get).
+     */
+    public function find(string $name): ?ModuleInterface
+    {
+        return $this->get($name);
+    }
+
+    /**
      * Check if a module exists.
      */
     public function has(string $name): bool

@@ -13,9 +13,17 @@
         <x-section-border/>
     @endif
 
-    @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
+    @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication() && ! is_null(auth()->user()?->getAuthPassword()))
         <div class="mt-10 sm:mt-0">
             @livewire(Laravel\Jetstream\Http\Livewire\TwoFactorAuthenticationForm::class)
+        </div>
+
+        <x-section-border/>
+    @endif
+
+    @if (JoelButcher\Socialstream\Socialstream::show())
+        <div class="mt-10 sm:mt-0">
+            @livewire(JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm::class)
         </div>
 
         <x-section-border/>

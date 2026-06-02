@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boilerplate-reverb
+  namespace: boilerplate-laravel
+  labels:
+    app: boilerplate-laravel
+    component: reverb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boilerplate-laravel
+      component: reverb
+  template:
+    metadata:
+      labels:
+        app: boilerplate-laravel
+        component: reverb
+    spec:
+      containers:
+      - name: reverb
+        image: ghcr.io/liberusoftware/boilerplate-laravel:latest
+        command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=6001"]
+        ports:
+        - containerPort: 6001
+          name: ws
+        envFrom:
+        - configMapRef:
+            name: boilerplate-config
+        - secretRef:
+            name: boilerplate-secrets
+        volumeMounts:
+        - name: storage
+          mountPath: /var/www/html/storage
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        readinessProbe:
+          tcpSocket:
+            port: 6001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 6001
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: boilerplate-storage
+      securityContext:
+        fsGroup: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boilerplate-reverb
+  namespace: boilerplate-laravel
+  labels:
+    app: boilerplate-laravel
+    component: reverb
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6001
+    targetPort: 6001
+    protocol: TCP
+    name: ws
+  selector:
+    app: boilerplate-laravel
+    component: reverb

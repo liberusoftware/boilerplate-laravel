@@ -279,12 +279,12 @@ install_standalone() {
     echo "=================================="
     echo ""
 
-    # Run database migrations
-    print_header "🎬 PHP ARTISAN MIGRATE:FRESH"
-    if php artisan migrate:fresh; then
-        print_success "Database migrated successfully"
+    # Run database migrations and seed in one pass
+    print_header "🎬 PHP ARTISAN MIGRATE:FRESH --SEED"
+    if php artisan migrate:fresh --seed; then
+        print_success "Database migrated and seeded successfully"
     else
-        print_error "Database migration failed"
+        print_error "Database migration/seed failed"
         exit 1
     fi
 
@@ -292,13 +292,12 @@ install_standalone() {
     echo "=================================="
     echo ""
 
-    # Seeding database
-    print_header "🎬 PHP ARTISAN DB:SEED"
-    if php artisan db:seed; then
-        print_success "Database seeded successfully"
+    # Generate Filament Shield permissions
+    print_header "🎬 PHP ARTISAN SHIELD:GENERATE"
+    if php artisan shield:generate --all --ignore-config-policies 2>/dev/null; then
+        print_success "Filament Shield permissions generated"
     else
-        print_error "Database seeding failed"
-        exit 1
+        print_warning "Shield generate skipped (not configured or no resources found)"
     fi
 
     echo ""
@@ -412,6 +411,23 @@ install_docker() {
 
     if [ $? -eq 0 ]; then
         print_success "Docker containers started successfully"
+
+        # Wait briefly for containers to be healthy, then run migrations
+        print_info "Waiting for services to be ready..."
+        sleep 5
+
+        DOCKER_CMD="docker compose"
+        if command_exists docker-compose; then
+            DOCKER_CMD="docker-compose"
+        fi
+
+        print_info "Running migrations inside app container..."
+        if $DOCKER_CMD exec app php artisan migrate --force; then
+            print_success "Database migrations completed"
+        else
+            print_warning "Migrations failed or app container not ready; run manually: $DOCKER_CMD exec app php artisan migrate --force"
+        fi
+
         print_info "Your application should be available at http://localhost:8000"
     else
         print_error "Failed to start Docker containers"
@@ -449,6 +465,25 @@ install_kubernetes() {
 
     print_info "Using Kubernetes configurations from: $K8S_DIR/"
 
+    # Choose overlay environment
+    OVERLAY="${KUBE_ENV:-production}"
+    if [ -d "$K8S_DIR/overlays/$OVERLAY" ]; then
+        KUBE_TARGET="$K8S_DIR/overlays/$OVERLAY"
+        print_info "Using overlay: $OVERLAY"
+    elif [ -d "$K8S_DIR/base" ]; then
+        KUBE_TARGET="$K8S_DIR/base"
+        print_warning "Overlay '$OVERLAY' not found, applying base configuration"
+    else
+        KUBE_TARGET="$K8S_DIR"
+    fi
+
+    # Check if kustomization.yaml exists (Kustomize vs plain manifests)
+    if [ -f "$KUBE_TARGET/kustomization.yaml" ]; then
+        KUBE_APPLY_CMD="kubectl apply -k $KUBE_TARGET"
+    else
+        KUBE_APPLY_CMD="kubectl apply -f $KUBE_TARGET/"
+    fi
+
     # Setup .env file
     if [ ! -f ".env" ]; then
         print_info "Copying .env.example to .env"
@@ -458,10 +493,11 @@ install_kubernetes() {
     fi
 
     # Apply Kubernetes configurations
-    print_info "Applying Kubernetes configurations..."
-    if kubectl apply -f "$K8S_DIR/"; then
-        print_success "Kubernetes resources created successfully"
-        print_info "Check status with: kubectl get pods"
+    print_info "Applying Kubernetes configurations: $KUBE_APPLY_CMD"
+    if eval "$KUBE_APPLY_CMD"; then
+        print_success "Kubernetes resources applied successfully"
+        print_info "Check pod status with: kubectl get pods -n boilerplate-laravel"
+        print_info "Watch deployment: kubectl rollout status deployment/boilerplate-laravel -n boilerplate-laravel"
     else
         print_error "Failed to apply Kubernetes configurations"
         exit 1

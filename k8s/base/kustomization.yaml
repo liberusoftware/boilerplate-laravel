@@ -12,6 +12,8 @@ resources:
 - redis.yaml
 - deployment.yaml
 - service.yaml
+- horizon.yaml
+- reverb.yaml
 - ingress.yaml
 - network-policy.yaml
 - resource-quota.yaml

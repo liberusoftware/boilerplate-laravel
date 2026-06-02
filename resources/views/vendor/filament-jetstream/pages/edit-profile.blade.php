@@ -1,27 +1,43 @@
-@use('Filament\Jetstream\Jetstream')
-
 <x-filament-panels::page>
-    @if (Jetstream::plugin()?->enabledProfileInformationUpdate())
-        @livewire(Filament\Jetstream\Livewire\Profile\UpdateProfileInformation::class)
+    @if (Laravel\Fortify\Features::canUpdateProfileInformation())
+        @livewire(Laravel\Jetstream\Http\Livewire\UpdateProfileInformationForm::class)
+
+        <x-section-border/>
     @endif
 
-    @if (Jetstream::plugin()?->enabledPasswordUpdate())
-        @livewire(Filament\Jetstream\Livewire\Profile\UpdatePassword::class)
+    @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
+        <div class="mt-10 sm:mt-0">
+            @livewire(Laravel\Jetstream\Http\Livewire\UpdatePasswordForm::class)
+        </div>
+
+        <x-section-border/>
     @endif
 
-    @if (Jetstream::plugin()?->enabledTwoFactorAuthetication())
-        @livewire(\Stephenjude\FilamentTwoFactorAuthentication\Livewire\TwoFactorAuthentication::class)
+    @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication() && ! is_null(auth()->user()?->getAuthPassword()))
+        <div class="mt-10 sm:mt-0">
+            @livewire(Laravel\Jetstream\Http\Livewire\TwoFactorAuthenticationForm::class)
+        </div>
+
+        <x-section-border/>
     @endif
 
-    @if (Jetstream::plugin()?->enabledPasskeyAuthetication())
-        @livewire(\Stephenjude\FilamentTwoFactorAuthentication\Livewire\PasskeyAuthentication::class)
+    @if (JoelButcher\Socialstream\Socialstream::show())
+        <div class="mt-10 sm:mt-0">
+            @livewire(JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm::class)
+        </div>
+
+        <x-section-border/>
     @endif
 
-    @if (Jetstream::plugin()?->enabledLogoutOtherBrowserSessions())
-        @livewire(Filament\Jetstream\Livewire\Profile\LogoutOtherBrowserSessions::class)
-    @endif
+    <div class="mt-10 sm:mt-0">
+        @livewire(Laravel\Jetstream\Http\Livewire\LogoutOtherBrowserSessionsForm::class)
+    </div>
 
-    @if (Jetstream::plugin()?->enabledDeleteAccount())
-        @livewire(Filament\Jetstream\Livewire\Profile\DeleteAccount::class)
+    @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
+        <x-section-border/>
+
+        <div class="mt-10 sm:mt-0">
+            @livewire(Laravel\Jetstream\Http\Livewire\DeleteUserForm::class)
+        </div>
     @endif
 </x-filament-panels::page>
