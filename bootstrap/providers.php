@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\ModuleServiceProvider;
 use App\Providers\AppServiceProvider;
 use App\Providers\AuthServiceProvider;
 use App\Providers\EventServiceProvider;
@@ -21,6 +22,7 @@ return [
     AppPanelProvider::class,
     FortifyServiceProvider::class,
     JetstreamServiceProvider::class,
+    ModuleServiceProvider::class,
     ModularServiceProvider::class,
     RouteServiceProvider::class,
     SiteSettingsBridgeServiceProvider::class,

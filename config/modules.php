@@ -82,8 +82,8 @@ return [
     */
 
     'requirements' => [
-        'php' => '8.4',
-        'laravel' => '12.0',
+        'php' => '8.5',
+        'laravel' => '13.0',
     ],
 
     /*

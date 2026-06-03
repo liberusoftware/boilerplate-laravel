@@ -49,6 +49,24 @@ command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Check PHP version is >= required
+check_php_version() {
+    local required="${1:-8.5}"
+    if ! command_exists php; then
+        print_error "PHP is not installed. Please install PHP ${required}+ first."
+        return 1
+    fi
+    local current
+    current=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+    if php -r "exit(version_compare(PHP_VERSION, '${required}', '>=') ? 0 : 1);"; then
+        print_success "PHP ${current} detected (>= ${required} required)"
+        return 0
+    else
+        print_error "PHP ${current} is too old — PHP ${required}+ is required."
+        return 1
+    fi
+}
+
 # Download composer.phar if composer is not available
 ensure_composer() {
     if command_exists composer; then
@@ -179,52 +197,57 @@ build_frontend_assets() {
 # Standalone installation
 install_standalone() {
     print_header "STANDALONE INSTALLATION"
-    print_info "Starting standalone installation process..."
 
-    clear
     echo "=================================="
     echo "===== USER: [$(whoami)]"
     echo "===== [PHP $(php -r 'echo phpversion();')]"
     echo "=================================="
     echo ""
 
+    # PHP version gate
+    if ! check_php_version "8.5"; then
+        exit 1
+    fi
+
     # Setup the .env file
-    copy=true
-    while true; do
-        read -p "🎬 DEV ---> DID YOU WANT TO COPY THE .ENV.EXAMPLE TO .ENV? (y/n) " yn
-        case $yn in
-            [Yy]* )
-                print_success "Copying .env.example to .env"
-                cp .env.example .env
-                copy=true
-                break
-                ;;
-            [Nn]* )
-                print_success "Continuing with your .env configuration"
-                copy=false
-                break
-                ;;
-            * )
-                print_warning "Please answer yes or no."
-                ;;
-        esac
-    done
-
-    echo ""
-    echo "=================================="
-    echo ""
-
-    # Ask user to confirm that .env file is properly setup before continuing
-    if [ "$copy" = true ]; then
+    if [ -f ".env" ]; then
+        print_info ".env already exists — skipping copy."
+        copy=false
+    else
+        copy=true
         while true; do
-            read -p "🎬 DEV ---> DID YOU SETUP YOUR DATABASE CREDENTIALS IN THE .ENV FILE? (y/n) " cond
-            case $cond in
+            read -p "🎬 DEV ---> COPY .ENV.EXAMPLE TO .ENV? (y/n) " yn
+            case $yn in
                 [Yy]* )
-                    print_success "Perfect let's continue with the setup"
+                    print_success "Copying .env.example to .env"
+                    cp .env.example .env
                     break
                     ;;
                 [Nn]* )
-                    print_warning "Please setup your .env file and run this script again"
+                    print_warning "No .env file — some steps may fail."
+                    copy=false
+                    break
+                    ;;
+                * )
+                    print_warning "Please answer yes or no."
+                    ;;
+            esac
+        done
+    fi
+
+    echo ""
+
+    # Ask user to confirm credentials only when a fresh .env was just created
+    if [ "$copy" = true ]; then
+        while true; do
+            read -p "🎬 DEV ---> HAVE YOU SET DATABASE CREDENTIALS IN .ENV? (y/n) " cond
+            case $cond in
+                [Yy]* )
+                    print_success "Perfect, continuing with setup"
+                    break
+                    ;;
+                [Nn]* )
+                    print_warning "Please edit .env and re-run this script."
                     exit 0
                     ;;
                 * )
@@ -292,6 +315,18 @@ install_standalone() {
     echo "=================================="
     echo ""
 
+    # Create storage symlink
+    print_header "🎬 PHP ARTISAN STORAGE:LINK"
+    if php artisan storage:link; then
+        print_success "Storage symlink created"
+    else
+        print_warning "storage:link failed (symlink may already exist)"
+    fi
+
+    echo ""
+    echo "=================================="
+    echo ""
+
     # Generate Filament Shield permissions
     print_header "🎬 PHP ARTISAN SHIELD:GENERATE"
     if php artisan shield:generate --all --ignore-config-policies 2>/dev/null; then
@@ -330,12 +365,6 @@ install_standalone() {
     print_header "🎬 PHP ARTISAN OPTIMIZE:CLEAR"
     php artisan optimize:clear
     php artisan route:clear
-
-    echo ""
-    print_success "=================================="
-    print_success "============== DONE =============="
-    print_success "=================================="
-    echo ""
 
     echo ""
     print_success "=================================="
@@ -401,36 +430,40 @@ install_docker() {
         read -p "Press Enter to continue after editing .env..."
     fi
 
-    # Build and start containers
-    print_info "Building and starting Docker containers..."
+    # Resolve docker compose command
+    local DOCKER_CMD="docker compose"
     if command_exists docker-compose; then
-        docker-compose up -d --build
-    else
-        docker compose up -d --build
+        DOCKER_CMD="docker-compose"
     fi
 
-    if [ $? -eq 0 ]; then
+    # Build and start containers — capture exit code without relying on set -e
+    print_info "Building and starting Docker containers..."
+    local docker_exit=0
+    $DOCKER_CMD up -d --build || docker_exit=$?
+
+    if [ $docker_exit -eq 0 ]; then
         print_success "Docker containers started successfully"
 
         # Wait briefly for containers to be healthy, then run migrations
         print_info "Waiting for services to be ready..."
         sleep 5
 
-        DOCKER_CMD="docker compose"
-        if command_exists docker-compose; then
-            DOCKER_CMD="docker-compose"
-        fi
-
         print_info "Running migrations inside app container..."
         if $DOCKER_CMD exec app php artisan migrate --force; then
             print_success "Database migrations completed"
         else
-            print_warning "Migrations failed or app container not ready; run manually: $DOCKER_CMD exec app php artisan migrate --force"
+            print_warning "Migrations failed or app container not ready; run manually:"
+            print_warning "  $DOCKER_CMD exec app php artisan migrate --force"
         fi
+
+        print_info "Creating storage symlink inside app container..."
+        $DOCKER_CMD exec app php artisan storage:link 2>/dev/null \
+            && print_success "Storage symlink created" \
+            || print_warning "storage:link skipped (may already exist)"
 
         print_info "Your application should be available at http://localhost:8000"
     else
-        print_error "Failed to start Docker containers"
+        print_error "Failed to start Docker containers (exit code: $docker_exit)"
         exit 1
     fi
 }
@@ -458,15 +491,38 @@ install_kubernetes() {
     fi
 
     # Determine config directory
-    K8S_DIR="k8s"
+    local K8S_DIR="k8s"
     if [ ! -d "$K8S_DIR" ] && [ -d "kubernetes" ]; then
         K8S_DIR="kubernetes"
     fi
 
     print_info "Using Kubernetes configurations from: $K8S_DIR/"
 
+    # Prefer the dedicated deploy script when it exists
+    if [ -f "$K8S_DIR/deploy.sh" ]; then
+        print_info "Found $K8S_DIR/deploy.sh — using it for deployment."
+        print_info "Required env vars: APP_KEY, DB_PASSWORD, DB_ROOT_PASSWORD"
+        print_info "Optional env vars: NAMESPACE, ENVIRONMENT, DOMAIN"
+        bash "$K8S_DIR/deploy.sh"
+        return $?
+    fi
+
+    # Warn if secret.yaml still has placeholder values
+    local SECRET_FILE="$K8S_DIR/base/secret.yaml"
+    if [ -f "$SECRET_FILE" ] && grep -q "REPLACE_WITH" "$SECRET_FILE"; then
+        print_warning "Secret placeholders detected in $SECRET_FILE."
+        print_warning "Edit it or set env vars before deploying."
+        read -p "Continue anyway? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Update secrets and re-run."
+            exit 0
+        fi
+    fi
+
     # Choose overlay environment
-    OVERLAY="${KUBE_ENV:-production}"
+    local OVERLAY="${KUBE_ENV:-production}"
+    local KUBE_TARGET
     if [ -d "$K8S_DIR/overlays/$OVERLAY" ]; then
         KUBE_TARGET="$K8S_DIR/overlays/$OVERLAY"
         print_info "Using overlay: $OVERLAY"
@@ -478,26 +534,23 @@ install_kubernetes() {
     fi
 
     # Check if kustomization.yaml exists (Kustomize vs plain manifests)
+    local KUBE_APPLY_CMD
     if [ -f "$KUBE_TARGET/kustomization.yaml" ]; then
         KUBE_APPLY_CMD="kubectl apply -k $KUBE_TARGET"
     else
         KUBE_APPLY_CMD="kubectl apply -f $KUBE_TARGET/"
     fi
 
-    # Setup .env file
-    if [ ! -f ".env" ]; then
-        print_info "Copying .env.example to .env"
-        cp .env.example .env
-        print_warning "Please edit .env file to configure your Kubernetes environment"
-        read -p "Press Enter to continue after editing .env..."
-    fi
-
     # Apply Kubernetes configurations
     print_info "Applying Kubernetes configurations: $KUBE_APPLY_CMD"
     if eval "$KUBE_APPLY_CMD"; then
         print_success "Kubernetes resources applied successfully"
-        print_info "Check pod status with: kubectl get pods -n boilerplate-laravel"
-        print_info "Watch deployment: kubectl rollout status deployment/boilerplate-laravel -n boilerplate-laravel"
+        print_info "Check pod status:   kubectl get pods -n boilerplate-laravel"
+        print_info "Watch deployment:   kubectl rollout status deployment/boilerplate-laravel -n boilerplate-laravel"
+        # Suggest validation script when present
+        if [ -f "$K8S_DIR/validate.sh" ]; then
+            print_info "Validate cluster:   bash $K8S_DIR/validate.sh"
+        fi
     else
         print_error "Failed to apply Kubernetes configurations"
         exit 1

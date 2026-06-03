@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boilerplate-queue
+  namespace: boilerplate-laravel
+  labels:
+    app: boilerplate-laravel
+    component: queue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: boilerplate-laravel
+      component: queue
+  template:
+    metadata:
+      labels:
+        app: boilerplate-laravel
+        component: queue
+    spec:
+      containers:
+      - name: queue-worker
+        image: ghcr.io/liberusoftware/boilerplate-laravel:latest
+        command:
+        - php
+        - artisan
+        - horizon
+        envFrom:
+        - configMapRef:
+            name: boilerplate-config
+        - secretRef:
+            name: boilerplate-secrets
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - php
+            - artisan
+            - horizon:status
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - php
+            - artisan
+            - horizon:status
+          initialDelaySeconds: 15
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - php
+              - artisan
+              - horizon:terminate
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        fsGroup: 1000
+      terminationGracePeriodSeconds: 300
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: boilerplate-scheduler
+  namespace: boilerplate-laravel
+  labels:
+    app: boilerplate-laravel
+    component: scheduler
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: boilerplate-laravel
+            component: scheduler
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: scheduler
+            image: ghcr.io/liberusoftware/boilerplate-laravel:latest
+            command:
+            - php
+            - artisan
+            - schedule:run
+            envFrom:
+            - configMapRef:
+                name: boilerplate-config
+            - secretRef:
+                name: boilerplate-secrets
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "50m"
+              limits:
+                memory: "256Mi"
+                cpu: "200m"
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 1000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+          securityContext:
+            fsGroup: 1000

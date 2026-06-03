@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
+use Laravel\Jetstream\Http\Controllers\Inertia\ProfilePhotoController;
 use Laravel\Jetstream\Http\Controllers\TeamInvitationController;
 
 /*
@@ -40,6 +41,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('messages.show', compact('user'));
     })->name('messages.show');
 });
+
+Route::delete('/user/profile-photo', [ProfilePhotoController::class, 'destroy'])
+    ->middleware(['auth', AuthenticateSession::class])
+    ->name('current-user-photo.destroy');
 
 Route::get('/team-invitations/{invitation}', [TeamInvitationController::class, 'accept'])
     ->middleware(['signed', 'verified', 'auth', AuthenticateSession::class])

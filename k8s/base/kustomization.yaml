@@ -10,7 +10,9 @@ resources:
 - pvc.yaml
 - mysql-statefulset.yaml
 - redis.yaml
+- nginx-configmap.yaml
 - deployment.yaml
+- queue-worker.yaml
 - service.yaml
 - horizon.yaml
 - reverb.yaml
