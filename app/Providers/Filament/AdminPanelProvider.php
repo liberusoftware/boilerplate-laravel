@@ -11,6 +11,7 @@ use App\Models\MenuItem as MenuItemModel;
 use App\Models\Team;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Biostate\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -91,7 +92,10 @@ class AdminPanelProvider extends PanelProvider
 
         $panel->plugins([
             FilamentShieldPlugin::make()
-                ->navigationGroup('Administration'),
+                ->navigationGroup('Administration')
+                // Roles are global unless Spatie teams are enabled; without this
+                // the tenant-scoped panel tries to resolve Role->team() and 500s.
+                ->scopeToTenant(Utils::isTenancyEnabled()),
             FilamentMenuBuilderPlugin::make()
                 ->usingMenuModel(Menu::class)
                 ->usingMenuItemModel(MenuItemModel::class)
