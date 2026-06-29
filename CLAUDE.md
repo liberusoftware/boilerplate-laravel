@@ -73,15 +73,21 @@ Both panels disable default Fortify/Jetstream route registration in their `boot(
 ### Authentication Stack (layered)
 Fortify handles the authentication primitives, Jetstream adds teams and profile management, Socialstream extends with OAuth providers, and Spatie Permission provides role/permission assignment. The `TeamsPermission` middleware syncs the active team with Filament Shield's tenant context. The `AssignDefaultTeam` middleware ensures every user lands on a team after login.
 
-### Module System (single — `app/Modules/`, target for Phase 4)
+### Module System (Phase 4 — done; single — `app/Modules/`)
 One mechanism: a custom `App\Modules\` system with lifecycle (install/enable/disable/
-uninstall events), a database registry (`modules` table), and `ModuleManager`. Lives under
-the existing `App\` PSR-4 autoload — no per-module `composer.json`, no merge-plugin. The
-`BlogModule` under `app/Modules/BlogModule/` is the reference implementation. Modules hook
-into each other via `HasModuleHooks`; discovery via `ExternalModuleLoader`.
+uninstall, each firing an event), a database registry (`modules` table via `App\Models\Module`),
+and `ModuleManager`. Lives under the existing `App\` PSR-4 autoload — no per-module
+`composer.json`, no merge-plugin. `ModuleManager` discovers modules by scanning `app/Modules/*`
+for a `module.json` (framework subfolders like `Contracts/`, `Events/`, `Traits/` are skipped)
+and resolving the main class as `App\Modules\{Dir}\{Dir}` or `…\{Dir}Module`. The reference is
+`app/Modules/BlogModule/` (`BlogModule.php` + `module.json`) — a thin registry **fixture**; its
+demo controller/routes/views/service were intentionally not ported (the views `@extend` a
+non-existent layout). Modules extend `BaseModule`, implement `ModuleInterface`, and can use the
+`Configurable` + `HasModuleHooks` traits. `ModuleResource` (`app/Filament/Resources/`) is the
+admin UI (`$model = null`, so it needs no tenant opt-out).
 
-`internachi/modular` / `app-modules/` are **not** used (removed in the rebuild). This system
-is **not yet ported** — it is Phase 4 work.
+`internachi/modular` / `app-modules/` are **not** used (removed in the rebuild) — there is no
+`ExternalModuleLoader`.
 
 ### Real-Time Stack
 - **Laravel Reverb** runs as a standalone WebSocket server.
