@@ -316,6 +316,109 @@ protected function determineActiveTheme(): string
 
 Load themes from external sources by extending `ThemeManager`.
 
+## Implementation Notes
+
+### Core Components
+
+#### ThemeManager Service (`app/Services/ThemeManager.php`)
+- Loads themes from `/themes` directory
+- Manages active theme selection
+- Registers theme view paths with Laravel
+- Provides methods for theme operations
+- Handles theme asset paths for Vite
+
+#### ThemeServiceProvider (`app/Providers/ThemeServiceProvider.php`)
+- Registers ThemeManager as singleton
+- Sets active theme from user preferences or config
+- Provides Blade directives: `@themeCss`, `@themeJs`, `@themeAsset()`, `@themeLayout()`
+- Shares theme data with all views
+
+#### Theme Helpers (`app/Helpers/theme_helpers.php`)
+- `theme()` - Get ThemeManager instance
+- `active_theme()` - Get current theme name
+- `set_theme($name)` - Switch themes
+- `theme_asset($path)` - Generate theme asset URLs
+- `theme_path($theme)` - Get theme directory
+- `theme_views_path($theme)` - Get theme views directory
+- `theme_layout($layout)` - Get theme layout path
+
+#### Livewire Theme Switcher
+- Component: `app/Livewire/ThemeSwitcher.php`
+- View: `resources/views/livewire/theme-switcher.blade.php`
+
+Provides UI for users to switch between available themes with:
+- Dropdown menu showing all themes
+- Active theme indicator
+- Theme descriptions
+- Automatic page reload after switching
+
+#### User Preferences
+- Database migration: `database/migrations/2026_02_16_215049_add_theme_preference_to_users_table.php`
+- Adds `theme_preference` column to users table
+- Automatically saves theme choice for authenticated users
+- Falls back to session for guests
+
+### Testing
+
+Comprehensive test suite in `tests/Unit/ThemeManagerTest.php`:
+- Theme loading and discovery
+- Theme switching
+- Path resolution
+- Helper function validation
+- Configuration verification
+
+Run tests:
+```bash
+php artisan test --filter ThemeManagerTest
+```
+
+A demo page is available at `resources/views/theme-demo.blade.php`.
+
+### Benefits of Single Root Folder
+
+1. **Better Organization**: All theme files in one place
+2. **Easier Management**: Create/delete themes by managing single directory
+3. **Clearer Structure**: Intuitive hierarchy for developers
+4. **Simplified Deployment**: Single directory to sync/deploy
+5. **Better Version Control**: Easier to track theme changes
+6. **Portable Themes**: Can package entire theme as zip
+
+## Migration from Old Structure
+
+Old structure (split across resources):
+```
+resources/views/themes/{theme}/
+resources/css/themes/{theme}/
+resources/js/themes/{theme}/
+```
+
+New structure (unified):
+```
+themes/{theme}/views/
+themes/{theme}/css/
+themes/{theme}/js/
+```
+
+All paths updated throughout the system:
+- ✅ ThemeManager service
+- ✅ ThemeServiceProvider
+- ✅ Blade directives
+- ✅ Helper functions
+- ✅ Vite configuration
+- ✅ Documentation
+
+## Future Enhancements
+
+Potential improvements:
+- Theme marketplace/repository
+- Theme hot-reloading in development
+- Theme preview mode
+- Per-page theme overrides
+- Theme inheritance
+- Theme builder UI
+- Import/export themes
+- Theme analytics
+
 ## Support
 
 For issues or questions about the theme system, please refer to:
