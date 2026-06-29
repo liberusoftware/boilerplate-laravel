@@ -8,12 +8,12 @@ use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -35,10 +35,9 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     }
     use HasRoles, HasTeams {
         // Both traits define teams(): Jetstream = team membership (used by allTeams()
-        // and Filament tenancy); Spatie = teams-derived-from-roles (convenience only,
-        // never called internally). Keep Jetstream's; alias Spatie's out of the way.
+        // and Filament tenancy). Spatie's teams() (roles-derived) is excluded — Spatie
+        // scopes via the team_id column + DefaultTeamResolver, not this relation.
         HasTeams::teams insteadof HasRoles;
-        HasRoles::teams as spatieRoleTeams;
     }
     use Notifiable;
     use SetsProfilePhotoFromUrl;
@@ -98,13 +97,14 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     }
 
     /**
-     * The teams this user may act within as a Filament tenant.
+     * The teams this user may act within as a Filament tenant — owned + member teams,
+     * consistent with canAccessTenant()/belongsToTeam() so invited members aren't locked out.
      *
      * @return array<int, Model>|Collection<int, Model>
      */
     public function getTenants(Panel $panel): array|Collection
     {
-        return $this->ownedTeams;
+        return $this->allTeams();
     }
 
     public function canAccessTenant(Model $tenant): bool

@@ -20,6 +20,20 @@ it('denies a stranger updating or deleting a team', function () {
         ->and($stranger->can('delete', $team))->toBeFalse();
 });
 
+it('denies member-management to non-owners', function () {
+    $owner = User::factory()->create();
+    $member = User::factory()->create();
+    $stranger = User::factory()->create();
+    $team = Team::factory()->create(['user_id' => $owner->id]);
+    $team->users()->attach($member, ['role' => 'editor']);
+
+    foreach (['addTeamMember', 'updateTeamMember', 'removeTeamMember'] as $ability) {
+        expect($member->fresh()->can($ability, $team))->toBeFalse()
+            ->and($stranger->can($ability, $team))->toBeFalse()
+            ->and($owner->can($ability, $team))->toBeTrue();
+    }
+});
+
 it('allows viewing only for team members', function () {
     $owner = User::factory()->create();
     $member = User::factory()->create();
