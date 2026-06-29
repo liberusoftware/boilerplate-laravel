@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Providers;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Socialite\Facades\Socialite;
@@ -62,7 +63,9 @@ test('users can register using socialite providers', function (string $socialite
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
+    // Provider slugs can contain hyphens (e.g. "twitter-oauth-2"); studly-case to a
+    // valid class identifier for the mock (the name is arbitrary — Mockery synthesises it).
+    $provider = Mockery::mock('Laravel\\Socialite\\Two\\'.Str::studly($socialiteProvider).'Provider');
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);
