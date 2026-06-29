@@ -4,32 +4,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $title ?? 'Liberu' }}</title>
+    <title>{{ $title ?? config('app.name') . ' — Enterprise Laravel foundation' }}</title>
+    <meta name="description" content="{{ $description ?? 'Auth, teams, roles, real-time chat, and multi-language — a production-ready Laravel + Filament foundation you can clone, brand, and ship.' }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
     @vite('resources/css/app.css')
 </head>
-<body class="antialiased bg-neutral-900">
-    <div class="relative flex flex-col sm:justify-center sm:items-center min-h-screen
-        bg-dots-darker bg-center bg-gray-100
-        dark:bg-linear-to-br dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+<body class="antialiased bg-canvas text-ink-inverse" style="font-family: Inter, ui-sans-serif, system-ui, sans-serif;">
+    <div class="relative flex flex-col sm:justify-center sm:items-center min-h-screen bg-canvas overflow-hidden">
+
+        {{-- Atmospheric: a single low teal glow, top-center. Purposeful, not glassmorphism. --}}
+        <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 -top-40 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(69,180,191,0.14),transparent_70%)]"></div>
 
         @if (filament()->hasLogin())
             <div class="sm:fixed sm:top-0 sm:right-0 p-4 sm:p-6 text-right z-10">
                 @auth
-                    <a href="{{ filament()->getHomeUrl() }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
+                    <a href="{{ filament()->getHomeUrl() }}" class="font-semibold text-ink-muted-dark hover:text-ink-inverse transition focus-visible:outline focus-visible:outline-2 focus-visible:rounded-sm focus-visible:outline-teal-signal">Dashboard</a>
                 @else
-                    <a href="{{ filament()->getLoginUrl() }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
+                    <a href="{{ filament()->getLoginUrl() }}" class="font-semibold text-ink-muted-dark hover:text-ink-inverse transition focus-visible:outline focus-visible:outline-2 focus-visible:rounded-sm focus-visible:outline-teal-signal">Log in</a>
                     @if (filament()->hasRegistration())
-                        <a href="{{ filament()->getRegistrationUrl() }}" class="ml-2 sm:ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
+                        <a href="{{ filament()->getRegistrationUrl() }}" class="ml-2 sm:ml-4 font-semibold text-ink-muted-dark hover:text-ink-inverse transition focus-visible:outline focus-visible:outline-2 focus-visible:rounded-sm focus-visible:outline-teal-signal">Register</a>
                     @endif
                 @endauth
             </div>
         @endif
 
-        <main class="w-full flex-1 flex items-center justify-center">
+        <main class="relative w-full flex-1 flex items-center justify-center">
             @yield('content')
         </main>
 

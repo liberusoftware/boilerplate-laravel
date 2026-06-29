@@ -1,61 +1,62 @@
 @extends('layouts.guest')
 
 @section('content')
-    <div class="min-h-full max-w-xl w-full flex flex-col sm:justify-center items-center pt-8 sm:pt-15 my-8 sm:my-20 px-4">
-        <div class="w-full mt-6 px-4 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-            <div class="mb-4 text-sm text-gray-600">
-                {{ __('Please sign in to access the admin panel.') }}
+    <x-auth.card title="{{ __('Welcome back') }}" subtitle="{{ __('Sign in to access your dashboard.') }}">
+        <x-validation-errors class="mb-4" />
+
+        @if (session('status'))
+            <div class="mb-4 rounded-lg border border-teal-signal/30 bg-teal-signal/10 px-3 py-2 text-sm font-medium text-teal-signal">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+            @csrf
+
+            <div>
+                <x-auth.label for="email" value="{{ __('Email') }}" />
+                <x-auth.input id="email" type="email" name="email" :value="old('email')"
+                    placeholder="you@example.com" required autofocus autocomplete="username" />
             </div>
 
-            <x-validation-errors class="mb-4" />
+            <div>
+                <x-auth.label for="password" value="{{ __('Password') }}" />
+                <x-auth.input id="password" type="password" name="password" required
+                    autocomplete="current-password" placeholder="••••••••" />
+            </div>
 
-            @if (session('status'))
-                <div class="mb-4 font-medium text-sm text-green-600">
-                    {{ session('status') }}
-                </div>
-            @endif
+            <div class="flex items-center justify-between">
+                <label for="remember_me" class="flex items-center gap-2 text-sm text-ink-muted-dark">
+                    <input type="checkbox" id="remember_me" name="remember"
+                        class="h-4 w-4 rounded border-border-dark bg-canvas accent-teal-signal" />
+                    {{ __('Remember me') }}
+                </label>
 
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}"
+                        class="text-sm text-ink-muted-dark underline-offset-4 transition hover:text-ink-inverse hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-signal">
+                        {{ __('Forgot password?') }}
+                    </a>
+                @endif
+            </div>
 
-                <div>
-                    <x-label for="email" value="{{ __('Email') }}" />
-                    <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
-                        placeholder="Enter your email" required autofocus autocomplete="username" />
-                </div>
+            <x-auth.button>{{ __('Log in') }}</x-auth.button>
+        </form>
 
-                <div class="mt-4">
-                    <x-label for="password" value="{{ __('Password') }}" />
-                    <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                        autocomplete="current-password" placeholder="Enter your password" />
-                </div>
-
-                <div class="mt-4">
-                    <label for="remember_me" class="flex items-center text-sm text-gray-700">
-                        <input type="checkbox" id="remember_me" name="remember"
-                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 transition duration-150" />
-                        <span class="ml-2">{{ __('Remember me') }}</span>
-                    </label>
-                </div>
-
-                <div class="flex items-center justify-between mt-4">
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Forgot your password?') }}
-                        </a>
-                    @endif
-
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-green-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
-                        {{ __('Log in') }}
-                    </button>
-                </div>
-            </form>
-
-            @if (JoelButcher\Socialstream\Socialstream::show())
+        @if (JoelButcher\Socialstream\Socialstream::show())
+            <div class="mt-6">
                 <x-socialstream::socialstream />
-            @endif
-        </div>
-    </div>
+            </div>
+        @endif
+
+        @if (Route::has('register'))
+            <x-slot name="footer">
+                {{ __("Don't have an account?") }}
+                <a href="{{ route('register') }}"
+                    class="font-semibold text-teal-signal underline-offset-4 transition hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-signal">
+                    {{ __('Create one') }}
+                </a>
+            </x-slot>
+        @endif
+    </x-auth.card>
 @endsection
