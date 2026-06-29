@@ -54,7 +54,7 @@ Overview
 
 Whether you are starting a new SaaS product, an internal tool, or a modular enterprise application, this boilerplate is designed to get you productive from day one. It follows Laravel best practices, supports both single-tenant and multi-tenant patterns, and is fully containerised for Docker or Kubernetes deployments.
 
-**Private Messaging System** — a complete secure messaging feature is built in, allowing users to exchange end-to-end encrypted messages. See [MESSAGING.md](MESSAGING.md) and [SETUP_MESSAGING.md](SETUP_MESSAGING.md) for full documentation.
+**Private Messaging System** — a complete secure messaging feature is built in, allowing users to exchange end-to-end encrypted messages. See [MESSAGING.md](docs/MESSAGING.md) and [SETUP_MESSAGING.md](docs/SETUP_MESSAGING.md) for full documentation.
 
 **Multi-Language Support** — the application supports English, Spanish, French and German out of the box with automated translations, smart language detection and per-user preferences. See [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md) for details.
 

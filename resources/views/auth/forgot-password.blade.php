@@ -1,37 +1,33 @@
 @extends('layouts.guest')
 
 @section('content')
-    <div class="h-full flex flex-col sm:justify-center items-center pt-8 sm:pt-15 my-8 sm:my-20 px-4">
-        <div class="w-full sm:max-w-md px-4 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+    <x-auth.card title="{{ __('Reset your password') }}"
+        subtitle="{{ __('Enter your email and we will send you a link to choose a new password.') }}">
+        @session('status')
+            <div class="mb-4 rounded-lg border border-teal-signal/30 bg-teal-signal/10 px-3 py-2 text-sm font-medium text-teal-signal">
+                {{ $value }}
+            </div>
+        @endsession
 
-            <div class="mb-4 text-sm text-gray-600">
-                {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        <x-validation-errors class="mb-4" />
+
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+            @csrf
+
+            <div>
+                <x-auth.label for="email" value="{{ __('Email') }}" />
+                <x-auth.input id="email" type="email" name="email" :value="old('email')"
+                    placeholder="you@example.com" required autofocus autocomplete="username" />
             </div>
 
-            @session('status')
-                <div class="mb-4 font-medium text-sm text-green-600">
-                    {{ $value }}
-                </div>
-            @endsession
+            <x-auth.button>{{ __('Email password reset link') }}</x-auth.button>
+        </form>
 
-            <x-validation-errors class="mb-4" />
-
-            <form method="POST" action="{{ route('password.email') }}">
-                @csrf
-
-                <div class="block">
-                    <x-label for="email" value="{{ __('Email') }}" />
-                    <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
-                        required autofocus autocomplete="username" />
-                </div>
-
-                <div class="flex items-center justify-end mt-4">
-                    <x-button>
-                        {{ __('Email Password Reset Link') }}
-                    </x-button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+        <x-slot name="footer">
+            <a href="{{ route('login') }}"
+                class="font-semibold text-teal-signal underline-offset-4 transition hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-signal">
+                {{ __('Back to sign in') }}
+            </a>
+        </x-slot>
+    </x-auth.card>
 @endsection

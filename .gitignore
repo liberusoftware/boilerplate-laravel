@@ -33,3 +33,4 @@ rr
 *.bak
 *.backup
 composer.phar
+.idea
