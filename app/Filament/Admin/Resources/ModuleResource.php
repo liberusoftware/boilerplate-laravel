@@ -3,12 +3,10 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ModuleResource\Pages\ListModules;
-use App\Filament\Admin\Resources\ModuleResource\Pages\ViewModule;
 use App\Modules\ModuleManager;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -16,9 +14,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class ModuleResource extends Resource
 {
@@ -49,7 +46,7 @@ class ModuleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(static::getEloquentQuery())
+            ->records(fn (): Collection => collect(app(ModuleManager::class)->getAllModulesInfo())->keyBy('name'))
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -68,28 +65,18 @@ class ModuleResource extends Resource
                     ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->limit(30),
             ])
-            ->filters([
-                TernaryFilter::make('enabled')
-                    ->label('Status')
-                    ->trueLabel('Enabled')
-                    ->falseLabel('Disabled')
-                    ->queries(
-                        true: fn (Builder $query) => $query->where('enabled', true),
-                        false: fn (Builder $query) => $query->where('enabled', false),
-                    ),
-            ])
             ->recordActions([
                 Action::make('toggle')
-                    ->label(fn ($record) => $record->enabled ? 'Disable' : 'Enable')
-                    ->icon(fn ($record) => $record->enabled ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
-                    ->color(fn ($record) => $record->enabled ? 'danger' : 'success')
-                    ->action(function ($record) {
+                    ->label(fn (array $record) => $record['enabled'] ? 'Disable' : 'Enable')
+                    ->icon(fn (array $record) => $record['enabled'] ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
+                    ->color(fn (array $record) => $record['enabled'] ? 'danger' : 'success')
+                    ->action(function (array $record) {
                         $moduleManager = app(ModuleManager::class);
 
-                        if ($record->enabled) {
-                            $moduleManager->disable($record->name);
+                        if ($record['enabled']) {
+                            $moduleManager->disable($record['name']);
                         } else {
-                            $moduleManager->enable($record->name);
+                            $moduleManager->enable($record['name']);
                         }
                     })
                     ->requiresConfirmation(),
@@ -97,23 +84,22 @@ class ModuleResource extends Resource
                     ->label('Install')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
-                    ->action(function ($record) {
+                    ->action(function (array $record) {
                         $moduleManager = app(ModuleManager::class);
-                        $moduleManager->install($record->name);
+                        $moduleManager->install($record['name']);
                     })
-                    ->visible(fn ($record) => ! $record->enabled)
+                    ->visible(fn (array $record) => ! $record['enabled'])
                     ->requiresConfirmation(),
                 Action::make('uninstall')
                     ->label('Uninstall')
                     ->icon('heroicon-o-trash')
                     ->color('danger')
-                    ->action(function ($record) {
+                    ->action(function (array $record) {
                         $moduleManager = app(ModuleManager::class);
-                        $moduleManager->uninstall($record->name);
+                        $moduleManager->uninstall($record['name']);
                     })
-                    ->visible(fn ($record) => $record->enabled)
+                    ->visible(fn (array $record) => $record['enabled'])
                     ->requiresConfirmation(),
-                ViewAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -124,7 +110,7 @@ class ModuleResource extends Resource
                         ->action(function ($records) {
                             $moduleManager = app(ModuleManager::class);
                             foreach ($records as $record) {
-                                $moduleManager->enable($record->name);
+                                $moduleManager->enable($record['name']);
                             }
                         })
                         ->requiresConfirmation(),
@@ -135,7 +121,7 @@ class ModuleResource extends Resource
                         ->action(function ($records) {
                             $moduleManager = app(ModuleManager::class);
                             foreach ($records as $record) {
-                                $moduleManager->disable($record->name);
+                                $moduleManager->disable($record['name']);
                             }
                         })
                         ->requiresConfirmation(),
@@ -143,55 +129,10 @@ class ModuleResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        $moduleManager = app(ModuleManager::class);
-        $modules = $moduleManager->getAllModulesInfo();
-
-        // Convert modules array to a collection that can be used with Filament
-        $query = new class extends Builder
-        {
-            protected $modules;
-
-            public function __construct($modules)
-            {
-                $this->modules = collect($modules);
-            }
-
-            public function get($columns = ['*'])
-            {
-                return $this->modules->map(function ($module) {
-                    return (object) $module;
-                });
-            }
-
-            public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
-            {
-                return $this->modules->map(function ($module) {
-                    return (object) $module;
-                });
-            }
-
-            public function where($column, $operator = null, $value = null, $boolean = 'and')
-            {
-                if ($column === 'enabled') {
-                    $this->modules = $this->modules->filter(function ($module) use ($value) {
-                        return $module['enabled'] === $value;
-                    });
-                }
-
-                return $this;
-            }
-        };
-
-        return new $query($modules);
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => ListModules::route('/'),
-            'view' => ViewModule::route('/{record}'),
         ];
     }
 }
