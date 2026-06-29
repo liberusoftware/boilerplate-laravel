@@ -7,6 +7,7 @@ use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;
 use App\Providers\SocialstreamServiceProvider;
 use App\Providers\TelescopeServiceProvider;
+use App\Providers\ThemeServiceProvider;
 
 return [
     AppServiceProvider::class,
@@ -16,4 +17,5 @@ return [
     HorizonServiceProvider::class,
     SocialstreamServiceProvider::class,
     TelescopeServiceProvider::class,
+    ThemeServiceProvider::class,
 ];

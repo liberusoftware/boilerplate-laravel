@@ -1,0 +1,11 @@
+{
+    "name": "dark",
+    "label": "Dark Theme",
+    "description": "A dark color scheme for the application",
+    "version": "1.0.0",
+    "author": "Liberu Software",
+    "colors": {
+        "primary": "indigo",
+        "secondary": "purple"
+    }
+}
