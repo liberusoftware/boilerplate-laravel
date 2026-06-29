@@ -90,8 +90,15 @@ is **not yet ported** — it is Phase 4 work.
 - **Horizon** manages Redis queues; dashboard at `/horizon`.
 - **Octane + RoadRunner** provides the HTTP server in production (config in `.rr.yaml`).
 
-### Permissions Model
-Spatie Permission roles/permissions are team-scoped (multi-tenancy). `FilamentShield` auto-generates policies for each Filament resource. The `Permission` and `Role` models extend Spatie's defaults. Policy classes are in `app/Policies/`.
+### Permissions Model (Phase 1 — done)
+Spatie Permission roles/permissions are team-scoped (`config/permission.php` `teams => true`, models point at `App\Models\Role`/`Permission`). `FilamentShield` auto-generates policies per Filament resource. Policy classes in `app/Policies/`.
+
+**Filament tenancy rules (important):**
+- The **admin** panel is Team-tenant-scoped (`->tenant(Team::class)`); the **app** panel is intentionally **not** scoped. `User`'s tenancy methods (`getTenants` = owned + member teams, `canAccessTenant`, `getDefaultTenant`) are panel-agnostic.
+- Any Filament Resource whose model has **no `team()` relationship** MUST override `public static function isScopedToTenant(): bool { return false; }`, or the tenant panel **500s** on that resource. Shield's global `RoleResource` is handled via `FilamentShieldPlugin::make()->scopeToTenant(Utils::isTenancyEnabled())`.
+- With `permission.teams=true`, roles carry a `team_id`, so `shield:generate` / super-admin assignment must run **inside a team context** (set `setPermissionsTeamId($team->id)` in a seeder, or scope the command). Default shield config has `super_admin.define_via_gate=false` — a bare `super_admin` role grants nothing until permissions are generated.
+- `User` resolves the `HasRoles::teams` vs `HasTeams::teams` trait collision by keeping Jetstream's `teams()` (`insteadof`) and excluding Spatie's (Spatie scopes via the `team_id` column, not that relation).
+- **Known:** `User::canAccessPanel()` returns `true` (any authenticated user reaches `/admin`); per-resource Shield policies still gate each resource. Tighten to a role check in a later auth-hardening phase.
 
 ### Theme System
 Themes live under `themes/{name}/` with their own CSS/JS/views. The active theme is resolved by `ThemeManager` (`app/Services/ThemeManager.php`) and set per user via `theme_preference` on the users table. Blade directives and helpers are registered in `ThemeServiceProvider`. Vite is configured to build per-theme assets (currently commented out pending re-enablement via `glob`).
