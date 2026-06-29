@@ -33,8 +33,10 @@ class ThemeSwitcher extends Component
         $this->dispatch('theme-changed', theme: $theme);
         session()->flash('message', 'Theme changed successfully!');
 
+        // Refresh the current page, but never trust the raw Referer (open-redirect).
         $referer = request()->header('Referer');
-        $this->redirect(is_string($referer) ? $referer : '/');
+        $base = url('/');
+        $this->redirect(is_string($referer) && str_starts_with($referer, $base) ? $referer : '/');
     }
 
     public function render(): View
