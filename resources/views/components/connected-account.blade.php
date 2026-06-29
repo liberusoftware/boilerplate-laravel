@@ -6,7 +6,7 @@
             <x-socialstream-icons.provider-icon :provider="$provider['id']" class="h-6 w-6" />
 
             <div class="ml-2">
-                <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                <div class="text-sm font-semibold text-gray-600">
                     {{ __($provider['name']) }}
                 </div>
 

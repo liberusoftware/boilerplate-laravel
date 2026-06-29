@@ -1,4 +1,4 @@
-<div class="text-gray-900 dark:text-gray-100">
+<div class="text-gray-900">
     @switch($provider)
         @case(\JoelButcher\Socialstream\Providers::bitbucket())
             <x-socialstream-icons.bitbucket {{ $attributes }} />

@@ -34,3 +34,4 @@ rr
 *.backup
 composer.phar
 .idea
+.rr.yaml

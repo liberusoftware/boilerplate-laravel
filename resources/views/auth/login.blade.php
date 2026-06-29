@@ -1,62 +1,52 @@
-@extends('layouts.guest')
+<x-guest-layout>
+    <x-authentication-card>
+        <x-slot name="logo">
+            <x-authentication-card-logo />
+        </x-slot>
 
-@section('content')
-    <x-auth.card title="{{ __('Welcome back') }}" subtitle="{{ __('Sign in to access your dashboard.') }}">
         <x-validation-errors class="mb-4" />
 
         @if (session('status'))
-            <div class="mb-4 rounded-lg border border-teal-signal/30 bg-teal-signal/10 px-3 py-2 text-sm font-medium text-teal-signal">
+            <div class="mb-4 font-medium text-sm text-green-600">
                 {{ session('status') }}
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+        <form method="POST" action="{{ route('login') }}">
             @csrf
 
             <div>
-                <x-auth.label for="email" value="{{ __('Email') }}" />
-                <x-auth.input id="email" type="email" name="email" :value="old('email')"
-                    placeholder="you@example.com" required autofocus autocomplete="username" />
+                <x-label for="email" value="{{ __('Email') }}" />
+                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
             </div>
 
-            <div>
-                <x-auth.label for="password" value="{{ __('Password') }}" />
-                <x-auth.input id="password" type="password" name="password" required
-                    autocomplete="current-password" placeholder="••••••••" />
+            <div class="mt-4">
+                <x-label for="password" value="{{ __('Password') }}" />
+                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
 
-            <div class="flex items-center justify-between">
-                <label for="remember_me" class="flex items-center gap-2 text-sm text-ink-muted-dark">
-                    <input type="checkbox" id="remember_me" name="remember"
-                        class="h-4 w-4 rounded border-border-dark bg-canvas accent-teal-signal" />
-                    {{ __('Remember me') }}
+            <div class="block mt-4">
+                <label for="remember_me" class="flex items-center">
+                    <x-checkbox id="remember_me" name="remember" />
+                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                 </label>
+            </div>
 
+            <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}"
-                        class="text-sm text-ink-muted-dark underline-offset-4 transition hover:text-ink-inverse hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-signal">
-                        {{ __('Forgot password?') }}
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                        {{ __('Forgot your password?') }}
                     </a>
                 @endif
-            </div>
 
-            <x-auth.button>{{ __('Log in') }}</x-auth.button>
+                <x-button class="ml-4">
+                    {{ __('Login') }}
+                </x-button>
+            </div>
         </form>
 
         @if (JoelButcher\Socialstream\Socialstream::show())
-            <div class="mt-6">
-                <x-socialstream::socialstream />
-            </div>
+            <x-socialstream />
         @endif
-
-        @if (Route::has('register'))
-            <x-slot name="footer">
-                {{ __("Don't have an account?") }}
-                <a href="{{ route('register') }}"
-                    class="font-semibold text-teal-signal underline-offset-4 transition hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal-signal">
-                    {{ __('Create one') }}
-                </a>
-            </x-slot>
-        @endif
-    </x-auth.card>
-@endsection
+    </x-authentication-card>
+</x-guest-layout>
