@@ -1,0 +1,403 @@
+<?php
+
+namespace App\Modules;
+
+use App\Models\Module;
+use App\Modules\Contracts\ModuleInterface;
+use App\Modules\Events\ModuleDisabled;
+use App\Modules\Events\ModuleEnabled;
+use App\Modules\Events\ModuleInstalled;
+use App\Modules\Events\ModuleUninstalled;
+use App\Modules\Traits\Configurable;
+use App\Modules\Traits\HasModuleHooks;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use ReflectionClass;
+
+abstract class BaseModule implements ModuleInterface
+{
+    use Configurable, HasModuleHooks;
+
+    protected string $name;
+
+    protected string $version;
+
+    protected string $description;
+
+    /**
+     * @var list<string>
+     */
+    protected array $dependencies = [];
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $config = [];
+
+    public function __construct()
+    {
+        $this->loadModuleInfo();
+    }
+
+    /**
+     * Get the module name.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the module version.
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get the module description.
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * Get the module dependencies.
+     *
+     * @return list<string>
+     */
+    public function getDependencies(): array
+    {
+        return $this->dependencies;
+    }
+
+    /**
+     * Check if the module is enabled.
+     */
+    public function isEnabled(): bool
+    {
+        try {
+            $record = Module::findByName($this->getName());
+            if ($record !== null) {
+                return (bool) $record->enabled;
+            }
+        } catch (\Throwable $e) {
+            Log::debug("Could not read module state from DB for {$this->getName()}: ".$e->getMessage());
+        }
+
+        // Fallback to property if present
+        return (bool) ($this->config['enabled'] ?? false);
+    }
+
+    /**
+     * Enable the module.
+     */
+    public function enable(): void
+    {
+        if ($this->isEnabled()) {
+            Log::info("Module {$this->getName()} is already enabled, skipping enable operation.");
+
+            return;
+        }
+
+        Log::info("Enabling module: {$this->getName()}");
+
+        // Execute before_enable hook
+        $this->executeHook('before_enable', $this);
+
+        // Run onEnable hook
+        try {
+            $this->onEnable();
+            Log::info("Module {$this->getName()} onEnable hook executed successfully.");
+        } catch (\Throwable $e) {
+            $message = "Failed to enable module {$this->getName()}: ".$e->getMessage();
+            Log::error($message, ['module' => $this->getName(), 'exception' => $e]);
+            throw new \RuntimeException($message, 0, $e);
+        }
+
+        // Dispatch event
+        try {
+            event(new ModuleEnabled($this->getName(), $this));
+            Log::info("ModuleEnabled event dispatched for {$this->getName()}");
+        } catch (\Throwable $e) {
+            Log::debug("Failed to dispatch ModuleEnabled event for {$this->getName()}: ".$e->getMessage());
+        }
+
+        // Execute after_enable hook
+        $this->executeHook('after_enable', $this);
+    }
+
+    /**
+     * Disable the module.
+     */
+    public function disable(): void
+    {
+        if (! $this->isEnabled()) {
+            return;
+        }
+
+        // Execute before_disable hook
+        $this->executeHook('before_disable', $this);
+
+        try {
+            $this->onDisable();
+        } catch (\Throwable $e) {
+            Log::warning("onDisable failed for {$this->getName()}: ".$e->getMessage());
+        }
+
+        try {
+            event(new ModuleDisabled($this->getName(), $this));
+        } catch (\Throwable $e) {
+            Log::debug("Failed to dispatch ModuleDisabled event for {$this->getName()}: ".$e->getMessage());
+        }
+
+        // Execute after_disable hook
+        $this->executeHook('after_disable', $this);
+    }
+
+    /**
+     * Install the module.
+     */
+    public function install(): void
+    {
+        Log::info("Installing module: {$this->getName()}");
+
+        // Execute before_install hook
+        $this->executeHook('before_install', $this);
+
+        try {
+            $this->runMigrations();
+            Log::info("Migrations completed for module: {$this->getName()}");
+        } catch (\Throwable $e) {
+            Log::error("Migration failed for module {$this->getName()}: ".$e->getMessage());
+            throw $e;
+        }
+
+        try {
+            $this->publishAssets();
+            Log::info("Assets published for module: {$this->getName()}");
+        } catch (\Throwable $e) {
+            Log::warning("Asset publishing failed for module {$this->getName()}: ".$e->getMessage());
+            // Continue anyway - assets are optional
+        }
+
+        $this->onInstall();
+        $this->enable();
+
+        try {
+            event(new ModuleInstalled($this->getName(), $this));
+        } catch (\Throwable $e) {
+            Log::debug("Failed to dispatch ModuleInstalled event for {$this->getName()}: ".$e->getMessage());
+        }
+
+        // Execute after_install hook
+        $this->executeHook('after_install', $this);
+
+        Log::info("Module {$this->getName()} installed successfully");
+    }
+
+    /**
+     * Uninstall the module.
+     */
+    public function uninstall(): void
+    {
+        // Execute before_uninstall hook
+        $this->executeHook('before_uninstall', $this);
+
+        $this->disable();
+        $this->rollbackMigrations();
+        $this->removeAssets();
+        $this->onUninstall();
+
+        try {
+            event(new ModuleUninstalled($this->getName(), $this));
+        } catch (\Throwable $e) {
+            Log::debug("Failed to dispatch ModuleUninstalled event for {$this->getName()}: ".$e->getMessage());
+        }
+
+        // Execute after_uninstall hook
+        $this->executeHook('after_uninstall', $this);
+    }
+
+    /**
+     * Get module configuration.
+     *
+     * @return array<string, mixed>
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    /**
+     * Load module information from module.json file.
+     */
+    protected function loadModuleInfo(): void
+    {
+        $modulePath = $this->getModulePath();
+        $moduleInfoPath = $modulePath.'/module.json';
+
+        if (! File::exists($moduleInfoPath)) {
+            return;
+        }
+
+        $moduleInfo = json_decode(File::get($moduleInfoPath), true);
+
+        if (! is_array($moduleInfo)) {
+            return;
+        }
+
+        $this->name = is_string($moduleInfo['name'] ?? null) ? $moduleInfo['name'] : class_basename($this);
+        $this->version = is_string($moduleInfo['version'] ?? null) ? $moduleInfo['version'] : '1.0.0';
+        $this->description = is_string($moduleInfo['description'] ?? null) ? $moduleInfo['description'] : '';
+
+        $deps = $moduleInfo['dependencies'] ?? [];
+        $this->dependencies = is_array($deps)
+            ? array_values(array_filter($deps, 'is_string'))
+            : [];
+
+        $config = [];
+        $rawConfig = $moduleInfo['config'] ?? [];
+        if (is_array($rawConfig)) {
+            foreach ($rawConfig as $key => $value) {
+                $config[(string) $key] = $value;
+            }
+        }
+        $this->config = $config;
+    }
+
+    /**
+     * Get the module path.
+     */
+    protected function getModulePath(): string
+    {
+        $reflection = new ReflectionClass($this);
+
+        return dirname((string) $reflection->getFileName());
+    }
+
+    /**
+     * Run module migrations.
+     */
+    protected function runMigrations(): void
+    {
+        // Validate module name to prevent path traversal
+        if (! preg_match('/^[a-zA-Z0-9_-]+$/', $this->name)) {
+            Log::error("Invalid module name for migrations: {$this->name}");
+            throw new \InvalidArgumentException("Invalid module name: {$this->name}");
+        }
+
+        $migrationsPath = $this->getModulePath().'/database/migrations';
+
+        if (! File::exists($migrationsPath)) {
+            return;
+        }
+
+        // Double-check the path is within app/Modules for defense in depth
+        $expectedPath = app_path('Modules/'.$this->name);
+        $moduleReal = realpath($this->getModulePath());
+        $expectedReal = realpath($expectedPath);
+        if ($moduleReal === false || $expectedReal === false || strpos($moduleReal, $expectedReal) !== 0) {
+            Log::error("Module path validation failed for: {$this->name}");
+            throw new \RuntimeException('Invalid module path');
+        }
+
+        Artisan::call('migrate', [
+            '--path' => 'app/Modules/'.$this->name.'/database/migrations',
+            '--force' => true,
+        ]);
+    }
+
+    /**
+     * Rollback module migrations.
+     */
+    protected function rollbackMigrations(): void
+    {
+        // Validate module name to prevent path traversal
+        if (! preg_match('/^[a-zA-Z0-9_-]+$/', $this->name)) {
+            Log::error("Invalid module name for migration rollback: {$this->name}");
+            throw new \InvalidArgumentException("Invalid module name: {$this->name}");
+        }
+
+        $migrationsPath = $this->getModulePath().'/database/migrations';
+
+        if (! File::exists($migrationsPath)) {
+            return;
+        }
+
+        // Double-check the path is within app/Modules for defense in depth
+        $expectedPath = app_path('Modules/'.$this->name);
+        $moduleReal = realpath($this->getModulePath());
+        $expectedReal = realpath($expectedPath);
+        if ($moduleReal === false || $expectedReal === false || strpos($moduleReal, $expectedReal) !== 0) {
+            Log::error("Module path validation failed for: {$this->name}");
+            throw new \RuntimeException('Invalid module path');
+        }
+
+        try {
+            Artisan::call('migrate:rollback', [
+                '--path' => 'app/Modules/'.$this->name.'/database/migrations',
+                '--force' => true,
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning("Failed to rollback migrations for {$this->getName()}: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Publish module assets.
+     */
+    protected function publishAssets(): void
+    {
+        Artisan::call('vendor:publish', [
+            '--tag' => strtolower($this->name).'-assets',
+            '--force' => true,
+        ]);
+    }
+
+    /**
+     * Remove module assets.
+     */
+    protected function removeAssets(): void
+    {
+        $assetsPath = public_path("modules/{$this->name}");
+        if (File::exists($assetsPath)) {
+            File::deleteDirectory($assetsPath);
+        }
+    }
+
+    /**
+     * Hook called when module is enabled.
+     */
+    protected function onEnable(): void
+    {
+        // Override in child classes
+    }
+
+    /**
+     * Hook called when module is disabled.
+     */
+    protected function onDisable(): void
+    {
+        // Override in child classes
+    }
+
+    /**
+     * Hook called when module is installed.
+     */
+    protected function onInstall(): void
+    {
+        // Override in child classes
+    }
+
+    /**
+     * Hook called when module is uninstalled.
+     */
+    protected function onUninstall(): void
+    {
+        // Override in child classes
+    }
+}

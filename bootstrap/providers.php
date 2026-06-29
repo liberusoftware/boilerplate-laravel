@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\ModuleServiceProvider;
 use App\Providers\AppServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
 use App\Providers\Filament\AppPanelProvider;
@@ -18,4 +19,5 @@ return [
     SocialstreamServiceProvider::class,
     TelescopeServiceProvider::class,
     ThemeServiceProvider::class,
+    ModuleServiceProvider::class,
 ];
