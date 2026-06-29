@@ -37,13 +37,13 @@ test('set locale middleware sets locale from session', function () {
 });
 
 test('set locale middleware sets locale from the authenticated user preference', function () {
-    $this->actingAs(User::factory()->create(['locale' => 'fr']));
+    $this->actingAs(User::factory()->create(['locale' => 'de']));
 
     $request = Request::create('/test', 'GET');
     $middleware = new SetLocale();
 
     $middleware->handle($request, function ($req) {
-        expect(App::getLocale())->toBe('fr');
+        expect(App::getLocale())->toBe('de');
 
         return response('OK');
     });

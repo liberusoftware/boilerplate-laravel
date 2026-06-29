@@ -47,8 +47,10 @@ class LanguageSwitcher extends Component
 
         $this->currentLocale = $locale;
 
+        // Refresh the current page, but never trust the raw Referer (open-redirect).
         $referer = request()->header('Referer');
-        $this->redirect(is_string($referer) ? $referer : '/');
+        $base = url('/');
+        $this->redirect(is_string($referer) && str_starts_with($referer, $base) ? $referer : '/');
     }
 
     public function render(): View

@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\TranslationService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -50,9 +51,23 @@ test('translation service uses cache', function () {
     expect($result1)->toBe('Hola');
     expect($result2)->toBe('Hola');
 
-    // Verify cache was used
+    // The second call must be served from cache — only ONE API request total.
+    Http::assertSentCount(1);
+
     $cacheKey = 'translation:en:es:'.md5('Hello');
     expect(Cache::has($cacheKey))->toBeTrue();
+});
+
+test('translation service returns original text when the API connection throws', function () {
+    Cache::flush();
+
+    $service = new TranslationService();
+
+    Http::fake(function () {
+        throw new ConnectionException('offline');
+    });
+
+    expect($service->translate('Hello', 'es', 'en'))->toBe('Hello');
 });
 
 test('translation service handles API failures gracefully', function () {
@@ -88,9 +103,11 @@ test('translation service can translate batch', function () {
 
     $results = $service->translateBatch($texts, 'es', 'en');
 
-    expect($results)->toBeArray();
-    expect($results)->toHaveKey('hello');
-    expect($results)->toHaveKey('world');
+    expect($results)->toBe([
+        'hello' => 'Translated',
+        'world' => 'Translated',
+    ]);
+    Http::assertSentCount(2);
 });
 
 test('translation service can check if language is supported', function () {

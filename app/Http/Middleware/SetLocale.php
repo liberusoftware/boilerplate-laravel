@@ -21,10 +21,11 @@ class SetLocale
     public function handle(Request $request, Closure $next): Response
     {
         $locale = null;
+        $fromRequest = false;
 
         if ($request->has('locale')) {
             $locale = $request->string('locale')->value();
-            Session::put('locale', $locale);
+            $fromRequest = true;
         }
 
         if (! $locale) {
@@ -50,6 +51,11 @@ class SetLocale
 
         if (in_array($locale, $supportedLocales, true)) {
             App::setLocale($locale);
+
+            // Persist only a validated, request-supplied locale (avoid storing arbitrary input).
+            if ($fromRequest) {
+                Session::put('locale', $locale);
+            }
         }
 
         return $next($request);
