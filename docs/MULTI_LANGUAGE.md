@@ -361,6 +361,138 @@ Potential improvements for the translation system:
 5. **Translation Memory**: Store and reuse translations across the system
 6. **Professional Translation**: Integration with professional translation services
 
+## Step-by-Step Setup Guide
+
+### Adding the Language Switcher to Jetstream Navigation
+
+If using Jetstream, edit `resources/views/navigation-menu.blade.php`:
+
+```blade
+<!-- Add in the navigation section -->
+<div class="hidden sm:flex sm:items-center sm:ml-6">
+    <!-- Teams Dropdown, Settings, etc. -->
+    <livewire:language-switcher />
+</div>
+```
+
+Or in a generic Blade layout (e.g., `resources/views/layouts/app.blade.php`):
+
+```blade
+<div class="flex items-center space-x-4">
+    <!-- Other navigation items -->
+    <livewire:language-switcher />
+</div>
+```
+
+### Test Language Switching
+
+1. Visit your application
+2. Click on the language switcher (globe icon)
+3. Select a different language
+4. The page will reload with the new language
+
+### In Notifications
+
+```php
+public function toArray($notifiable)
+{
+    return [
+        'message' => __('messages.notification_text'),
+    ];
+}
+```
+
+## Adding More Languages
+
+To add support for additional languages:
+
+1. **Update Configuration**
+
+Edit `config/app.php`:
+
+```php
+'supported_locales' => [
+    'en' => 'English',
+    'es' => 'Español',
+    'fr' => 'Français',
+    'de' => 'Deutsch',
+    'it' => 'Italiano',  // Add Italian
+    'pt' => 'Português', // Add Portuguese
+    // Add more languages...
+],
+```
+
+2. **Update TranslationService**
+
+Edit `app/Services/TranslationService.php`:
+
+```php
+public const SUPPORTED_LANGUAGES = [
+    'en' => 'English',
+    'es' => 'Spanish',
+    'fr' => 'French',
+    'de' => 'German',
+    'it' => 'Italian',    // Add Italian
+    'pt' => 'Portuguese', // Add Portuguese
+];
+```
+
+3. **Update LanguageSwitcher Component**
+
+Edit `app/Livewire/LanguageSwitcher.php` mount method to use the config:
+
+```php
+public function mount()
+{
+    $this->currentLocale = App::getLocale();
+    $this->availableLocales = config('app.supported_locales');
+}
+```
+
+4. **Create Language Directory**
+
+```bash
+mkdir lang/it
+mkdir lang/pt
+```
+
+5. **Generate Translations**
+
+```bash
+php artisan translate:generate --source=en --target=it
+php artisan translate:generate --source=en --target=pt
+```
+
+## Common Translation Keys
+
+Here are the common translation keys included in `lang/*/messages.php`:
+
+- `welcome` - Welcome message
+- `dashboard` - Dashboard
+- `profile` - Profile
+- `logout` - Logout
+- `login` - Login
+- `register` - Register
+- `settings` - Settings
+- `users` - Users
+- `teams` - Teams
+- `messages` - Messages
+- `notifications` - Notifications
+- `search` - Search
+- `edit` - Edit
+- `create` - Create
+- `delete` - Delete
+- `save` - Save
+- `cancel` - Cancel
+- `language` - Language
+- `select_language` - Select Language
+
+### Language Switcher Not Showing
+
+- Make sure Alpine.js is loaded (Livewire includes it)
+- Check browser console for JavaScript errors
+- Clear view cache: `php artisan view:clear`
+
 ## Support
 
 For issues or questions about the multi-language support:
