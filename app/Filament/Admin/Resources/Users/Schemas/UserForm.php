@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -73,6 +74,26 @@ class UserForm
                                             ->placeholder('Select roles')
                                             ->helperText('Users inherit all permissions from their assigned roles')
                                             ->columnSpanFull(),
+                                    ]),
+                            ]),
+
+                        Tab::make('Account Settings')
+                            ->schema([
+                                Section::make('Account')
+                                    ->description('Email verification and team context')
+                                    ->columns(2)
+                                    ->schema([
+                                        DateTimePicker::make('email_verified_at')
+                                            ->label('Email Verified At')
+                                            ->helperText('Set to mark the email as verified; clear to revoke.'),
+
+                                        Select::make('current_team_id')
+                                            ->label('Current Team')
+                                            ->relationship('latestTeam', 'name')
+                                            ->searchable()
+                                            ->preload()
+                                            ->placeholder('No active team')
+                                            ->helperText('The team this user is currently acting within.'),
                                     ]),
                             ]),
 
