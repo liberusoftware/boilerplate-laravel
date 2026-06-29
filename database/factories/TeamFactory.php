@@ -12,6 +12,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class TeamFactory extends Factory
 {
     /**
+     * The name of the factory's corresponding model.
+     *
+     * @var class-string<Team>
+     */
+    protected $model = Team::class;
+
+    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>

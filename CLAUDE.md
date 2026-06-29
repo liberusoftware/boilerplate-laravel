@@ -2,6 +2,26 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Current State — fresh rebuild in progress (2026-06-29)
+
+This repo was **rebuilt from a fresh Laravel 13 skeleton** on branch `chore/fresh-skeleton`.
+Design + roadmap: `docs/superpowers/specs/2026-06-29-fresh-skeleton-design.md`.
+
+**Phase 0 (done, green):** fresh skeleton + full package set (Socialstream/Jetstream +
+teams, dual Filament v5 panels + Shield, Spatie permission/media-library/backup/activitylog/
+query-builder, Reverb, Horizon, Octane/RoadRunner, Telescope, Pulse, passkeys, menu-builder).
+Authenticated home = the Filament **app** panel via the `dashboard` route. OAuth: GitHub,
+Google, Facebook, Twitter(OAuth2) enabled (placeholder creds in `.env`).
+
+**Single module system:** `app/Modules/` only — `internachi/modular` and
+`composer-merge-plugin` were **removed**. There is no `app-modules/` layer.
+
+**NOT yet ported (Phases 1–7, each its own PR):** custom `App\Modules` lifecycle +
+`BlogModule`, `ThemeManager`/themes, multi-language (`SetLocale`/`TranslationService`),
+`SearchService`, `SiteSettings`, messaging/chat. The architecture sections below describe
+the **target** for those ports, not all of which exists yet — verify a class exists before
+relying on it.
+
 ## Commands
 
 ```bash
@@ -53,12 +73,15 @@ Both panels disable default Fortify/Jetstream route registration in their `boot(
 ### Authentication Stack (layered)
 Fortify handles the authentication primitives, Jetstream adds teams and profile management, Socialstream extends with OAuth providers, and Spatie Permission provides role/permission assignment. The `TeamsPermission` middleware syncs the active team with Filament Shield's tenant context. The `AssignDefaultTeam` middleware ensures every user lands on a team after login.
 
-### Module System (dual-layer)
-There are two parallel module mechanisms:
-1. **`internachi/modular`** — PSR-4 autoloaded from `app-modules/` under the `Modules\\` namespace. Registered through `ModularServiceProvider`. Used for external/installable modules.
-2. **Custom `App\Modules\`** — internal module system with lifecycle (install/enable/disable/uninstall events), database registry (`modules` table), and `ModuleManager`. The `BlogModule` under `app/Modules/BlogModule/` is the reference implementation.
+### Module System (single — `app/Modules/`, target for Phase 4)
+One mechanism: a custom `App\Modules\` system with lifecycle (install/enable/disable/
+uninstall events), a database registry (`modules` table), and `ModuleManager`. Lives under
+the existing `App\` PSR-4 autoload — no per-module `composer.json`, no merge-plugin. The
+`BlogModule` under `app/Modules/BlogModule/` is the reference implementation. Modules hook
+into each other via `HasModuleHooks`; discovery via `ExternalModuleLoader`.
 
-Modules can hook into each other via `HasModuleHooks` trait. External module discovery is handled by `ExternalModuleLoader`.
+`internachi/modular` / `app-modules/` are **not** used (removed in the rebuild). This system
+is **not yet ported** — it is Phase 4 work.
 
 ### Real-Time Stack
 - **Laravel Reverb** runs as a standalone WebSocket server.
