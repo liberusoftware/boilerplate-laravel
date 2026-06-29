@@ -1,0 +1,22 @@
+{
+    "name": "modules/ping",
+    "description": "Ping Module",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Modules\\Ping\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Ping\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Ping\\Providers\\PingServiceProvider"
+            ]
+        }
+    }
+}
