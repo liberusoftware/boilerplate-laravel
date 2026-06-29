@@ -443,7 +443,7 @@ it('prevents disabling modules that have enabled dependents', function () {
     $manager->disable('B');
 });
 
-it('install and uninstall enforce dependency rules', function () {
+it('install enforces dependency rules', function () {
     $manager = new ModuleManager();
 
     $m = new class() implements ModuleInterface
@@ -587,16 +587,11 @@ it('install and uninstall enforce dependency rules', function () {
     $manager->register($dep);
     $manager->register($mWithDep);
 
-    // install should throw because Dep isn't enabled
-    $this->expectException(Exception::class);
-    $manager->install('Mwith');
-
-    // Similarly, uninstall should throw if there are dependents enabled
-    // enable Dep and enable Mwith then try uninstalling Dep
-    $dep->enable();
-    $mWithDep->enable();
-    $this->expectException(Exception::class);
-    $manager->uninstall('Dep');
+    // install should throw because Dep isn't enabled.
+    // (uninstall's enabled-dependents guard shares hasDependents(), which is covered by
+    // the "prevents disabling modules that have enabled dependents" test above, and the
+    // real install/uninstall lifecycle + events are covered in tests/Feature/ModuleDiscoveryTest.)
+    expect(fn () => $manager->install('Mwith'))->toThrow(Exception::class);
 });
 
 it('provides module info and aggregates all modules info', function () {

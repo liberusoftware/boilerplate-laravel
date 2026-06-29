@@ -19,5 +19,9 @@ it('renders the modules list (non-Eloquent data source)', function () {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
     Filament::setTenant($team);
 
-    Livewire::test(ListModules::class)->assertOk();
+    // Must actually list the discovered module — a bare assertOk() passed while the
+    // table was silently empty (the loader never found BlogModule).
+    Livewire::test(ListModules::class)
+        ->assertOk()
+        ->assertSee('BlogModule');
 });

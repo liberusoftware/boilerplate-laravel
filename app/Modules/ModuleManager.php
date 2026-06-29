@@ -238,50 +238,86 @@ class ModuleManager
      */
     protected function loadModule(string $moduleName, string $modulePath): void
     {
-        $moduleClass = "App\\Modules\\{$moduleName}\\{$moduleName}Module";
+        // Only directories that declare a module.json are modules — skip the framework
+        // subfolders (Contracts/, Events/, Traits/, Support/).
+        if (! File::exists($modulePath.'/module.json')) {
+            return;
+        }
 
-        // If class isn't autoloadable, try requiring the module main file directly.
-        if (! class_exists($moduleClass)) {
-            $mainFile = $modulePath."/{$moduleName}Module.php";
-            if (File::exists($mainFile)) {
-                try {
-                    require_once $mainFile;
-                } catch (\Throwable $e) {
-                    Log::warning("Failed requiring main file for module {$moduleName}: ".$e->getMessage());
+        // Support both layouts: app/Modules/Foo/FooModule.php and app/Modules/Foo/Foo.php.
+        $candidates = [
+            "App\\Modules\\{$moduleName}\\{$moduleName}Module",
+            "App\\Modules\\{$moduleName}\\{$moduleName}",
+        ];
+
+        $moduleClass = $this->resolveModuleClass($candidates);
+
+        // If not autoloadable, require the main file directly, then re-check.
+        if ($moduleClass === null) {
+            foreach (["{$moduleName}Module.php", "{$moduleName}.php"] as $file) {
+                $mainFile = $modulePath.'/'.$file;
+                if (File::exists($mainFile)) {
+                    try {
+                        require_once $mainFile;
+                    } catch (\Throwable $e) {
+                        Log::warning("Failed requiring main file for module {$moduleName}: ".$e->getMessage());
+                    }
                 }
+            }
+            $moduleClass = $this->resolveModuleClass($candidates);
+        }
+
+        if ($moduleClass === null) {
+            Log::warning("Module class not found for module path {$modulePath}.");
+
+            return;
+        }
+
+        try {
+            $module = new $moduleClass();
+        } catch (\Throwable $e) {
+            Log::warning("Failed instantiating module class {$moduleClass}: ".$e->getMessage());
+
+            return;
+        }
+
+        if (! $module instanceof ModuleInterface) {
+            return;
+        }
+
+        $this->register($module);
+
+        // Persist module metadata to DB (create or update).
+        try {
+            Module::updateOrCreate(
+                ['name' => $module->getName()],
+                [
+                    'version' => $module->getVersion(),
+                    'description' => $module->getDescription(),
+                    'dependencies' => $module->getDependencies(),
+                    'config' => $module->getConfig(),
+                ]
+            );
+        } catch (\Throwable $e) {
+            Log::warning("Failed to persist module '{$moduleName}' metadata: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Return the first existing class from the candidate list, or null.
+     *
+     * @param  list<string>  $candidates
+     * @return class-string|null
+     */
+    protected function resolveModuleClass(array $candidates): ?string
+    {
+        foreach ($candidates as $candidate) {
+            if (class_exists($candidate)) {
+                return $candidate;
             }
         }
 
-        if (class_exists($moduleClass)) {
-            try {
-                $module = new $moduleClass();
-            } catch (\Throwable $e) {
-                Log::warning("Failed instantiating module class {$moduleClass}: ".$e->getMessage());
-
-                return;
-            }
-
-            if ($module instanceof ModuleInterface) {
-                $this->register($module);
-
-                // Persist module metadata to DB (create or update)
-                try {
-                    Module::updateOrCreate(
-                        ['name' => $module->getName()],
-                        [
-                            'version' => $module->getVersion(),
-                            'description' => $module->getDescription(),
-                            'dependencies' => $module->getDependencies(),
-                            'config' => $module->getConfig(),
-                        ]
-                    );
-                } catch (\Throwable $e) {
-                    Log::warning("Failed to persist module '{$moduleName}' metadata: ".$e->getMessage());
-                }
-            }
-        } else {
-            Log::warning("Module class {$moduleClass} not found for module path {$modulePath}.");
-        }
+        return null;
     }
 
     /**
