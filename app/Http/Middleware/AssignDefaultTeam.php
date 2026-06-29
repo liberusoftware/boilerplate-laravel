@@ -12,7 +12,7 @@ class AssignDefaultTeam
     {
         if (! Filament::getTenant() && auth()->check()) {
             $user = auth()->user();
-            $defaultTeam = $user->currentTeam ?? $user->ownedTeams()->first();
+            $defaultTeam = $user->latestTeam ?? $user->ownedTeams()->first();
             if (! $defaultTeam) {
                 $defaultTeam = $user->ownedTeams()->create([
                     'name' => $user->name."'s Team",

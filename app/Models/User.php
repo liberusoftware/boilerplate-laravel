@@ -46,6 +46,46 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     }
 
     /**
+     * Determine whether the user owns the given team.
+     */
+    public function ownsTeam(?Team $team): bool
+    {
+        if (is_null($team)) {
+            return false;
+        }
+
+        return $this->id === $team->user_id;
+    }
+
+    /**
+     * Determine whether the user owns or is a member of the given team.
+     */
+    public function belongsToTeam(?Team $team): bool
+    {
+        if (is_null($team)) {
+            return false;
+        }
+
+        return $this->ownsTeam($team)
+            || $this->teams->contains('id', $team->id);
+    }
+
+    /**
+     * Switch the user's current team, if they belong to it.
+     */
+    public function switchTeam(?Team $team): bool
+    {
+        if (! $this->belongsToTeam($team)) {
+            return false;
+        }
+
+        $this->forceFill(['current_team_id' => $team->id])->save();
+        $this->setRelation('latestTeam', $team);
+
+        return true;
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
