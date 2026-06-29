@@ -40,7 +40,9 @@ Core (same as current `composer.json`):
 - Filament: `filament/filament ~5.1`, `bezhansalleh/filament-shield ~4`,
   `filament/spatie-laravel-settings-plugin ^5`, `biostate/filament-menu-builder ^5`
 - Permissions/menus: `spatie/laravel-permission ^7`, `spatie/laravel-menu ^4.2`
-- Modules: `internachi/modular ^3`, `wikimedia/composer-merge-plugin ^2.1`
+- Modules: ~~`internachi/modular ^3`, `wikimedia/composer-merge-plugin ^2.1`~~ — **removed**.
+  Decision: consolidate on a single custom `App\Modules\` system (see Phase 4); no
+  distributable-package layer.
 - Real-time/perf: `laravel/horizon ^5`, `laravel/reverb ^1`, `laravel/octane ^2.3`,
   `spiral/roadrunner-cli ^2.6`, `spiral/roadrunner-http ^3.3`
 - `guzzlehttp/guzzle ^7.8`
@@ -65,9 +67,10 @@ Dev: `pestphp/pest 5.x-dev`, `pestphp/pest-plugin-laravel 5.x-dev`, `larastan/la
 - **Layered auth**: Fortify → Jetstream (teams, profile) → Socialstream (OAuth) → Spatie
   Permission (team-scoped roles). `TeamsPermission` middleware syncs active team to
   Shield's tenant; `AssignDefaultTeam` lands users on a team.
-- **Dual module system**: `internachi/modular` (`app-modules/`, `Modules\`) + custom
-  `App\Modules\` lifecycle (install/enable/disable/uninstall, `modules` table,
-  `ModuleManager`, `BlogModule` reference).
+- **Single module system**: custom `App\Modules\` lifecycle only
+  (install/enable/disable/uninstall, `modules` table, `ModuleManager`, `BlogModule`
+  reference). Lives under the existing `App\` PSR-4 autoload — no per-module
+  `composer.json`, no merge-plugin. `internachi/modular` is **not** used.
 - **Real-time**: Reverb + Echo (Pusher protocol), channels in `routes/channels.php`,
   Horizon for Redis queues, Octane+RoadRunner for HTTP.
 - **Subsystems to port**: ThemeManager + theme dirs, multi-language (`SetLocale`,
@@ -90,9 +93,10 @@ spec → plan → PR, branched off the merged Phase 0 base, in dependency order.
   `users.theme_preference`, Vite per-theme wiring.
 - **Phase 3 — Multi-language.** Port `SetLocale`, `TranslationService`,
   `LanguageSwitcher`, `lang/`, `users.locale`.
-- **Phase 4 — Module systems.** Port `App\Modules` lifecycle + `ModuleManager` +
-  `modules` table + `BlogModule` + `ExternalModuleLoader`; confirm `internachi/modular`
-  + merge-plugin wiring.
+- **Phase 4 — Module system (`app/Modules/` only).** Port the custom `App\Modules`
+  lifecycle + `ModuleManager` + `modules` table + `BlogModule` + `ExternalModuleLoader`.
+  `internachi/modular` + `composer-merge-plugin` are removed from the dependency set;
+  no `app-modules/` layer.
 - **Phase 5 — Search.** Port `SearchService`, Api controllers, search-index migration.
 - **Phase 6 — Messaging/chat/notifications.** Port models/Livewire/events + Reverb
   channels + tests.
@@ -109,7 +113,8 @@ spec → plan → PR, branched off the merged Phase 0 base, in dependency order.
 3. `php artisan socialstream:install` (Livewire stack, teams, chosen OAuth providers).
 4. Install Filament + create second panel; `AdminPanelProvider` Team tenancy.
 5. `spatie/laravel-permission` install + `filament-shield` install + `shield:generate`.
-6. `internachi/modular` + composer-merge-plugin (`app-modules/*`).
+6. (removed) — no `internachi/modular` / merge-plugin; module system is Phase 4,
+   `app/Modules/` only.
 7. Reverb + Horizon + Octane/RoadRunner publish; Sanctum.
 8. Filament plugins: spatie-settings, menu-builder; `spatie/laravel-menu`, passkeys.
 9. Extras: medialibrary, backup, activitylog, query-builder; Telescope + Pulse (publish +
