@@ -19,6 +19,9 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
+    // Posts are global content (no team relationship); don't tenant-scope them.
+    protected static bool $isScopedToTenant = false;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Content';
