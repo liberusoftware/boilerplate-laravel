@@ -101,7 +101,9 @@ Spatie Permission roles/permissions are team-scoped (`config/permission.php` `te
 - **Known:** `User::canAccessPanel()` returns `true` (any authenticated user reaches `/admin`); per-resource Shield policies still gate each resource. Tighten to a role check in a later auth-hardening phase.
 
 ### Theme System
-Themes live under `themes/{name}/` with their own CSS/JS/views. The active theme is resolved by `ThemeManager` (`app/Services/ThemeManager.php`) and set per user via `theme_preference` on the users table. Blade directives and helpers are registered in `ThemeServiceProvider`. Vite is configured to build per-theme assets (currently commented out pending re-enablement via `glob`).
+Themes live under `themes/{name}/` (each with `theme.json` + `css/`/`js/`/`views/`), discovered from disk by `ThemeManager` (`app/Services/ThemeManager.php`). Active theme resolves user `theme_preference` → session → `config('theme.default')`; the `ThemeSwitcher` Livewire component + `set_theme()` helper persist it. `ThemeServiceProvider` registers the `theme` singleton/alias, 4 Blade directives (`@themeAsset`, `@themeCss`, `@themeJs`, `@themeLayout`), and shares `$activeTheme`/`$themeConfig` with all views. Theme view overrides work via `View` finder `prependLocation` (a `layouts.app` reference resolves to the active theme's override).
+
+**Per-theme Vite inputs are deferred** — `vite.config.js` builds only the main `app.css`/`app.js`. `@themeCss`/`@themeJs` gate on the Vite *manifest* (`ThemeManager::viteHasAsset`), so they emit nothing until `themes/*/{css,js}` are added to the Vite `input` and built — no 500. Wire those inputs in the PR that first ships a page extending a theme layout.
 
 ### Multi-Language
 User locale is stored in `users.locale`. The `SetLocale` middleware applies it on every request. `TranslationService` provides programmatic translation. Language files are in `lang/{locale}/`. A `LanguageSwitcher` Livewire component handles runtime switching.

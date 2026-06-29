@@ -63,9 +63,13 @@ class ThemeServiceProvider extends ServiceProvider
     {
         Blade::directive('themeAsset', fn (string $expression): string => "<?php echo asset('themes/' . app('theme')->getActiveTheme() . '/' . {$expression}); ?>");
 
-        Blade::directive('themeCss', fn (): string => "<?php \$theme = app('theme')->getActiveTheme(); if (app('theme')->getThemeCss()) { echo app(\Illuminate\Foundation\Vite::class)('themes/' . \$theme . '/css/app.css'); } ?>");
+        // ponytail: @themeCss/@themeJs gate on the Vite MANIFEST, not disk — per-theme
+        // Vite inputs are deferred, so until themes/*/{css,js} are added to vite.config.js
+        // input + built, these emit nothing rather than throwing "Unable to locate file
+        // in Vite manifest". They light up automatically once the assets are built.
+        Blade::directive('themeCss', fn (): string => "<?php \$__p = 'themes/' . app('theme')->getActiveTheme() . '/css/app.css'; if (app('theme')->viteHasAsset(\$__p)) { echo app(\Illuminate\Foundation\Vite::class)(\$__p); } ?>");
 
-        Blade::directive('themeJs', fn (): string => "<?php \$theme = app('theme')->getActiveTheme(); if (app('theme')->getThemeJs()) { echo app(\Illuminate\Foundation\Vite::class)('themes/' . \$theme . '/js/app.js'); } ?>");
+        Blade::directive('themeJs', fn (): string => "<?php \$__p = 'themes/' . app('theme')->getActiveTheme() . '/js/app.js'; if (app('theme')->viteHasAsset(\$__p)) { echo app(\Illuminate\Foundation\Vite::class)(\$__p); } ?>");
 
         Blade::directive('themeLayout', fn (string $expression): string => "<?php echo app('theme')->getLayout({$expression}); ?>");
     }

@@ -168,6 +168,24 @@ class ThemeManager
     }
 
     /**
+     * Whether the given path is present in the built Vite manifest. Used to gate
+     * the @themeCss/@themeJs directives: a theme asset on disk but not yet added to
+     * the Vite build would otherwise throw "Unable to locate file in Vite manifest".
+     */
+    public function viteHasAsset(string $path): bool
+    {
+        $manifest = public_path('build/manifest.json');
+
+        if (! File::exists($manifest)) {
+            return false;
+        }
+
+        $decoded = json_decode(File::get($manifest), true);
+
+        return is_array($decoded) && array_key_exists($path, $decoded);
+    }
+
+    /**
      * Get theme configuration.
      *
      * @return array<string, mixed>
