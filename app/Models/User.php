@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property string|null $theme_preference
+ * @property string|null $locale
  */
 class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants
 {
@@ -56,6 +57,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         'email',
         'password',
         'theme_preference',
+        'locale',
     ];
 
     /**
