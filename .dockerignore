@@ -7,8 +7,8 @@
 # Documentation
 *.md
 docs/
-DEVELOPER_NOTES.md
-ARCHITECTURE.md
+docs/DEVELOPER_NOTES.md
+docs/ARCHITECTURE.md
 
 # CI/CD
 .circleci
