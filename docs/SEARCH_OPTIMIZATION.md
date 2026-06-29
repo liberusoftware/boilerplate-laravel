@@ -16,7 +16,8 @@ Added strategic database indexes to improve query performance:
 - **Index on `title`**: Accelerates title-based searches
 - **Index on `status`**: Optimizes filtering by post status
 - **Index on `created_at`**: Improves sorting by creation date
-- **Full-text index on `title` and `content`**: Enables efficient full-text search across post content
+
+> Note: posts use plain B-tree indexes only — there is currently no full-text index on `title`/`content`. Search uses `LIKE` matching via the `search` scope.
 
 #### Groups Table
 - **Index on `name`**: Speeds up group name searches
@@ -26,17 +27,19 @@ Added strategic database indexes to improve query performance:
 ### 2. Query Optimization
 
 #### Selective Column Loading
-Instead of loading all columns, search endpoints only select necessary fields:
-- Reduces memory usage
-- Decreases network transfer size
-- Improves response times
+The dedicated API search controllers (e.g. `UserSearchController`) select only
+necessary fields to reduce memory usage and transfer size:
 
 ```php
-// Example: Only load necessary user columns
+// UserSearchController: only load necessary user columns
 $users = User::search($query)
     ->select(['id', 'name', 'email', 'profile_photo_path', 'created_at'])
     ->paginate($perPage);
 ```
+
+> Note: the shared `SearchService` (used by `SearchController`) does **not** yet
+> apply selective column loading — it returns full models. This optimization is
+> currently limited to the standalone search controllers.
 
 #### Eager Loading
 Prevents N+1 query problems by loading related data in advance:
