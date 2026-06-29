@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
@@ -135,6 +136,17 @@ it('validates user search order_direction', function () {
 
     $response->assertStatus(422)
         ->assertJsonValidationErrors(['order_direction']);
+});
+
+it('can filter users by role', function () {
+    $editor = Role::create(['name' => 'editor']);
+    $this->user1->assignRole($editor);
+
+    $response = $this->getJson('/api/search/users?role=editor');
+
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data')
+        ->assertJsonFragment(['email' => 'alice@example.com']);
 });
 
 it('can combine multiple user filters', function () {
