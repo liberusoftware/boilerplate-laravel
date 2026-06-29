@@ -22,6 +22,9 @@ use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property string|null $theme_preference
+ */
 class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants
 {
     use HasApiTokens;
@@ -52,6 +55,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         'name',
         'email',
         'password',
+        'theme_preference',
     ];
 
     /**

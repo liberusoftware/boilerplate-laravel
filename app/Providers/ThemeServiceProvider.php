@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Providers;
+
+use App\Models\User;
+use App\Services\ThemeManager;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\View\View as ViewContract;
+
+class ThemeServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     */
+    public function register(): void
+    {
+        $this->app->singleton(ThemeManager::class, fn () => new ThemeManager());
+        $this->app->alias(ThemeManager::class, 'theme');
+    }
+
+    /**
+     * Bootstrap services.
+     */
+    public function boot(): void
+    {
+        $themeManager = $this->app->make(ThemeManager::class);
+        $themeManager->setTheme($this->determineActiveTheme());
+
+        $this->registerBladeDirectives();
+
+        View::composer('*', function (ViewContract $view) use ($themeManager): void {
+            $view->with('activeTheme', $themeManager->getActiveTheme());
+            $view->with('themeConfig', $themeManager->getThemeConfig());
+        });
+    }
+
+    /**
+     * Determine the active theme: authenticated user preference → session → config default.
+     */
+    protected function determineActiveTheme(): string
+    {
+        $user = auth()->user();
+        if ($user instanceof User && is_string($user->theme_preference) && $user->theme_preference !== '') {
+            return $user->theme_preference;
+        }
+
+        $session = session('theme_preference');
+        if (is_string($session) && $session !== '') {
+            return $session;
+        }
+
+        $default = config('theme.default', 'default');
+
+        return is_string($default) ? $default : 'default';
+    }
+
+    /**
+     * Register custom Blade directives for themes.
+     */
+    protected function registerBladeDirectives(): void
+    {
+        Blade::directive('themeAsset', fn (string $expression): string => "<?php echo asset('themes/' . app('theme')->getActiveTheme() . '/' . {$expression}); ?>");
+
+        // ponytail: @themeCss/@themeJs gate on the Vite MANIFEST, not disk — per-theme
+        // Vite inputs are deferred, so until themes/*/{css,js} are added to vite.config.js
+        // input + built, these emit nothing rather than throwing "Unable to locate file
+        // in Vite manifest". They light up automatically once the assets are built.
+        Blade::directive('themeCss', fn (): string => "<?php \$__p = 'themes/' . app('theme')->getActiveTheme() . '/css/app.css'; if (app('theme')->viteHasAsset(\$__p)) { echo app(\Illuminate\Foundation\Vite::class)(\$__p); } ?>");
+
+        Blade::directive('themeJs', fn (): string => "<?php \$__p = 'themes/' . app('theme')->getActiveTheme() . '/js/app.js'; if (app('theme')->viteHasAsset(\$__p)) { echo app(\Illuminate\Foundation\Vite::class)(\$__p); } ?>");
+
+        Blade::directive('themeLayout', fn (string $expression): string => "<?php echo app('theme')->getLayout({$expression}); ?>");
+    }
+}
