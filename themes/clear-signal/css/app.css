@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+@source '../../../resources/views/**/*.blade.php';
+@source '../../../storage/framework/views/*.php';
+
+/* Clear Signal — teal signal on a quiet neutral workbench (DESIGN.md North Star). */
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-brand: #0b6b74;       /* teal-emphasis — AA-safe text */
+    --color-brand-hover: #0e7f8a; /* teal-deep */
+    --color-brand-solid: #1597a3; /* teal-primary */
+    --color-canvas: #fafcfc;
+    --color-surface: #ffffff;
+    --color-surface-sunken: #f1f5f5;
+    --color-border: #dce4e4;
+    --color-ink: #2a3338;
+    --color-ink-muted: #626e74;
+
+    --radius-brand: 8px;
+}
+
+@layer base {
+    body {
+        background-color: var(--color-canvas);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+    }
+}
+
+@layer components {
+    .btn-primary {
+        background-color: var(--color-brand);
+        color: var(--color-surface);
+        border-radius: var(--radius-brand);
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-brand-hover);
+    }
+}

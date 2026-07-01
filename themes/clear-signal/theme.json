@@ -1,0 +1,11 @@
+{
+    "name": "clear-signal",
+    "label": "Clear Signal",
+    "description": "Teal signal on a quiet neutral workbench (DESIGN.md North Star).",
+    "version": "1.0.0",
+    "author": "Liberu Software",
+    "colors": {
+        "primary": "teal",
+        "secondary": "cyan"
+    }
+}
