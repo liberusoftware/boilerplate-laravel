@@ -8,7 +8,6 @@ use App\Models\Team;
 use App\Services\ThemeManager;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use BezhanSalleh\FilamentShield\Middleware\SyncShieldTenant;
-use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -62,11 +61,13 @@ class AdminPanelProvider extends PanelProvider
                 SetLocale::class,
             ])
             ->plugins([
-                // Roles are team-scoped only when Spatie teams are enabled; gating on
-                // Utils::isTenancyEnabled() keeps Shield's RoleResource from resolving a
-                // missing Role->team() relation (which would 500 the tenant panel).
+                // Do NOT tenant-scope Shield's RoleResource: the admin panel scopes by
+                // an ownershipRelationship of 'team', but App\Models\Role (Spatie) has no
+                // team() relation, so scoping it 500s the panel when the nav/badges render.
+                // Roles are already team-isolated by Spatie's team_id column; leave the
+                // resource unscoped (like every other resource here overrides isScopedToTenant).
                 FilamentShieldPlugin::make()
-                    ->scopeToTenant(Utils::isTenancyEnabled()),
+                    ->scopeToTenant(false),
                 ModuleFilamentPlugin::make()->for('Admin'),
             ])
             ->authMiddleware([
