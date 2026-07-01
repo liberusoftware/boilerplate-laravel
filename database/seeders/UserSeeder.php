@@ -29,8 +29,21 @@ class UserSeeder extends Seeder
         );
 
         $team = Team::firstOrFail();
+
+        // TeamSeeder runs first and may have created a throwaway owner to satisfy
+        // the team's user_id. Hand ownership to the admin and drop that placeholder.
+        $placeholderOwnerId = $team->user_id;
+        $team->forceFill(['user_id' => $adminUser->id])->save();
+
         $adminUser->teams()->syncWithoutDetaching([$team->id]);
         $adminUser->forceFill(['current_team_id' => $team->id])->save();
+
+        if ($placeholderOwnerId !== null && $placeholderOwnerId !== $adminUser->id) {
+            User::where('id', $placeholderOwnerId)
+                ->where('email', 'owner@example.com')
+                ->whereDoesntHave('ownedTeams')
+                ->delete();
+        }
 
         // Assign the role in the team's permission context (team-scoped roles).
         if (Utils::isTenancyEnabled()) {
