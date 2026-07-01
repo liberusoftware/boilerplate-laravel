@@ -59,7 +59,6 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         'password',
         'theme_preference',
         'locale',
-        'email_verified_at',
     ];
 
     /**
@@ -72,6 +71,10 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        // PII: keep email off array/JSON serialization so public search endpoints
+        // (nested post.user / group.owner) can't be used to harvest addresses.
+        'email',
+        'email_verified_at',
     ];
 
     /**

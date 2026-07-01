@@ -8,14 +8,14 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Create test users
-    $this->user1 = User::create([
+    $this->user1 = User::forceCreate([
         'name' => 'John Doe',
         'email' => 'john@example.com',
         'password' => bcrypt('password'),
         'email_verified_at' => now(),
     ]);
 
-    $this->user2 = User::create([
+    $this->user2 = User::forceCreate([
         'name' => 'Jane Smith',
         'email' => 'jane@example.com',
         'password' => bcrypt('password'),

@@ -164,9 +164,11 @@ it('returns groups with owner relationship', function () {
                     'owner' => [
                         'id',
                         'name',
-                        'email',
                     ],
                 ],
             ],
         ]);
+
+    // PII: nested owner must not expose email to the public search endpoint.
+    expect($response->json('data.0.owner'))->not->toHaveKey('email');
 });

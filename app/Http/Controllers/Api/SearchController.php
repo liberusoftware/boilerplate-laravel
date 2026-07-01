@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\SearchService;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -24,7 +26,7 @@ class SearchController extends Controller
         $filters = $this->validateUserFilters($request);
         $results = $this->searchService->searchUsers($filters);
 
-        return response()->json($results);
+        return response()->json($this->projectUsers($results));
     }
 
     /**
@@ -57,7 +59,27 @@ class SearchController extends Controller
         $filters = $this->validateAllFilters($request);
         $results = $this->searchService->searchAll($filters);
 
+        if (isset($results['users']) && $results['users'] instanceof LengthAwarePaginator) {
+            $results['users'] = $this->projectUsers($results['users']);
+        }
+
         return response()->json($results);
+    }
+
+    /**
+     * Project user results to a public, non-PII shape (no email / verification timestamp),
+     * so the public search endpoints can't be used to harvest emails.
+     *
+     * @param  LengthAwarePaginator<int, User>  $users
+     * @return LengthAwarePaginator<int, array{id: int, name: string, profile_photo_url: string}>
+     */
+    private function projectUsers(LengthAwarePaginator $users): LengthAwarePaginator
+    {
+        return $users->through(fn (User $user): array => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'profile_photo_url' => $user->profile_photo_url,
+        ]);
     }
 
     /**

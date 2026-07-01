@@ -9,7 +9,7 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Create test user
-    $this->user = User::create([
+    $this->user = User::forceCreate([
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => bcrypt('password'),
@@ -54,7 +54,8 @@ it('can search specific entity types', function () {
 
     $response->assertStatus(200)
         ->assertJsonStructure(['posts'])
-        ->assertJsonMissing(['users', 'groups']);
+        ->assertJsonMissingPath('users')
+        ->assertJsonMissingPath('groups');
 });
 
 it('can search multiple specific entity types', function () {
@@ -62,7 +63,7 @@ it('can search multiple specific entity types', function () {
 
     $response->assertStatus(200)
         ->assertJsonStructure(['posts', 'groups'])
-        ->assertJsonMissing(['users']);
+        ->assertJsonMissingPath('users');
 });
 
 it('validates search types', function () {

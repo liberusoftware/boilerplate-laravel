@@ -35,6 +35,8 @@ class PostFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status' => 'published',
+            // scopePublished() also requires a non-null, past published_at.
+            'published_at' => now()->subDay(),
         ]);
     }
 

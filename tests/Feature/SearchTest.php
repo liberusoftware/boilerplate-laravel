@@ -26,7 +26,7 @@ describe('User Search', function () {
         $response = $this->getJson('/api/search/users?query=jane@example.com');
 
         $response->assertOk()
-            ->assertJsonPath('data.0.email', 'jane@example.com');
+            ->assertJsonPath('data.0.name', 'Jane Smith');
     });
 
     it('returns empty results when no users match', function () {
