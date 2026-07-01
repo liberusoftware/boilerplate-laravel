@@ -208,6 +208,12 @@
         .feature h3 { margin: .35rem 0 0; font-size: 1.02rem; font-weight: 600; letter-spacing: -0.01em; }
         .feature p { margin: 0; color: var(--ink-muted); font-size: .9rem; line-height: 1.55; }
         .feature code { font-family: var(--font-mono); font-size: .78rem; color: var(--teal-emphasis); background: color-mix(in oklab, var(--teal-primary) 10%, var(--surface)); padding: .05rem .35rem; border-radius: 5px; }
+        .feature--cta { background: color-mix(in oklab, var(--teal-primary) 8%, var(--surface)); justify-content: center; gap: .35rem; }
+        .feature--cta a { display: inline-flex; align-items: center; gap: .45rem; font-weight: 600; font-size: .95rem; color: var(--teal-emphasis); }
+        .feature--cta a:hover { color: var(--teal-deep); }
+        .feature--cta a svg { transition: transform .18s ease; }
+        .feature--cta a:hover svg { transform: translateX(3px); }
+        .feature--cta p { margin: 0; }
 
         /* theming showcase */
         .theming { background: var(--surface-sunken); border-block: 1px solid var(--border); }
@@ -372,6 +378,13 @@
                     <div class="feature__ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18 22 12 16 6M8 6 2 12l6 6"/></svg></div>
                     <h3>Modules, queues &amp; a Docker-first stack</h3>
                     <p>An install / enable / disable module system, Horizon-managed Redis queues, and Octane + RoadRunner for production — all running locally via <code>docker compose up</code>. Pest and PHPStan level 5 keep it honest.</p>
+                </div>
+                <div class="feature feature--cta">
+                    <a href="https://github.com/liberusoftware/boilerplate-laravel" rel="noopener">
+                        Read the source
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </a>
+                    <p>Every layer above, in one repo.</p>
                 </div>
             </div>
         </div>
