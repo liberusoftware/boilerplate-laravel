@@ -1,0 +1,10 @@
+{
+    "name": "Blog",
+    "version": "1.0.0",
+    "description": "A working blog module — the reference implementation for app/Modules.",
+    "dependencies": [],
+    "config": {
+        "posts_per_page": 10,
+        "allow_comments": false
+    }
+}

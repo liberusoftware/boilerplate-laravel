@@ -270,82 +270,69 @@ Troubleshooting
 
 Modular Architecture
 --------------------
-This boilerplate features a powerful modular architecture based on the **internachi/modular** pattern, allowing you to easily create and integrate custom modules for specific project requirements. The system integrates seamlessly with Filament 5 and supports custom themes.
+This boilerplate uses a single, custom module system rooted at `app/Modules/`, under the
+app's own `App\Modules\` PSR-4 namespace. There is no `internachi/modular`, no per-module
+`composer.json`/composer-merge-plugin, and no `app-modules/` directory — none of that is
+used. Modules have a DB-backed lifecycle (install/enable/disable/uninstall) managed by
+`ModuleManager`, and an enabled module's Filament resources/pages/widgets are auto-discovered
+per panel by `App\Filament\Plugins\ModuleFilamentPlugin`. `app/Modules/Blog/` is the reference
+implementation — copy its shape when adding a module.
 
-### Quick Start with Modules
-
-Create a new module:
-```bash
-php artisan make:module YourModule
-# or
-php artisan module create YourModule
-```
-
-Manage modules:
-```bash
-php artisan module list              # List all modules
-php artisan module enable MyModule   # Enable a module
-php artisan module disable MyModule  # Disable a module
-php artisan module install MyModule  # Install a module (migrations + enable)
-php artisan module info MyModule     # Show module information
-```
+Manage modules from `/admin` → **Modules**: the list shows every module discovered from disk
+with enable/disable/install/uninstall actions (backed by `ModuleManager`); there is no artisan
+`module:*` command.
 
 ### Module Features
 
-- **Composer-based autoloading** - Each module is autoloaded as a composer package
-- **Laravel package discovery** - Automatic service provider registration
-- **Filament 5 integration** - Auto-discovery of Filament resources, pages, and widgets
-- **Self-contained structure** - Each module has its own controllers, models, views, routes, migrations, and configuration
-- **Lifecycle hooks** - Enable, disable, install, and uninstall hooks for custom logic
-- **Dependency management** - Declare dependencies on other modules
-- **Custom theme support** - Modules can provide their own themes and assets
-- **Auto-discovery** - Modules are automatically discovered and registered
-- **Configuration management** - Easy configuration with dedicated config files
-- **Database migrations** - Automatic migration running during installation
-- **Asset publishing** - Assets are automatically published to public directory
-- **IDE-friendly** - Full autocomplete and code navigation support
+- PSR-4 under the existing `App\` autoload — no per-module `composer.json`, no
+  composer-merge-plugin, no `internachi/modular`/`app-modules/`.
+- `module.json` (not `composer.json`) declares `name`, `version`, `description`,
+  `dependencies`, and a `config` map.
+- Lifecycle hooks — `onInstall`/`onEnable`/`onDisable`/`onUninstall` on your `BaseModule`
+  subclass — each firing a `Module{Installed,Enabled,Disabled,Uninstalled}` event.
+- Panel-targeted Filament auto-discovery: `Filament/Admin/{Resources,Pages,Widgets}` is
+  discovered into the `/admin` panel, `Filament/App/{Resources,Pages,Widgets}` into `/app`
+  (via `ModuleFilamentPlugin::make()->for('Admin')` / `->for('App')`, registered on each panel).
+- Enabled-gating: routes, views, and translations are only registered for modules the
+  `modules` DB table marks enabled; config and migrations always load regardless of state.
+- Dependency checks: `enable()`/`install()` refuse to run if a declared dependency isn't
+  present and enabled.
+- Admin UI: the `Modules` Filament resource (`app/Filament/Resources/ModuleResource.php`)
+  lists modules and drives enable/disable/install/uninstall.
 
-### Documentation
-
-- [Module Development Guide](docs/MODULE_DEVELOPMENT.md) - Comprehensive guide for developing custom modules
-- [Quick Start Guide](docs/MODULE_QUICK_START.md) - Get started with modules in minutes
-- Example modules in `app-modules/` and `app/Modules/BlogModule/` - Reference implementations
+See `docs/MODULE_DEVELOPMENT.md` for a full walkthrough using Blog as the worked example.
 
 ### Module Structure
 
 ```
-app-modules/YourModule/
-├── composer.json                  # Module composer configuration
-├── src/
-│   ├── YourModuleModule.php      # Main module class
-│   ├── Providers/
-│   │   └── YourModuleServiceProvider.php
-│   ├── Http/Controllers/
-│   ├── Models/
-│   ├── Services/
-│   ├── Filament/                 # Filament 5 resources (auto-discovered)
-│   │   ├── Resources/
-│   │   ├── Pages/
-│   │   └── Widgets/
-├── routes/
-│   ├── web.php
-│   ├── api.php
-│   └── admin.php
+app/Modules/Blog/
+├── module.json                     # name, version, description, dependencies, config
+├── BlogModule.php                  # main module class, extends BaseModule
+├── Filament/
+│   └── Admin/                      # discovered into the /admin panel
+│       └── Resources/
+│           ├── PostResource.php
+│           └── PostResource/Pages/{ListPosts,CreatePost,EditPost}.php
+│                                    # a Filament/App/ sibling would target the /app panel
+├── Http/Controllers/BlogController.php
+├── Models/Post.php
+├── config/blog.php                 # config('blog.posts_per_page') — file named after the
+│                                    # module merges at its own root key, not blog.blog.*
 ├── database/migrations/
-├── resources/
-│   ├── views/
-│   ├── lang/
-│   └── assets/
-└── tests/
+│   └── 2026_07_01_000000_create_module_blog_posts_table.php
+├── resources/views/index.blade.php # view('blog::index')
+└── routes/web.php                  # blog.index route
 ```
 
-### Filament 5 Integration
+### Filament Integration
 
-Modules automatically integrate with Filament 5:
-- Place Filament resources in `src/Filament/Resources/`
-- Create custom pages in `src/Filament/Pages/`
-- Add widgets in `src/Filament/Widgets/`
-- All components are auto-discovered and registered
+Each **enabled** module's Filament components are auto-discovered per panel:
+- `Filament/Admin/Resources|Pages|Widgets` → registered into the `/admin` panel
+- `Filament/App/Resources|Pages|Widgets` → registered into the `/app` panel
+- Discovery is done by `App\Filament\Plugins\ModuleFilamentPlugin`, added to each panel's
+  `->plugins([...])` in `AdminPanelProvider`/`AppPanelProvider`
+- A resource whose model has no `team()` relationship (like Blog's `Post`) must override
+  `isScopedToTenant(): false`, same as core resources on the tenant-scoped `/admin` panel
 
 ### Custom Theme Support
 

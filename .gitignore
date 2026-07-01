@@ -35,3 +35,4 @@ composer.phar
 # stray sqlite artifact from artisan/tinker runs
 /boilerplate-laravel
 docs/superpowers
+.superpowers

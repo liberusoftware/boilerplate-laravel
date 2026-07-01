@@ -66,7 +66,13 @@ class ModuleServiceProvider extends ServiceProvider
         if (File::exists($configPath)) {
             $configFiles = File::files($configPath);
             foreach ($configFiles as $configFile) {
-                $configName = Str::snake($moduleName).'.'.$configFile->getFilenameWithoutExtension();
+                $moduleKey = Str::snake($moduleName);
+                // A config file named after the module itself (e.g. Blog's config/blog.php)
+                // merges at the root namespace, so config('blog.posts_per_page') works
+                // instead of the doubled-up config('blog.blog.posts_per_page').
+                $configName = $configFile->getFilenameWithoutExtension() === $moduleKey
+                    ? $moduleKey
+                    : $moduleKey.'.'.$configFile->getFilenameWithoutExtension();
                 $this->mergeConfigFrom($configFile->getPathname(), $configName);
             }
         }

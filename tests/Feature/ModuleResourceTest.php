@@ -20,8 +20,8 @@ it('renders the modules list (non-Eloquent data source)', function () {
     Filament::setTenant($team);
 
     // Must actually list the discovered module — a bare assertOk() passed while the
-    // table was silently empty (the loader never found BlogModule).
+    // table was silently empty (the loader never found Blog).
     Livewire::test(ListModules::class)
         ->assertOk()
-        ->assertSee('BlogModule');
+        ->assertSee('Blog');
 });

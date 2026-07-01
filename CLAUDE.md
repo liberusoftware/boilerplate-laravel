@@ -73,21 +73,37 @@ Both panels disable default Fortify/Jetstream route registration in their `boot(
 ### Authentication Stack (layered)
 Fortify handles the authentication primitives, Jetstream adds teams and profile management, Socialstream extends with OAuth providers, and Spatie Permission provides role/permission assignment. The `TeamsPermission` middleware syncs the active team with Filament Shield's tenant context. The `AssignDefaultTeam` middleware ensures every user lands on a team after login.
 
-### Module System (Phase 4 — done; single — `app/Modules/`)
-One mechanism: a custom `App\Modules\` system with lifecycle (install/enable/disable/
-uninstall, each firing an event), a database registry (`modules` table via `App\Models\Module`),
-and `ModuleManager`. Lives under the existing `App\` PSR-4 autoload — no per-module
-`composer.json`, no merge-plugin. `ModuleManager` discovers modules by scanning `app/Modules/*`
-for a `module.json` (framework subfolders like `Contracts/`, `Events/`, `Traits/` are skipped)
-and resolving the main class as `App\Modules\{Dir}\{Dir}` or `…\{Dir}Module`. The reference is
-`app/Modules/BlogModule/` (`BlogModule.php` + `module.json`) — a thin registry **fixture**; its
-demo controller/routes/views/service were intentionally not ported (the views `@extend` a
-non-existent layout). Modules extend `BaseModule`, implement `ModuleInterface`, and can use the
-`Configurable` + `HasModuleHooks` traits. `ModuleResource` (`app/Filament/Resources/`) is the
-admin UI (`$model = null`, so it needs no tenant opt-out).
+### Module System (single — `app/Modules/`)
+A custom `App\Modules\` system with lifecycle (install/enable/disable/uninstall, each firing
+an event), a database registry (`modules` table via `App\Models\Module`), and `ModuleManager`.
+Lives under the existing `App\` PSR-4 autoload — no per-module `composer.json`, no
+merge-plugin, no `internachi/modular`/`app-modules/` (removed in the rebuild; there is no
+`ExternalModuleLoader`). `ModuleManager` discovers modules by scanning `app/Modules/*` for a
+`module.json` (framework subfolders like `Contracts/`, `Events/`, `Traits/` are skipped) and
+resolving the main class as `App\Modules\{Dir}\{Dir}` or `…\{Dir}Module`. Modules extend
+`BaseModule`, implement `ModuleInterface`, and can use the `Configurable` + `HasModuleHooks`
+traits.
 
-`internachi/modular` / `app-modules/` are **not** used (removed in the rebuild) — there is no
-`ExternalModuleLoader`.
+`app/Modules/Blog/` is the reference implementation — a real flagship module, not a fixture:
+a `Post` model backed by the `module_blog_posts` migration, a `blog::index` view + `blog.index`
+route + `BlogController`, `config('blog.*')`, and an admin `PostResource`. It ships enabled by
+default (seeded in `DatabaseSeeder`). `ModuleServiceProvider` merges each module's own
+`config/{module}.php` at that module's root config key (`config('blog.posts_per_page')`, not
+the doubled-up `config('blog.blog.posts_per_page')`) and only registers a module's
+routes/views/translations when its `modules` row is enabled — config and migrations always
+load regardless of enabled state.
+
+Filament components are discovered **per panel** by `App\Filament\Plugins\ModuleFilamentPlugin`,
+registered on each panel via `->plugins([ModuleFilamentPlugin::make()->for('Admin')])` /
+`->for('App')`: for each **enabled** module it scans `Filament/Admin/{Resources,Pages,Widgets}`
+into the `/admin` panel and `Filament/App/{Resources,Pages,Widgets}` into the `/app` panel.
+`ModuleResource` (`app/Filament/Resources/`) is the admin UI for the module registry itself
+(`$model = null`, so it needs no tenant opt-out).
+
+**Panel access policy:** `User::canAccessPanel()` requires a `super_admin` or `admin` role to
+reach `/admin` (checked directly against the `model_has_roles` pivot across all teams, since
+Shield's team-scoped context isn't reliably set at this point) — `/app` stays open to any
+authenticated user. Per-resource Shield policies still gate individual resources within a panel.
 
 ### Real-Time Stack
 - **Laravel Reverb** runs as a standalone WebSocket server.
@@ -104,7 +120,7 @@ Spatie Permission roles/permissions are team-scoped (`config/permission.php` `te
 - Any Filament Resource whose model has **no `team()` relationship** MUST override `public static function isScopedToTenant(): bool { return false; }`, or the tenant panel **500s** on that resource. Shield's global `RoleResource` is handled via `FilamentShieldPlugin::make()->scopeToTenant(Utils::isTenancyEnabled())`.
 - With `permission.teams=true`, roles carry a `team_id`, so `shield:generate` / super-admin assignment must run **inside a team context** (set `setPermissionsTeamId($team->id)` in a seeder, or scope the command). Default shield config has `super_admin.define_via_gate=false` — a bare `super_admin` role grants nothing until permissions are generated.
 - `User` resolves the `HasRoles::teams` vs `HasTeams::teams` trait collision by keeping Jetstream's `teams()` (`insteadof`) and excluding Spatie's (Spatie scopes via the `team_id` column, not that relation).
-- **Known:** `User::canAccessPanel()` returns `true` (any authenticated user reaches `/admin`); per-resource Shield policies still gate each resource. Tighten to a role check in a later auth-hardening phase.
+- `User::canAccessPanel()` requires a `super_admin`/`admin` role for `/admin` (see Module System's panel access policy above); `/app` is open to any authenticated user. Per-resource Shield policies still gate each resource within a panel.
 
 ### Theme System
 Themes live under `themes/{name}/` (each with `theme.json` + `css/`/`js/`/`views/`), discovered from disk by `ThemeManager` (`app/Services/ThemeManager.php`). Active theme resolves user `theme_preference` → session → `config('theme.default')`; the `ThemeSwitcher` Livewire component + `set_theme()` helper persist it. `ThemeServiceProvider` registers the `theme` singleton/alias, 4 Blade directives (`@themeAsset`, `@themeCss`, `@themeJs`, `@themeLayout`), and shares `$activeTheme`/`$themeConfig` with all views. Theme view overrides work via `View` finder `prependLocation` (a `layouts.app` reference resolves to the active theme's override).
