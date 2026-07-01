@@ -119,7 +119,9 @@ preference falls through instead of erroring. Because `ThemeManager` is a boot-o
 (long-lived under Octane, reused within a test), the theme is **re-derived on every view
 render** in `ThemeServiceProvider`'s `View::composer('*', ...)`, not just once at boot — so an
 admin theme change (or a mid-lifecycle session/user pref) is picked up on the next render.
-Filament panels follow the **site-wide** theme only (no per-user panel theming):
+This applies to frontend Blade rendering only: Filament panels evaluate `->colors()` once at
+worker boot, so under Octane a panel color change is only visible after a worker restart, not
+the next request. Filament panels follow the **site-wide** theme only (no per-user panel theming):
 `AdminPanelProvider`/`AppPanelProvider` call
 `->colors(app(ThemeManager::class)->getFilamentColors(app(ThemeManager::class)->getSiteTheme()))`,
 which maps a theme's `theme.json` `colors.primary` (a Tailwind color name) to a Filament

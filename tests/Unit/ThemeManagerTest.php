@@ -2,6 +2,8 @@
 
 use App\Services\ThemeManager;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
+use Illuminate\View\FileViewFinder;
 
 beforeEach(function () {
     $this->themeManager = new ThemeManager();
@@ -130,6 +132,29 @@ test('theme_views_path helper returns views path', function () {
 
     expect($path)->toBeString()
         ->and($path)->toContain('themes/default/views');
+});
+
+test('repeated setTheme calls do not grow the view finder paths', function () {
+    $finder = View::getFinder();
+
+    if (! $finder instanceof FileViewFinder) {
+        $this->markTestSkipped('View finder is not a FileViewFinder.');
+    }
+
+    $themeViewsPath = $this->themeManager->getThemeViewsPath('default');
+
+    for ($i = 0; $i < 5; $i++) {
+        $this->themeManager->setTheme('default');
+    }
+
+    $paths = $finder->getPaths();
+
+    expect(array_count_values($paths)[$themeViewsPath] ?? 0)->toBe(1);
+
+    $countAfterFirstCall = count($paths);
+    $this->themeManager->setTheme('default');
+
+    expect($finder->getPaths())->toHaveCount($countAfterFirstCall);
 });
 
 test('dark theme has correct configuration', function () {

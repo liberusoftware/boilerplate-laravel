@@ -152,10 +152,29 @@ class ThemeManager
         $themeViewsPath = $this->getThemeViewsPath();
         $finder = View::getFinder();
 
-        if (File::exists($themeViewsPath) && $finder instanceof FileViewFinder) {
-            // Add theme views path before the default views path
-            $finder->prependLocation($themeViewsPath);
+        if (! File::exists($themeViewsPath) || ! $finder instanceof FileViewFinder) {
+            return;
         }
+
+        $resolvedPath = realpath($themeViewsPath) ?: $themeViewsPath;
+        $paths = $finder->getPaths();
+
+        if (($paths[0] ?? null) === $resolvedPath) {
+            // Already registered and already has top priority: prependLocation() has no
+            // dedupe, and this runs per view render (via ThemeServiceProvider's
+            // View::composer), so re-adding it every render would grow the finder's
+            // paths array unbounded under Octane.
+            return;
+        }
+
+        // Drop any stale registration of this theme's path before re-prepending, so
+        // switching themes mid-worker (a different theme was prepended after this one)
+        // still gives the newly active theme priority instead of leaving it shadowed.
+        // Prepend the realpath (the same value used for the dedupe check above) so a
+        // symlinked deploy path (e.g. Octane atomic releases) stays idempotent — a raw
+        // path here would never match $resolvedPath and would accumulate every render.
+        $finder->setPaths(array_values(array_diff($paths, [$resolvedPath])));
+        $finder->prependLocation($resolvedPath);
     }
 
     /**
@@ -223,7 +242,7 @@ class ThemeManager
      * (not dynamic constant lookup) so an unexpected theme.json value can never
      * reference an undefined constant.
      *
-     * @return array<string, array<int|string, string>>
+     * @return array<string, array<int, string>>
      */
     protected function filamentColorMap(): array
     {
@@ -257,7 +276,7 @@ class ThemeManager
      * Build the Filament panel color palette for a theme from its theme.json
      * `colors.primary`. Unknown or missing → Amber (the shipped default look).
      *
-     * @return array<string, array<int|string, string>>
+     * @return array<string, array<int, string>>
      */
     public function getFilamentColors(?string $theme = null): array
     {
