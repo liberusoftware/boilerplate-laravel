@@ -7,6 +7,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -70,6 +71,10 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        // PII: keep email off array/JSON serialization so public search endpoints
+        // (nested post.user / group.owner) can't be used to harvest addresses.
+        'email',
+        'email_verified_at',
     ];
 
     /**
@@ -134,5 +139,19 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     public function latestTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'current_team_id');
+    }
+
+    /**
+     * Scope a query to search by name or email.
+     *
+     * @param  Builder<User>  $query
+     * @return Builder<User>
+     */
+    public function scopeSearch(Builder $query, string $search): Builder
+    {
+        return $query->where(function (Builder $q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        });
     }
 }
