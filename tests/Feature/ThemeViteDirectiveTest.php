@@ -8,7 +8,7 @@ it('registers a compilable themeVite directive', function () {
 
     expect($compiled)
         ->toContain('activeCssEntry')
-        ->toContain("resources/js/app.js");
+        ->toContain('resources/js/app.js');
 });
 
 it('renders the welcome page without error', function () {
