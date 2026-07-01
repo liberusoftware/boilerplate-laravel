@@ -82,4 +82,20 @@ describe('non-public groups stay hidden', function () {
 
         expect($response->json('data.0.id'))->toBe($public->id);
     });
+
+    it('cannot be coerced to return private groups via a type param', function () {
+        $public = Group::create(['name' => 'Public Group', 'description' => 'x', 'owner_id' => $this->user->id, 'type' => 'public']);
+        Group::create(['name' => 'Private Group', 'description' => 'x', 'owner_id' => $this->user->id, 'type' => 'private']);
+
+        // The dropped `type` param must not resurrect private groups (regression guard).
+        foreach (['private', 'restricted'] as $type) {
+            $response = $this->actingAs($this->user, 'sanctum')
+                ->getJson('/api/search/groups?type='.$type);
+
+            $response->assertStatus(200)
+                ->assertJsonMissing(['name' => 'Private Group'])
+                ->assertJsonCount(1, 'data');
+            expect($response->json('data.0.id'))->toBe($public->id);
+        }
+    });
 });
