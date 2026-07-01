@@ -35,3 +35,6 @@ rr
 composer.phar
 .idea
 .rr.yaml
+
+# stray sqlite artifact from artisan/tinker runs
+/boilerplate-laravel

@@ -15,12 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -44,6 +47,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         // scopes via the team_id column + DefaultTeamResolver, not this relation.
         HasTeams::teams insteadof HasRoles;
     }
+    use LogsActivity;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
@@ -153,5 +157,36 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
             $q->where('name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%");
         });
+    }
+
+    /**
+     * Only track safe profile fields — never password / 2FA / tokens.
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'email', 'locale', 'theme_preference'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
+
+    /**
+     * Admin = super_admin in any team, or an allowlisted email. Used to gate the
+     * Telescope/Pulse dashboards. The role check queries the pivot directly because
+     * Spatie's hasRole() is bound to the active team context, which is unset on the
+     * plain web requests those dashboards serve.
+     */
+    public function isAdmin(): bool
+    {
+        if (in_array($this->email, (array) config('app.admin_emails', []), true)) {
+            return true;
+        }
+
+        return DB::table('model_has_roles')
+            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+            ->where('model_has_roles.model_id', $this->getKey())
+            ->where('model_has_roles.model_type', $this->getMorphClass())
+            ->where('roles.name', 'super_admin')
+            ->exists();
     }
 }
