@@ -30,6 +30,8 @@ class SiteSettings extends Settings
 
     public string $footer_copyright;
 
+    public string $active_theme;
+
     public static function group(): string
     {
         return 'site';
