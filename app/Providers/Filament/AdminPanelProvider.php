@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Plugins\ModuleFilamentPlugin;
 use App\Http\Middleware\SetLocale;
 use App\Models\Team;
 use App\Services\ThemeManager;
@@ -66,6 +67,7 @@ class AdminPanelProvider extends PanelProvider
                 // missing Role->team() relation (which would 500 the tenant panel).
                 FilamentShieldPlugin::make()
                     ->scopeToTenant(Utils::isTenancyEnabled()),
+                ModuleFilamentPlugin::make()->for('Admin'),
             ])
             ->authMiddleware([
                 Authenticate::class,
