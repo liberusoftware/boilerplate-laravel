@@ -111,6 +111,22 @@ Themes live under `themes/{name}/` (each with `theme.json` + `css/`/`js/`/`views
 
 **Per-theme Vite inputs are deferred** — `vite.config.js` builds only the main `app.css`/`app.js`. `@themeCss`/`@themeJs` gate on the Vite *manifest* (`ThemeManager::viteHasAsset`), so they emit nothing until `themes/*/{css,js}` are added to the Vite `input` and built — no 500. Wire those inputs in the PR that first ships a page extending a theme layout.
 
+Site-wide theme is admin-selectable via `SiteSettings::$active_theme` (Appearance
+section on the `ManageSiteSettings` page). Frontend resolution is
+`user.theme_preference → session → SiteSettings.active_theme → config('theme.default')`;
+each candidate is validated with `ThemeManager::themeExists()` before use, so a stale/invalid
+preference falls through instead of erroring. Because `ThemeManager` is a boot-once singleton
+(long-lived under Octane, reused within a test), the theme is **re-derived on every view
+render** in `ThemeServiceProvider`'s `View::composer('*', ...)`, not just once at boot — so an
+admin theme change (or a mid-lifecycle session/user pref) is picked up on the next render.
+Filament panels follow the **site-wide** theme only (no per-user panel theming):
+`AdminPanelProvider`/`AppPanelProvider` call
+`->colors(app(ThemeManager::class)->getFilamentColors(app(ThemeManager::class)->getSiteTheme()))`,
+which maps a theme's `theme.json` `colors.primary` (a Tailwind color name) to a Filament
+`Color` palette (unknown/missing → Amber). Compiled per-theme Filament CSS is **not** built
+yet; the reserved hook is a `theme.json` `filament_css` key + `->viteTheme()` on the panel,
+added when a theme needs its own Filament stylesheet.
+
 ### Multi-Language (Phase 3 — done)
 Supported locales live in `config('app.supported_locales')` (en/es/fr/de). `SetLocale` resolves locale (request param → session → `users.locale` → `Accept-Language` → default, validated against supported) and runs on the **`web` group** (`bootstrap/app.php`) **and both Filament panels** (added to each panel's `->middleware([])`, since Filament panels don't use the `web` group). Precedence is request > session > user (a stale session locale can shadow a freshly-logged-in user until logout flushes the session). `LanguageSwitcher` Livewire component persists to session + `users.locale`. `TranslationService` does on-demand translation via the MyMemory API (cached 30 days). No `locale_helpers`/`lang/*/messages` were ported (no callers); add `lang/` files only when something calls `__('...')`. The `LanguageSwitcher` component isn't mounted in any view yet — mount `<livewire:language-switcher />` where a switcher UI is wanted.
 
