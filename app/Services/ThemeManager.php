@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Settings\SiteSettings;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
+use Throwable;
 
 class ThemeManager
 {
@@ -68,6 +70,24 @@ class ThemeManager
     public function getActiveTheme(): string
     {
         return $this->activeTheme;
+    }
+
+    /**
+     * The admin-selected site-wide theme, or the config default when the
+     * setting is unavailable or names a theme that does not exist. Never throws.
+     */
+    public function getSiteTheme(): string
+    {
+        $default = config('theme.default', 'default');
+        $default = is_string($default) ? $default : 'default';
+
+        try {
+            $theme = app(SiteSettings::class)->active_theme;
+        } catch (Throwable) {
+            return $default;
+        }
+
+        return $this->themeExists($theme) ? $theme : $default;
     }
 
     /**
