@@ -32,6 +32,8 @@ beforeEach(function () {
         'owner_id' => $this->user->id,
         'type' => 'public',
     ]);
+
+    $this->actingAs($this->user, 'sanctum');
 });
 
 it('can search all entities with a query', function () {

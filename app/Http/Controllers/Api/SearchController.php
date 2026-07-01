@@ -114,7 +114,6 @@ class SearchController extends Controller
             'author_id' => 'nullable|integer|exists:users,id',
             'published_from' => 'nullable|date',
             'published_to' => 'nullable|date',
-            'include_drafts' => 'nullable|boolean',
             'order_by' => 'nullable|in:title,published_at,created_at',
             'order_direction' => 'nullable|in:asc,desc',
             'per_page' => 'nullable|integer|min:1|max:100',
@@ -130,7 +129,6 @@ class SearchController extends Controller
     {
         return $request->validate([
             'query' => 'nullable|string|max:255',
-            'type' => 'nullable|in:public,private,restricted',
             'active_only' => 'nullable|boolean',
             'owner_id' => 'nullable|integer|exists:users,id',
             'created_from' => 'nullable|date',

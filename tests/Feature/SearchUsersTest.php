@@ -29,6 +29,8 @@ beforeEach(function () {
         'password' => bcrypt('password'),
         'email_verified_at' => now(),
     ]);
+
+    $this->actingAs($this->user1, 'sanctum');
 });
 
 it('can search users by name', function () {
@@ -142,7 +144,10 @@ it('can filter users by role', function () {
     $team = Team::factory()->create(['user_id' => $this->user1->id]);
     setPermissionsTeamId($team->id);
 
-    $editor = Role::create(['name' => 'editor']);
+    // guard_name is explicit: actingAs(..., 'sanctum') in beforeEach mutates the runtime
+    // auth.defaults.guard to 'sanctum' (via Auth::shouldUse), so an implicit guard here
+    // would create a role on the wrong guard and mismatch the (web-guard) User model.
+    $editor = Role::create(['name' => 'editor', 'guard_name' => 'web']);
     $this->user1->assignRole($editor);
 
     $response = $this->getJson('/api/search/users?role=editor');

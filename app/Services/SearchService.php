@@ -87,10 +87,8 @@ class SearchService
             );
         }
 
-        // Only published posts (unless explicitly requesting all)
-        if (! isset($filters['include_drafts']) || ! $filters['include_drafts']) {
-            $query->published();
-        }
+        // Drafts must never be reachable via search, regardless of caller input.
+        $query->published();
 
         // Order by
         $orderBy = $this->toString($filters['order_by'] ?? 'published_at');
@@ -120,10 +118,8 @@ class SearchService
             $query->active();
         }
 
-        // Filter by type
-        if (! empty($filters['type'])) {
-            $query->type($this->toString($filters['type']));
-        }
+        // Only public groups are searchable; private/restricted must never appear.
+        $query->type('public');
 
         // Filter by owner
         if (! empty($filters['owner_id'])) {

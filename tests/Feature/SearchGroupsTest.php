@@ -41,6 +41,8 @@ beforeEach(function () {
         'owner_id' => $this->user1->id,
         'type' => 'restricted',
     ]);
+
+    $this->actingAs($this->user1, 'sanctum');
 });
 
 it('can search groups by name', function () {
@@ -51,15 +53,16 @@ it('can search groups by name', function () {
         ->assertJsonFragment(['name' => 'Laravel Community']);
 });
 
-it('can search groups by description', function () {
+it('does not search private groups by description', function () {
+    // "Private Beta Testers" matches the query but is a private group, so search must
+    // not surface it — only public groups are searchable.
     $response = $this->getJson('/api/search/groups?query=beta');
 
     $response->assertStatus(200)
-        ->assertJsonCount(1, 'data')
-        ->assertJsonFragment(['name' => 'Private Beta Testers']);
+        ->assertJsonCount(0, 'data');
 });
 
-it('can filter groups by type', function () {
+it('only ever returns public groups regardless of the type param', function () {
     $response = $this->getJson('/api/search/groups?type=public');
 
     $response->assertStatus(200)
@@ -67,21 +70,19 @@ it('can filter groups by type', function () {
         ->assertJsonFragment(['type' => 'public']);
 });
 
-it('can filter groups by owner', function () {
+it('can filter groups by owner, excluding their non-public groups', function () {
+    // user1 owns group1 (public) and group3 (restricted) — only the public one may appear.
     $response = $this->getJson('/api/search/groups?owner_id='.$this->user1->id);
 
     $response->assertStatus(200)
-        ->assertJsonCount(2, 'data');
-
-    $data = $response->json('data');
-    foreach ($data as $group) {
-        expect($group['owner_id'])->toBe($this->user1->id);
-    }
+        ->assertJsonCount(1, 'data')
+        ->assertJsonFragment(['name' => 'Laravel Community']);
 });
 
 it('can filter groups by creation date range', function () {
-    // Update group creation dates for testing
-    $this->group1->forceFill(['created_at' => now()->subDays(10)])->saveQuietly();
+    // Only group1 is public; put it in range and leave the others out of scope entirely
+    // since they're private/restricted and must never be returned regardless of dates.
+    $this->group1->forceFill(['created_at' => now()->subDays(3)])->saveQuietly();
     $this->group2->forceFill(['created_at' => now()->subDays(5)])->saveQuietly();
     $this->group3->forceFill(['created_at' => now()->subDay()])->saveQuietly();
 
@@ -91,16 +92,24 @@ it('can filter groups by creation date range', function () {
     $response = $this->getJson("/api/search/groups?created_from={$from}&created_to={$to}");
 
     $response->assertStatus(200)
-        ->assertJsonCount(2, 'data');
+        ->assertJsonCount(1, 'data')
+        ->assertJsonFragment(['name' => 'Laravel Community']);
 });
 
 it('can sort groups by name', function () {
+    Group::create([
+        'name' => 'Alpha Group',
+        'description' => 'Another public group for sort testing',
+        'owner_id' => $this->user2->id,
+        'type' => 'public',
+    ]);
+
     $response = $this->getJson('/api/search/groups?order_by=name&order_direction=asc');
 
     $response->assertStatus(200);
 
     $names = collect($response->json('data'))->pluck('name')->all();
-    expect($names[0])->toBe('Admin Team');
+    expect($names[0])->toBe('Alpha Group');
 });
 
 it('can paginate groups', function () {
@@ -127,13 +136,6 @@ it('can paginate groups', function () {
         ]);
 });
 
-it('validates group search type', function () {
-    $response = $this->getJson('/api/search/groups?type=invalid');
-
-    $response->assertStatus(422)
-        ->assertJsonValidationErrors(['type']);
-});
-
 it('validates owner_id exists', function () {
     $response = $this->getJson('/api/search/groups?owner_id=99999');
 
@@ -142,11 +144,11 @@ it('validates owner_id exists', function () {
 });
 
 it('can combine multiple group filters', function () {
-    $response = $this->getJson('/api/search/groups?query=admin&type=restricted&owner_id='.$this->user1->id);
+    $response = $this->getJson('/api/search/groups?query=Laravel&owner_id='.$this->user1->id);
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
-        ->assertJsonFragment(['name' => 'Admin Team']);
+        ->assertJsonFragment(['name' => 'Laravel Community']);
 });
 
 it('returns groups with owner relationship', function () {

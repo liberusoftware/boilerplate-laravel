@@ -46,6 +46,8 @@ beforeEach(function () {
         'status' => 'draft',
         'published_at' => null,
     ]);
+
+    $this->actingAs($this->user1, 'sanctum');
 });
 
 it('can search posts by title', function () {
@@ -64,12 +66,11 @@ it('can search posts by content', function () {
         ->assertJsonFragment(['title' => 'Advanced PHP']);
 });
 
-it('can filter posts by status', function () {
+it('never returns drafts, even with status=draft&include_drafts=1', function () {
     $response = $this->getJson('/api/search/posts?status=draft&include_drafts=1');
 
     $response->assertStatus(200)
-        ->assertJsonCount(1, 'data')
-        ->assertJsonFragment(['status' => 'draft']);
+        ->assertJsonCount(0, 'data');
 });
 
 it('excludes draft posts by default', function () {
