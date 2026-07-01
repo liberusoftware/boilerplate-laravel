@@ -2,11 +2,6 @@
 
 use App\Modules\Contracts\ModuleInterface;
 use App\Modules\ModuleManager;
-use Exception;
-
-beforeEach(function () {
-    // Nothing global needed for these pure unit tests
-});
 
 it('can register modules and expose them via all/has/get', function () {
     $manager = new ModuleManager();
