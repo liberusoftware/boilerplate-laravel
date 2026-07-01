@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Settings\SiteSettings;
+use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
+use Throwable;
 
 class ThemeManager
 {
@@ -71,6 +74,24 @@ class ThemeManager
     }
 
     /**
+     * The admin-selected site-wide theme, or the config default when the
+     * setting is unavailable or names a theme that does not exist. Never throws.
+     */
+    public function getSiteTheme(): string
+    {
+        $default = config('theme.default', 'default');
+        $default = is_string($default) ? $default : 'default';
+
+        try {
+            $theme = app(SiteSettings::class)->active_theme;
+        } catch (Throwable) {
+            return $default;
+        }
+
+        return $this->themeExists($theme) ? $theme : $default;
+    }
+
+    /**
      * Get all available themes.
      *
      * @return array<string, array<string, mixed>>
@@ -131,10 +152,29 @@ class ThemeManager
         $themeViewsPath = $this->getThemeViewsPath();
         $finder = View::getFinder();
 
-        if (File::exists($themeViewsPath) && $finder instanceof FileViewFinder) {
-            // Add theme views path before the default views path
-            $finder->prependLocation($themeViewsPath);
+        if (! File::exists($themeViewsPath) || ! $finder instanceof FileViewFinder) {
+            return;
         }
+
+        $resolvedPath = realpath($themeViewsPath) ?: $themeViewsPath;
+        $paths = $finder->getPaths();
+
+        if (($paths[0] ?? null) === $resolvedPath) {
+            // Already registered and already has top priority: prependLocation() has no
+            // dedupe, and this runs per view render (via ThemeServiceProvider's
+            // View::composer), so re-adding it every render would grow the finder's
+            // paths array unbounded under Octane.
+            return;
+        }
+
+        // Drop any stale registration of this theme's path before re-prepending, so
+        // switching themes mid-worker (a different theme was prepended after this one)
+        // still gives the newly active theme priority instead of leaving it shadowed.
+        // Prepend the realpath (the same value used for the dedupe check above) so a
+        // symlinked deploy path (e.g. Octane atomic releases) stays idempotent — a raw
+        // path here would never match $resolvedPath and would accumulate every render.
+        $finder->setPaths(array_values(array_diff($paths, [$resolvedPath])));
+        $finder->prependLocation($resolvedPath);
     }
 
     /**
@@ -195,6 +235,58 @@ class ThemeManager
         $theme = $theme ?? $this->activeTheme;
 
         return $this->themes[$theme] ?? [];
+    }
+
+    /**
+     * Whitelist of Tailwind color names → Filament Color palettes. Explicit map
+     * (not dynamic constant lookup) so an unexpected theme.json value can never
+     * reference an undefined constant.
+     *
+     * @return array<string, array<int, string>>
+     */
+    protected function filamentColorMap(): array
+    {
+        return [
+            'slate' => Color::Slate,
+            'gray' => Color::Gray,
+            'zinc' => Color::Zinc,
+            'neutral' => Color::Neutral,
+            'stone' => Color::Stone,
+            'red' => Color::Red,
+            'orange' => Color::Orange,
+            'amber' => Color::Amber,
+            'yellow' => Color::Yellow,
+            'lime' => Color::Lime,
+            'green' => Color::Green,
+            'emerald' => Color::Emerald,
+            'teal' => Color::Teal,
+            'cyan' => Color::Cyan,
+            'sky' => Color::Sky,
+            'blue' => Color::Blue,
+            'indigo' => Color::Indigo,
+            'violet' => Color::Violet,
+            'purple' => Color::Purple,
+            'fuchsia' => Color::Fuchsia,
+            'pink' => Color::Pink,
+            'rose' => Color::Rose,
+        ];
+    }
+
+    /**
+     * Build the Filament panel color palette for a theme from its theme.json
+     * `colors.primary`. Unknown or missing → Amber (the shipped default look).
+     *
+     * @return array<string, array<int, string>>
+     */
+    public function getFilamentColors(?string $theme = null): array
+    {
+        $config = $this->getThemeConfig($theme);
+        $colors = is_array($config['colors'] ?? null) ? $config['colors'] : [];
+        $primary = is_string($colors['primary'] ?? null) ? strtolower($colors['primary']) : 'amber';
+
+        $map = $this->filamentColorMap();
+
+        return ['primary' => $map[$primary] ?? Color::Amber];
     }
 
     /**
