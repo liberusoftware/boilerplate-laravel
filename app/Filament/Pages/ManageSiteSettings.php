@@ -2,7 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Services\ThemeManager;
 use App\Settings\SiteSettings;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\SettingsPage;
@@ -26,6 +28,20 @@ class ManageSiteSettings extends SettingsPage
         return $schema
             ->columns(1)
             ->components([
+                Section::make('Appearance')
+                    ->description('Site-wide theme. Users may still override this with their own preference.')
+                    ->schema([
+                        Select::make('active_theme')
+                            ->label('Site Theme')
+                            ->options(collect(app(ThemeManager::class)->getThemes())
+                                ->mapWithKeys(fn (array $config, string $name): array => [
+                                    $name => is_string($config['label'] ?? null) ? $config['label'] : ucfirst($name),
+                                ])
+                                ->all())
+                            ->required()
+                            ->native(false),
+                    ]),
+
                 Section::make('Site Information')
                     ->schema([
                         TextInput::make('site_name')
