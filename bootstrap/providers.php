@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\ModuleServiceProvider;
 use App\Providers\AppServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
 use App\Providers\Filament\AppPanelProvider;
@@ -7,6 +8,7 @@ use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;
 use App\Providers\SocialstreamServiceProvider;
 use App\Providers\TelescopeServiceProvider;
+use App\Providers\ThemeServiceProvider;
 
 return [
     AppServiceProvider::class,
@@ -16,4 +18,6 @@ return [
     HorizonServiceProvider::class,
     SocialstreamServiceProvider::class,
     TelescopeServiceProvider::class,
+    ThemeServiceProvider::class,
+    ModuleServiceProvider::class,
 ];
