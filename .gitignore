@@ -1,8 +1,4 @@
 /vendor/
-
-
-
-
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -38,3 +34,4 @@ composer.phar
 
 # stray sqlite artifact from artisan/tinker runs
 /boilerplate-laravel
+docs/superpowers
