@@ -9,7 +9,9 @@ function passwordFails(string $password): bool
 }
 
 it('rejects short passwords (min 12)', function () {
-    expect(passwordFails('Ab1!short'))->toBeTrue(); // 8 chars
+    expect(passwordFails('Ab1!short'))->toBeTrue();   // 9 chars, under the 12 minimum
+    expect(passwordFails('Ab1!eleven!'))->toBeTrue(); // 11 chars — just under
+    expect(passwordFails('Ab1!twelve!X'))->toBeFalse(); // 12 chars, complex — the boundary passes
 });
 
 it('rejects passwords missing complexity', function () {
