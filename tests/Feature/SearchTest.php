@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Cache;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    $this->actingAs(User::factory()->create(), 'sanctum');
+});
+
 describe('User Search', function () {
     it('can search users by name', function () {
         User::factory()->create(['name' => 'John Doe', 'email' => 'john@example.com']);
@@ -127,8 +131,8 @@ describe('Post Search', function () {
 describe('Group Search', function () {
     it('can search groups by name', function () {
         $owner = User::factory()->create();
-        Group::factory()->create(['name' => 'Developers Group', 'owner_id' => $owner->id]);
-        Group::factory()->create(['name' => 'Designers Group', 'owner_id' => $owner->id]);
+        Group::factory()->create(['name' => 'Developers Group', 'owner_id' => $owner->id, 'type' => 'public']);
+        Group::factory()->create(['name' => 'Designers Group', 'owner_id' => $owner->id, 'type' => 'public']);
 
         $response = $this->getJson('/api/search/groups?query=Developers');
 
@@ -142,6 +146,7 @@ describe('Group Search', function () {
             'name' => 'Group One',
             'description' => 'This is for Laravel developers',
             'owner_id' => $owner->id,
+            'type' => 'public',
         ]);
 
         $response = $this->getJson('/api/search/groups?query=Laravel');
@@ -152,8 +157,8 @@ describe('Group Search', function () {
 
     it('can filter active groups only', function () {
         $owner = User::factory()->create();
-        Group::factory()->create(['name' => 'Active Group', 'is_active' => true, 'owner_id' => $owner->id]);
-        Group::factory()->create(['name' => 'Inactive Group', 'is_active' => false, 'owner_id' => $owner->id]);
+        Group::factory()->create(['name' => 'Active Group', 'is_active' => true, 'owner_id' => $owner->id, 'type' => 'public']);
+        Group::factory()->create(['name' => 'Inactive Group', 'is_active' => false, 'owner_id' => $owner->id, 'type' => 'public']);
 
         $response = $this->getJson('/api/search/groups?query=Group&active_only=1');
 

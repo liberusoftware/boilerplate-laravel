@@ -67,12 +67,12 @@ describe('searchPosts', function () {
         expect($statuses)->not->toContain('draft');
     });
 
-    it('includes drafts when include_drafts is set', function () {
+    it('never includes drafts, even when include_drafts is set', function () {
         $user = User::factory()->create();
         Post::create(['title' => 'Draft', 'content' => 'B', 'user_id' => $user->id, 'status' => 'draft']);
 
         $result = $this->service->searchPosts(['include_drafts' => true, 'status' => 'draft']);
-        expect($result->total())->toBeGreaterThanOrEqual(1);
+        expect($result->total())->toBe(0);
     });
 
     it('filters by author id', function () {
@@ -97,13 +97,16 @@ describe('searchGroups', function () {
         expect($result->items()[0]->name)->toBe('Active Group');
     });
 
-    it('filters by type', function () {
+    it('only ever returns public groups, regardless of a type filter', function () {
         $owner = User::factory()->create();
         Group::create(['name' => 'Public', 'owner_id' => $owner->id, 'type' => 'public']);
         Group::create(['name' => 'Private', 'owner_id' => $owner->id, 'type' => 'private']);
+        Group::create(['name' => 'Restricted', 'owner_id' => $owner->id, 'type' => 'restricted']);
 
-        $result = $this->service->searchGroups(['type' => 'public']);
+        // 'type' is no longer an accepted caller filter — searchGroups always scopes to public.
+        $result = $this->service->searchGroups(['type' => 'private']);
         expect($result->total())->toBe(1);
+        expect($result->items()[0]->name)->toBe('Public');
     });
 });
 
