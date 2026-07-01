@@ -156,6 +156,28 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
             ->exists();
     }
 
+    /**
+     * True if the user holds the super_admin role in ANY team. Team-agnostic
+     * (unlike Spatie's team-scoped hasRole), so it drives the policy-bypass gate
+     * reliably even when no team context is set on the request.
+     */
+    public function isSuperAdmin(): bool
+    {
+        /** @var string $pivot */
+        $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
+        /** @var string $roles */
+        $roles = config('permission.table_names.roles', 'roles');
+        /** @var string $superAdmin */
+        $superAdmin = config('filament-shield.super_admin.name', 'super_admin');
+
+        return DB::table($pivot)
+            ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
+            ->where("{$pivot}.model_id", $this->getKey())
+            ->where("{$pivot}.model_type", $this->getMorphClass())
+            ->where("{$roles}.name", $superAdmin)
+            ->exists();
+    }
+
     public function getDefaultTenant(Panel $panel): ?Model
     {
         return $this->latestTeam;
