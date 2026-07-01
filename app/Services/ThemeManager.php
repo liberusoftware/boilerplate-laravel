@@ -208,6 +208,19 @@ class ThemeManager
     }
 
     /**
+     * The Vite entry to load for the active theme: the theme's own built CSS
+     * bundle when it exists in the Vite manifest, otherwise the main app.css.
+     * Lets a theme with a compiled bundle (e.g. clear-signal) restyle the blade
+     * frontend while unbundled themes (default, dark) keep the stock look.
+     */
+    public function activeCssEntry(): string
+    {
+        $themeCss = 'themes/'.$this->activeTheme.'/css/app.css';
+
+        return $this->viteHasAsset($themeCss) ? $themeCss : 'resources/css/app.css';
+    }
+
+    /**
      * Whether the given path is present in the built Vite manifest. Used to gate
      * the @themeCss/@themeJs directives: a theme asset on disk but not yet added to
      * the Vite build would otherwise throw "Unable to locate file in Vite manifest".

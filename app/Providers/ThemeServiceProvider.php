@@ -81,5 +81,8 @@ class ThemeServiceProvider extends ServiceProvider
         Blade::directive('themeJs', fn (): string => "<?php \$__p = 'themes/' . app('theme')->getActiveTheme() . '/js/app.js'; if (app('theme')->viteHasAsset(\$__p)) { echo app(\Illuminate\Foundation\Vite::class)(\$__p); } ?>");
 
         Blade::directive('themeLayout', fn (string $expression): string => "<?php echo app('theme')->getLayout({$expression}); ?>");
+
+        // Load the active theme's built CSS bundle (or app.css fallback) + main JS.
+        Blade::directive('themeVite', fn (): string => "<?php echo app(\Illuminate\Foundation\Vite::class)([app('theme')->activeCssEntry(), 'resources/js/app.js']); ?>");
     }
 }

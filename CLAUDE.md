@@ -129,6 +129,16 @@ which maps a theme's `theme.json` `colors.primary` (a Tailwind color name) to a 
 yet; the reserved hook is a `theme.json` `filament_css` key + `->viteTheme()` on the panel,
 added when a theme needs its own Filament stylesheet.
 
+**Frontend theme bundles:** each real theme may ship a self-contained Tailwind
+bundle at `themes/<name>/css/app.css` wired into `vite.config.js` `input`. Blade
+loads the active theme via the `@themeVite` directive, which calls
+`ThemeManager::activeCssEntry()`: it returns the theme's bundle path when that
+bundle is in the Vite manifest, otherwise `resources/css/app.css`. So `default`
+(and `dark`) keep the stock `app.css` look, while `clear-signal` (teal, DESIGN.md
+North Star; `colors.primary: teal` → Filament panels go `Color::Teal`) restyles
+the blade frontend once built. A fresh install must run `npm run build` to compile
+the `clear-signal` bundle; `default` stays active by default (zero visual change).
+
 ### Multi-Language (Phase 3 — done)
 Supported locales live in `config('app.supported_locales')` (en/es/fr/de). `SetLocale` resolves locale (request param → session → `users.locale` → `Accept-Language` → default, validated against supported) and runs on the **`web` group** (`bootstrap/app.php`) **and both Filament panels** (added to each panel's `->middleware([])`, since Filament panels don't use the `web` group). Precedence is request > session > user (a stale session locale can shadow a freshly-logged-in user until logout flushes the session). `LanguageSwitcher` Livewire component persists to session + `users.locale`. `TranslationService` does on-demand translation via the MyMemory API (cached 30 days). No `locale_helpers`/`lang/*/messages` were ported (no callers); add `lang/` files only when something calls `__('...')`. The `LanguageSwitcher` component isn't mounted in any view yet — mount `<livewire:language-switcher />` where a switcher UI is wanted.
 
