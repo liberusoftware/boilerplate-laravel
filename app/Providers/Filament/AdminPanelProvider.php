@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Plugins\ModuleFilamentPlugin;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Models\Team;
 use App\Services\ThemeManager;
@@ -59,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 SetLocale::class,
+                SecurityHeaders::class,
             ])
             ->plugins([
                 // Do NOT tenant-scope Shield's RoleResource: the admin panel scopes by
