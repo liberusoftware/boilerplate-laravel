@@ -1,16 +1,43 @@
 <?php
 
+use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\Filament\AppPanelProvider;
 use App\Services\ThemeManager;
-use Filament\Facades\Filament;
+use App\Settings\SiteSettings;
+use Filament\Panel;
 use Filament\Support\Colors\Color;
 
-it('admin panel primary color follows the site theme', function () {
-    // getFilamentColors('dark') → Indigo; assert the resolver returns it so the
-    // panel provider (which passes this array to ->colors()) is driven by the theme.
-    expect(app(ThemeManager::class)->getFilamentColors('dark')['primary'])->toBe(Color::Indigo);
-    expect(app(ThemeManager::class)->getFilamentColors('default')['primary'])->toBe(Color::Amber);
+function setSiteTheme(string $theme): void
+{
+    $settings = app(SiteSettings::class);
+    $settings->active_theme = $theme;
+    $settings->save();
 
-    // Panel registers without error using the theme-driven palette.
-    Filament::setCurrentPanel(Filament::getPanel('admin'));
-    expect(Filament::getPanel('admin'))->not->toBeNull();
+    // getSiteTheme() reads SiteSettings via the container; drop the cached
+    // ThemeManager instance so it re-resolves the (now-persisted) setting.
+    app()->forgetInstance(ThemeManager::class);
+}
+
+it('admin panel primary color follows the dark site theme', function () {
+    setSiteTheme('dark');
+
+    $colors = (new AdminPanelProvider(app()))->panel(Panel::make())->getColors();
+
+    expect($colors['primary'])->toBe(Color::Indigo);
+});
+
+it('admin panel primary color follows the default site theme', function () {
+    setSiteTheme('default');
+
+    $colors = (new AdminPanelProvider(app()))->panel(Panel::make())->getColors();
+
+    expect($colors['primary'])->toBe(Color::Amber);
+});
+
+it('app panel primary color follows the dark site theme', function () {
+    setSiteTheme('dark');
+
+    $colors = (new AppPanelProvider(app()))->panel(Panel::make())->getColors();
+
+    expect($colors['primary'])->toBe(Color::Indigo);
 });
