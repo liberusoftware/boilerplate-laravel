@@ -129,7 +129,31 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'admin') {
+            return $this->hasAdminAccess();
+        }
+
         return true;
+    }
+
+    /**
+     * True if the user holds an admin role in ANY team. Spatie roles are
+     * team-scoped, and the active team context is not reliably set when
+     * canAccessPanel() runs, so check the pivot directly across all teams.
+     */
+    public function hasAdminAccess(): bool
+    {
+        /** @var string $pivot */
+        $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
+        /** @var string $roles */
+        $roles = config('permission.table_names.roles', 'roles');
+
+        return DB::table($pivot)
+            ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
+            ->where("{$pivot}.model_id", $this->getKey())
+            ->where("{$pivot}.model_type", $this->getMorphClass())
+            ->whereIn("{$roles}.name", ['super_admin', 'admin'])
+            ->exists();
     }
 
     public function getDefaultTenant(Panel $panel): ?Model
