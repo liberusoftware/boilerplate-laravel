@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Plugins\ModuleFilamentPlugin;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Services\ThemeManager;
 use Filament\Http\Middleware\Authenticate;
@@ -50,6 +51,7 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 SetLocale::class,
+                SecurityHeaders::class,
             ])
             ->plugins([
                 ModuleFilamentPlugin::make()->for('App'),
