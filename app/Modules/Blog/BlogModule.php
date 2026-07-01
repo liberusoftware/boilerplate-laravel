@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\BlogModule;
+namespace App\Modules\Blog;
 
 use App\Modules\BaseModule;
 use Illuminate\Support\Facades\Log;
