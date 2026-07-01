@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Settings\SiteSettings;
+use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
@@ -215,6 +216,58 @@ class ThemeManager
         $theme = $theme ?? $this->activeTheme;
 
         return $this->themes[$theme] ?? [];
+    }
+
+    /**
+     * Whitelist of Tailwind color names → Filament Color palettes. Explicit map
+     * (not dynamic constant lookup) so an unexpected theme.json value can never
+     * reference an undefined constant.
+     *
+     * @return array<string, array<int|string, string>>
+     */
+    protected function filamentColorMap(): array
+    {
+        return [
+            'slate' => Color::Slate,
+            'gray' => Color::Gray,
+            'zinc' => Color::Zinc,
+            'neutral' => Color::Neutral,
+            'stone' => Color::Stone,
+            'red' => Color::Red,
+            'orange' => Color::Orange,
+            'amber' => Color::Amber,
+            'yellow' => Color::Yellow,
+            'lime' => Color::Lime,
+            'green' => Color::Green,
+            'emerald' => Color::Emerald,
+            'teal' => Color::Teal,
+            'cyan' => Color::Cyan,
+            'sky' => Color::Sky,
+            'blue' => Color::Blue,
+            'indigo' => Color::Indigo,
+            'violet' => Color::Violet,
+            'purple' => Color::Purple,
+            'fuchsia' => Color::Fuchsia,
+            'pink' => Color::Pink,
+            'rose' => Color::Rose,
+        ];
+    }
+
+    /**
+     * Build the Filament panel color palette for a theme from its theme.json
+     * `colors.primary`. Unknown or missing → Amber (the shipped default look).
+     *
+     * @return array<string, array<int|string, string>>
+     */
+    public function getFilamentColors(?string $theme = null): array
+    {
+        $config = $this->getThemeConfig($theme);
+        $colors = is_array($config['colors'] ?? null) ? $config['colors'] : [];
+        $primary = is_string($colors['primary'] ?? null) ? strtolower($colors['primary']) : 'amber';
+
+        $map = $this->filamentColorMap();
+
+        return ['primary' => $map[$primary] ?? Color::Amber];
     }
 
     /**

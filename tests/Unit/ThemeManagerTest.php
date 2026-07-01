@@ -149,5 +149,5 @@ test('default theme has correct configuration', function () {
         ->and($config['name'])->toBe('default')
         ->and($config['label'])->toBe('Default Theme')
         ->and($config)->toHaveKey('colors')
-        ->and($config['colors']['primary'])->toBe('gray');
+        ->and($config['colors']['primary'])->toBe('amber');
 });
