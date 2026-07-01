@@ -49,18 +49,20 @@ class ThemeServiceProvider extends ServiceProvider
      */
     protected function determineActiveTheme(): string
     {
+        $themeManager = $this->app->make(ThemeManager::class);
+
         $user = auth()->user();
-        if ($user instanceof User && is_string($user->theme_preference) && $user->theme_preference !== '') {
+        if ($user instanceof User && is_string($user->theme_preference) && $user->theme_preference !== '' && $themeManager->themeExists($user->theme_preference)) {
             return $user->theme_preference;
         }
 
         $session = session('theme_preference');
-        if (is_string($session) && $session !== '') {
+        if (is_string($session) && $session !== '' && $themeManager->themeExists($session)) {
             return $session;
         }
 
         // Admin-selected site-wide theme (validated; safe fallback to config default).
-        return $this->app->make(ThemeManager::class)->getSiteTheme();
+        return $themeManager->getSiteTheme();
     }
 
     /**

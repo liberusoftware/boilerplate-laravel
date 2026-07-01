@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Services\ThemeManager;
 use App\Settings\SiteSettings;
 
@@ -23,4 +24,28 @@ it('lets a session preference win over the site theme', function () {
     $this->get('/');
 
     expect(app(ThemeManager::class)->getActiveTheme())->toBe('default');
+});
+
+it('falls through to the site theme when the user preference names a nonexistent theme', function () {
+    $settings = app(SiteSettings::class);
+    $settings->active_theme = 'dark';
+    $settings->save();
+
+    $user = User::factory()->create(['theme_preference' => 'no-such-theme']);
+
+    $this->actingAs($user)->get('/');
+
+    expect(app(ThemeManager::class)->getActiveTheme())->toBe('dark');
+});
+
+it('lets a valid user preference win over the site theme', function () {
+    $settings = app(SiteSettings::class);
+    $settings->active_theme = 'default';
+    $settings->save();
+
+    $user = User::factory()->create(['theme_preference' => 'dark']);
+
+    $this->actingAs($user)->get('/');
+
+    expect(app(ThemeManager::class)->getActiveTheme())->toBe('dark');
 });
