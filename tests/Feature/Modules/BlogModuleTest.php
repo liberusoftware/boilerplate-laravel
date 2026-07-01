@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Module;
 use App\Models\User;
 use App\Modules\Blog\Filament\Admin\Resources\PostResource;
 use App\Modules\Blog\Models\Post;
@@ -32,4 +33,11 @@ it('registers the Post admin resource on /admin only', function () {
         ->toContain(PostResource::class);
     expect(Filament::getPanel('app')->getResources())
         ->not->toContain(PostResource::class);
+});
+
+it('keeps the module table when the module is disabled', function () {
+    // migrations load unconditionally in ModuleServiceProvider, independent of enabled state.
+    Module::create(['name' => 'Blog', 'enabled' => false]);
+
+    expect(Schema::hasTable('module_blog_posts'))->toBeTrue();
 });
