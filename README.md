@@ -357,46 +357,58 @@ Modules can provide custom themes:
 
 Custom Theme System
 -------------------
-This boilerplate includes a comprehensive theme system that allows you to create custom layouts, CSS, and JavaScript for different visual themes.
+This boilerplate includes a comprehensive theme system for custom layouts, CSS, and JavaScript per visual theme. Two themes ship ready to use:
+
+- **`default`** — the stock look (loads `resources/css/app.css`); active out of the box, no visual change until you switch.
+- **`clear-signal`** — a teal theme built from the `DESIGN.md` "Clear Signal" design system (teal palette + Inter). Its `theme.json` `colors.primary: teal` also drives the Filament admin/app panel accent when it's the active site theme.
+
+A `dark` theme is also included as a reference.
 
 ### Quick Start with Themes
 
+Pick the **site-wide** theme in the admin panel: **Site Settings → Appearance → Site Theme**. Individual users can still override it.
+
 Switch themes programmatically:
 ```php
-set_theme('dark');  // Switch to dark theme
-$current = active_theme();  // Get current theme
+set_theme('clear-signal');  // Switch theme (session / user preference)
+$current = active_theme();   // Get the active theme
 ```
 
-Use the theme switcher component:
+Use the per-user theme switcher component:
 ```blade
 <livewire:theme-switcher />
 ```
 
+> `clear-signal` ships a compiled Tailwind bundle, so it only restyles the frontend after `npm run build`. Before that (or for `default`/`dark`), the frontend safely falls back to `resources/css/app.css`.
+
 ### Theme Features
 
+- **Per-theme Tailwind bundles** - A theme can ship a self-contained Tailwind bundle at `/themes/{theme}/css/app.css`, wired into `vite.config.js` `input`. `@themeVite` loads the active theme's built bundle when it's in the Vite manifest, otherwise `resources/css/app.css`.
+- **Admin-selectable site theme** - Choose the site-wide theme in Site Settings; per-user overrides supported.
 - **Custom Layouts** - Theme-specific Blade layouts in `/themes/{theme}/views/`
-- **Custom CSS** - Theme-specific stylesheets in `/themes/{theme}/css/app.css`
-- **Custom JavaScript** - Theme-specific scripts in `/themes/{theme}/js/app.js`
 - **User Preferences** - Themes saved to database per user or session
-- **Dynamic Switching** - Switch themes on the fly with Livewire component
-- **Fallback System** - Automatically falls back to default files if theme doesn't have custom versions
-- **Blade Directives** - `@themeCss`, `@themeJs`, `@themeAsset()`, `@themeLayout()`
+- **Dynamic Switching** - Switch themes on the fly with the Livewire component
+- **Fallback System** - Falls back to `resources/css/app.css` / default files when a theme has no built bundle or custom file
+- **Blade Directives** - `@themeVite` (load the active theme's frontend bundle), `@themeCss`, `@themeJs`, `@themeAsset()`, `@themeLayout()`
 
 ### Using Themes in Views
 
 ```blade
+<head>
+    {{-- Load the active theme's built bundle (or app.css fallback) + app.js --}}
+    @themeVite
+</head>
+
 {{-- Use theme-specific layout --}}
 @extends(theme_layout('app'))
 
 @section('content')
-    {{-- Include theme CSS and JS --}}
-    @themeCss
-    @themeJs
-    
     {{-- Use theme assets --}}
     <img src="{{ theme_asset('images/logo.png') }}" alt="Logo">
 @endsection
 ```
+
+`@themeVite` is the frontend entry point. `@themeCss`/`@themeJs` remain available for layouts that load a theme bundle alongside `app.css` (both are gated on the Vite manifest, so they emit nothing until the assets are built).
 
 ### Creating a New Theme
 
@@ -407,15 +419,15 @@ mkdir -p themes/mytheme/css
 mkdir -p themes/mytheme/js
 ```
 
-2. Create `theme.json` with metadata
-3. Create custom layout files
-4. Create custom CSS and JS
-5. Build assets: `npm run build`
+2. Create `theme.json` with metadata (set `colors.primary` to a Tailwind color name — e.g. `teal` — to also drive the Filament panel accent).
+3. Create the Tailwind bundle `themes/mytheme/css/app.css` (`@import 'tailwindcss'` + your `@theme` tokens) and any custom layout files.
+4. Wire the bundle into `vite.config.js` — add `'themes/mytheme/css/app.css'` to the Laravel plugin `input` array.
+5. Build assets: `npm run build`. The theme is then selectable site-wide in Site Settings (themes are auto-discovered from `themes/`).
 
 ### Documentation
 
 - [Theme System Guide](docs/THEME_SYSTEM.md) - Complete guide for creating and using themes
-- Example themes: `themes/default/` and `themes/dark/`
+- Example themes: `themes/default/`, `themes/clear-signal/` (teal, with a compiled Tailwind bundle), and `themes/dark/`
 
 ### Theme Structure
 
