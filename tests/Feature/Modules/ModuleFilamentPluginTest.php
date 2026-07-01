@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\Plugins\ModuleFilamentPlugin;
+use Filament\Facades\Filament;
 
 it('exposes a per-segment id and fluent for()', function () {
     $plugin = ModuleFilamentPlugin::make()->for('Admin');
@@ -11,6 +12,6 @@ it('exposes a per-segment id and fluent for()', function () {
 
 it('is registered on both panels with the right segment', function () {
     // The admin panel registers the Admin segment; the app panel the App segment.
-    expect(\Filament\Facades\Filament::getPanel('admin')->getPlugin('modules-admin'))->not->toBeNull();
-    expect(\Filament\Facades\Filament::getPanel('app')->getPlugin('modules-app'))->not->toBeNull();
+    expect(Filament::getPanel('admin')->getPlugin('modules-admin'))->not->toBeNull();
+    expect(Filament::getPanel('app')->getPlugin('modules-app'))->not->toBeNull();
 });
