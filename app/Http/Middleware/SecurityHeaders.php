@@ -14,6 +14,8 @@ class SecurityHeaders
      * Note: a strict Content-Security-Policy is intentionally NOT enforced here —
      * Filament/Livewire/Vite rely on inline scripts and styles, so a real CSP needs
      * per-app tuning (nonces). Add one deliberately when the surfaces are locked down.
+     *
+     * @param  Closure(Request): Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
