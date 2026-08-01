@@ -2,179 +2,232 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Current State — fresh rebuild in progress (2026-06-29)
+## Shape of this repository
 
-This repo was **rebuilt from a fresh Laravel 13 skeleton** on branch `chore/fresh-skeleton`.
-Design + roadmap: `docs/superpowers/specs/2026-06-29-fresh-skeleton-design.md`.
+This is a **composition host**, not an application. `app/` holds exactly four files:
 
-**Phase 0 (done, green):** fresh skeleton + full package set (Socialstream/Jetstream +
-teams, dual Filament v5 panels + Shield, Spatie permission/media-library/backup/activitylog/
-query-builder, Reverb, Horizon, Octane/RoadRunner, Telescope, Pulse, passkeys, menu-builder).
-Authenticated home = the Filament **app** panel via the `dashboard` route. OAuth: GitHub,
-Google, Facebook, Twitter(OAuth2) enabled (placeholder creds in `.env`).
+```
+app/Models/User.php                            the one host model
+app/Filament/ModulePlugins.php                 composes panel plugins from enabled modules
+app/Providers/Filament/AdminPanelProvider.php
+app/Providers/Filament/AppPanelProvider.php
+```
 
-**Single module system:** `app/Modules/` only — `internachi/modular` and
-`composer-merge-plugin` were **removed**. There is no `app-modules/` layer.
+Everything else — search, messaging, theming, localization, settings, authorization,
+observability, blog — lives in **44 `liberu-module` packages** under `modules/` and
+**4 `liberu-theme` packages** under `themes/`. Both directories are Composer install
+targets *and* tracked in Git (`.gitignore` negates them explicitly).
 
-**NOT yet ported (Phases 1–7, each its own PR):** custom `App\Modules` lifecycle +
-`BlogModule`, `ThemeManager`/themes, multi-language (`SetLocale`/`TranslationService`),
-`SearchService`, `SiteSettings`, messaging/chat. The architecture sections below describe
-the **target** for those ports, not all of which exists yet — verify a class exists before
-relying on it.
+Before assuming a class lives in `app/`, search `modules/`. Almost nothing is in `app/`.
+
+### The publish loop
+
+`modules/` and `themes/` are the source of truth. `scripts/publish-components` rsyncs each
+`modules/<name>/` and `themes/<name>/` into its own GitHub repository (`--delete`, excluding
+`.git`), which is then tagged and installed back through Composer from Packagist
+(`liberusoftware/search`, `liberusoftware/theme-dark`, …).
+
+Practical consequence: **edit packages here, in this monorepo.** A change is published by
+committing it here and running `publish-components --push`. Packagist names drop the
+`module-` prefix that the GitHub repositories carry.
 
 ## Commands
 
 ```bash
-# Install dependencies
-composer install
-npm install
+composer install && npm install
 
-# Run all tests
-composer test          # runs vendor/bin/pest
-php artisan test       # alternative
-
-# Run a single test file
+composer test                  # vendor/bin/pest
 vendor/bin/pest tests/Feature/SearchTest.php
-
-# Run tests by filter
 vendor/bin/pest --filter=SearchTest
+vendor/bin/pint                # --test to check without writing
 
-# Code style (Laravel Pint)
-vendor/bin/pint
-vendor/bin/pint --test   # check only, no changes
+npm run dev                    # vite
+npm run build                  # required once, to compile the theme bundles
 
-# Build frontend assets
-npm run dev              # Vite dev server with HMR
-npm run build            # production build
-
-# Database
 php artisan migrate
 php artisan migrate:fresh --seed
 
-# Queue / real-time
-php artisan horizon      # Horizon queue worker UI at /horizon
-php artisan reverb:start # WebSocket server (Laravel Reverb)
-php artisan octane:start --server=roadrunner  # high-performance HTTP server
+php artisan horizon
+php artisan reverb:start
+php artisan octane:start --server=roadrunner
 
-# Filament
-php artisan filament:upgrade   # run after Filament updates
-php artisan shield:generate    # regenerate Filament Shield permissions
+php artisan filament:upgrade
+php artisan shield:generate
+
+# A single package's own suite, standalone:
+cd modules/search && composer update && vendor/bin/pest
 ```
 
 ## Architecture
 
-### Dual Filament Panel Setup
-There are two Filament panels configured in `app/Providers/Filament/`:
-- **AdminPanelProvider** — path `/admin`, tenant-scoped to `Team`, and composed from enabled modules' admin Filament plugins. Login delegates to Fortify's `AuthenticatedSessionController`.
-- **AppPanelProvider** — user-facing Filament panel (profile, team management, API tokens).
+### Module system
 
-Both panels disable default Fortify/Jetstream route registration in their `boot()` methods; routes are registered from `routes/web.php` and `routes/socialstream.php` instead.
+`ModuleManagerServiceProvider` (first entry in `bootstrap/providers.php`) discovers packages
+from `config('modules.paths')` and reads each `module.json` — provider class, capabilities,
+required packages and capabilities, `default_enabled`, and any Filament plugins.
+`ModuleRegistry::resolve($enabled, $disabled)` validates constraints with `Semver` and returns
+providers in dependency order.
 
-### Authentication Stack (layered)
-Fortify handles the authentication primitives, Jetstream adds teams and profile management, Socialstream extends with OAuth providers, and Spatie Permission provides role/permission assignment. The `TeamsPermission` middleware syncs the active team with Filament Shield's tenant context. The `AssignDefaultTeam` middleware ensures every user lands on a team after login.
+Installation never implies boot: no package declares `extra.laravel.providers`, so Laravel's
+auto-discovery finds nothing to register, and an architecture rule asserts that stays true.
+Enablement is a separate, explicit decision.
 
-### Module system (`modules/`)
-Modules are independently versioned `liberu-module` Composer packages. Composer owns
-installation and autoloading; `module.json` owns runtime capabilities, dependencies and
-Filament plugin declarations. `config/modules.php` explicitly selects enabled packages, and
-the module manager validates and dependency-orders their providers. Package auto-discovery is
-disabled so it cannot bypass runtime enablement.
+`config/modules.php` holds two lists. `$applicationModules` (41 names) is the default for
+`MODULES_ENABLED`; `$optionalAdapters` (`analytics-google`, `analytics-meta`,
+`localization-mymemory`) is the default for `MODULES_DISABLED` — they need third-party
+credentials, so they ship installed but off. **Disabled beats enabled**, and either env var
+replaces its whole list. Every directory under `modules/` must appear in one of the two,
+enforced by `tests/Architecture/ModuleBoundariesTest.php`.
+
+All 44 manifests declare `default_enabled: false`; the enabled list is the working lever.
 
 Domain packages stay presentation-agnostic. Filament UI lives in companion `*-filament`
-packages, whose manifests declare `admin` and/or `app` plugin classes. The panel providers use
-`App\Filament\ModulePlugins` to instantiate only plugins belonging to enabled modules.
-Cross-package APIs use declared Composer dependencies and, where adapters need implementation
-independence, small contract packages. See `docs/MODULE_DEVELOPMENT.md`.
+packages whose manifests declare `admin` and/or `app` plugin classes; `App\Filament\ModulePlugins`
+instantiates only the plugins of enabled modules, rejecting duplicate ids and non-`Plugin` types.
+Cross-package APIs go through declared Composer dependencies and, where an adapter needs
+implementation independence, small contract packages (`liberusoftware/analytics-contracts`,
+`liberusoftware/localization-contracts`). See `docs/MODULE_DEVELOPMENT.md`.
 
-**Panel access policy:** `User::canAccessPanel()` requires a `super_admin` or `admin` role to
-reach `/admin` (checked directly against the `model_has_roles` pivot across all teams, since
-Shield's team-scoped context isn't reliably set at this point) — `/app` stays open to any
-authenticated user. Per-resource Shield policies still gate individual resources within a panel.
+### Architecture tests
 
-### Real-Time Stack
-- **Laravel Reverb** runs as a standalone WebSocket server.
-- **Laravel Echo** (frontend, `resources/js/app.js`) connects via Pusher protocol over Reverb.
-- Broadcasting channels are defined in `routes/channels.php`.
-- **Horizon** manages Redis queues; dashboard at `/horizon`.
-- **Octane + RoadRunner** provides the HTTP server in production (config in `.rr.yaml`).
+`tests/Architecture/ModuleBoundariesTest.php` holds 12 executable rules: package metadata
+consistency, every module exercising its provider, no `App\` dependency from module `src/`,
+no Filament in non-presentation modules, `-api` adapters not importing domain models, Composer
+owning every autoload boundary, `-filament` modules declaring plugins, declared cross-package
+namespace dependencies, enabled/disabled accounting for every installed module, `phpunit.xml`
+running and measuring every module, theme parents resolving, and themes shipping the assets
+they declare.
 
-### Permissions Model (Phase 1 — done)
-Spatie Permission roles/permissions are team-scoped (`config/permission.php` `teams => true`, models point at `App\Models\Role`/`Permission`). `FilamentShield` auto-generates policies per Filament resource. Policy classes in `app/Policies/`.
+This is the cheapest place to enforce a boundary. Prefer adding a rule here over adding prose.
 
-**Filament tenancy rules (important):**
-- The **admin** panel is Team-tenant-scoped (`->tenant(Team::class)`); the **app** panel is intentionally **not** scoped. `User`'s tenancy methods (`getTenants` = owned + member teams, `canAccessTenant`, `getDefaultTenant`) are panel-agnostic.
-- Any Filament Resource whose model has **no `team()` relationship** MUST override `public static function isScopedToTenant(): bool { return false; }`, or the tenant panel **500s** on that resource. The authorization presentation module wraps Shield with tenant resource scoping disabled because Spatie already isolates roles by `team_id`.
-- With `permission.teams=true`, roles carry a `team_id`, so `shield:generate` / super-admin assignment must run **inside a team context** (set `setPermissionsTeamId($team->id)` in a seeder, or scope the command). Default shield config has `super_admin.define_via_gate=false` — a bare `super_admin` role grants nothing until permissions are generated.
-- `User` resolves the `HasRoles::teams` vs `HasTeams::teams` trait collision by keeping Jetstream's `teams()` (`insteadof`) and excluding Spatie's (Spatie scopes via the `team_id` column, not that relation).
-- `User::canAccessPanel()` requires a `super_admin`/`admin` role for `/admin` (see Module System's panel access policy above); `/app` is open to any authenticated user. Per-resource Shield policies still gate each resource within a panel.
+### Packages are standalone-testable
 
-### Theme System
-Themes live under `themes/{name}/` (each with `theme.json` + `css/`/`js/`/`views/`), discovered from disk by `ThemeManager` (`app/Services/ThemeManager.php`). Active theme resolves user `theme_preference` → session → `config('theme.default')`; the `ThemeSwitcher` Livewire component + `set_theme()` helper persist it. `ThemeServiceProvider` registers the `theme` singleton/alias, 4 Blade directives (`@themeAsset`, `@themeCss`, `@themeJs`, `@themeLayout`), and shares `$activeTheme`/`$themeConfig` with all views. Theme view overrides work via `View` finder `prependLocation` (a `layouts.app` reference resolves to the active theme's override).
+Every package carries `require-dev` (`orchestra/testbench ^11.1`, `pestphp/pest ^5.0`),
+`autoload-dev` (`<PsrRoot>\Tests\` → `tests/`), its own `phpunit.xml`, and its own
+`.github/workflows/tests.yml` — which `publish-components` carries upstream, so the split
+repositories get real CI. `tests/Integration/ServiceProviderTest.php` boots
+`Orchestra\Testbench\TestCase`, never the host's `Tests\TestCase`.
 
-**Per-theme Vite inputs are deferred** — `vite.config.js` builds only the main `app.css`/`app.js`. `@themeCss`/`@themeJs` gate on the Vite *manifest* (`ThemeManager::viteHasAsset`), so they emit nothing until `themes/*/{css,js}` are added to the Vite `input` and built — no 500. Wire those inputs in the PR that first ships a page extending a theme layout.
+A test belongs **in the package** only if it needs nothing from the host. Several suites that
+look package-shaped are not: the `ThemeManager*` tests assert on the host's `themes/` directory,
+and `SearchServiceTest`/`SetLocaleMiddlewareTest` use `App\Models\User`. Those are composition
+tests and stay in `tests/`.
 
-Site-wide theme is admin-selectable via `SiteSettings::$active_theme` (Appearance
-section on the `ManageSiteSettings` page). Frontend resolution is
-`user.theme_preference → session → SiteSettings.active_theme → config('theme.default')`;
-each candidate is validated with `ThemeManager::themeExists()` before use, so a stale/invalid
-preference falls through instead of erroring. Because `ThemeManager` is a boot-once singleton
-(long-lived under Octane, reused within a test), the theme is **re-derived on every view
-render** in `ThemeServiceProvider`'s `View::composer('*', ...)`, not just once at boot — so an
-admin theme change (or a mid-lifecycle session/user pref) is picked up on the next render.
-This applies to frontend Blade rendering only: Filament panels evaluate `->colors()` once at
-worker boot, so under Octane a panel color change is only visible after a worker restart, not
-the next request. Filament panels follow the **site-wide** theme only (no per-user panel theming):
-`AdminPanelProvider`/`AppPanelProvider` call
-`->colors(app(ThemeManager::class)->getFilamentColors(app(ThemeManager::class)->getSiteTheme()))`,
-which maps a theme's `theme.json` `colors.primary` (a Tailwind color name) to a Filament
-`Color` palette (unknown/missing → Amber). Compiled per-theme Filament CSS is **not** built
-yet; the reserved hook is a `theme.json` `filament_css` key + `->viteTheme()` on the panel,
-added when a theme needs its own Filament stylesheet.
+### Dual Filament panels
 
-**Frontend theme bundles:** each real theme may ship a self-contained Tailwind
-bundle at `themes/<name>/css/app.css` wired into `vite.config.js` `input`. Blade
-loads the active theme via the `@themeVite` directive, which calls
-`ThemeManager::activeCssEntry()`: it returns the theme's bundle path when that
-bundle is in the Vite manifest, otherwise `resources/css/app.css`. So `default`
-(and `dark`) keep the stock `app.css` look, while `clear-signal` (teal, DESIGN.md
-North Star; `colors.primary: teal` → Filament panels go `Color::Teal`) restyles
-the blade frontend once built. A fresh install must run `npm run build` to compile
-the `clear-signal` bundle; `default` stays active by default (zero visual change).
+- **`AdminPanelProvider`** — `->default()`, path `/admin`, tenant-scoped to
+  `Liberu\Foundation\Organizations\Models\Team` (`ownershipRelationship: 'team'`), with Shield's
+  `SyncShieldTenant` as persistent tenant middleware.
+- **`AppPanelProvider`** — path `/app`, deliberately **not** tenant-scoped.
 
-### Multi-Language (Phase 3 — done)
-Supported locales live in `config('app.supported_locales')` (en/es/fr/de). `SetLocale` resolves locale (request param → session → `users.locale` → `Accept-Language` → default, validated against supported) and runs on the **`web` group** (`bootstrap/app.php`) **and both Filament panels** (added to each panel's `->middleware([])`, since Filament panels don't use the `web` group). Precedence is request > session > user (a stale session locale can shadow a freshly-logged-in user until logout flushes the session). `LanguageSwitcher` Livewire component persists to session + `users.locale`. `TranslationService` does on-demand translation via the MyMemory API (cached 30 days). No `locale_helpers`/`lang/*/messages` were ported (no callers); add `lang/` files only when something calls `__('...')`. The `LanguageSwitcher` component isn't mounted in any view yet — mount `<livewire:language-switcher />` where a switcher UI is wanted.
+Both resolve colours through `app(ThemeColors::class)->forSite()` and append `SetLocale` +
+`SecurityHeaders` to `->middleware([])`, because Filament panels don't run the `web` group.
+Both take `->plugins(app(ModulePlugins::class)->forPanel(...))`.
 
-### Search
-`SearchService` (`app/Services/SearchService.php`) performs cross-entity full-text search over Users, Posts, and Groups. Dedicated API controllers under `app/Http/Controllers/Api/` serve search results. Search indexes are added via migration `2026_02_14_000003_add_search_indexes_to_users_table.php`.
+`routes/web.php` is two routes: `/` renders `welcome`, and `/dashboard` redirects a super admin
+into the admin panel at their default tenant, and everyone else to `filament.app.pages.dashboard`.
 
-### Site Settings
-`SiteSettings` uses the `spatie/laravel-settings` pattern: a typed settings class at `app/Settings/SiteSettings.php`, stored in the `settings` table. Accessed via `App\Facades\SiteSettings` or injected directly. A Filament page (`ManageSiteSettings`) provides the admin UI.
+### Authentication and permissions
 
-### Frontend Build
-Vite entry points (`vite.config.js`):
-- `resources/css/app.css` + `resources/js/app.js` — main app
-- `resources/css/filament/admin/theme.css` — Filament custom theme (Tailwind CSS v4 via `@tailwindcss/vite`)
+Fortify provides the primitives, Jetstream adds teams and profile management,
+`bursteri/socialstream` adds OAuth, Spatie Permission provides team-scoped roles
+(`permission.teams => true`, models pointing at `Liberu\Foundation\Authorization\Models\Role`
+and `Permission`).
 
-HMR refresh is wired to all `app/Filament/**`, `app/Livewire/**`, and `themes/**` paths.
+`User` implements seven contracts from four packages — `PrivilegedActor` (`isSuperAdmin`),
+`ObservabilityActor` (`isAdmin`), `OrganizationActor`, `ConnectedAccountOwner`, plus Filament's
+`FilamentUser`, `HasTenants` and `HasDefaultTenant`. Its three role checks route through one
+private `hasRoleInAnyTeam(...$names)` helper that reads table names from `permission.table_names`
+and the super admin name from `filament-shield.super_admin.name`. It queries the pivot directly
+and team-agnostically, because Spatie's `hasRole()` is bound to an active team context that
+isn't set when `canAccessPanel()` or the Telescope/Pulse gates run.
+
+**Tenancy rules that bite:**
+
+- Any Filament Resource whose model has no `team()` relationship MUST override
+  `isScopedToTenant(): bool { return false; }`, or the tenant panel 500s on it. The authorization
+  presentation module wraps Shield with tenant resource scoping disabled, because Spatie already
+  isolates roles by `team_id`.
+- With `permission.teams=true` roles carry a `team_id`, so `shield:generate` and super-admin
+  assignment must run **inside a team context** (`setPermissionsTeamId($team->id)`).
+- `User` resolves the `HasRoles::teams` / `HasTeams::teams` collision with
+  `HasTeams::teams insteadof HasRoles` — Jetstream's relation wins; Spatie scopes by column.
+- `canAccessPanel()` requires `super_admin` or `admin` for `/admin`; `/app` is open to any
+  authenticated user. Per-resource Shield policies still gate each resource within a panel.
+- `config/filament-shield.php` `tenant_model` and `config/permission.php` `models.team` are both
+  **deliberately `null`** — each config carries a comment explaining why. Do not "fix" them.
+
+Passkeys are `laravel/passkeys`; the table migration lives in the `identity` module. `User` does
+not use a passkey trait.
+
+### Themes
+
+Themes are packages under `themes/`, each with `theme.json` (name, version, provider, `type`,
+`parent`, `assets`) and a `resources/` tree. `liberu-base` is the `shared` root; `default`, `dark`
+and `clear-signal` are `public` themes declaring `parent: liberu-base`.
+`ThemeManager::inheritanceChain()` walks the chain with a cycle guard, and only `liberu-base`
+ships `layouts/app.blade.php`, so every public theme renders through the fallback.
+
+`config/theme.php` holds `default`, `fallback`, per-surface themes (`public` → `clear-signal`),
+optional caching and asset budgets. Site-wide selection lives in
+`Liberu\Foundation\Settings\Settings\SiteSettings::$active_theme`, edited from
+`Liberu\Foundation\SettingsFilament\Pages\ManageSiteSettings`.
+
+Filament panels follow the **site-wide** theme only, via `ThemeColors::forSite()` mapping a
+theme's `colors.primary` to a Filament palette (unknown → Amber). Panels evaluate `->colors()`
+once at worker boot, so under Octane a colour change needs a worker restart.
+
+**Vite inputs are derived, not listed.** `vite.config.js` reads every `themes/*/theme.json` and
+flattens `assets.css` + `assets.js`. Installing a theme package is enough to get it built; a
+typo in `assets` fails the build, which is why an architecture rule checks those files exist.
+A fresh install must run `npm run build`.
+
+### Multi-language
+
+`config('app.supported_locales')` (en/es/fr/de).
+`Liberu\Foundation\Localization\Http\Middleware\SetLocale` resolves request param → session →
+`users.locale` → `Accept-Language` → default, and runs on the `web` group (`bootstrap/app.php`)
+**and** both panels. Precedence is request > session > user, so a stale session locale can shadow
+a freshly logged-in user until the session is flushed.
+
+`LanguageSwitcher` lives in `localization-livewire`; mount `<livewire:language-switcher />` where
+a switcher is wanted — it isn't mounted anywhere yet. On-demand machine translation is
+`localization-mymemory`, **disabled by default** (needs the MyMemory API).
+
+### Operations
+
+Horizon manages Redis queues at `/horizon`. Octane + RoadRunner serves HTTP in production
+(`.rr.yaml`). Telescope (dev) and Pulse are gated by `ObservabilityActor::isAdmin()` from the
+`observability` module. `bootstrap/app.php` appends `SetLocale` and `SecurityHeaders` to the
+`web` group, registers a `/up` health route, and renders JSON exceptions for `api/*`.
+
+**Reverb is installed but not wired.** `resources/js/app.js` is empty, there is no Echo client,
+and `routes/channels.php` holds only Laravel's default user channel — no module broadcasts.
+Treat real-time as an available dependency, not a working feature.
 
 ## Testing
 
-PHPUnit 13 / Pest 5. Tests use SQLite in-memory (configured in `phpunit.xml`). The test database is configured via `DB_CONNECTION=sqlite` and `DB_DATABASE=:memory:` env overrides; no separate `.env.testing` database config is needed.
+Pest 5 / PHPUnit 13, SQLite in-memory (env overrides in `phpunit.xml`; no `.env.testing`
+database config needed). Base class `tests/TestCase.php`, Pest config `tests/Pest.php`
+(`Feature` gets `RefreshDatabase`).
 
-Base test class: `tests/TestCase.php`. Pest config: `tests/Pest.php`.
+Five testsuites: `Unit`, `Feature`, `Architecture`, `Modules`, `Themes`. The `Modules` and
+`Themes` suites list each package's `tests` directory explicitly rather than scanning — PHPUnit
+does **not** expand wildcards in `<directory>` or `<exclude>`, and a package whose standalone
+suite has been run locally has a `vendor/` that must not be swept in. The same applies to the
+`<source>` coverage list. Both lists are guarded by an architecture rule, so neither can drift
+from what is installed.
 
-Feature tests cover: chat, messaging, notifications, search (users/posts/groups/all), profile photos, site settings.
-Unit tests cover: module system (loader, config, hooks, manager, model), locale middleware, team model, theme manager, translation service, user model.
+Note that most of `tests/Unit` is integration-shaped: it boots the app, reads host config and
+asserts across several packages. Only tests needing nothing from the host belong in a package.
 
-## Known Upgrade Blockers
+## Known upgrade blockers
 
-These upgrades are blocked by dependency conflicts — revisit when the blocking package releases support:
+- **`spatie/laravel-permission` → v8**: blocked by `bezhansalleh/filament-shield ~4.x` requiring
+  `^6.0|^7.0`. Upgrade both together once Shield releases v5+ with v8 support.
+- **`spiral/roadrunner-http` → v4**: blocked by `laravel/octane ^2.x`; v4 has breaking API
+  changes Octane doesn't support.
 
-- **`spatie/laravel-permission` → v8**: Blocked by `bezhansalleh/filament-shield ~4.x` requiring `^6.0|^7.0`. Upgrade both together once filament-shield releases v5+ with v8 support.
-- **`phpunit/phpunit` → 13.1.13+**: Blocked by `pestphp/pest 5.x-dev` explicitly conflicting with `phpunit > 13.1.8`. Will resolve when Pest 5 stable releases.
-- **`spiral/roadrunner-http` → v4**: Blocked by `laravel/octane ^2.x` suggesting `^3.3.0`; v4 has breaking API changes unsupported by current Octane.
+## PHP 8.5 notes
 
-## Known PHP 8.5 Changes Applied
-
-- `PDO::MYSQL_ATTR_SSL_CA` deprecated → replaced with `Pdo\Mysql::ATTR_SSL_CA` in `config/database.php`
-- `Spatie\LaravelPasskeys\Models\Concerns\HasPasskeys` changed from a trait to an interface; `User` now implements the interface and uses `InteractsWithPasskeys` trait
+- `PDO::MYSQL_ATTR_SSL_CA` is deprecated; `config/database.php` uses `Pdo\Mysql::ATTR_SSL_CA`.

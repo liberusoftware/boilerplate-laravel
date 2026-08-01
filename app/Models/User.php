@@ -149,17 +149,7 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function hasAdminAccess(): bool
     {
-        /** @var string $pivot */
-        $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
-        /** @var string $roles */
-        $roles = config('permission.table_names.roles', 'roles');
-
-        return DB::table($pivot)
-            ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
-            ->where("{$pivot}.model_id", $this->getKey())
-            ->where("{$pivot}.model_type", $this->getMorphClass())
-            ->whereIn("{$roles}.name", ['super_admin', 'admin'])
-            ->exists();
+        return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'), 'admin');
     }
 
     /**
@@ -169,18 +159,26 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function isSuperAdmin(): bool
     {
+        return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'));
+    }
+
+    /**
+     * Team-agnostic role check. Spatie's hasRole() is bound to the active team
+     * context, which is unset on plain web requests and when canAccessPanel()
+     * runs, so query the pivot directly across every team.
+     */
+    private function hasRoleInAnyTeam(string ...$names): bool
+    {
         /** @var string $pivot */
         $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
         /** @var string $roles */
         $roles = config('permission.table_names.roles', 'roles');
-        /** @var string $superAdmin */
-        $superAdmin = config('filament-shield.super_admin.name', 'super_admin');
 
         return DB::table($pivot)
             ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
             ->where("{$pivot}.model_id", $this->getKey())
             ->where("{$pivot}.model_type", $this->getMorphClass())
-            ->where("{$roles}.name", $superAdmin)
+            ->whereIn("{$roles}.name", $names)
             ->exists();
     }
 
@@ -224,21 +222,11 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
 
     /**
      * Admin = super_admin in any team, or an allowlisted email. Used to gate the
-     * Telescope/Pulse dashboards. The role check queries the pivot directly because
-     * Spatie's hasRole() is bound to the active team context, which is unset on the
-     * plain web requests those dashboards serve.
+     * Telescope/Pulse dashboards.
      */
     public function isAdmin(): bool
     {
-        if (in_array($this->email, (array) config('app.admin_emails', []), true)) {
-            return true;
-        }
-
-        return DB::table('model_has_roles')
-            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('model_has_roles.model_id', $this->getKey())
-            ->where('model_has_roles.model_type', $this->getMorphClass())
-            ->where('roles.name', 'super_admin')
-            ->exists();
+        return in_array($this->email, (array) config('app.admin_emails', []), true)
+            || $this->isSuperAdmin();
     }
 }

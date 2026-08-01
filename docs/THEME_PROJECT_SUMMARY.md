@@ -1,5 +1,8 @@
 # Project Implementation Summary
 
+> **Where this lives now.** The code described below moved out of `app/` into `modules/theme-support`. Paths and namespaces here have been updated to match; the owning package's `README.md` is the canonical reference.
+
+
 ## Custom Theme System - Complete Implementation
 
 **Repository**: liberusoftware/boilerplate-laravel  
@@ -40,10 +43,10 @@
 ### File Breakdown
 
 #### Core Theme System (8 files)
-1. `app/Services/ThemeManager.php` - Theme management service
+1. `modules/theme-support/src/Services/ThemeManager.php` - Theme management service
 2. `app/Providers/ThemeServiceProvider.php` - Laravel integration
 3. `app/Helpers/theme_helpers.php` - Helper functions
-4. `app/Livewire/ThemeSwitcher.php` - UI component
+4. `modules/theme-support/src/Livewire/ThemeSwitcher.php` - UI component
 5. `resources/views/livewire/theme-switcher.blade.php` - Component view
 6. `config/theme.php` - Theme configuration
 7. `database/migrations/2026_02_16_215049_add_theme_preference_to_users_table.php` - DB schema

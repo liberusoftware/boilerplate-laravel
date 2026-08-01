@@ -1,5 +1,8 @@
 # Multi-Language Support Documentation
 
+> **Where this lives now.** The code described below moved out of `app/` into `modules/localization`, `modules/localization-livewire` and `modules/localization-mymemory`. Paths and namespaces here have been updated to match; the owning package's `README.md` is the canonical reference.
+
+
 This Laravel boilerplate now includes comprehensive multi-language support with automated translations.
 
 ## Features
@@ -188,7 +191,7 @@ console.log(translations.welcome);
 The `TranslationService` class provides programmatic access to translations:
 
 ```php
-use App\Services\TranslationService;
+use Liberu\Foundation\Localization\MyMemory\TranslationService;
 
 $service = app(TranslationService::class);
 
@@ -424,7 +427,7 @@ Edit `config/app.php`:
 
 2. **Update TranslationService**
 
-Edit `app/Services/TranslationService.php`:
+Edit `modules/localization-mymemory/src/TranslationService.php`:
 
 ```php
 public const SUPPORTED_LANGUAGES = [
@@ -439,7 +442,7 @@ public const SUPPORTED_LANGUAGES = [
 
 3. **Update LanguageSwitcher Component**
 
-Edit `app/Livewire/LanguageSwitcher.php` mount method to use the config:
+Edit `modules/localization-livewire/src/Livewire/LanguageSwitcher.php` mount method to use the config:
 
 ```php
 public function mount()

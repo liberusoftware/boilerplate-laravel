@@ -5,7 +5,6 @@ use Liberu\Foundation\ModuleManager\Exceptions\DependencyResolutionFailed;
 use Liberu\Foundation\ModuleManager\Exceptions\InvalidManifest;
 use Liberu\Foundation\ModuleManager\Manifest;
 use Liberu\Foundation\ModuleManager\ModuleRegistry;
-use Tests\TestCase;
 
 function makeCoverageManifest(array $overrides = [], ?string $package = null): Manifest
 {
@@ -30,7 +29,7 @@ it('exposes and normalizes all manifest metadata', function () {
     $manifest = makeCoverageManifest([
         'display_name' => 'Covered', 'category' => 'presentation',
         'requires' => ['packages' => 'bad', 'capabilities' => 'bad', 'php' => '^8.5', 'laravel' => '^12.0'],
-        'presentation' => ['filament' => ['admin' => [TestCase::class, 42]]],
+        'presentation' => ['filament' => ['admin' => [ServiceProvider::class, 42]]],
     ]);
 
     expect($manifest->displayName())->toBe('Covered')
@@ -41,7 +40,7 @@ it('exposes and normalizes all manifest metadata', function () {
         ->and($manifest->requiredCapabilities())->toBe([])
         ->and($manifest->phpConstraint())->toBe('^8.5')
         ->and($manifest->laravelConstraint())->toBe('^12.0')
-        ->and($manifest->filamentPlugins('admin'))->toBe([TestCase::class])
+        ->and($manifest->filamentPlugins('admin'))->toBe([ServiceProvider::class])
         ->and($manifest->filamentPlugins('app'))->toBe([])
         ->and($manifest->toArray()['path'])->toBe($manifest->path);
 });

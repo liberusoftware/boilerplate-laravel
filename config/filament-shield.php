@@ -40,6 +40,23 @@ return [
     | and configure the tenant model during setup. This enables tenant-scoped
     | roles and permissions throughout your application.
     |
+    | Keep this `null` in this boilerplate. Tenancy is wired manually, not via
+    | `shield:install --tenant`: `AdminPanelProvider` declares
+    | `->tenant(Team::class, ownershipRelationship: 'team')` and Shield's
+    | `SyncShieldTenant` tenant middleware calls `setPermissionsTeamId()` on
+    | every request. That is what scopes roles/permissions to the active team,
+    | and it never reads this key.
+    |
+    | Shield only reads `tenant_model` in places this app does not use:
+    |   - `RoleResource`'s tenant picker, visible only when the panel is marked
+    |     as the central app (`->centralApp()`); the admin panel is a tenant
+    |     panel, so the field is hidden regardless.
+    |   - `shield:super-admin --tenant=<id>`, purely to verify the id exists.
+    |   - the `shield:seeder` stub and `php artisan about` output.
+    |
+    | Setting it to `Team::class` is harmless but buys nothing at runtime, so
+    | leave it null and avoid a second source of truth for the tenant model.
+    |
     */
 
     'tenant_model' => null,

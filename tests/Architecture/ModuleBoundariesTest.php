@@ -35,6 +35,26 @@ it('gives every runtime module complete package metadata', function () {
     }
 });
 
+it('accounts for every installed module in the runtime selection', function () {
+    $installed = array_map('basename', moduleDirectories());
+    $selected = array_merge((array) config('modules.enabled'), (array) config('modules.disabled'));
+
+    expect(array_values(array_diff($installed, $selected)))->toBe([])
+        ->and(array_values(array_diff($selected, $installed)))->toBe([]);
+});
+
+it('runs and measures every installed module', function () {
+    $phpunit = file_get_contents(dirname(__DIR__, 2).'/phpunit.xml');
+    $installed = array_map('basename', moduleDirectories());
+
+    foreach (['#<directory>modules/([^/<]+)/src</directory>#', '#<directory suffix="Test.php">modules/([^/<]+)/tests</directory>#'] as $pattern) {
+        preg_match_all($pattern, $phpunit, $configured);
+
+        expect(array_values(array_diff($installed, $configured[1])))->toBe([])
+            ->and(array_values(array_diff($configured[1], $installed)))->toBe([]);
+    }
+});
+
 it('requires every module to exercise its service provider in the application', function () {
     foreach (moduleDirectories() as $module) {
         $test = $module.'/tests/Integration/ServiceProviderTest.php';
@@ -72,6 +92,37 @@ it('does not let api adapters import domain persistence models', function () {
         }
         foreach (modulePhpFiles($module) as $file) {
             expect(file_get_contents($file->getPathname()))->not->toMatch('/use Liberu\\\\.+\\\\Models\\\\/');
+        }
+    }
+});
+
+it('resolves every declared theme parent', function () {
+    $themes = [];
+    foreach (glob(dirname(__DIR__, 2).'/themes/*/theme.json') ?: [] as $manifestFile) {
+        $manifest = json_decode(file_get_contents($manifestFile), true, flags: JSON_THROW_ON_ERROR);
+        $themes[$manifest['name']] = $manifest['parent'] ?? '';
+    }
+
+    expect($themes)->not->toBeEmpty();
+
+    foreach ($themes as $name => $parent) {
+        if ($parent === '') {
+            continue;
+        }
+        expect($themes)->toHaveKey($parent, "Theme [{$name}] inherits from missing theme [{$parent}].")
+            ->and($parent)->not->toBe($name);
+    }
+});
+
+it('ships every asset a theme declares', function () {
+    foreach (glob(dirname(__DIR__, 2).'/themes/*/theme.json') ?: [] as $manifestFile) {
+        $manifest = json_decode(file_get_contents($manifestFile), true, flags: JSON_THROW_ON_ERROR);
+        $assets = array_merge($manifest['assets']['css'] ?? [], $manifest['assets']['js'] ?? []);
+
+        expect($assets)->not->toBeEmpty();
+
+        foreach ($assets as $asset) {
+            expect(dirname($manifestFile).'/'.$asset)->toBeFile();
         }
     }
 });

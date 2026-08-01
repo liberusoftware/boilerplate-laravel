@@ -9,9 +9,18 @@
     "liberusoftware/analytics-contracts": "^1.0",
     "liberusoftware/integrations": "^1.0"
   },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
   "autoload": {
     "psr-4": {
       "Liberu\\Foundation\\Analytics\\Meta\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\Analytics\\Meta\\Tests\\": "tests/"
     }
   },
   "extra": {

@@ -1,5 +1,8 @@
 # Advanced Search Functionality
 
+> **Where this lives now.** The code described below moved out of `app/` into `modules/search`. Paths and namespaces here have been updated to match; the owning package's `README.md` is the canonical reference.
+
+
 This document describes the advanced search functionality implemented for users, posts, and groups.
 
 ## Overview
@@ -204,7 +207,7 @@ Located at: `app/Models/User.php`
 ## Service Layer
 
 ### SearchService
-Located at: `app/Services/SearchService.php`
+Located at: `modules/search/src/Services/SearchService.php`
 
 **Methods**:
 - `searchUsers(array $filters)`: Search users with advanced filters

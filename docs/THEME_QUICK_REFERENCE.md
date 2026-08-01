@@ -1,5 +1,8 @@
 # Theme System - Quick Reference
 
+> **Where this lives now.** The code described below moved out of `app/` into `modules/theme-support`. Paths and namespaces here have been updated to match; the owning package's `README.md` is the canonical reference.
+
+
 ## Directory Structure
 
 ```
@@ -107,7 +110,7 @@ if (theme()->themeExists('mytheme')) {
 ## ThemeManager Methods
 
 ```php
-$manager = app(\App\Services\ThemeManager::class);
+$manager = app(\Liberu\Foundation\Theme\Services\ThemeManager::class);
 
 // Get all themes
 $themes = $manager->getThemes();

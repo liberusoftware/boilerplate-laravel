@@ -1,11 +1,9 @@
 <?php
 
+use Illuminate\Support\ServiceProvider;
 use Liberu\Foundation\Theme\Discovery\ThemeDiscovery;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 use Liberu\Foundation\Theme\Manifests\ThemeManifest;
-use Tests\TestCase;
-
-uses(TestCase::class);
 
 function writeCoverageTheme(array $changes = [], bool $asset = true): string
 {
@@ -16,7 +14,7 @@ function writeCoverageTheme(array $changes = [], bool $asset = true): string
     }
     $data = array_replace([
         'name' => 'covered', 'display_name' => 'Covered', 'version' => '1.0.0',
-        'provider' => TestCase::class, 'type' => 'shared', 'parent' => '',
+        'provider' => ServiceProvider::class, 'type' => 'shared', 'parent' => '',
         'optimized_for' => [], 'tested_with' => [], 'required_capabilities' => ['one'],
         'optional_capabilities' => ['two'], 'supports' => [],
         'assets' => ['css' => ['theme.css'], 'js' => []],
@@ -34,7 +32,7 @@ function writeCoverageTheme(array $changes = [], bool $asset = true): string
 it('exposes all theme manifest values', function () {
     $manifest = ThemeManifest::fromFile(writeCoverageTheme(['parent' => 'base']));
     expect($manifest->name())->toBe('covered')->and($manifest->displayName())->toBe('Covered')
-        ->and($manifest->version())->toBe('1.0.0')->and($manifest->provider())->toBe(TestCase::class)
+        ->and($manifest->version())->toBe('1.0.0')->and($manifest->provider())->toBe(ServiceProvider::class)
         ->and($manifest->type())->toBe('shared')->and($manifest->parent())->toBe('base')
         ->and($manifest->assets('css'))->toBe(['theme.css'])->and($manifest->assets('unknown'))->toBe([])
         ->and($manifest->requiredCapabilities())->toBe(['one'])->and($manifest->optionalCapabilities())->toBe(['two'])

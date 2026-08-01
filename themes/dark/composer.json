@@ -8,9 +8,18 @@
     "liberusoftware/theme-support": "^1.0",
     "liberusoftware/theme-base": "^1.0"
   },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
   "autoload": {
     "psr-4": {
       "Liberu\\Themes\\Dark\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Themes\\Dark\\Tests\\": "tests/"
     }
   },
   "extra": {

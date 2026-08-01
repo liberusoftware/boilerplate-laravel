@@ -9,6 +9,10 @@
     "liberusoftware/module-manager": "^1.0",
     "liberusoftware/settings": "^1.0"
   },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
   "autoload": {
     "psr-4": {
       "Liberu\\Foundation\\Theme\\": "src/"
@@ -16,6 +20,11 @@
     "files": [
       "src/Support/theme_helpers.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\Theme\\Tests\\": "tests/"
+    }
   },
   "extra": {
     "liberu": {

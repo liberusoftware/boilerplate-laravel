@@ -34,6 +34,21 @@ return [
          * When using the "Teams" feature from this package, we need to know which
          * Eloquent model should be used to retrieve your teams. Of course, it
          * is often just the "Team" model but you may use whatever you like.
+         *
+         * Keep this `null` in this boilerplate, even though `teams => true`
+         * below. Team scoping works off the `team_id` column and the team id
+         * set by `setPermissionsTeamId()`; it does not need this class.
+         *
+         * This key is only read by two members of Spatie's `HasRoles` trait,
+         * neither of which this app uses:
+         *   - `HasRoles::teams()` — `App\Models\User` resolves the trait
+         *     collision with `HasTeams::teams insteadof HasRoles`, so
+         *     Jetstream's `teams()` wins and Spatie's is never compiled in.
+         *   - the `team()` / `withoutTeam()` query scopes — unused here.
+         *
+         * Pointing it at `App\Models\Team` would therefore change no behaviour,
+         * and it invites re-exposing Spatie's `teams()` relation, which would
+         * collide with Jetstream's. Leave it null.
          */
         'team' => null,
 

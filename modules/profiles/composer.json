@@ -9,9 +9,18 @@
     "illuminate/support": "^13.0",
     "liberusoftware/identity": "^1.0"
   },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
   "autoload": {
     "psr-4": {
       "Liberu\\Foundation\\Profiles\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\Profiles\\Tests\\": "tests/"
     }
   },
   "extra": {

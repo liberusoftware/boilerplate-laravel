@@ -4,6 +4,11 @@
 !/modules/**
 !/themes/
 !/themes/**
+# ...except the dependencies a package installs when its own suite is run standalone.
+/modules/*/vendor/
+/themes/*/vendor/
+/modules/*/composer.lock
+/themes/*/composer.lock
 node_modules/
 npm-debug.log
 yarn-error.log

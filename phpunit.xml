@@ -14,8 +14,59 @@
         <testsuite name="Architecture">
             <directory>tests/Architecture</directory>
         </testsuite>
+        <!-- Listed per package rather than scanned: each package installs its own vendor/
+             when its standalone suite runs, and PHPUnit does not expand wildcards in exclude. -->
         <testsuite name="Modules">
-            <directory suffix="Test.php">modules</directory>
+            <directory suffix="Test.php">modules/activity-comments/tests</directory>
+            <directory suffix="Test.php">modules/analytics-core/tests</directory>
+            <directory suffix="Test.php">modules/analytics-google/tests</directory>
+            <directory suffix="Test.php">modules/analytics-meta/tests</directory>
+            <directory suffix="Test.php">modules/api-access/tests</directory>
+            <directory suffix="Test.php">modules/application-core/tests</directory>
+            <directory suffix="Test.php">modules/audit/tests</directory>
+            <directory suffix="Test.php">modules/blog-core/tests</directory>
+            <directory suffix="Test.php">modules/blog-filament/tests</directory>
+            <directory suffix="Test.php">modules/currency-context/tests</directory>
+            <directory suffix="Test.php">modules/developer-experience/tests</directory>
+            <directory suffix="Test.php">modules/feature-flags/tests</directory>
+            <directory suffix="Test.php">modules/files-media/tests</directory>
+            <directory suffix="Test.php">modules/foundation-filament/tests</directory>
+            <directory suffix="Test.php">modules/identity/tests</directory>
+            <directory suffix="Test.php">modules/identity-filament/tests</directory>
+            <directory suffix="Test.php">modules/identity-socialstream/tests</directory>
+            <directory suffix="Test.php">modules/import-export/tests</directory>
+            <directory suffix="Test.php">modules/integrations/tests</directory>
+            <directory suffix="Test.php">modules/jetstream-bridge/tests</directory>
+            <directory suffix="Test.php">modules/localization/tests</directory>
+            <directory suffix="Test.php">modules/localization-livewire/tests</directory>
+            <directory suffix="Test.php">modules/localization-mymemory/tests</directory>
+            <directory suffix="Test.php">modules/messaging/tests</directory>
+            <directory suffix="Test.php">modules/messaging-api/tests</directory>
+            <directory suffix="Test.php">modules/messaging-filament/tests</directory>
+            <directory suffix="Test.php">modules/module-manager/tests</directory>
+            <directory suffix="Test.php">modules/notifications/tests</directory>
+            <directory suffix="Test.php">modules/observability/tests</directory>
+            <directory suffix="Test.php">modules/organizations-teams/tests</directory>
+            <directory suffix="Test.php">modules/organizations-teams-filament/tests</directory>
+            <directory suffix="Test.php">modules/profiles/tests</directory>
+            <directory suffix="Test.php">modules/roles-permissions/tests</directory>
+            <directory suffix="Test.php">modules/roles-permissions-filament/tests</directory>
+            <directory suffix="Test.php">modules/scheduler-queues/tests</directory>
+            <directory suffix="Test.php">modules/search/tests</directory>
+            <directory suffix="Test.php">modules/search-api/tests</directory>
+            <directory suffix="Test.php">modules/search-demo/tests</directory>
+            <directory suffix="Test.php">modules/sessions-devices/tests</directory>
+            <directory suffix="Test.php">modules/settings/tests</directory>
+            <directory suffix="Test.php">modules/settings-filament/tests</directory>
+            <directory suffix="Test.php">modules/theme-support/tests</directory>
+            <directory suffix="Test.php">modules/two-factor-authentication/tests</directory>
+            <directory suffix="Test.php">modules/webhooks/tests</directory>
+        </testsuite>
+        <testsuite name="Themes">
+            <directory suffix="Test.php">themes/clear-signal/tests</directory>
+            <directory suffix="Test.php">themes/dark/tests</directory>
+            <directory suffix="Test.php">themes/default/tests</directory>
+            <directory suffix="Test.php">themes/liberu-base/tests</directory>
         </testsuite>
     </testsuites>
     <source>
