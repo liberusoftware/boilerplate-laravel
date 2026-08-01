@@ -18,7 +18,7 @@
       "name": "clear-signal"
     }
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "require-dev": {
     "orchestra/testbench": "^11.1",
     "pestphp/pest": "^5.0"
