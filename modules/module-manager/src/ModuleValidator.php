@@ -34,7 +34,7 @@ final class ModuleValidator
 
             $composerPackages = array_filter(
                 $composer['require'] ?? [],
-                static fn (string $package): bool => str_starts_with($package, 'liberu/'),
+                static fn (string $package): bool => str_starts_with($package, 'liberusoftware/'),
                 ARRAY_FILTER_USE_KEY,
             );
             if ($composerPackages !== $manifest->requiredPackages()) {

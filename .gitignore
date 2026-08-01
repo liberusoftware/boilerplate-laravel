@@ -1,4 +1,9 @@
 /vendor/
+# Composer installs Liberu packages into these directories; both are intentionally tracked.
+!/modules/
+!/modules/**
+!/themes/
+!/themes/**
 node_modules/
 npm-debug.log
 yarn-error.log

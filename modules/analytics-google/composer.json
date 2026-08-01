@@ -1,14 +1,13 @@
 {
-  "name": "liberu/analytics-google",
-  "version": "1.0.0",
+  "name": "liberusoftware/analytics-google",
   "description": "Consent-aware Google Analytics event mapping adapter.",
   "type": "liberu-module",
   "license": "MIT",
   "require": {
     "php": "^8.5",
     "illuminate/support": "^13.0",
-    "liberu/analytics-contracts": "^1.0",
-    "liberu/integrations": "^1.0"
+    "liberusoftware/analytics-contracts": "^1.0",
+    "liberusoftware/integrations": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -19,5 +18,6 @@
     "liberu": {
       "name": "analytics-google"
     }
-  }
+  },
+  "version": "1.0.0"
 }

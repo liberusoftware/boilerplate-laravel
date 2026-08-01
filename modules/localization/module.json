@@ -6,8 +6,8 @@
     "version": "1.0.0",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Localization\\LocalizationServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/localization-contracts": "^1.0", "liberu/module-manager": "^1.0" } },
-    "suggests": { "liberu/localization-livewire": "^1.0", "liberu/localization-mymemory": "^1.0" },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/localization-contracts": "^1.0", "liberusoftware/module-manager": "^1.0" } },
+    "suggests": { "liberusoftware/localization-livewire": "^1.0", "liberusoftware/localization-mymemory": "^1.0" },
     "capabilities": ["foundation.localization"],
     "default_enabled": false
 }

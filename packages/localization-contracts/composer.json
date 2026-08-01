@@ -1,9 +1,0 @@
-{
-    "name": "liberu/localization-contracts",
-    "description": "Stable provider-neutral machine translation contracts for Liberu Localization.",
-    "type": "library",
-    "version": "1.0.0",
-    "license": "MIT",
-    "require": { "php": "^8.5" },
-    "autoload": { "psr-4": { "Liberu\\Localization\\Contracts\\": "src/" } }
-}

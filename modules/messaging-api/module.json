@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "presentation",
     "provider": "Liberu\\Messaging\\Api\\MessagingApiServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/messaging": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/messaging": "^1.0" } },
     "suggests": {},
     "capabilities": ["messaging.api"],
     "default_enabled": false

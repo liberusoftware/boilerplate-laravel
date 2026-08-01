@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\OrganizationsFilament\\OrganizationsFilamentServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/organizations-teams": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/organizations-teams": "^1.0" } },
     "suggests": {},
     "presentation": { "filament": { "admin": ["Liberu\\Foundation\\OrganizationsFilament\\OrganizationsFilamentPlugin"] } },
     "capabilities": ["foundation.organizations.filament"],

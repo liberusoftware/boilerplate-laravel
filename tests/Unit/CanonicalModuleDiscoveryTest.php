@@ -29,7 +29,7 @@ it('rejects a selected module whose local package dependency is disabled', funct
     file_put_contents($dependentPath, json_encode([
         'name' => 'dependent', 'display_name' => 'Dependent', 'description' => 'test',
         'version' => '1.0.0', 'category' => 'foundation', 'provider' => 'Provider',
-        'requires' => ['packages' => ['liberu/module-manager' => '^1.0']],
+        'requires' => ['packages' => ['liberusoftware/module-manager' => '^1.0']],
         'capabilities' => ['test.dependent'], 'default_enabled' => true,
     ], JSON_THROW_ON_ERROR));
     $dependent = Manifest::fromFile($dependentPath);

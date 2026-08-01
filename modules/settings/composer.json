@@ -1,13 +1,12 @@
 {
-  "name": "liberu/settings",
-  "version": "1.0.0",
+  "name": "liberusoftware/settings",
   "description": "Typed scoped settings foundation for Liberu applications.",
   "type": "liberu-module",
   "license": "MIT",
   "require": {
     "php": "^8.5",
     "spatie/laravel-settings": "^3.0",
-    "liberu/module-manager": "^1.0"
+    "liberusoftware/module-manager": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -18,5 +17,6 @@
     "liberu": {
       "name": "settings"
     }
-  }
+  },
+  "version": "1.0.0"
 }

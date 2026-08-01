@@ -19,11 +19,12 @@ it('gives every runtime module complete package metadata', function () {
         expect($module.'/composer.json')->toBeFile()
             ->and($module.'/module.json')->toBeFile()
             ->and($module.'/README.md')->toBeFile()
+            ->and($module.'/LICENSE.md')->toBeFile()
             ->and($module.'/CHANGELOG.md')->toBeFile();
 
         $composer = json_decode(file_get_contents($module.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
         $manifest = json_decode(file_get_contents($module.'/module.json'), true, flags: JSON_THROW_ON_ERROR);
-        $moduleDependencies = array_filter($composer['require'] ?? [], fn ($constraint, $package) => str_starts_with($package, 'liberu/'), ARRAY_FILTER_USE_BOTH);
+        $moduleDependencies = array_filter($composer['require'] ?? [], fn ($constraint, $package) => str_starts_with($package, 'liberusoftware/'), ARRAY_FILTER_USE_BOTH);
 
         expect($composer['type'] ?? null)->toBe('liberu-module')
             ->and($composer['extra']['liberu']['name'] ?? null)->toBe($manifest['name'])
@@ -102,8 +103,8 @@ it('declares every cross-package Liberu namespace dependency in Composer', funct
     $root = dirname(__DIR__, 2);
     $packageFiles = array_merge(
         glob($root.'/modules/*/composer.json') ?: [],
-        glob($root.'/packages/*/composer.json') ?: [],
         glob($root.'/themes/*/composer.json') ?: [],
+        glob($root.'/vendor/liberusoftware/*/composer.json') ?: [],
     );
     $packages = [];
     foreach ($packageFiles as $composerFile) {

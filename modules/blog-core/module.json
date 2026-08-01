@@ -6,8 +6,8 @@
     "version": "1.0.0",
     "category": "product",
     "provider": "Liberu\\Blog\\Core\\BlogServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
-    "suggests": { "liberu/blog-filament": "^1.0" },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },
+    "suggests": { "liberusoftware/blog-filament": "^1.0" },
     "capabilities": ["blog.publish"],
     "default_enabled": false
 }

@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\SearchApi\\SearchApiServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/search": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/search": "^1.0" } },
     "suggests": {},
     "capabilities": ["foundation.search.api"],
     "default_enabled": false

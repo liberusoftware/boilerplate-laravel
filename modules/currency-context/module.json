@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Currency\\CurrencyServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },
     "suggests": {},
     "capabilities": ["foundation.currency"],
     "default_enabled": false

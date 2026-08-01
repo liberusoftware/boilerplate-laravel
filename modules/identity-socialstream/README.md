@@ -1,7 +1,88 @@
-# Liberu Identity Socialstream
+# Liberu Social Identity
 
-Provider adapter for social identity linking. It owns connected-account persistence, policy, actions, migrations, and factory. Provider credentials remain protected and provider-specific behavior does not leak into product modules. The host identity composition implements `ConnectedAccountOwner` and supplies its configured authentication model.
+> Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization.
 
-## Identity schema extension
+[Software](https://liberusoftware.com) · [Hosting](https://liberuhosting.com) · [Services](https://liberuservices.com) · [Liberu Group](https://liberugroup.com)
 
-This adapter explicitly requires `liberu/identity`. Social identities remain in its owned `connected_accounts` table; its compatibility migration only relaxes the canonical password field for provider-only accounts. Disabling the adapter preserves linked-account data.
+[![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)](https://www.php.net/) [![Latest release](https://img.shields.io/github/v/release/liberusoftware/module-identity-socialstream?sort=semver)](https://github.com/liberusoftware/module-identity-socialstream/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+
+## Feature scope
+
+Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization. This repository owns this capability as an independently versioned Composer package; hosts integrate it through its declared public boundaries rather than application-specific classes.
+
+### Capabilities
+
+- `identity.socialstream`
+
+## Requirements and installation
+
+| Dependency | Supported version |
+|---|---|
+| `php` | `^8.5` |
+| `bursteri/socialstream` | `^7.0` |
+| `laravel/socialite` | `^5.0` |
+| `liberusoftware/identity` | `^1.0` |
+| `liberusoftware/module-manager` | `^1.0` |
+| `liberusoftware/organizations-teams` | `^1.0` |
+
+Install the released package from the project root:
+
+```bash
+composer require liberusoftware/identity-socialstream
+```
+
+The trusted `liberu/composer-installer` places it in `/modules/identity-socialstream`. The installed directory remains tracked by the host repository, while Composer and its lock file remain the source of version truth. Installation does not imply runtime enablement or commercial entitlement.
+
+## Architecture and integration
+
+- Composer package: `liberusoftware/identity-socialstream`
+- Package type: `liberu-module`
+- Installer name: `identity-socialstream`
+- Category: `adapter`
+- Service provider: `Liberu\Foundation\Identity\Socialstream\Providers\SocialstreamServiceProvider`
+- Enabled by default: `no`
+
+### Public contracts
+
+- `src/Contracts/ConnectedAccountOwner.php`
+
+### Commands
+
+- No console command is provided.
+
+### Events
+
+- No package-owned event class is currently published.
+
+### Persistence and permissions
+
+- `database/migrations/2026_06_29_123954_make_password_nullable_on_users_table.php`
+- `database/migrations/2026_06_29_123955_create_connected_accounts_table.php`
+
+Authorization remains the host application's responsibility unless a public authorizer contract is listed above. Consumers should grant only the permissions needed for the exported capabilities and must not couple to internal tables or classes.
+
+## Testing
+
+The package includes 2 test file(s). From a compatible host checkout, run:
+
+```bash
+vendor/bin/pest modules/identity-socialstream/tests
+```
+
+Changes must preserve the manifest, service-provider integration, package boundaries, and PHP/Laravel compatibility declared above.
+
+## Security
+
+Do not report security vulnerabilities through public GitHub issues. Email `security@liberusoftware.com` with reproduction details and the affected version so the report can be handled privately.
+
+## License
+
+This module is open-source software available under the [MIT License](LICENSE.md). The linked licence text is authoritative.
+
+## Feedback and contributing
+
+Focused issues and tested pull requests are welcome in the [GitHub repository](https://github.com/liberusoftware/module-identity-socialstream). Keep changes within this module's capability boundary, update tests and documentation, and record user-visible changes in `CHANGELOG.md`.
+
+## Contributors
+
+Thank you to everyone who helps improve Liberu. [View the contributors graph](https://github.com/liberusoftware/module-identity-socialstream/graphs/contributors).

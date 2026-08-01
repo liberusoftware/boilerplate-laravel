@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "adapter",
     "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/identity": "^1.0", "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/identity": "^1.0", "liberusoftware/module-manager": "^1.0", "liberusoftware/organizations-teams": "^1.0" } },
     "suggests": {},
     "capabilities": ["identity.socialstream"],
     "default_enabled": false

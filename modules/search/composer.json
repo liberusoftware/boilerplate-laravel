@@ -1,6 +1,5 @@
 {
-  "name": "liberu/search",
-  "version": "1.0.0",
+  "name": "liberusoftware/search",
   "description": "Provider-neutral authorized search contracts and local Eloquent driver.",
   "type": "liberu-module",
   "license": "MIT",
@@ -8,8 +7,8 @@
     "php": "^8.5",
     "illuminate/database": "^13.0",
     "illuminate/pagination": "^13.0",
-    "liberu/identity": "^1.0",
-    "liberu/module-manager": "^1.0"
+    "liberusoftware/identity": "^1.0",
+    "liberusoftware/module-manager": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -20,5 +19,6 @@
     "liberu": {
       "name": "search"
     }
-  }
+  },
+  "version": "1.0.0"
 }

@@ -1,6 +1,5 @@
 {
-  "name": "liberu/feature-flags",
-  "version": "1.0.0",
+  "name": "liberusoftware/feature-flags",
   "description": "Typed rollout flags with stable environment, tenant, and actor targeting.",
   "type": "liberu-module",
   "license": "MIT",
@@ -8,7 +7,7 @@
     "php": "^8.5",
     "illuminate/database": "^13.0",
     "illuminate/support": "^13.0",
-    "liberu/module-manager": "^1.0"
+    "liberusoftware/module-manager": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -19,5 +18,6 @@
     "liberu": {
       "name": "feature-flags"
     }
-  }
+  },
+  "version": "1.0.0"
 }

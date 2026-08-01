@@ -1,6 +1,5 @@
 {
-  "name": "liberu/audit",
-  "version": "1.0.0",
+  "name": "liberusoftware/audit",
   "description": "Contextual material-change audit records with correlation and retention boundaries.",
   "type": "liberu-module",
   "license": "MIT",
@@ -8,7 +7,7 @@
     "php": "^8.5",
     "illuminate/database": "^13.0",
     "illuminate/support": "^13.0",
-    "liberu/module-manager": "^1.0"
+    "liberusoftware/module-manager": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -19,5 +18,6 @@
     "liberu": {
       "name": "audit"
     }
-  }
+  },
+  "version": "1.0.0"
 }

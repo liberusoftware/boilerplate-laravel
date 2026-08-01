@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\IdentityFilament\\IdentityFilamentServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/roles-permissions": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/roles-permissions": "^1.0" } },
     "suggests": {},
     "presentation": { "filament": { "admin": ["Liberu\\Foundation\\IdentityFilament\\IdentityFilamentPlugin"] } },
     "capabilities": ["foundation.identity.filament"],

@@ -1,465 +1,193 @@
-# Liberu Software — Laravel 13 SaaS Boilerplate
+# Liberu Boilerplate
 
-[![](https://avatars.githubusercontent.com/u/158830885?s=200&v=4)](https://www.liberu.co.uk)
+> Production-ready Laravel foundation for modular, single-tenant and multi-tenant applications.
 
-![](https://img.shields.io/badge/PHP-8.5-informational?style=flat&logo=php&color=4f5b93)
-![](https://img.shields.io/badge/Laravel-13-informational?style=flat&logo=laravel&color=ef3b2d)
-![](https://img.shields.io/badge/Filament-5-informational?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48cGF0aCBkPSJNMCAwaDQ4djQ4SDBWMHoiIGZpbGw9IiNmNGIyNWUiLz48cGF0aCBkPSJNMjggN2wtMSA2LTMuNDM3LjgxM0wyMCAxNWwtMSAzaDZ2NWgtN2wtMyAxOEg4Yy41MTUtNS44NTMgMS40NTQtMTEuMzMgMy0xN0g4di01bDUtMSAuMjUtMy4yNUMxNCAxMSAxNCAxMSAxNS40MzggOC41NjMgMTkuNDI5IDYuMTI4IDIzLjQ0MiA2LjY4NyAyOCA3eiIgZmlsbD0iIzI4MjQxZSIvPjxwYXRoIGQ9Ik0zMCAxOGg0YzIuMjMzIDUuMzM0IDIuMjMzIDUuMzM0IDEuMTI1IDguNUwzNCAyOWMtLjE2OCAzLjIwOS0uMTY4IDMuMjA5IDAgNmwtMiAxIDEgM2gtNXYyaC0yYy44NzUtNy42MjUuODc1LTcuNjI1IDItMTFoMnYtMmgtMnYtMmwyLTF2LTQtM3oiIGZpbGw9IiMyYTIwMTIiLz48cGF0aCBkPSJNMzUuNTYzIDYuODEzQzM4IDcgMzggNyAzOSA4Yy4xODggMi40MzguMTg4IDIuNDM4IDAgNWwtMiAyYy0yLjYyNS0uMzc1LTIuNjI1LS4zNzUtNS0xLS42MjUtMi4zNzUtLjYyNS0yLjM3NS0xLTUgMi0yIDItMiA0LjU2My0yLjE4N3oiIGZpbGw9IiM0MDM5MzEiLz48cGF0aCBkPSJNMzAgMThoNGMyLjA1NSA1LjMxOSAyLjA1NSA1LjMxOSAxLjgxMyA4LjMxM0wzNSAyOGwtMyAxdi0ybC00IDF2LTJsMi0xdi00LTN6IiBmaWxsPSIjMzEyODFlIi8+PHBhdGggZD0iTTI5IDI3aDN2MmgydjJoLTJ2MmwtNC0xdi0yaDJsLTEtM3oiIGZpbGw9IiMxNTEzMTAiLz48cGF0aCBkPSJNMzAgMThoNHYzaC0ydjJsLTMgMSAxLTZ6IiBmaWxsPSIjNjA0YjMyIi8+PC9zdmc+&&color=fdae4b&link=https://filamentphp.com)
-![](https://img.shields.io/badge/Livewire-4-informational?style=flat&logo=Livewire&color=fb70a9)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Open Source Love](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)
+[Software](https://liberusoftware.com) · [Hosting](https://liberuhosting.com) · [Services](https://liberuservices.com) · [Liberu Group](https://liberugroup.com)
 
+[![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)](https://www.php.net/) [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/) [![Filament](https://img.shields.io/badge/Filament-5-FDAE4B)](https://filamentphp.com/) [![Livewire](https://img.shields.io/badge/Livewire-4-FB70A9)](https://livewire.laravel.com/)
 
-## Build modern SaaS applications faster — a production-ready Laravel 13 boilerplate powered by PHP 8.5, Filament 5 and Livewire 4.
+[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml) [![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml) [![Latest release](https://img.shields.io/github/v/release/liberusoftware/boilerplate-laravel?sort=semver)](https://github.com/liberusoftware/boilerplate-laravel/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
-[![Contact us on WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/+441793200950)
-[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@liberusoftware)
-[![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=Facebook&logoColor=white)](https://www.facebook.com/liberusoftware)
-[![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/liberusoftware)
-[![X](https://img.shields.io/badge/X-%23000000.svg?style=for-the-badge&logo=X&logoColor=white)](https://www.x.com/liberusoftware)
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/liberugroup)
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://www.github.com/liberusoftware)
+Liberu Boilerplate is the deployable reference host for the Liberu Composer ecosystem. It combines independently released capability, presentation, and theme packages while keeping application bootstrapping, environment configuration, panel composition, and cross-package tests in one place.
 
+## Key features
 
-[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml)
-[![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml)
-[![Docker](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml/badge.svg)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/liberusoftware/boilerplate-laravel/graph/badge.svg?token=K7TWB1QF1L)](https://codecov.io/gh/liberusoftware/boilerplate-laravel)
-[![Latest Release](https://img.shields.io/github/v/release/liberusoftware/boilerplate-laravel?label=Latest%20Release)](https://github.com/liberusoftware/boilerplate-laravel/releases/latest)
+- Jetstream authentication, profiles, sessions, two-factor authentication, passkeys, and social login
+- Filament admin and account panels assembled from optional presentation modules
+- Organisations, teams, roles, permissions, audit trails, settings, and feature flags
+- Messaging, notifications, localisation, search, files, webhooks, integrations, analytics, and import/export foundations
+- Queue, scheduler, Horizon, Pulse, Telescope, Octane, Reverb, backup, and observability support
+- Independently versioned modules installed into tracked `/modules` directories
+- Independently versioned themes installed into tracked `/themes` directories with inheritance and safe fallback
+- Architecture tests for manifests, dependency direction, package ownership, and presentation boundaries
 
-A production-ready SaaS starter built with Laravel 13, PHP 8.5, Filament 5, Livewire 4, Jetstream and Socialite — designed to kickstart multi-tenant or single-tenant SaaS applications with minimal setup.
+## Requirements
 
-Website: https://www.liberu.co.uk
+| Dependency | Supported version |
+|---|---|
+| PHP | 8.5 |
+| Laravel | 13.x |
+| Filament | 5.x |
+| Livewire | 4.x |
+| Composer | 2.x |
+| Node.js | Current LTS |
+| Database | A Laravel-supported SQL database |
 
----
-
-Table of contents
-- Overview
-- Key features
-- Prerequisites
-- Standard (local) install
-- Automated installation script
-- Web-based graphical installer
-- Docker / Sail install
-- Running tests
-- Troubleshooting
-- Contributing
-- License
-
----
-
-Overview
---------
-**Liberu Software** is an open-source initiative that combines the latest versions of Laravel 13, PHP 8.5, Filament 5 and Livewire 4 to provide a solid, extensible foundation for modern web applications. This boilerplate ships with the common SaaS building blocks you need — authentication, an admin panel, real-time interactivity, social login, notifications, multi-language support and more — so you can focus on building your product rather than reinventing the wheel.
-
-Whether you are starting a new SaaS product, an internal tool, or a modular enterprise application, this boilerplate is designed to get you productive from day one. It follows Laravel best practices, supports both single-tenant and multi-tenant patterns, and is fully containerised for Docker or Kubernetes deployments.
-
-**Private Messaging System** — a complete secure messaging feature is built in, allowing users to exchange end-to-end encrypted messages. See [MESSAGING.md](docs/MESSAGING.md) and [SETUP_MESSAGING.md](docs/SETUP_MESSAGING.md) for full documentation.
-
-**Multi-Language Support** — the application supports English, Spanish, French and German out of the box with automated translations, smart language detection and per-user preferences. See [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md) for details.
-
-Key features
-------------
-- Jetstream authentication and user profiles with avatar uploads
-- Filament admin panel for resource management
-- Livewire-powered UI for reactive components
-- Social login via Socialite
-- **Real-time notifications with Pusher/Laravel Echo** (see [docs/NOTIFICATIONS.md](docs/NOTIFICATIONS.md))
-- **Modular architecture** for easy custom module integration
-- **Custom Theme System** - Support for custom layouts, CSS, and JS per theme (see [docs/THEME_SYSTEM.md](docs/THEME_SYSTEM.md))
-- **Private Messaging System** - Secure end-to-end encrypted messaging between users
-- **Multi-Language Support** - Automated translations with language detection and user preferences (see [docs/MULTI_LANGUAGE.md](docs/MULTI_LANGUAGE.md))
-- Database seeders and example data (optional)
-- Docker and Laravel Sail support for containerized development
-
-Prerequisites
--------------
-- PHP 8.5
-- Composer
-- Node.js (recommended: LTS) and npm or yarn (for front-end assets)
-- MySQL / PostgreSQL or another supported DB
-- Docker (if using Docker or Sail)
-
-Standard (local) install
-------------------------
-> **Quickstart:** The fastest way to get started is to use the bundled `install.sh` script (see *Automated installation script* below) or the browser-based graphical installer at `public/installer.php`. Both options guide you step-by-step without requiring manual configuration.
-
-These steps assume you want to run the application on your machine (not in Docker). They are intentionally clear and safe — back up any existing .env before overriding.
-
-1. Clone the repo
-   ```bash
-   git clone https://github.com/liberusoftware/boilerplate-laravel.git
-   cd boilerplate-laravel
-   ```
-
-2. Install PHP dependencies
-   ```bash
-   composer install
-   ```
-
-3. Copy the example env and configure
-   ```bash
-   cp .env.example .env
-   # Edit .env to set DB_*, APP_URL and other settings
-   ```
-
-4. Generate application key
-   ```bash
-   php artisan key:generate
-   ```
-
-5. Install front-end dependencies (if you plan to build assets)
-   ```bash
-   npm install
-   # or
-   yarn
-   ```
-
-6. Build front-end assets (development or production)
-   ```bash
-   npm run dev   # development
-   npm run build # production
-   ```
-
-7. Run migrations and seeders
-    - IMPORTANT: Seeders will add example data. Skip seeding if you don't want that.
-   ```bash
-   php artisan migrate
-   # When you want seed data:
-   php artisan migrate --seed
-   ```
-
-8. Create storage symlink (required for profile photos)
-   ```bash
-   php artisan storage:link
-   ```
-
-9. Run the application
-   ```bash
-   php artisan serve --host=127.0.0.1 --port=8000
-   ```
-   Open: http://127.0.0.1:8000 (or your configured APP_URL)
-
-Automated installation script
------------------------------
-The repository includes `install.sh`, an interactive shell script that automates the entire setup process. Run it from the command line after cloning:
+## Quick start
 
 ```bash
-chmod +x install.sh
-./install.sh
+git clone https://github.com/liberusoftware/boilerplate-laravel.git
+cd boilerplate-laravel
+composer install
+cp .env.example .env
+php artisan key:generate
+npm install
+npm run build
+php artisan migrate
+php artisan serve
 ```
 
-The script supports three installation modes:
-1. **Standalone** - Local development/production installation
-2. **Docker** - Containerised deployment
-3. **Kubernetes** - K8s cluster deployment
+Review `.env` before migrating. Use `php artisan migrate --seed` only when example data is wanted. The optional interactive `install.sh` supports local, Docker, and Kubernetes-oriented setup.
 
-Features of `install.sh`:
-- Automatically detects and handles missing dependencies
-- Downloads `composer.phar` if the `composer` command is not available
-- Skips `composer install` if the `vendor/` folder already exists
-- Skips `npm install` if the `node_modules/` folder already exists
-- Provides coloured output and error checking
-- Interactive prompts guide you through configuration step by step
+## Composable package architecture
 
-Web-based graphical installer
-------------------------------
-A browser-based graphical installer is available at `public/installer.php` for users who prefer a point-and-click setup experience. Enable it before use:
-
-```dotenv
-INSTALLER_ENABLED=true
-INSTALLER_KEY=your-secret-key   # optional: restrict access
-```
-
-The graphical installer provides:
-- **Step-by-step installation workflow** with visual progress indicators
-- Composer and NPM installation with automatic skip if already installed
-- **Fallback to download `composer.phar`** if the `composer` command is not found
-- Database configuration and connectivity testing
-- Migration and seeding
-- User creation with role assignment
-- **Module management** (list, install, enable modules)
-- **"Run All Steps" button** for fully automated one-click installation
-
-> **Important:** Disable the installer after setup by setting `INSTALLER_ENABLED=false` in `.env`.
-
-Notes
-- Configure mail and social provider settings in `.env` for production use.
-- If you use a different DB (e.g., PostgreSQL), update `.env` accordingly.
-
-Docker install
---------------
-Two recommended Docker approaches are provided: manual Docker image and Laravel Sail.
-
-A. Using the repository Dockerfile (image build)
-1. Build the image from the project root:
-   ```bash
-   docker build -t boilerplate-laravel .
-   ```
-2. Create an env file for the container or use your `.env`:
-   ```bash
-   # Ensure .env contains correct DB and APP_URL values
-   ```
-3. Run the container (example: mapped port 8000):
-   ```bash
-   docker run --name boilerplate-app --env-file .env -p 8000:8000 -d boilerplate-laravel
-   ```
-4. Run migrations inside the running container:
-   ```bash
-   docker exec -it boilerplate-app php artisan migrate --seed
-   docker exec -it boilerplate-app php artisan storage:link
-   ```
-5. Visit: http://localhost:8000
-
-Notes for Docker image:
-- When building a standalone image, ensure your Dockerfile handles running queue workers, scheduler, and any entrypoint tasks you need. For development, using docker run with volume mounts can be more convenient.
-
-B. Recommended: Use Laravel Sail (Docker Compose wrapper)
-1. Start Sail from project root:
-   ```bash
-   # Linux / macOS
-   ./vendor/bin/sail up -d
-   # Windows (PowerShell)
-   vendor/bin/sail up -d
-   ```
-2. Run migrations and seeders using Sail:
-   ```bash
-   ./vendor/bin/sail artisan migrate --seed
-   ./vendor/bin/sail artisan storage:link
-   ```
-3. Build front-end assets inside Sail (if needed):
-   ```bash
-   ./vendor/bin/sail npm install
-   ./vendor/bin/sail npm run dev
-   ```
-4. Visit: http://localhost
-
-Sail notes:
-- Sail creates a complete development environment with services (DB, Redis, mailhog) and is the recommended containerized development workflow.
-
-Running tests
--------------
-This repository includes automated tests (see /tests). Run tests with:
-
-```bash
-# Local (uses Pest)
-composer install --dev
-vendor/bin/pest
-
-# Or via Laravel's test runner which proxies to Pest
-php artisan test
-
-# With Sail
-./vendor/bin/sail test
-```
-
-Troubleshooting
----------------
-- "Permission denied" when running storage or bootstrap cache: adjust filesystem ownership
-  ```bash
-  sudo chown -R $USER:www-data storage bootstrap/cache
-  chmod -R 775 storage bootstrap/cache
-  ```
-- DB connection errors: verify `.env` DB_* values and ensure the DB service is running (Sail or local).
-- If assets not updating: clear caches
-  ```bash
-  php artisan config:clear
-  php artisan cache:clear
-  php artisan view:clear
-  ```
-
-Modular Architecture
---------------------
-The application is composed from independently versioned `liberu-module` Composer packages
-installed in `modules/`. Composer owns installation and autoloading, while each package's
-`module.json` describes runtime capabilities and dependencies. `config/modules.php` explicitly
-selects the application composition; the module manager validates and dependency-orders that
-graph before registering providers.
-
-### Module Features
-
-- Every module owns its `composer.json`, `module.json`, provider, README, changelog and tests.
-- Composer dependencies control installation; manifest capabilities control runtime composition.
-- Bundled modules default to disabled and are enabled explicitly by the consuming application.
-- Contract-only packages keep adapters independent from concrete implementations.
-- Domain packages remain UI-agnostic; companion `*-filament` modules declare panel plugins in
-  their manifests and consume public domain services or contracts.
-- Architecture tests enforce declared cross-package dependencies and presentation boundaries.
-
-See `docs/MODULE_DEVELOPMENT.md` for a full walkthrough using Blog as the worked example.
-
-### Module Structure
+Each runtime capability is an independent `liberu-module` Composer package with its own GitHub repository, release lifecycle, manifest, provider, documentation, and tests. Each visual package is an independent `liberu-theme`. Shared contract packages and the custom installer are normal Composer dependencies under `/vendor`.
 
 ```text
-modules/blog/
-├── composer.json
-├── module.json
-├── README.md
-├── CHANGELOG.md
-├── src/
-├── config/
-├── database/migrations/
-├── resources/views/
-├── routes/
-└── tests/
+Application composition
+├── modules/       # Composer-installed module releases, tracked in Git
+├── themes/        # Composer-installed theme releases, tracked in Git
+├── app/           # Host-only composition and integration
+├── config/        # Enabled modules and application policy
+└── tests/         # Cross-package and application tests
 ```
 
-### Filament Integration
+Composer is the source of installation and version truth:
 
-Enabled presentation modules declare plugin classes under `filament_plugins.admin` or
-`filament_plugins.app` in `module.json`. `App\Filament\ModulePlugins` builds each panel from
-those declarations. This keeps panel providers independent of optional modules and ensures
-that disabling a presentation package removes its UI as well as its provider.
-
-### Custom Theme Support
-
-Modules can provide custom themes:
-- Define themes in `resources/themes/`
-- Include custom layouts, CSS, and JavaScript
-- Themes integrate with the application theme system
-- Support for theme inheritance and overrides
-
-Custom Theme System
--------------------
-This boilerplate includes a comprehensive theme system for custom layouts, CSS, and JavaScript per visual theme. Two themes ship ready to use:
-
-- **`default`** — the stock look (loads `resources/css/app.css`); active out of the box, no visual change until you switch.
-- **`clear-signal`** — a teal theme built from the `DESIGN.md` "Clear Signal" design system (teal palette + Inter). Its `theme.json` `colors.primary: teal` also drives the Filament admin/app panel accent when it's the active site theme.
-
-A `dark` theme is also included as a reference.
-
-### Quick Start with Themes
-
-Pick the **site-wide** theme in the admin panel: **Site Settings → Appearance → Site Theme**. Individual users can still override it.
-
-Switch themes programmatically:
-```php
-set_theme('clear-signal');  // Switch theme (session / user preference)
-$current = active_theme();   // Get the active theme
-```
-
-Use the per-user theme switcher component:
-```blade
-<livewire:theme-switcher />
-```
-
-> `clear-signal` ships a compiled Tailwind bundle, so it only restyles the frontend after `npm run build`. Before that (or for `default`/`dark`), the frontend safely falls back to `resources/css/app.css`.
-
-### Theme Features
-
-- **Per-theme bundles** - A theme declares canonical `/themes/{theme}/resources/css/app.css` and JavaScript entries in `theme.json`. `@themeVite` loads built entries and otherwise uses the application bundle.
-- **Admin-selectable site theme** - Choose the site-wide theme in Site Settings; per-user overrides supported.
-- **Custom Layouts** - Theme-specific Blade layouts in `/themes/{theme}/resources/views/`
-- **User Preferences** - Themes saved to database per user or session
-- **Dynamic Switching** - Switch themes on the fly with the Livewire component
-- **Fallback System** - Falls back to `resources/css/app.css` / default files when a theme has no built bundle or custom file
-- **Blade Directives** - `@themeVite` (load the active theme's frontend bundle), `@themeCss`, `@themeJs`, `@themeAsset()`, `@themeLayout()`
-
-### Using Themes in Views
-
-```blade
-<head>
-    {{-- Load the active theme's built bundle (or app.css fallback) + app.js --}}
-    @themeVite
-</head>
-
-{{-- Use theme-specific layout --}}
-@extends(theme_layout('app'))
-
-@section('content')
-    {{-- Use theme assets --}}
-    <img src="{{ theme_asset('images/logo.png') }}" alt="Logo">
-@endsection
-```
-
-`@themeVite` is the frontend entry point. `@themeCss`/`@themeJs` remain available for layouts that load a theme bundle alongside `app.css` (both are gated on the Vite manifest, so they emit nothing until the assets are built).
-
-### Creating a New Theme
-
-1. Create theme directories:
 ```bash
-mkdir -p themes/mytheme/resources/views/layouts
-mkdir -p themes/mytheme/resources/css
-mkdir -p themes/mytheme/resources/js
+# Update all dependencies, including modules and themes
+composer update --with-all-dependencies
+
+# Update one capability from its tagged GitHub repository
+composer update liberusoftware/search --with-dependencies
 ```
 
-2. Create `theme.json` with metadata (set `colors.primary` to a Tailwind color name — e.g. `teal` — to also drive the Filament panel accent).
-3. Create semantic tokens and the bundle at `themes/mytheme/resources/css/app.css`, plus any custom layout files.
-4. Declare entries in `theme.json` and wire `themes/mytheme/resources/css/app.css` into the consuming Vite input.
-5. Build assets: `npm run build`. The theme is then selectable site-wide in Site Settings (themes are auto-discovered from `themes/`).
+The trusted [`liberu/composer-installer`](https://github.com/liberu/composer-installer) places packages according to type:
 
-### Documentation
+| Composer type | Install path | Repository convention |
+|---|---|---|
+| `liberu-module` | `/modules/{installer-name}` | `liberusoftware/module-{installer-name}` |
+| `liberu-theme` | `/themes/{installer-name}` | `liberusoftware/theme-{installer-name}` |
+| Contract/library | `/vendor` | Package-specific repository |
 
-- [Theme System Guide](docs/THEME_SYSTEM.md) - Complete guide for creating and using themes
-- Example themes: `themes/default/`, `themes/clear-signal/` (teal, with a compiled Tailwind bundle), and `themes/dark/`
+`modules/` and `themes/` are intentionally kept out of `.gitignore`. Their reproduced contents are committed so deployments and reviews can see the exact installed code, while `composer.lock` pins each release and source commit. Do not edit an installed module only in this host: contribute the generic change to its package repository, release it, and update the Composer dependency here.
 
-### Theme Structure
+Installation, runtime enablement, authorisation, and commercial entitlement are separate concerns. `config/modules.php` selects the enabled capability graph; the module manager validates dependencies and orders providers without scanning application classes manually.
 
+## Module and theme development
+
+A module owns one cohesive capability and communicates through public contracts, actions, events, registries, or stable identifiers. Domain modules do not depend on Filament or themes; optional `*-filament`, `*-api`, and `*-livewire` packages provide presentation adapters.
+
+Every module contains:
+
+```text
+composer.json
+module.json
+README.md
+LICENSE.md
+CHANGELOG.md
+src/
+database/ or resources/ when required
+tests/
 ```
-themes/
-└── mytheme/
-    ├── theme.json           # Theme metadata
-    ├── views/
-    │   └── layouts/
-    │       └── app.blade.php    # Custom layout
-    ├── css/
-    │   └── app.css              # Theme CSS
-    └── js/
-        └── app.js               # Theme JavaScript
+
+Themes contain `composer.json`, `theme.json`, source assets, compatibility metadata, accessibility/fallback expectations, tests, documentation, and asset licensing information. See the [module development guide](docs/MODULE_DEVELOPMENT.md) and [theme architecture](docs/THEME_ARCHITECTURE.md).
+
+## Testing and quality
+
+```bash
+composer validate --strict
+vendor/bin/pest
+vendor/bin/pint --test
+npm run build
 ```
 
-Contributing
-------------
-Contributions are welcome and warmly encouraged! To contribute:
+The test suite exercises application behaviour and every installed module provider. Package architecture tests verify metadata, declared dependencies, host isolation, UI boundaries, and Composer ownership.
 
-1. **Fork** the repository on GitHub
-2. **Create a feature branch** from `main` — e.g. `git checkout -b feature/my-improvement`
-3. **Make your changes** and add or update tests where applicable
-4. **Ensure tests pass** by running `php artisan test` or `vendor/bin/pest`
-5. **Commit** with a clear, descriptive message
-6. **Open a Pull Request** against the `main` branch — describe what you changed and why
+### Publishing the component repositories
 
-Please follow the repository's code style. All pull requests are reviewed before merging. If you are planning a large change, consider opening an issue first to discuss it with the maintainers.
+The publishing helper derives repository names from directory names, using
+`module-` for entries in `modules/` and `theme-` for entries in `themes/`. It
+also handles this complete meta repository as `boilerplate-laravel`.
 
-We welcome bug fixes, new features, documentation improvements and translations. Cross-repo collaboration with other Liberu projects is especially encouraged.
+```bash
+# Inspect all mappings without changing GitHub
+scripts/publish-components
 
-License
--------
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for the full text.
+# Create any missing public repositories in the organisation
+scripts/publish-components --create
 
-The MIT license is one of the most permissive open-source licenses available. Key benefits:
+# After committing the complete worktree, split and push every component plus the meta repository
+scripts/publish-components --push
+```
 
-- **Free to use** in personal, commercial and proprietary projects at no cost
-- **Free to modify** — you can adapt the code to your needs without restriction
-- **Free to distribute** — you may share, sell or sublicense the software
-- **No warranty obligations** — you are not required to provide support or maintenance
-- **Patent peace** — no hidden patent grants or restrictions
-- **Business-friendly** — the only requirement is to retain the original copyright notice and license text
+Publishing requires authenticated `gh` and `git` access to the organisation.
+Push mode deliberately refuses a dirty worktree because subtree splits can only
+publish committed content. Existing repositories are updated without force, so
+non-fast-forward histories must be reconciled explicitly rather than overwritten.
 
-In short: take this boilerplate, build your product and ship it — the license will not get in your way.
+After the repositories are public, register every Composer package on Packagist:
 
-Credits & Related Projects
---------------------------
-- Liberu Software: https://www.liberu.co.uk
+```bash
+# Verify all 49 package-to-repository mappings without submitting
+php scripts/submit-packagist.php --dry-run
 
-## Related projects
+# Obtain the MAIN API token from packagist.org/profile, then bulk register the packages
+export PACKAGIST_USERNAME='your-packagist-username'
+export PACKAGIST_API_TOKEN='your-packagist-api-token'
+php scripts/submit-packagist.php
+unset PACKAGIST_API_TOKEN
+```
 
-The Liberu ecosystem contains a number of companion repositories and packages that extend or demonstrate functionality used in this boilerplate. Below is a concise, professional list of those projects with quick descriptions — follow the links to learn more or to contribute.
+The submitter skips packages that are already registered and reports individual
+API failures without printing the configured token.
 
-| Project | Repository | Short description |
-|---|---:|---|
-| Accounting | [liberu-accounting/accounting-laravel](https://github.com/liberu-accounting/accounting-laravel) | Accounting and invoicing features tailored for Laravel applications. |
-| Automation | [liberu-automation/automation-laravel](https://github.com/liberu-automation/automation-laravel) | Automation tooling and workflow integrations for Laravel projects. |
-| Billing | [liberu-billing/billing-laravel](https://github.com/liberu-billing/billing-laravel) | Subscription and billing management integrations (payments, invoices). |
-| Boilerplate (core) | [liberusoftware/boilerplate](https://github.com/liberusoftware/boilerplate) | Core starter and shared utilities used across Liberu projects. |
-| Browser Game | [liberu-browser-game/browser-game-laravel](https://github.com/liberu-browser-game/browser-game-laravel) | Example Laravel-based browser game platform and mechanics. |
-| CMS | [liberu-cms/cms-laravel](https://github.com/liberu-cms/cms-laravel) | Content management features and modular page administration. |
-| Control Panel | [liberu-control-panel/control-panel-laravel](https://github.com/liberu-control-panel/control-panel-laravel) | Administration/control-panel components for managing services. |
-| CRM | [liberu-crm/crm-laravel](https://github.com/liberu-crm/crm-laravel) | Customer relationship management features and integrations. |
-| E‑commerce | [liberu-ecommerce/ecommerce-laravel](https://github.com/liberu-ecommerce/ecommerce-laravel) | E‑commerce storefront, product and order management. |
-| Genealogy | [liberu-genealogy/genealogy-laravel](https://github.com/liberu-genealogy/genealogy-laravel) | Family tree and genealogy features built on Laravel. |
-| Maintenance | [liberu-maintenance/maintenance-laravel](https://github.com/liberu-maintenance/maintenance-laravel) | Scheduling, tracking and reporting for maintenance tasks. |
-| Real Estate | [liberu-real-estate/real-estate-laravel](https://github.com/liberu-real-estate/real-estate-laravel) | Property listings and real-estate management features. |
-| Social Network | [liberu-social-network/social-network-laravel](https://github.com/liberu-social-network/social-network-laravel) | Social features, profiles, feeds and messaging for Laravel apps. |
+## Documentation
 
-If you maintain or use one of these projects and would like a more detailed description or a different categorisation, open an issue or submit a pull request and we'll update the list. Contributions and cross-repo collaboration are warmly encouraged.
+- [Module development](docs/MODULE_DEVELOPMENT.md)
+- [Foundation compliance](docs/FOUNDATION_COMPLIANCE.md)
+- [Foundation module matrix](docs/FOUNDATION_MODULE_MATRIX.md)
+- [Theme architecture](docs/THEME_ARCHITECTURE.md)
+- [Theme system](docs/THEME_SYSTEM.md)
+- [Messaging architecture](docs/MESSAGING_ARCHITECTURE.md)
+- [Search architecture](docs/SEARCH_ARCHITECTURE.md)
+- [Localisation](docs/MULTI_LANGUAGE.md)
+- [Notifications](docs/NOTIFICATIONS.md)
+
+## Related Liberu projects
+
+| Project | Repository | Scope |
+|---|---|---|
+| CMS | [liberusoftware/cms-laravel](https://github.com/liberusoftware/cms-laravel) | Content, publishing, pages, media, search, and delivery |
+| CRM | [liberusoftware/crm-laravel](https://github.com/liberusoftware/crm-laravel) | Customers, leads, opportunities, sales, and service |
+| Billing | [liberusoftware/billing-laravel](https://github.com/liberusoftware/billing-laravel) | Billing, subscriptions, payments, invoices, and revenue operations |
+| Ecommerce | [liberusoftware/ecommerce-laravel](https://github.com/liberusoftware/ecommerce-laravel) | Catalogues, checkout, orders, fulfilment, and returns |
+| Accounting | [liberusoftware/accounting-erp-laravel](https://github.com/liberusoftware/accounting-erp-laravel) | Ledgers, banking, tax, expenses, close, and reporting |
+| Control panel | [liberusoftware/control-panel-laravel](https://github.com/liberusoftware/control-panel-laravel) | Hosting, infrastructure, DNS, mail, backups, and operations |
+| Automation | [liberusoftware/automation-laravel](https://github.com/liberusoftware/automation-laravel) | Governed workflows, provider-neutral AI, approvals, and connectors |
+
+## Security
+
+Do not report security vulnerabilities through public GitHub issues. Email `security@liberusoftware.com` with reproduction details and the affected version so the report can be handled privately.
+
+## License
+
+This project is open-source software available under the [MIT License](LICENSE.md). The linked licence text is authoritative; this summary is not legal advice.
+
+## Feedback and contributing
+
+Feedback and contributions are welcome. Report reproducible bugs, propose focused enhancements, improve documentation or translations, and submit tested changes. Search existing issues first. Pull requests should explain the problem and approach, remain focused, pass the required checks, and document user-visible or breaking changes. Security reports must follow the private route above.
+
+## Contributors
+
+Thank you to everyone who helps improve Liberu. [View the contributors graph](https://github.com/liberusoftware/boilerplate-laravel/graphs/contributors).
