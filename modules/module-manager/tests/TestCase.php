@@ -33,6 +33,6 @@ abstract class TestCase extends Orchestra
     private function usePackageOrCompositionBasePath($app): void
     {
         $compositionRoot = dirname(__DIR__, 3);
-        $app->useBasePath(is_dir($compositionRoot.'/themes') ? $compositionRoot : dirname(__DIR__));
+        $app->setBasePath(is_dir($compositionRoot.'/themes') ? $compositionRoot : dirname(__DIR__));
     }
 }

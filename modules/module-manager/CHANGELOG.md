@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6 - 2026-08-01
+
+- Correct Testbench base-path configuration through Laravel's supported application API.
+
 ## 1.0.5 - 2026-08-01
 
 - Make standalone Testbench booting independent of the host application's base path.
