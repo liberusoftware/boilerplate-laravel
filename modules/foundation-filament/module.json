@@ -3,7 +3,7 @@
     "name": "foundation-filament",
     "display_name": "Foundation Filament",
     "description": "Accessible account security/preferences and authorized foundation operations diagnostics.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\Filament\\FoundationFilamentServiceProvider",
     "requires": {

@@ -19,7 +19,7 @@
       "name": "scheduler-queues"
     }
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\SchedulerQueues\\Tests\\": "tests/"

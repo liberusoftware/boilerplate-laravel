@@ -20,7 +20,7 @@
       "name": "settings-filament"
     }
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\SettingsFilament\\Tests\\": "tests/"

@@ -3,7 +3,7 @@
     "name": "application-core",
     "display_name": "Application Core",
     "description": "Application metadata, health/readiness, secure response defaults, clocks, and shared identifiers.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\ApplicationCore\\ApplicationCoreServiceProvider",
     "requires": {

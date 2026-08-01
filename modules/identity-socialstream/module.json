@@ -3,7 +3,7 @@
     "name": "identity-socialstream",
     "display_name": "Social Identity",
     "description": "Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "adapter",
     "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
     "requires": {

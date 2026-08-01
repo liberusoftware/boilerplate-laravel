@@ -3,7 +3,7 @@
     "name": "organizations-teams",
     "display_name": "Organizations and Teams",
     "description": "Teams, memberships, invitations, ownership, switching, and current-context boundaries.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Organizations\\OrganizationsServiceProvider",
     "requires": {

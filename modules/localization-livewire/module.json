@@ -3,7 +3,7 @@
     "name": "localization-livewire",
     "display_name": "Localization Livewire",
     "description": "Interactive locale selection for Livewire applications.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\LocalizationLivewire\\LocalizationLivewireServiceProvider",
     "requires": {

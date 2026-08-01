@@ -3,7 +3,7 @@
     "name": "messaging-filament",
     "display_name": "Messaging Filament",
     "description": "Authenticated inbox and conversation presentation for Filament panels.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Messaging\\Filament\\MessagingFilamentServiceProvider",
     "requires": {

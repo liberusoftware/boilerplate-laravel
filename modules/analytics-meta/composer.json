@@ -19,7 +19,7 @@
       "name": "analytics-meta"
     }
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Analytics\\Meta\\Tests\\": "tests/"

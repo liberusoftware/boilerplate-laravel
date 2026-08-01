@@ -3,7 +3,7 @@
     "name": "localization",
     "display_name": "Localization",
     "description": "Locale negotiation, user preference, translations, timezone context, and RTL hooks.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Localization\\LocalizationServiceProvider",
     "requires": {

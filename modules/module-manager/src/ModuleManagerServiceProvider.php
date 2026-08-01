@@ -24,10 +24,17 @@ final class ModuleManagerServiceProvider extends ServiceProvider
             (string) config('modules.cache_path'),
         ));
 
-        $this->app->make(ModuleValidationGuard::class)
-            ->ensureValid($this->app->make(ModuleRegistry::class), Application::VERSION);
+        $registry = $this->app->make(ModuleRegistry::class);
+        $modules = $registry->resolve(config('modules.enabled', []), config('modules.disabled', []));
+        $selected = [];
+        foreach ($modules as $module) {
+            $selected[$module->name()] = $module;
+        }
 
-        foreach ($this->app->make(ModuleRegistry::class)->resolve(config('modules.enabled', []), config('modules.disabled', [])) as $module) {
+        $this->app->make(ModuleValidationGuard::class)
+            ->ensureValid(new ModuleRegistry($selected), Application::VERSION);
+
+        foreach ($modules as $module) {
             if ($module->name() !== 'module-manager') {
                 $this->app->register($module->provider());
             }

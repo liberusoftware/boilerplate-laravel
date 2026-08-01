@@ -3,7 +3,7 @@
     "name": "search-demo",
     "display_name": "Search Demo",
     "description": "Runnable reference records used to exercise search filters and authorization.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "product",
     "provider": "Liberu\\Search\\Demo\\SearchDemoServiceProvider",
     "requires": {

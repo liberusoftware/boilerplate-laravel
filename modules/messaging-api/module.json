@@ -3,7 +3,7 @@
     "name": "messaging-api",
     "display_name": "Messaging API",
     "description": "Authenticated private-message endpoints with validation and policy enforcement.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Messaging\\Api\\MessagingApiServiceProvider",
     "requires": {

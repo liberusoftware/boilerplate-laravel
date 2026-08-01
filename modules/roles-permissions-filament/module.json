@@ -3,7 +3,7 @@
     "name": "roles-permissions-filament",
     "display_name": "Authorization Filament",
     "description": "Filament role and permission management through the authorization capability.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\AuthorizationFilament\\AuthorizationFilamentServiceProvider",
     "requires": {

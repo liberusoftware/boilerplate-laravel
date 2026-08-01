@@ -3,7 +3,7 @@
     "name": "blog-filament",
     "display_name": "Blog Administration",
     "description": "Optional Filament resources for Blog.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Blog\\Filament\\BlogFilamentServiceProvider",
     "requires": {

@@ -3,7 +3,7 @@
     "name": "messaging",
     "display_name": "Messaging",
     "description": "Authorized private messages encrypted at rest with unread state and participant policies.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "capability",
     "provider": "Liberu\\Messaging\\Core\\MessagingServiceProvider",
     "requires": {

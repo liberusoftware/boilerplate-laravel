@@ -3,7 +3,7 @@
     "name": "notifications",
     "display_name": "Notifications",
     "description": "Localized templates, channel preferences, inbox state, retries, delivery status, and quiet hours.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Notifications\\NotificationsServiceProvider",
     "requires": {

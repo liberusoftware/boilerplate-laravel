@@ -170,7 +170,7 @@ it('reports all invalid module metadata and dependency errors', function () {
 
 it('reports an installed Composer version mismatch and a non-provider class', function () {
     $manifest = makeCoverageManifest([
-        'name' => 'module-manager', 'version' => '0.0.1', 'provider' => TestCase::class,
+        'name' => 'module-manager', 'version' => '0.0.1', 'provider' => stdClass::class,
     ], 'liberusoftware/module-manager');
     file_put_contents($manifest->path.'/composer.json', json_encode([
         'name' => 'liberusoftware/module-manager', 'type' => 'liberu-module',
