@@ -34,6 +34,15 @@ it('gives every runtime module complete package metadata', function () {
     }
 });
 
+it('requires every module to exercise its service provider in the application', function () {
+    foreach (moduleDirectories() as $module) {
+        $test = $module.'/tests/Integration/ServiceProviderTest.php';
+
+        expect($test)->toBeFile()
+            ->and(file_get_contents($test))->toContain('->register($provider, true)');
+    }
+});
+
 it('prevents modules from depending on the host application', function () {
     foreach (moduleDirectories() as $module) {
         foreach (modulePhpFiles($module) as $file) {
