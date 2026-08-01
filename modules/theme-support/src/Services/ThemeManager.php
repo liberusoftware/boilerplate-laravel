@@ -2,7 +2,6 @@
 
 namespace Liberu\Foundation\Theme\Services;
 
-use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
@@ -227,12 +226,11 @@ final class ThemeManager
         return isset($this->themes[$theme ?? $this->activeTheme]) ? $this->themes[$theme ?? $this->activeTheme]->toArray() : [];
     }
 
-    public function getFilamentColors(?string $theme = null): array
+    public function primaryColor(?string $theme = null): string
     {
         $config = $this->getThemeConfig($theme);
-        $primary = strtolower((string) ($config['colors']['primary'] ?? 'amber'));
 
-        return ['primary' => $this->filamentColorMap()[$primary] ?? Color::Amber];
+        return strtolower((string) ($config['colors']['primary'] ?? 'amber'));
     }
 
     public function clearCache(): void
@@ -257,11 +255,6 @@ final class ThemeManager
     public function getLayout(string $layout, ?string $theme = null): string
     {
         return "layouts.{$layout}";
-    }
-
-    protected function filamentColorMap(): array
-    {
-        return ['slate' => Color::Slate, 'gray' => Color::Gray, 'zinc' => Color::Zinc, 'neutral' => Color::Neutral, 'stone' => Color::Stone, 'red' => Color::Red, 'orange' => Color::Orange, 'amber' => Color::Amber, 'yellow' => Color::Yellow, 'lime' => Color::Lime, 'green' => Color::Green, 'emerald' => Color::Emerald, 'teal' => Color::Teal, 'cyan' => Color::Cyan, 'sky' => Color::Sky, 'blue' => Color::Blue, 'indigo' => Color::Indigo, 'violet' => Color::Violet, 'purple' => Color::Purple, 'fuchsia' => Color::Fuchsia, 'pink' => Color::Pink, 'rose' => Color::Rose];
     }
 
     private function enabledCapabilities(): array

@@ -1,24 +1,27 @@
 <?php
 
 use Filament\Support\Colors\Color;
-use Liberu\Foundation\Theme\Services\ThemeManager;
+use Liberu\Foundation\Filament\Support\ThemeColors;
 
 it('maps the default theme primary color to the Amber Filament palette', function () {
-    $colors = app(ThemeManager::class)->getFilamentColors('default');
+    config(['theme.default' => 'default']);
+    $colors = app(ThemeColors::class)->forSite();
 
     expect($colors)->toHaveKey('primary');
     expect($colors['primary'])->toBe(Color::Amber);
 });
 
 it('maps the dark theme primary color to the Indigo Filament palette', function () {
-    $colors = app(ThemeManager::class)->getFilamentColors('dark');
+    config(['theme.default' => 'dark']);
+    $colors = app(ThemeColors::class)->forSite();
 
     expect($colors['primary'])->toBe(Color::Indigo);
 });
 
 it('falls back to Amber for an unknown color name', function () {
     // A theme with no colors block resolves to the Amber default.
-    $colors = app(ThemeManager::class)->getFilamentColors('no-such-theme');
+    config(['theme.default' => 'no-such-theme']);
+    $colors = app(ThemeColors::class)->forSite();
 
     expect($colors['primary'])->toBe(Color::Amber);
 });

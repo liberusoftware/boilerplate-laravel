@@ -2,6 +2,7 @@
 
 namespace Liberu\Foundation\ModuleManager;
 
+use Composer\InstalledVersions;
 use Liberu\Foundation\ModuleManager\Exceptions\InvalidManifest;
 
 final class ModuleDiscovery
@@ -11,6 +12,21 @@ final class ModuleDiscovery
     {
         $modules = [];
         $capabilities = [];
+        $packageNames = [];
+
+        if (class_exists(InstalledVersions::class)) {
+            foreach (InstalledVersions::getInstalledPackagesByType('liberu-module') as $package) {
+                $installPath = InstalledVersions::getInstallPath($package);
+                if (is_string($installPath)) {
+                    $paths[] = dirname($installPath);
+                }
+            }
+        }
+
+        $paths = array_values(array_unique(array_filter(array_map(
+            static fn (string $path): string|false => realpath($path),
+            $paths,
+        ))));
 
         foreach ($paths as $root) {
             foreach (glob(rtrim($root, '/').'/*/module.json') ?: [] as $path) {
@@ -21,6 +37,12 @@ final class ModuleDiscovery
                 if (! is_file($manifest->path.'/composer.json')) {
                     throw new InvalidManifest("Module [{$manifest->name()}] has no composer.json.");
                 }
+                $composer = json_decode((string) file_get_contents($manifest->path.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
+                $package = $composer['name'] ?? null;
+                if (! is_string($package) || isset($packageNames[$package])) {
+                    throw new InvalidManifest("Module [{$manifest->name()}] has a missing or duplicate Composer package name.");
+                }
+                $packageNames[$package] = $manifest->name();
                 foreach ($manifest->capabilities() as $capability) {
                     if (isset($capabilities[$capability])) {
                         throw new InvalidManifest("Duplicate capability [{$capability}].");

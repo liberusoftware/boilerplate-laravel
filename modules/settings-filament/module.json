@@ -8,6 +8,7 @@
     "provider": "Liberu\\Foundation\\SettingsFilament\\SettingsFilamentServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/settings": "^1.0", "liberu/theme-support": "^1.0" } },
     "suggests": {},
+    "presentation": { "filament": { "admin": ["Liberu\\Foundation\\SettingsFilament\\SettingsFilamentPlugin"] } },
     "capabilities": ["foundation.settings.filament"],
-    "default_enabled": true
+    "default_enabled": false
 }

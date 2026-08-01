@@ -19,7 +19,7 @@ final class RowValidator
             }
         }
 
-return $errors;
+        return $errors;
     }
 
     private function matches(mixed $value, string $type): bool

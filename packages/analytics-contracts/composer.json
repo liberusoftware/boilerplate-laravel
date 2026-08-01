@@ -1,0 +1,9 @@
+{
+    "name": "liberu/analytics-contracts",
+    "description": "Stable provider-neutral contracts and value types for Liberu Analytics.",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": { "php": "^8.5" },
+    "autoload": { "psr-4": { "Liberu\\Analytics\\Contracts\\": "src/" } }
+}

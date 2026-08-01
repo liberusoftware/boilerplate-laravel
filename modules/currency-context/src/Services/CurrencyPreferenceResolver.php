@@ -17,6 +17,6 @@ final class CurrencyPreferenceResolver
             }
         }
 
-return strtoupper($fallback);
+        return strtoupper($fallback);
     }
 }

@@ -1,14 +1,26 @@
 {
-    "name": "liberu/identity-socialstream",
-    "description": "Socialstream/Socialite identity-linking provider adapter.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "bursteri/socialstream": "^7.0", "laravel/socialite": "^5.0", "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" },
-    "autoload": {
-        "psr-4": {
-            "Liberu\\Foundation\\Identity\\Socialstream\\": "src/",
-            "Liberu\\Foundation\\Identity\\Socialstream\\Database\\Factories\\": "database/factories/"
-        }
-    },
-    "extra": { "liberu": { "name": "identity-socialstream" }, "laravel": { "providers": ["Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider"] } }
+  "name": "liberu/identity-socialstream",
+  "version": "1.0.0",
+  "description": "Socialstream/Socialite identity-linking provider adapter.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "bursteri/socialstream": "^7.0",
+    "laravel/socialite": "^5.0",
+    "liberu/identity": "^1.0",
+    "liberu/module-manager": "^1.0",
+    "liberu/organizations-teams": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Identity\\Socialstream\\": "src/",
+      "Liberu\\Foundation\\Identity\\Socialstream\\Database\\Factories\\": "database/factories/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "identity-socialstream"
+    }
+  }
 }

@@ -1,1 +1,22 @@
-{"name":"liberu/theme-dark","description":"Liberu dark public theme.","type":"liberu-theme","license":"MIT","require":{"php":"^8.5","liberu/theme-support":"^1.0","liberu/theme-base":"^1.0"},"autoload":{"psr-4":{"Liberu\\Themes\\Dark\\":"src/"}},"extra":{"liberu":{"name":"dark"},"laravel":{"providers":["Liberu\\Themes\\Dark\\DarkThemeServiceProvider"]}}}
+{
+  "name": "liberu/theme-dark",
+  "version": "1.0.0",
+  "description": "Liberu dark public theme.",
+  "type": "liberu-theme",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "liberu/theme-support": "^1.0",
+    "liberu/theme-base": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Themes\\Dark\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "dark"
+    }
+  }
+}

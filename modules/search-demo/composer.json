@@ -1,9 +1,25 @@
 {
-    "name": "liberu/search-demo",
-    "description": "Reference searchable post and group records for the boilerplate integration test bed.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "illuminate/database": "^13.0", "illuminate/support": "^13.0", "liberu/module-manager": "^1.0", "liberu/search": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Search\\Demo\\": "src/", "Liberu\\Search\\Demo\\Database\\Factories\\": "database/factories/" } },
-    "extra": { "liberu": { "name": "search-demo" }, "laravel": { "providers": ["Liberu\\Search\\Demo\\SearchDemoServiceProvider"] } }
+  "name": "liberu/search-demo",
+  "version": "1.0.0",
+  "description": "Reference searchable post and group records for the boilerplate integration test bed.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/database": "^13.0",
+    "illuminate/support": "^13.0",
+    "liberu/module-manager": "^1.0",
+    "liberu/search": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Search\\Demo\\": "src/",
+      "Liberu\\Search\\Demo\\Database\\Factories\\": "database/factories/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "search-demo"
+    }
+  }
 }

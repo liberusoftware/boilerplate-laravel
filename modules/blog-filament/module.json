@@ -8,6 +8,7 @@
     "provider": "Liberu\\Blog\\Filament\\BlogFilamentServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/blog-core": "^1.0" } },
     "suggests": {},
+    "presentation": { "filament": { "admin": ["Liberu\\Blog\\Filament\\BlogFilamentPlugin"] } },
     "capabilities": ["blog.filament"],
-    "default_enabled": true
+    "default_enabled": false
 }

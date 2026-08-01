@@ -23,6 +23,6 @@ final class LocaleResolver
             $timezone = 'UTC';
         }
 
-return new LocaleContext($locale, $timezone, in_array($locale, (array) config('localization.rtl_locales', []), true) ? 'rtl' : 'ltr');
+        return new LocaleContext($locale, $timezone, in_array($locale, (array) config('localization.rtl_locales', []), true) ? 'rtl' : 'ltr');
     }
 }

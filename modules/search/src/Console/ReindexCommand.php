@@ -31,6 +31,6 @@ final class ReindexCommand extends Command
             $this->info("Reindexed {$type}.");
         }
 
-return self::SUCCESS;
+        return self::SUCCESS;
     }
 }

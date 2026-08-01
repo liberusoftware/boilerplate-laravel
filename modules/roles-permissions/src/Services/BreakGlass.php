@@ -13,7 +13,7 @@ final class BreakGlass
             throw new RuntimeException('Break-glass access requires strong authentication, reason, and future expiry.');
         }
 
-return DB::table('authorization_break_glass')->insertGetId(['actor_id' => (string) $actorId, 'permission' => $permission, 'reason' => $reason, 'expires_at' => $expiresAt, 'created_at' => now(), 'updated_at' => now()]);
+        return DB::table('authorization_break_glass')->insertGetId(['actor_id' => (string) $actorId, 'permission' => $permission, 'reason' => $reason, 'expires_at' => $expiresAt, 'created_at' => now(), 'updated_at' => now()]);
     }
 
     public function active(string|int $actorId, string $permission): bool

@@ -30,6 +30,6 @@ final class FoundationDoctorCommand extends Command
             $this->info('Foundation checks passed.');
         }
 
-return $errors === [] ? self::SUCCESS : self::FAILURE;
+        return $errors === [] ? self::SUCCESS : self::FAILURE;
     }
 }

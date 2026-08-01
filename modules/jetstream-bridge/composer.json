@@ -1,9 +1,25 @@
 {
-    "name": "liberu/jetstream-bridge",
-    "description": "Fortify and Jetstream-compatible action adapters for Liberu identity capabilities.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "laravel/fortify": "^1.0", "laravel/jetstream": "^5.1", "liberu/identity": "^1.0", "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Foundation\\JetstreamBridge\\": "src/" } },
-    "extra": { "liberu": { "name": "jetstream-bridge" }, "laravel": { "providers": ["Liberu\\Foundation\\JetstreamBridge\\Providers\\FortifyServiceProvider"] } }
+  "name": "liberu/jetstream-bridge",
+  "version": "1.0.0",
+  "description": "Fortify and Jetstream-compatible action adapters for Liberu identity capabilities.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "laravel/fortify": "^1.0",
+    "laravel/jetstream": "^5.1",
+    "liberu/identity": "^1.0",
+    "liberu/module-manager": "^1.0",
+    "liberu/organizations-teams": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\JetstreamBridge\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "jetstream-bridge"
+    }
+  }
 }

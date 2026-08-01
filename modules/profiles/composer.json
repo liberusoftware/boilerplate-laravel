@@ -1,1 +1,23 @@
-{"name":"liberu/profiles","description":"Controlled profile updates and user presentation preferences.","type":"liberu-module","license":"MIT","require":{"php":"^8.5","illuminate/database":"^13.0","illuminate/support":"^13.0","liberu/identity":"^1.0"},"autoload":{"psr-4":{"Liberu\\Foundation\\Profiles\\":"src/"}},"extra":{"liberu":{"name":"profiles"},"laravel":{"providers":["Liberu\\Foundation\\Profiles\\ProfilesServiceProvider"]}}}
+{
+  "name": "liberu/profiles",
+  "version": "1.0.0",
+  "description": "Controlled profile updates and user presentation preferences.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/database": "^13.0",
+    "illuminate/support": "^13.0",
+    "liberu/identity": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Profiles\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "profiles"
+    }
+  }
+}

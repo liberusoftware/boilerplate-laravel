@@ -7,7 +7,7 @@
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Authorization\\AuthorizationServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" } },
-    "suggests": {},
+    "suggests": { "liberu/roles-permissions-filament": "^1.0" },
     "capabilities": ["foundation.authorization"],
-    "default_enabled": true
+    "default_enabled": false
 }

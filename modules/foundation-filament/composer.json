@@ -1,1 +1,25 @@
-{"name":"liberu/foundation-filament","description":"Accessible account-security and staff operations presentation adapter for foundation modules.","type":"liberu-module","license":"MIT","require":{"php":"^8.5","filament/filament":"^5.0","liberu/module-manager":"^1.0","liberu/sessions-devices":"^1.0","liberu/observability":"^1.0"},"autoload":{"psr-4":{"Liberu\\Foundation\\Filament\\":"src/"}},"extra":{"liberu":{"name":"foundation-filament"},"laravel":{"providers":["Liberu\\Foundation\\Filament\\FoundationFilamentServiceProvider"]}}}
+{
+  "name": "liberu/foundation-filament",
+  "version": "1.0.0",
+  "description": "Accessible account-security and staff operations presentation adapter for foundation modules.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "filament/filament": "^5.0",
+    "liberu/module-manager": "^1.0",
+    "liberu/theme-support": "^1.0",
+    "liberu/sessions-devices": "^1.0",
+    "liberu/observability": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Filament\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "foundation-filament"
+    }
+  }
+}

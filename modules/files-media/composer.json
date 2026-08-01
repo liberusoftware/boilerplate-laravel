@@ -1,1 +1,23 @@
-{"name":"liberu/files-media","description":"Secure upload policy, malware-scanner contract, media metadata, access, and retention foundations.","type":"liberu-module","license":"MIT","require":{"php":"^8.5","illuminate/database":"^13.0","illuminate/support":"^13.0","liberu/module-manager":"^1.0"},"autoload":{"psr-4":{"Liberu\\Foundation\\Files\\":"src/"}},"extra":{"liberu":{"name":"files-media"},"laravel":{"providers":["Liberu\\Foundation\\Files\\FilesMediaServiceProvider"]}}}
+{
+  "name": "liberu/files-media",
+  "version": "1.0.0",
+  "description": "Secure upload policy, malware-scanner contract, media metadata, access, and retention foundations.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/database": "^13.0",
+    "illuminate/support": "^13.0",
+    "liberu/module-manager": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Files\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "files-media"
+    }
+  }
+}

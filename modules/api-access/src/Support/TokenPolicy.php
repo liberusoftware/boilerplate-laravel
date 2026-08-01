@@ -14,7 +14,7 @@ final class TokenPolicy
             throw new InvalidArgumentException('Requested token scope is not permitted.');
         }
 
-return array_values(array_unique($requested));
+        return array_values(array_unique($requested));
     }
 
     public function expiresAt(?\DateTimeImmutable $requested = null): \DateTimeImmutable

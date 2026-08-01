@@ -3,7 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
-use Liberu\Foundation\Localization\Livewire\LanguageSwitcher;
+use Liberu\Foundation\LocalizationLivewire\Livewire\LanguageSwitcher;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);

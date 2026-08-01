@@ -3,9 +3,10 @@
 namespace Liberu\Foundation\Analytics\Support;
 
 use InvalidArgumentException;
-use Liberu\Foundation\Analytics\Contracts\AnalyticsDestination;
+use Liberu\Analytics\Contracts\AnalyticsDestination;
+use Liberu\Analytics\Contracts\AnalyticsDestinationRegistry;
 
-final class DestinationRegistry
+final class DestinationRegistry implements AnalyticsDestinationRegistry
 {
     private array $destinations = [];
 

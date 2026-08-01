@@ -3,6 +3,7 @@
 namespace Liberu\Foundation\Analytics;
 
 use Illuminate\Support\ServiceProvider;
+use Liberu\Analytics\Contracts\AnalyticsDestinationRegistry;
 use Liberu\Foundation\Analytics\Support\DestinationRegistry;
 
 final class AnalyticsServiceProvider extends ServiceProvider
@@ -10,6 +11,7 @@ final class AnalyticsServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(DestinationRegistry::class);
+        $this->app->alias(DestinationRegistry::class, AnalyticsDestinationRegistry::class);
     }
 
     public function boot(): void

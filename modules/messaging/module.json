@@ -7,7 +7,7 @@
     "category": "capability",
     "provider": "Liberu\\Messaging\\Core\\MessagingServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
-    "suggests": { "liberu/messaging-api": "^1.0" },
+    "suggests": { "liberu/messaging-api": "^1.0", "liberu/messaging-filament": "^1.0" },
     "capabilities": ["messaging.private"],
-    "default_enabled": true
+    "default_enabled": false
 }

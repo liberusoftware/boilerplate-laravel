@@ -5,9 +5,15 @@ namespace Liberu\Foundation\Localization\MyMemory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Liberu\Localization\Contracts\TranslationProvider;
 
-class TranslationService
+final class TranslationService implements TranslationProvider
 {
+    public function name(): string
+    {
+        return 'mymemory';
+    }
+
     /**
      * Supported languages with their codes.
      *
@@ -99,6 +105,11 @@ class TranslationService
     public function getSupportedLanguages(): array
     {
         return self::SUPPORTED_LANGUAGES;
+    }
+
+    public function supportedLanguages(): array
+    {
+        return $this->getSupportedLanguages();
     }
 
     /**

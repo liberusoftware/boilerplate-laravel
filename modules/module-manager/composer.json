@@ -1,23 +1,23 @@
 {
-    "name": "liberu/module-manager",
-    "description": "Deterministic manifest discovery and runtime enablement for Liberu modules.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": {
-        "php": "^8.5",
-        "composer/semver": "^3.4",
-        "illuminate/contracts": "^13.0",
-        "illuminate/support": "^13.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Liberu\\Foundation\\ModuleManager\\": "src/"
-        }
-    },
-    "extra": {
-        "liberu": { "name": "module-manager" },
-        "laravel": {
-            "providers": ["Liberu\\Foundation\\ModuleManager\\ModuleManagerServiceProvider"]
-        }
+  "name": "liberu/module-manager",
+  "version": "1.0.0",
+  "description": "Deterministic manifest discovery and runtime enablement for Liberu modules.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "composer/semver": "^3.4",
+    "illuminate/contracts": "^13.0",
+    "illuminate/support": "^13.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\ModuleManager\\": "src/"
     }
+  },
+  "extra": {
+    "liberu": {
+      "name": "module-manager"
+    }
+  }
 }

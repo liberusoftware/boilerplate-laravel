@@ -1,9 +1,23 @@
 {
-    "name": "liberu/localization-mymemory",
-    "description": "MyMemory machine-translation adapter for Liberu Localization.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "illuminate/http": "^13.0", "illuminate/cache": "^13.0", "liberu/localization": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Foundation\\Localization\\MyMemory\\": "src/" } },
-    "extra": { "liberu": { "name": "localization-mymemory" }, "laravel": { "providers": ["Liberu\\Foundation\\Localization\\MyMemory\\MyMemoryServiceProvider"] } }
+  "name": "liberu/localization-mymemory",
+  "version": "1.0.0",
+  "description": "MyMemory machine-translation adapter for Liberu Localization.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/http": "^13.0",
+    "illuminate/cache": "^13.0",
+    "liberu/localization-contracts": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Localization\\MyMemory\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "localization-mymemory"
+    }
+  }
 }

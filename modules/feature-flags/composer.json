@@ -1,1 +1,23 @@
-{"name":"liberu/feature-flags","description":"Typed rollout flags with stable environment, tenant, and actor targeting.","type":"liberu-module","license":"MIT","require":{"php":"^8.5","illuminate/database":"^13.0","illuminate/support":"^13.0","liberu/module-manager":"^1.0"},"autoload":{"psr-4":{"Liberu\\Foundation\\FeatureFlags\\":"src/"}},"extra":{"liberu":{"name":"feature-flags"},"laravel":{"providers":["Liberu\\Foundation\\FeatureFlags\\FeatureFlagsServiceProvider"]}}}
+{
+  "name": "liberu/feature-flags",
+  "version": "1.0.0",
+  "description": "Typed rollout flags with stable environment, tenant, and actor targeting.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/database": "^13.0",
+    "illuminate/support": "^13.0",
+    "liberu/module-manager": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\FeatureFlags\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "feature-flags"
+    }
+  }
+}

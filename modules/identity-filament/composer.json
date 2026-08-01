@@ -1,9 +1,22 @@
 {
-    "name": "liberu/identity-filament",
-    "description": "Filament administration adapter for the configured Liberu identity model.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "filament/filament": "^5.1", "liberu/roles-permissions": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Foundation\\IdentityFilament\\": "src/" } },
-    "extra": { "liberu": { "name": "identity-filament" }, "laravel": { "providers": ["Liberu\\Foundation\\IdentityFilament\\IdentityFilamentServiceProvider"] } }
+  "name": "liberu/identity-filament",
+  "version": "1.0.0",
+  "description": "Filament administration adapter for the configured Liberu identity model.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "filament/filament": "^5.1",
+    "liberu/roles-permissions": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\IdentityFilament\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "identity-filament"
+    }
+  }
 }

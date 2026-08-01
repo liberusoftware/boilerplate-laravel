@@ -1,0 +1,22 @@
+{
+  "name": "liberu/localization-livewire",
+  "version": "1.0.0",
+  "description": "Livewire locale-switching presentation adapter for Liberu Localization.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "livewire/livewire": "^4.0",
+    "liberu/localization": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\LocalizationLivewire\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "localization-livewire"
+    }
+  }
+}

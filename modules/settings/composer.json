@@ -1,9 +1,22 @@
 {
-    "name": "liberu/settings",
-    "description": "Typed scoped settings foundation for Liberu applications.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "spatie/laravel-settings": "^3.0", "liberu/module-manager": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Foundation\\Settings\\": "src/" } },
-    "extra": { "liberu": { "name": "settings" }, "laravel": { "providers": ["Liberu\\Foundation\\Settings\\SettingsServiceProvider"] } }
+  "name": "liberu/settings",
+  "version": "1.0.0",
+  "description": "Typed scoped settings foundation for Liberu applications.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "spatie/laravel-settings": "^3.0",
+    "liberu/module-manager": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Settings\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "settings"
+    }
+  }
 }

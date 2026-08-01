@@ -1,12 +1,22 @@
 {
-    "name": "liberu/blog-filament",
-    "description": "Filament administration adapter for Liberu Blog.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "filament/filament": "^5.1", "liberu/blog-core": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Blog\\Filament\\": "src/" } },
-    "extra": {
-        "liberu": { "name": "blog-filament" },
-        "laravel": { "providers": ["Liberu\\Blog\\Filament\\BlogFilamentServiceProvider"] }
+  "name": "liberu/blog-filament",
+  "version": "1.0.0",
+  "description": "Filament administration adapter for Liberu Blog.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "filament/filament": "^5.1",
+    "liberu/blog-core": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Blog\\Filament\\": "src/"
     }
+  },
+  "extra": {
+    "liberu": {
+      "name": "blog-filament"
+    }
+  }
 }

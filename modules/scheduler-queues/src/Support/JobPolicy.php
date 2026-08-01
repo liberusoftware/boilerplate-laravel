@@ -17,6 +17,6 @@ final class JobPolicy
             throw new InvalidArgumentException('Queued mutations require an idempotency key.');
         }
 
-return trim($key);
+        return trim($key);
     }
 }

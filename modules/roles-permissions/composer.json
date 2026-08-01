@@ -1,9 +1,23 @@
 {
-    "name": "liberu/roles-permissions",
-    "description": "Contextual roles, permissions, policies, and authorization safeguards.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "spatie/laravel-permission": "^7.0", "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Foundation\\Authorization\\": "src/" } },
-    "extra": { "liberu": { "name": "roles-permissions" }, "laravel": { "providers": ["Liberu\\Foundation\\Authorization\\AuthorizationServiceProvider"] } }
+  "name": "liberu/roles-permissions",
+  "version": "1.0.0",
+  "description": "Contextual roles, permissions, policies, and authorization safeguards.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "spatie/laravel-permission": "^7.0",
+    "liberu/module-manager": "^1.0",
+    "liberu/organizations-teams": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Authorization\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "roles-permissions"
+    }
+  }
 }

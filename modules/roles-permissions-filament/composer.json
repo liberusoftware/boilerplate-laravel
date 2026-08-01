@@ -1,0 +1,23 @@
+{
+  "name": "liberu/roles-permissions-filament",
+  "version": "1.0.0",
+  "description": "Filament Shield presentation adapter for Liberu authorization.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "bezhansalleh/filament-shield": "~4.0",
+    "filament/filament": "^5.1",
+    "liberu/roles-permissions": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\AuthorizationFilament\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "roles-permissions-filament"
+    }
+  }
+}

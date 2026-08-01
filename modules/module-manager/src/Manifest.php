@@ -6,6 +6,8 @@ use Liberu\Foundation\ModuleManager\Exceptions\InvalidManifest;
 
 final readonly class Manifest
 {
+    public const CATEGORIES = ['foundation', 'contracts', 'capability', 'adapter', 'product', 'presentation', 'distribution'];
+
     /** @param array<string, mixed> $data */
     private function __construct(public string $path, private array $data) {}
 
@@ -25,6 +27,20 @@ final readonly class Manifest
 
         if (! is_array($data['requires']) || ! is_array($data['capabilities'])) {
             throw new InvalidManifest("Manifest {$path} has invalid requires or capabilities metadata.");
+        }
+
+        if (! in_array($data['category'], self::CATEGORIES, true)) {
+            throw new InvalidManifest("Manifest {$path} has an invalid category [{$data['category']}].");
+        }
+
+        if (! is_bool($data['default_enabled'])) {
+            throw new InvalidManifest("Manifest {$path} default_enabled must be boolean.");
+        }
+
+        foreach ($data['capabilities'] as $capability) {
+            if (! is_string($capability) || ! preg_match('/^[a-z0-9]+(?:[.-][a-z0-9]+)*$/', $capability)) {
+                throw new InvalidManifest("Manifest {$path} has an invalid capability.");
+            }
         }
 
         return new self(dirname($path), $data);
@@ -74,6 +90,14 @@ final readonly class Manifest
         return is_array($packages) ? $packages : [];
     }
 
+    /** @return array<string, string> */
+    public function requiredCapabilities(): array
+    {
+        $capabilities = $this->data['requires']['capabilities'] ?? [];
+
+        return is_array($capabilities) ? $capabilities : [];
+    }
+
     public function phpConstraint(): ?string
     {
         return $this->data['requires']['php'] ?? null;
@@ -82,6 +106,14 @@ final readonly class Manifest
     public function laravelConstraint(): ?string
     {
         return $this->data['requires']['laravel'] ?? null;
+    }
+
+    /** @return list<class-string> */
+    public function filamentPlugins(string $panel): array
+    {
+        $plugins = $this->data['presentation']['filament'][$panel] ?? [];
+
+        return is_array($plugins) ? array_values(array_filter($plugins, 'is_string')) : [];
     }
 
     /** @return array<string, mixed> */

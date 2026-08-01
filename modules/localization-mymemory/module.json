@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "category": "adapter",
     "provider": "Liberu\\Foundation\\Localization\\MyMemory\\MyMemoryServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/localization": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/localization-contracts": "^1.0" }, "capabilities": { "foundation.localization": "^1.0" } },
     "suggests": {},
     "capabilities": ["localization.machine-translation.mymemory"],
     "default_enabled": false

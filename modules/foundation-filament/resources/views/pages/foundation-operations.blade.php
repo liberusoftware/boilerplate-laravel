@@ -5,9 +5,5 @@
         @foreach ($modules as $module)<tr><th scope="row">{{ $module['display_name'] }}</th><td>{{ $module['version'] }}</td><td>{{ implode(', ', $module['capabilities']) }}</td></tr>@endforeach
         </tbody></table></div>
     </section>
-    <section aria-labelledby="operations-heading" class="space-y-3">
-        <h2 id="operations-heading" class="text-lg font-semibold">Operational records</h2>
-        <dl class="grid gap-3 sm:grid-cols-3">@foreach ($diagnostics as $name => $count)<div><dt>{{ str($name)->replace('_', ' ')->title() }}</dt><dd>{{ $count ?? 'Not installed' }}</dd></div>@endforeach</dl>
-        <p>Use the dedicated Horizon, Telescope, Pulse, settings, roles, teams, and resource pages for authorized operations. Replay, lifecycle, and schema changes remain explicit audited deployment actions.</p>
-    </section>
+    <p>Use each capability's dedicated presentation adapter for operational records. This package intentionally does not query another module's tables.</p>
 </x-filament-panels::page>

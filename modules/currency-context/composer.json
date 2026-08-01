@@ -1,9 +1,23 @@
 {
-    "name": "liberu/currency-context",
-    "description": "Precise money values, ISO currency metadata, context, formatting, and exchange-rate contracts.",
-    "type": "liberu-module",
-    "license": "MIT",
-    "require": { "php": "^8.5", "illuminate/contracts": "^13.0", "illuminate/support": "^13.0", "liberu/module-manager": "^1.0" },
-    "autoload": { "psr-4": { "Liberu\\Foundation\\Currency\\": "src/" } },
-    "extra": { "liberu": { "name": "currency-context" }, "laravel": { "providers": ["Liberu\\Foundation\\Currency\\CurrencyServiceProvider"] } }
+  "name": "liberu/currency-context",
+  "version": "1.0.0",
+  "description": "Precise money values, ISO currency metadata, context, formatting, and exchange-rate contracts.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/contracts": "^13.0",
+    "illuminate/support": "^13.0",
+    "liberu/module-manager": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Currency\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "currency-context"
+    }
+  }
 }

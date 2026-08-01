@@ -1,1 +1,22 @@
-{"name":"liberu/theme-clear-signal","description":"Clear Signal public theme for Liberu applications.","type":"liberu-theme","license":"MIT","require":{"php":"^8.5","liberu/theme-support":"^1.0","liberu/theme-base":"^1.0"},"autoload":{"psr-4":{"Liberu\\Themes\\ClearSignal\\":"src/"}},"extra":{"liberu":{"name":"clear-signal"},"laravel":{"providers":["Liberu\\Themes\\ClearSignal\\ClearSignalThemeServiceProvider"]}}}
+{
+  "name": "liberu/theme-clear-signal",
+  "version": "1.0.0",
+  "description": "Clear Signal public theme for Liberu applications.",
+  "type": "liberu-theme",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "liberu/theme-support": "^1.0",
+    "liberu/theme-base": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Themes\\ClearSignal\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "clear-signal"
+    }
+  }
+}

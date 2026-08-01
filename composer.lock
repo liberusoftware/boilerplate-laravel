@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "377daf164f5bffc1adb18df0d31c2c4e",
+    "content-hash": "0e13f81e17aa508dab8355b974219b4b",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -298,90 +298,6 @@
                 }
             ],
             "time": "2026-07-25T03:31:26+00:00"
-        },
-        {
-            "name": "biostate/filament-menu-builder",
-            "version": "v5.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Biostate/filament-menu-builder.git",
-                "reference": "9736f63b5664fc8bc1ee73c5a6492d0fdeea9044"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Biostate/filament-menu-builder/zipball/9736f63b5664fc8bc1ee73c5a6492d0fdeea9044",
-                "reference": "9736f63b5664fc8bc1ee73c5a6492d0fdeea9044",
-                "shasum": ""
-            },
-            "require": {
-                "filament/filament": "^5.0",
-                "filament/forms": "^5.0",
-                "filament/tables": "^5.0",
-                "kalnoy/nestedset": "^6.0|^7.0",
-                "php": "^8.2",
-                "spatie/laravel-package-tools": "^1.15.0",
-                "spatie/laravel-sluggable": "^3.6"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^8.0",
-                "nunomaduro/larastan": "^2.0.1|^3.0",
-                "orchestra/testbench": "^9.14|^10.0|^11.0",
-                "pestphp/pest": "^2.1|^3.0|^4.0",
-                "pestphp/pest-plugin-arch": "^2.0|^3.0|^4.0",
-                "pestphp/pest-plugin-laravel": "^2.0|^3.0|^4.0",
-                "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan-deprecation-rules": "^1.0|^2.0",
-                "phpstan/phpstan-phpunit": "^1.0|^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "FilamentMenuBuilder": "Biostate\\FilamentMenuBuilder\\Facades\\FilamentMenuBuilder"
-                    },
-                    "providers": [
-                        "Biostate\\FilamentMenuBuilder\\FilamentMenuBuilderServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Biostate\\FilamentMenuBuilder\\": "src/",
-                    "Biostate\\FilamentMenuBuilder\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Süleyman Özgür Özarpacı",
-                    "email": "oozarpac@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "An Elegant Menu Builder for FilamentPHP",
-            "homepage": "https://github.com/biostate/filament-menu-builder",
-            "keywords": [
-                "Biostate",
-                "filament-menu-builder",
-                "filamentphp",
-                "laravel",
-                "menu-builder"
-            ],
-            "support": {
-                "issues": "https://github.com/biostate/filament-menu-builder/issues",
-                "source": "https://github.com/biostate/filament-menu-builder"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/Biostate",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-05-29T16:06:38+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -2986,69 +2902,6 @@
             "time": "2026-07-17T13:53:03+00:00"
         },
         {
-            "name": "kalnoy/nestedset",
-            "version": "v7.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lazychaser/laravel-nestedset.git",
-                "reference": "4e9ad66a3c6a8867dd69eea53e7954c3b150af6d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/4e9ad66a3c6a8867dd69eea53e7954c3b150af6d",
-                "reference": "4e9ad66a3c6a8867dd69eea53e7954c3b150af6d",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": ">=13.0",
-                "illuminate/events": ">=13.0",
-                "illuminate/support": ">=13.0",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=7.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Kalnoy\\Nestedset\\NestedSetServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-master": "v5.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kalnoy\\Nestedset\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alexander Kalnoy",
-                    "email": "lazychaser@gmail.com"
-                }
-            ],
-            "description": "Nested Set Model for Laravel 5.7 and up",
-            "keywords": [
-                "database",
-                "hierarchy",
-                "laravel",
-                "nested sets",
-                "nsm"
-            ],
-            "support": {
-                "issues": "https://github.com/lazychaser/laravel-nestedset/issues",
-                "source": "https://github.com/lazychaser/laravel-nestedset/tree/v7.0.0"
-            },
-            "time": "2026-04-11T13:45:58+00:00"
-        },
-        {
             "name": "kirschbaum-development/eloquent-power-joins",
             "version": "4.3.3",
             "source": {
@@ -4272,6 +4125,75 @@
             "time": "2026-07-01T13:50:23+00:00"
         },
         {
+            "name": "laravel/telescope",
+            "version": "v5.21.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/telescope.git",
+                "reference": "f00f45a59843329b97aa238f28da594f3b7d4aa7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/f00f45a59843329b97aa238f28da594f3b7d4aa7",
+                "reference": "f00f45a59843329b97aa238f28da594f3b7d4aa7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/framework": "^8.37|^9.0|^10.0|^11.0|^12.0|^13.0",
+                "laravel/sentinel": "^1.0",
+                "php": "^8.0",
+                "symfony/console": "^5.3|^6.0|^7.0|^8.0",
+                "symfony/var-dumper": "^5.0|^6.0|^7.0|^8.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "guzzlehttp/guzzle": "^6.0|^7.0",
+                "laravel/octane": "^1.4|^2.0",
+                "orchestra/testbench": "^6.47.1|^7.55|^8.36|^9.15|^10.8|^11.0",
+                "phpstan/phpstan": "^1.10"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Telescope\\TelescopeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Telescope\\": "src/",
+                    "Laravel\\Telescope\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Mohamed Said",
+                    "email": "mohamed@laravel.com"
+                }
+            ],
+            "description": "An elegant debug assistant for the Laravel framework.",
+            "keywords": [
+                "debugging",
+                "laravel",
+                "monitoring"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/telescope/issues",
+                "source": "https://github.com/laravel/telescope/tree/v5.21.0"
+            },
+            "time": "2026-07-20T19:44:45+00:00"
+        },
+        {
             "name": "laravel/tinker",
             "version": "v3.0.2",
             "source": {
@@ -5151,6 +5073,339 @@
             "time": "2026-03-08T20:05:35+00:00"
         },
         {
+            "name": "liberu/activity-comments",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/activity-comments",
+                "reference": "a596d461e212d89b72875ff31699d5bad2653a2b"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "activity-comments"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\ActivityComments\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Generic authorized timelines, comments, mentions, subscriptions, attachments, and visibility.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/analytics-contracts",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/analytics-contracts",
+                "reference": "18d3b93efda4e333e1795caf545f16a453660008"
+            },
+            "require": {
+                "php": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Analytics\\Contracts\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Stable provider-neutral contracts and value types for Liberu Analytics.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/analytics-core",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/analytics-core",
+                "reference": "9d4671e5e4f8533e368aae8f054b02ddb6323132"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/analytics-contracts": "^1.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "analytics-core"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Analytics\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Consent-aware provider-neutral analytics event routing and durable delivery evidence.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/analytics-google",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/analytics-google",
+                "reference": "3d5c6a23a78d1a68a860cffe75d151f427ef1fa6"
+            },
+            "require": {
+                "illuminate/support": "^13.0",
+                "liberu/analytics-contracts": "^1.0",
+                "liberu/integrations": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "analytics-google"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Analytics\\Google\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Consent-aware Google Analytics event mapping adapter.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/analytics-meta",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/analytics-meta",
+                "reference": "23e1360f6bcdf0da383ea4fe6d4454cf2b056763"
+            },
+            "require": {
+                "illuminate/support": "^13.0",
+                "liberu/analytics-contracts": "^1.0",
+                "liberu/integrations": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "analytics-meta"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Analytics\\Meta\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Consent-aware Meta server-side event mapping and normalized customer-data adapter.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/api-access",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/api-access",
+                "reference": "7b35922c13330204da0bf47702663152adb68e11"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "laravel/sanctum": "^4.0",
+                "liberu/identity": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "api-access"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\ApiAccess\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "API token, scope, version, rate-limit, idempotency, and revocation policy.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/application-core",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/application-core",
+                "reference": "a7795dc5a4d330df46f41b6ca75412fa453252a2"
+            },
+            "require": {
+                "illuminate/http": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "application-core"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\ApplicationCore\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Required application metadata, health, clocks, identifiers, and secure HTTP defaults.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/audit",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/audit",
+                "reference": "a81810d47bdc0a543c3f05c0c2d45687a76150f1"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "audit"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Audit\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Contextual material-change audit records with correlation and retention boundaries.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/blog-core",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/blog-core",
+                "reference": "8ae5970bdc908f840292f5b2162fff5c2d36fa21"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "blog-core"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Blog\\Core\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Provider-neutral blog publishing capability.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/blog-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/blog-filament",
+                "reference": "78232cf533be5863cd5cb39a3f410ba8ef7f6294"
+            },
+            "require": {
+                "filament/filament": "^5.1",
+                "liberu/blog-core": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "blog-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Blog\\Filament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament administration adapter for Liberu Blog.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "liberu/composer-installer",
             "version": "1.0.0",
             "dist": {
@@ -5177,6 +5432,1366 @@
             "description": "Deterministic Composer 2 installer for tracked Liberu modules and themes.",
             "transport-options": {
                 "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/currency-context",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/currency-context",
+                "reference": "b9b7e6769de9a3d8faf80bcaa7778a92d9d11f4a"
+            },
+            "require": {
+                "illuminate/contracts": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "currency-context"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Currency\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Precise money values, ISO currency metadata, context, formatting, and exchange-rate contracts.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/developer-experience",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/developer-experience",
+                "reference": "1f7bbad3047b83766426b29d03bd542802550fcc"
+            },
+            "require": {
+                "illuminate/console": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "developer-experience"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\DeveloperExperience\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Foundation diagnostics and reproducible development/quality conventions.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/feature-flags",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/feature-flags",
+                "reference": "6f74226616f0ad20a035192e4b5b8f0212c2d190"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "feature-flags"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\FeatureFlags\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Typed rollout flags with stable environment, tenant, and actor targeting.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/files-media",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/files-media",
+                "reference": "41c2fee4da57acbf2efa8a9edcaa2224d00a17e5"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "files-media"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Files\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Secure upload policy, malware-scanner contract, media metadata, access, and retention foundations.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/foundation-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/foundation-filament",
+                "reference": "5a07ee642c6298719a3a94770f07691377e43ac2"
+            },
+            "require": {
+                "filament/filament": "^5.0",
+                "liberu/module-manager": "^1.0",
+                "liberu/observability": "^1.0",
+                "liberu/sessions-devices": "^1.0",
+                "liberu/theme-support": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "foundation-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Filament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Accessible account-security and staff operations presentation adapter for foundation modules.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/identity",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/identity",
+                "reference": "110ae434dd81db9338e120f8faa7cd36197928fe"
+            },
+            "require": {
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "identity"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Identity\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Provider-neutral identity policy, normalization, and versioned security events.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/identity-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/identity-filament",
+                "reference": "7ccb3caaf673eed5534f157ae41db9aba52fc27d"
+            },
+            "require": {
+                "filament/filament": "^5.1",
+                "liberu/roles-permissions": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "identity-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\IdentityFilament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament administration adapter for the configured Liberu identity model.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/identity-socialstream",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/identity-socialstream",
+                "reference": "90038de6024f5605005c3b292e7169a922fe0aa9"
+            },
+            "require": {
+                "bursteri/socialstream": "^7.0",
+                "laravel/socialite": "^5.0",
+                "liberu/identity": "^1.0",
+                "liberu/module-manager": "^1.0",
+                "liberu/organizations-teams": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "identity-socialstream"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Identity\\Socialstream\\": "src/",
+                    "Liberu\\Foundation\\Identity\\Socialstream\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Socialstream/Socialite identity-linking provider adapter.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/import-export",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/import-export",
+                "reference": "35c5cd03bb34979c3ac67b2529ac8e91ac29c7b8"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "import-export"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\ImportExport\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Versioned transfer schemas, mapping, dry runs, validation, queued progress, reports, and retention.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/integrations",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/integrations",
+                "reference": "0d6b9253b3fa6eb8f19485d083888651a318c2d2"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "integrations"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Integrations\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Provider adapter registry and protected connection lifecycle.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/jetstream-bridge",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/jetstream-bridge",
+                "reference": "4d0c483661ad9bda54ffbace9b399a92d7c555d4"
+            },
+            "require": {
+                "laravel/fortify": "^1.0",
+                "laravel/jetstream": "^5.1",
+                "liberu/identity": "^1.0",
+                "liberu/module-manager": "^1.0",
+                "liberu/organizations-teams": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "jetstream-bridge"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\JetstreamBridge\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Fortify and Jetstream-compatible action adapters for Liberu identity capabilities.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/localization",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/localization",
+                "reference": "1697aacac3983e2edf6b95cee4a0f5824345a607"
+            },
+            "require": {
+                "illuminate/contracts": "^13.0",
+                "illuminate/http": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/localization-contracts": "^1.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "localization"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Localization\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Locale resolution, preferences, propagation, and UI direction for Liberu applications.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/localization-contracts",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/localization-contracts",
+                "reference": "b6ed3f18a2a9241617ec94d2cd5ecf8b987ec0ce"
+            },
+            "require": {
+                "php": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Localization\\Contracts\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Stable provider-neutral machine translation contracts for Liberu Localization.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/localization-livewire",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/localization-livewire",
+                "reference": "8d727207771f7c86497ec136fefa8b546e744b93"
+            },
+            "require": {
+                "liberu/localization": "^1.0",
+                "livewire/livewire": "^4.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "localization-livewire"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\LocalizationLivewire\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Livewire locale-switching presentation adapter for Liberu Localization.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/localization-mymemory",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/localization-mymemory",
+                "reference": "01baecabb7ec05e892724555b9fec84ba00c21ec"
+            },
+            "require": {
+                "illuminate/cache": "^13.0",
+                "illuminate/http": "^13.0",
+                "liberu/localization-contracts": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "localization-mymemory"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Localization\\MyMemory\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "MyMemory machine-translation adapter for Liberu Localization.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/messaging",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/messaging",
+                "reference": "34a32e929b74e904ecd13958c2bad61e48c777e5"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "messaging"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Messaging\\Core\\": "src/",
+                    "Liberu\\Messaging\\Core\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Private encrypted messaging capability for Liberu applications.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/messaging-api",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/messaging-api",
+                "reference": "f4a246e7efc3cefde1914d05b27ded5755923d9c"
+            },
+            "require": {
+                "illuminate/http": "^13.0",
+                "illuminate/routing": "^13.0",
+                "liberu/messaging": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "messaging-api"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Messaging\\Api\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Authenticated API presentation adapter for Liberu Messaging.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/messaging-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/messaging-filament",
+                "reference": "289dd63bce4f054547838116e57bd66ad017b9e4"
+            },
+            "require": {
+                "filament/filament": "^5.1",
+                "liberu/messaging": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "messaging-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Messaging\\Filament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament inbox presentation adapter for Liberu Messaging.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/module-manager",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/module-manager",
+                "reference": "5d093826d15c1a885aec45471d83735a637d0d98"
+            },
+            "require": {
+                "composer/semver": "^3.4",
+                "illuminate/contracts": "^13.0",
+                "illuminate/support": "^13.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "module-manager"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\ModuleManager\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Deterministic manifest discovery and runtime enablement for Liberu modules.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/notifications",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/notifications",
+                "reference": "2f940cdddac1e6870297a7219190ce2067097f00"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "notifications"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Notifications\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Localized notification preferences, channel policy, inbox delivery state, and quiet hours.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/observability",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/observability",
+                "reference": "3e2f6941747f66743134c230518fc6625e67377f"
+            },
+            "require": {
+                "laravel/horizon": "^5.0",
+                "laravel/pulse": "^1.7",
+                "laravel/telescope": "^5.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "observability"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Observability\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Structured diagnostics, monitoring dashboards, health signals, and redaction defaults.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/organizations-teams",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/organizations-teams",
+                "reference": "f7df6f6c8c23bd5ddee88c08423aa1ce344e180a"
+            },
+            "require": {
+                "laravel/jetstream": "^5.1",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5",
+                "spatie/laravel-activitylog": "^5.0"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "organizations-teams"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Organizations\\": "src/",
+                    "Liberu\\Foundation\\Organizations\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Organization, team, membership, invitation, ownership, and context foundation.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/organizations-teams-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/organizations-teams-filament",
+                "reference": "0750b7577c775c52ac922ca2d176bfd0ccfeb34a"
+            },
+            "require": {
+                "filament/filament": "^5.1",
+                "liberu/organizations-teams": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "organizations-teams-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\OrganizationsFilament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament administration adapter for organizations and teams.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/profiles",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/profiles",
+                "reference": "7479299ab6808ef3bdd53ea7d4a37b40be24ddb2"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/identity": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "profiles"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Profiles\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Controlled profile updates and user presentation preferences.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/roles-permissions",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/roles-permissions",
+                "reference": "604b35216c8ea95548f2b06c0d041b1750e3c819"
+            },
+            "require": {
+                "liberu/module-manager": "^1.0",
+                "liberu/organizations-teams": "^1.0",
+                "php": "^8.5",
+                "spatie/laravel-permission": "^7.0"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "roles-permissions"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Authorization\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Contextual roles, permissions, policies, and authorization safeguards.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/roles-permissions-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/roles-permissions-filament",
+                "reference": "efc30c5986b12f6d34760a504ff83cfbff617aa4"
+            },
+            "require": {
+                "bezhansalleh/filament-shield": "~4.0",
+                "filament/filament": "^5.1",
+                "liberu/roles-permissions": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "roles-permissions-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\AuthorizationFilament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament Shield presentation adapter for Liberu authorization.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/scheduler-queues",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/scheduler-queues",
+                "reference": "cf2e6ae9860cb84ef130b757209f60adc14dfc9b"
+            },
+            "require": {
+                "illuminate/console": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "scheduler-queues"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\SchedulerQueues\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Queue idempotency, retry, failure, scheduling, locking, and deployment conventions.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/search",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/search",
+                "reference": "239fd6dcd88877524b6d1e94e594f32346527ae2"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/pagination": "^13.0",
+                "liberu/identity": "^1.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "search"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Search\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Provider-neutral authorized search contracts and local Eloquent driver.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/search-api",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/search-api",
+                "reference": "cf8689d5ba5a23380d0cc2d0c6a25d474d3d5527"
+            },
+            "require": {
+                "illuminate/http": "^13.0",
+                "illuminate/routing": "^13.0",
+                "liberu/search": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "search-api"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\SearchApi\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "HTTP API presentation adapter for Liberu Search.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/search-demo",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/search-demo",
+                "reference": "aca0221f88a9a365cd17a9905835580648344af0"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "liberu/search": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "search-demo"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Search\\Demo\\": "src/",
+                    "Liberu\\Search\\Demo\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Reference searchable post and group records for the boilerplate integration test bed.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/sessions-devices",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/sessions-devices",
+                "reference": "4be92758f132577c9a154ad48110bc00bb514c7c"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/identity": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "sessions-devices"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Sessions\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Privacy-conscious session inventory and revocation.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/settings",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/settings",
+                "reference": "9725876c3ba586d2d88d3a3abbe2fe289f7e032e"
+            },
+            "require": {
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5",
+                "spatie/laravel-settings": "^3.0"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "settings"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Settings\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Typed scoped settings foundation for Liberu applications.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/settings-filament",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/settings-filament",
+                "reference": "a393f895ee152e2a41255eb56561028d05dc060d"
+            },
+            "require": {
+                "filament/filament": "^5.1",
+                "filament/spatie-laravel-settings-plugin": "^5.0",
+                "liberu/settings": "^1.0",
+                "liberu/theme-support": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "settings-filament"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\SettingsFilament\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament administration adapter for Liberu Settings.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/theme-base",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "themes/liberu-base",
+                "reference": "18cd06a9533ba951de5eee08faa07a6e8d780ceb"
+            },
+            "require": {
+                "liberu/theme-support": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-theme",
+            "extra": {
+                "liberu": {
+                    "name": "liberu-base"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Themes\\Base\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Shared semantic tokens and accessible presentation primitives for Liberu themes.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/theme-clear-signal",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "themes/clear-signal",
+                "reference": "8fe5ce7c8f584c4f01931f6a3f7f7aaf1e0c95a4"
+            },
+            "require": {
+                "liberu/theme-base": "^1.0",
+                "liberu/theme-support": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-theme",
+            "extra": {
+                "liberu": {
+                    "name": "clear-signal"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Themes\\ClearSignal\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Clear Signal public theme for Liberu applications.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/theme-dark",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "themes/dark",
+                "reference": "13f46ece62e3e71df4998c45cfd4966c866ec111"
+            },
+            "require": {
+                "liberu/theme-base": "^1.0",
+                "liberu/theme-support": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-theme",
+            "extra": {
+                "liberu": {
+                    "name": "dark"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Themes\\Dark\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Liberu dark public theme.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/theme-default",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "themes/default",
+                "reference": "03569106acaf94a074be18a652f6f0543feb1162"
+            },
+            "require": {
+                "liberu/theme-base": "^1.0",
+                "liberu/theme-support": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-theme",
+            "extra": {
+                "liberu": {
+                    "name": "default"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Themes\\DefaultTheme\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Liberu default public theme.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/theme-support",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/theme-support",
+                "reference": "90df08f03d0eaef670a54e6bf6f35d82de4f9cac"
+            },
+            "require": {
+                "liberu/module-manager": "^1.0",
+                "liberu/settings": "^1.0",
+                "livewire/livewire": "^4.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "theme-support"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Theme\\": "src/"
+                },
+                "files": [
+                    "src/Support/theme_helpers.php"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Theme discovery and host presentation support for Liberu applications.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/two-factor-authentication",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/two-factor-authentication",
+                "reference": "a8fff8a0c0572ea5ae5b5b60e3527e5595506a7d"
+            },
+            "require": {
+                "illuminate/contracts": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/identity": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "two-factor-authentication"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\TwoFactor\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "TOTP enforcement policy and one-time recovery-code primitives.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberu/webhooks",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/webhooks",
+                "reference": "de48b0083016affe3732848800865e96c5588751"
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberu/module-manager": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "webhooks"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\Webhooks\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Signed filtered webhook endpoints, durable delivery attempts, retry, replay, and secret rotation.",
+            "transport-options": {
+                "symlink": true,
                 "relative": true
             }
         },
@@ -5255,84 +6870,6 @@
                 }
             ],
             "time": "2026-06-27T03:16:11+00:00"
-        },
-        {
-            "name": "maennchen/zipstream-php",
-            "version": "3.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/maennchen/ZipStream-PHP.git",
-                "reference": "77bebeb4c6c340bb3c11c843b2cffd8bbfde4d5e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/77bebeb4c6c340bb3c11c843b2cffd8bbfde4d5e",
-                "reference": "77bebeb4c6c340bb3c11c843b2cffd8bbfde4d5e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "ext-zlib": "*",
-                "php-64bit": "^8.3"
-            },
-            "require-dev": {
-                "brianium/paratest": "^7.7",
-                "ext-zip": "*",
-                "friendsofphp/php-cs-fixer": "^3.86",
-                "guzzlehttp/guzzle": "^7.5",
-                "mikey179/vfsstream": "^1.6",
-                "php-coveralls/php-coveralls": "^2.5",
-                "phpunit/phpunit": "^12.0",
-                "vimeo/psalm": "^6.0"
-            },
-            "suggest": {
-                "guzzlehttp/psr7": "^2.4",
-                "psr/http-message": "^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ZipStream\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Duncan",
-                    "email": "pabs@pablotron.org"
-                },
-                {
-                    "name": "Jonatan Männchen",
-                    "email": "jonatan@maennchen.ch"
-                },
-                {
-                    "name": "Jesse Donat",
-                    "email": "donatj@gmail.com"
-                },
-                {
-                    "name": "András Kolesár",
-                    "email": "kolesar@kolesar.hu"
-                }
-            ],
-            "description": "ZipStream is a library for dynamically streaming dynamic zip files from PHP without writing to the disk at all on the server.",
-            "keywords": [
-                "stream",
-                "zip"
-            ],
-            "support": {
-                "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
-                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.2.2"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/maennchen",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-04-11T18:38:28+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -8348,136 +9885,6 @@
             "time": "2026-05-04T11:43:33+00:00"
         },
         {
-            "name": "spatie/image",
-            "version": "3.9.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/image.git",
-                "reference": "7ac0b9dab1100ddfc0c98afd12720f5b9fc0cd65"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/image/zipball/7ac0b9dab1100ddfc0c98afd12720f5b9fc0cd65",
-                "reference": "7ac0b9dab1100ddfc0c98afd12720f5b9fc0cd65",
-                "shasum": ""
-            },
-            "require": {
-                "ext-exif": "*",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "php": "^8.2",
-                "spatie/image-optimizer": "^1.7.5",
-                "spatie/temporary-directory": "^2.2",
-                "symfony/process": "^6.4|^7.0|^8.0"
-            },
-            "require-dev": {
-                "ext-ffi": "*",
-                "ext-gd": "*",
-                "ext-imagick": "*",
-                "jcupitt/vips": "^2.4",
-                "laravel/sail": "^1.34",
-                "pestphp/pest": "^3.0|^4.0",
-                "phpstan/phpstan": "^1.10.50",
-                "spatie/pest-plugin-snapshots": "^2.1",
-                "spatie/pixelmatch-php": "^1.0",
-                "spatie/ray": "^1.40.1",
-                "symfony/var-dumper": "^6.4|^7.0|^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Image\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Manipulate images with an expressive API",
-            "homepage": "https://github.com/spatie/image",
-            "keywords": [
-                "image",
-                "spatie"
-            ],
-            "support": {
-                "source": "https://github.com/spatie/image/tree/3.9.5"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/spatie",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-06-19T07:40:17+00:00"
-        },
-        {
-            "name": "spatie/image-optimizer",
-            "version": "1.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/image-optimizer.git",
-                "reference": "333c03952289dc2df0a91874636a0dffeb5b6aec"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/image-optimizer/zipball/333c03952289dc2df0a91874636a0dffeb5b6aec",
-                "reference": "333c03952289dc2df0a91874636a0dffeb5b6aec",
-                "shasum": ""
-            },
-            "require": {
-                "ext-fileinfo": "*",
-                "php": "^7.4|^8.0",
-                "psr/log": "^1.0 | ^2.0 | ^3.0",
-                "symfony/process": "^4.2|^5.0|^6.0|^7.0|^8.0"
-            },
-            "require-dev": {
-                "pestphp/pest": "^1.21|^2.0|^3.0|^4.0",
-                "phpunit/phpunit": "^8.5.21|^9.4.4|^10.0|^11.0|^12.0",
-                "symfony/var-dumper": "^4.2|^5.0|^6.0|^7.0|^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\ImageOptimizer\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Easily optimize images using PHP",
-            "homepage": "https://github.com/spatie/image-optimizer",
-            "keywords": [
-                "image-optimizer",
-                "spatie"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/image-optimizer/issues",
-                "source": "https://github.com/spatie/image-optimizer/tree/1.10.0"
-            },
-            "time": "2026-06-29T08:28:30+00:00"
-        },
-        {
             "name": "spatie/invade",
             "version": "2.1.0",
             "source": {
@@ -8730,189 +10137,6 @@
             "time": "2026-06-10T08:25:59+00:00"
         },
         {
-            "name": "spatie/laravel-medialibrary",
-            "version": "11.23.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "b578814b8c81a68c8ec9c9005246df5d417fe0f9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/b578814b8c81a68c8ec9c9005246df5d417fe0f9",
-                "reference": "b578814b8c81a68c8ec9c9005246df5d417fe0f9",
-                "shasum": ""
-            },
-            "require": {
-                "composer/semver": "^3.4",
-                "ext-exif": "*",
-                "ext-fileinfo": "*",
-                "ext-json": "*",
-                "illuminate/bus": "^10.2|^11.0|^12.0|^13.0",
-                "illuminate/conditionable": "^10.2|^11.0|^12.0|^13.0",
-                "illuminate/console": "^10.2|^11.0|^12.0|^13.0",
-                "illuminate/database": "^10.2|^11.0|^12.0|^13.0",
-                "illuminate/pipeline": "^10.2|^11.0|^12.0|^13.0",
-                "illuminate/support": "^10.2|^11.0|^12.0|^13.0",
-                "maennchen/zipstream-php": "^3.1",
-                "php": "^8.2",
-                "spatie/image": "^3.3.2",
-                "spatie/laravel-package-tools": "^1.16.1",
-                "spatie/temporary-directory": "^2.2",
-                "symfony/console": "^6.4.1|^7.0|^8.0"
-            },
-            "conflict": {
-                "php-ffmpeg/php-ffmpeg": "<0.6.1"
-            },
-            "require-dev": {
-                "aws/aws-sdk-php": "^3.293.10",
-                "ext-imagick": "*",
-                "ext-pdo_sqlite": "*",
-                "ext-zip": "*",
-                "guzzlehttp/guzzle": "^7.8.1",
-                "larastan/larastan": "^2.7|^3.0",
-                "league/flysystem-aws-s3-v3": "^3.22",
-                "mockery/mockery": "^1.6.7",
-                "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",
-                "pestphp/pest": "^2.36|^3.0|^4.0",
-                "phpstan/extension-installer": "^1.3.1",
-                "spatie/laravel-ray": "^1.33",
-                "spatie/pdf-to-image": "^2.2|^3.0",
-                "spatie/pest-expectations": "^1.13",
-                "spatie/pest-plugin-snapshots": "^2.1"
-            },
-            "suggest": {
-                "league/flysystem-aws-s3-v3": "Required to use AWS S3 file storage",
-                "php-ffmpeg/php-ffmpeg": "Required for generating video thumbnails",
-                "spatie/pdf-to-image": "Required for generating thumbnails of PDFs and SVGs"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Spatie\\MediaLibrary\\MediaLibraryServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\MediaLibrary\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Associate files with Eloquent models",
-            "homepage": "https://github.com/spatie/laravel-medialibrary",
-            "keywords": [
-                "cms",
-                "conversion",
-                "downloads",
-                "images",
-                "laravel",
-                "laravel-medialibrary",
-                "media",
-                "spatie"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/11.23.3"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/spatie",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-07-22T07:06:25+00:00"
-        },
-        {
-            "name": "spatie/laravel-menu",
-            "version": "4.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/laravel-menu.git",
-                "reference": "ae3e543715679cd39384476db17828b948c310fa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-menu/zipball/ae3e543715679cd39384476db17828b948c310fa",
-                "reference": "ae3e543715679cd39384476db17828b948c310fa",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/auth": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
-                "illuminate/contracts": "^8.71|^9.0|^10.0|^11.0|^12.0|^13.0",
-                "illuminate/support": "^8.71|^9.0|^10.0|^11.0|^12.0|^13.0",
-                "php": "^8.0",
-                "spatie/menu": "^3.0"
-            },
-            "require-dev": {
-                "fakerphp/faker": "^1.9",
-                "orchestra/testbench": "^6.23|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "pestphp/pest": "^1.22|^2.34|^3.7|^4.0",
-                "phpunit/phpunit": "^9.4|^10.5|^11.5.3|^12.5.12"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "Menu": "Spatie\\Menu\\Laravel\\Facades\\Menu"
-                    },
-                    "providers": [
-                        "Spatie\\Menu\\Laravel\\MenuServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Menu\\Laravel\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian De Deyne",
-                    "email": "sebastiandedeyne@gmail.com",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Html menu generator for Laravel",
-            "homepage": "https://github.com/spatie/laravel-menu",
-            "keywords": [
-                "laravel-menu",
-                "spatie"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/laravel-menu/issues",
-                "source": "https://github.com/spatie/laravel-menu/tree/4.2.2"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                }
-            ],
-            "time": "2026-02-21T21:16:50+00:00"
-        },
-        {
             "name": "spatie/laravel-package-tools",
             "version": "1.93.1",
             "source": {
@@ -9139,80 +10363,6 @@
             "time": "2026-05-30T19:21:26+00:00"
         },
         {
-            "name": "spatie/laravel-query-builder",
-            "version": "7.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/laravel-query-builder.git",
-                "reference": "3554c005f778d9da89d44b9895d2cca149110fea"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-query-builder/zipball/3554c005f778d9da89d44b9895d2cca149110fea",
-                "reference": "3554c005f778d9da89d44b9895d2cca149110fea",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^12.0|^13.0",
-                "illuminate/http": "^12.0|^13.0",
-                "illuminate/support": "^12.0|^13.0",
-                "php": "^8.3",
-                "spatie/laravel-package-tools": "^1.11"
-            },
-            "require-dev": {
-                "ext-json": "*",
-                "larastan/larastan": "^3.3",
-                "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^10.0|^11.0",
-                "pestphp/pest": "^4.0",
-                "phpunit/phpunit": "^12.0",
-                "spatie/invade": "^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Spatie\\QueryBuilder\\QueryBuilderServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\QueryBuilder\\": "src",
-                    "Spatie\\QueryBuilder\\Database\\Factories\\": "database/factories"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alex Vanderbist",
-                    "email": "alex@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Easily build Eloquent queries from API requests",
-            "homepage": "https://github.com/spatie/laravel-query-builder",
-            "keywords": [
-                "laravel-query-builder",
-                "spatie"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/laravel-query-builder/issues",
-                "source": "https://github.com/spatie/laravel-query-builder"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                }
-            ],
-            "time": "2026-05-02T11:22:31+00:00"
-        },
-        {
             "name": "spatie/laravel-settings",
             "version": "3.9.0",
             "source": {
@@ -9373,181 +10523,6 @@
             "time": "2026-02-22T08:16:31+00:00"
         },
         {
-            "name": "spatie/laravel-sluggable",
-            "version": "3.8.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/laravel-sluggable.git",
-                "reference": "3624a2d7d8c8475d8561c53faf63f1af583ef76c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-sluggable/zipball/3624a2d7d8c8475d8561c53faf63f1af583ef76c",
-                "reference": "3624a2d7d8c8475d8561c53faf63f1af583ef76c",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
-                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
-                "php": "^8.2"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
-                "pestphp/pest": "^2.0|^3.7|^4.0",
-                "spatie/laravel-translatable": "^5.0|^6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Sluggable\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Generate slugs when saving Eloquent models",
-            "homepage": "https://github.com/spatie/laravel-sluggable",
-            "keywords": [
-                "laravel-sluggable",
-                "spatie"
-            ],
-            "support": {
-                "source": "https://github.com/spatie/laravel-sluggable/tree/3.8.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/spatie",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-03-23T07:42:02+00:00"
-        },
-        {
-            "name": "spatie/macroable",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/macroable.git",
-                "reference": "2967f69810ba4df158391665c0850010b9d1507c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/macroable/zipball/2967f69810ba4df158391665c0850010b9d1507c",
-                "reference": "2967f69810ba4df158391665c0850010b9d1507c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.3"
-            },
-            "require-dev": {
-                "pestphp/pest": "^4",
-                "phpunit/phpunit": "^12"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Macroable\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A trait to dynamically add methods to a class",
-            "homepage": "https://github.com/spatie/macroable",
-            "keywords": [
-                "macroable",
-                "spatie"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/macroable/issues",
-                "source": "https://github.com/spatie/macroable/tree/2.1.0"
-            },
-            "time": "2026-01-30T17:13:34+00:00"
-        },
-        {
-            "name": "spatie/menu",
-            "version": "3.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/menu.git",
-                "reference": "6b59c187e1800986bb354b849495e3cbbfff0f88"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/menu/zipball/6b59c187e1800986bb354b849495e3cbbfff0f88",
-                "reference": "6b59c187e1800986bb354b849495e3cbbfff0f88",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0",
-                "spatie/url": "^2.0.0"
-            },
-            "require-dev": {
-                "larapack/dd": "^1.0",
-                "pestphp/pest": "^1.22",
-                "phpunit/phpunit": "^9.0",
-                "vimeo/psalm": "^4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Menu\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian De Deyne",
-                    "email": "sebastian@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Html menu generator",
-            "homepage": "https://github.com/spatie/menu",
-            "keywords": [
-                "menu",
-                "navigation",
-                "spatie"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/menu/issues",
-                "source": "https://github.com/spatie/menu/tree/3.2.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/spatie",
-                    "type": "github"
-                },
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "other"
-                }
-            ],
-            "time": "2025-06-13T07:09:57+00:00"
-        },
-        {
             "name": "spatie/shiki-php",
             "version": "2.4.0",
             "source": {
@@ -9672,68 +10647,6 @@
                 }
             ],
             "time": "2026-06-22T07:55:44+00:00"
-        },
-        {
-            "name": "spatie/url",
-            "version": "2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/url.git",
-                "reference": "93a51db743cdec22b081c64593e193887c9cd395"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/url/zipball/93a51db743cdec22b081c64593e193887c9cd395",
-                "reference": "93a51db743cdec22b081c64593e193887c9cd395",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0",
-                "psr/http-message": "^1.0 || ^2.0",
-                "spatie/macroable": "^1.0 || ^2.0"
-            },
-            "require-dev": {
-                "pestphp/pest": "^1.21"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Url\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian De Deyne",
-                    "email": "sebastian@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Parse, build and manipulate URL's",
-            "homepage": "https://github.com/spatie/url",
-            "keywords": [
-                "spatie",
-                "url"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/url/issues",
-                "source": "https://github.com/spatie/url/tree/2.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/spatie",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-03-08T11:35:19+00:00"
         },
         {
             "name": "spiral/core",
@@ -10819,16 +11732,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v8.1.1",
+            "version": "v8.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "b711a8ab808b6c074c6b8caef70d0fd8d6b6d07d"
+                "reference": "535e18a1b8925f6c01a55b171d157ab66c2ace15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/b711a8ab808b6c074c6b8caef70d0fd8d6b6d07d",
-                "reference": "b711a8ab808b6c074c6b8caef70d0fd8d6b6d07d",
+                "url": "https://api.github.com/repos/symfony/console/zipball/535e18a1b8925f6c01a55b171d157ab66c2ace15",
+                "reference": "535e18a1b8925f6c01a55b171d157ab66c2ace15",
                 "shasum": ""
             },
             "require": {
@@ -10895,7 +11808,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v8.1.1"
+                "source": "https://github.com/symfony/console/tree/v8.1.2"
             },
             "funding": [
                 {
@@ -10915,7 +11828,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-16T12:55:20+00:00"
+            "time": "2026-07-27T13:58:19+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -12064,16 +12977,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.38.1",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603"
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/e9247d281d694a5120554d9afaf54e070e88a603",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
                 "shasum": ""
             },
             "require": {
@@ -12122,7 +13035,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -12142,7 +13055,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T05:58:03+00:00"
+            "time": "2026-07-28T08:25:59+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -12487,16 +13400,16 @@
         },
         {
             "name": "symfony/polyfill-php83",
-            "version": "v1.38.2",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php83.git",
-                "reference": "796a26abb75ce49f3a84433cd81bf1009d73d5f8"
+                "reference": "5ea99087fb99c273a9b9236ed4c31e78b16103c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php83/zipball/796a26abb75ce49f3a84433cd81bf1009d73d5f8",
-                "reference": "796a26abb75ce49f3a84433cd81bf1009d73d5f8",
+                "url": "https://api.github.com/repos/symfony/polyfill-php83/zipball/5ea99087fb99c273a9b9236ed4c31e78b16103c6",
+                "reference": "5ea99087fb99c273a9b9236ed4c31e78b16103c6",
                 "shasum": ""
             },
             "require": {
@@ -12543,7 +13456,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php83/tree/v1.38.2"
+                "source": "https://github.com/symfony/polyfill-php83/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -12563,7 +13476,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-27T06:51:48+00:00"
+            "time": "2026-07-01T12:47:55+00:00"
         },
         {
             "name": "symfony/polyfill-php84",
@@ -12647,16 +13560,16 @@
         },
         {
             "name": "symfony/polyfill-php85",
-            "version": "v1.38.1",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php85.git",
-                "reference": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
+                "reference": "255fab485aaa1006ed411040c42aecd7b5302d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
-                "reference": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
+                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/255fab485aaa1006ed411040c42aecd7b5302d7a",
+                "reference": "255fab485aaa1006ed411040c42aecd7b5302d7a",
                 "shasum": ""
             },
             "require": {
@@ -12703,7 +13616,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php85/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-php85/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -12723,7 +13636,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T02:25:22+00:00"
+            "time": "2026-07-01T12:47:55+00:00"
         },
         {
             "name": "symfony/polyfill-php86",
@@ -13036,16 +13949,16 @@
         },
         {
             "name": "symfony/property-info",
-            "version": "v8.1.0",
+            "version": "v8.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-info.git",
-                "reference": "4721e8c56d0cd2378e0ef9a9899f810008b859f7"
+                "reference": "289ef0d4f2b9bd5245ac2604564289a8673837b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-info/zipball/4721e8c56d0cd2378e0ef9a9899f810008b859f7",
-                "reference": "4721e8c56d0cd2378e0ef9a9899f810008b859f7",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/289ef0d4f2b9bd5245ac2604564289a8673837b9",
+                "reference": "289ef0d4f2b9bd5245ac2604564289a8673837b9",
                 "shasum": ""
             },
             "require": {
@@ -13098,7 +14011,7 @@
                 "validator"
             ],
             "support": {
-                "source": "https://github.com/symfony/property-info/tree/v8.1.0"
+                "source": "https://github.com/symfony/property-info/tree/v8.1.2"
             },
             "funding": [
                 {
@@ -13118,7 +14031,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-29T05:06:50+00:00"
+            "time": "2026-07-22T15:42:13+00:00"
         },
         {
             "name": "symfony/psr-http-message-bridge",
@@ -13289,16 +14202,16 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v8.1.1",
+            "version": "v8.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "f911b744bc24658f435ea30439cfe536f0173a3a"
+                "reference": "6bd396438ba6c36800224e2beaf3f8f2d7439343"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/f911b744bc24658f435ea30439cfe536f0173a3a",
-                "reference": "f911b744bc24658f435ea30439cfe536f0173a3a",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/6bd396438ba6c36800224e2beaf3f8f2d7439343",
+                "reference": "6bd396438ba6c36800224e2beaf3f8f2d7439343",
                 "shasum": ""
             },
             "require": {
@@ -13310,7 +14223,7 @@
                 "phpdocumentor/reflection-docblock": "<5.2|>=7",
                 "phpdocumentor/type-resolver": "<1.5.1",
                 "symfony/property-access": "<8.1",
-                "symfony/property-info": "<7.4",
+                "symfony/property-info": "<7.4.15",
                 "symfony/type-info": "<7.4"
             },
             "require-dev": {
@@ -13329,7 +14242,7 @@
                 "symfony/messenger": "^7.4|^8.0",
                 "symfony/mime": "^7.4|^8.0",
                 "symfony/property-access": "^8.1",
-                "symfony/property-info": "^7.4|^8.0",
+                "symfony/property-info": "^7.4.15|~8.0.15|^8.1.2",
                 "symfony/translation-contracts": "^2.5|^3",
                 "symfony/type-info": "^7.4|^8.0",
                 "symfony/uid": "^7.4|^8.0",
@@ -13364,7 +14277,7 @@
             "description": "Handles serializing and deserializing data structures, including object graphs, into array structures or other formats like XML and JSON.",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/serializer/tree/v8.1.1"
+                "source": "https://github.com/symfony/serializer/tree/v8.1.3"
             },
             "funding": [
                 {
@@ -13384,7 +14297,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-06-27T09:05:56+00:00"
+            "time": "2026-07-29T14:11:26+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -13475,16 +14388,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v8.1.0",
+            "version": "v8.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "afd5944f4005862d961efb85c8bbd5c523c4e3c9"
+                "reference": "286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/afd5944f4005862d961efb85c8bbd5c523c4e3c9",
-                "reference": "afd5944f4005862d961efb85c8bbd5c523c4e3c9",
+                "url": "https://api.github.com/repos/symfony/string/zipball/286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc",
+                "reference": "286a76b7255e5cc4bf0101a0bc5388ecf1c38ccc",
                 "shasum": ""
             },
             "require": {
@@ -13541,7 +14454,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v8.1.0"
+                "source": "https://github.com/symfony/string/tree/v8.1.2"
             },
             "funding": [
                 {
@@ -13561,7 +14474,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-29T05:06:50+00:00"
+            "time": "2026-07-28T07:35:25+00:00"
         },
         {
             "name": "symfony/translation",
@@ -15371,75 +16284,6 @@
                 "source": "https://github.com/laravel/sail"
             },
             "time": "2026-07-17T15:09:35+00:00"
-        },
-        {
-            "name": "laravel/telescope",
-            "version": "v5.21.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/telescope.git",
-                "reference": "f00f45a59843329b97aa238f28da594f3b7d4aa7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/f00f45a59843329b97aa238f28da594f3b7d4aa7",
-                "reference": "f00f45a59843329b97aa238f28da594f3b7d4aa7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": "^8.37|^9.0|^10.0|^11.0|^12.0|^13.0",
-                "laravel/sentinel": "^1.0",
-                "php": "^8.0",
-                "symfony/console": "^5.3|^6.0|^7.0|^8.0",
-                "symfony/var-dumper": "^5.0|^6.0|^7.0|^8.0"
-            },
-            "require-dev": {
-                "ext-gd": "*",
-                "guzzlehttp/guzzle": "^6.0|^7.0",
-                "laravel/octane": "^1.4|^2.0",
-                "orchestra/testbench": "^6.47.1|^7.55|^8.36|^9.15|^10.8|^11.0",
-                "phpstan/phpstan": "^1.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Laravel\\Telescope\\TelescopeServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Telescope\\": "src/",
-                    "Laravel\\Telescope\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                },
-                {
-                    "name": "Mohamed Said",
-                    "email": "mohamed@laravel.com"
-                }
-            ],
-            "description": "An elegant debug assistant for the Laravel framework.",
-            "keywords": [
-                "debugging",
-                "laravel",
-                "monitoring"
-            ],
-            "support": {
-                "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v5.21.0"
-            },
-            "time": "2026-07-20T19:44:45+00:00"
         },
         {
             "name": "mockery/mockery",

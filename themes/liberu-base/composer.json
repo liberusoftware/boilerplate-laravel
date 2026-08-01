@@ -1,1 +1,21 @@
-{"name":"liberu/theme-base","description":"Shared semantic tokens and accessible presentation primitives for Liberu themes.","type":"liberu-theme","license":"MIT","require":{"php":"^8.5","liberu/theme-support":"^1.0"},"autoload":{"psr-4":{"Liberu\\Themes\\Base\\":"src/"}},"extra":{"liberu":{"name":"liberu-base"},"laravel":{"providers":["Liberu\\Themes\\Base\\BaseThemeServiceProvider"]}}}
+{
+  "name": "liberu/theme-base",
+  "version": "1.0.0",
+  "description": "Shared semantic tokens and accessible presentation primitives for Liberu themes.",
+  "type": "liberu-theme",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "liberu/theme-support": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Themes\\Base\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "liberu-base"
+    }
+  }
+}

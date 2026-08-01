@@ -2,7 +2,7 @@
 
 namespace Liberu\Foundation\Analytics\Support;
 
-use Liberu\Foundation\Analytics\Data\AnalyticsEvent;
+use Liberu\Analytics\Contracts\AnalyticsEvent;
 
 final readonly class EventRouter
 {
@@ -17,6 +17,6 @@ final readonly class EventRouter
             $results[$name] = $this->destinations->get($name)->deliver($event);
         }
 
-return $results;
+        return $results;
     }
 }

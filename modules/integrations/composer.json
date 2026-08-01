@@ -1,1 +1,23 @@
-{"name":"liberu/integrations","description":"Provider adapter registry and protected connection lifecycle.","type":"liberu-module","license":"MIT","require":{"php":"^8.5","illuminate/database":"^13.0","illuminate/support":"^13.0","liberu/module-manager":"^1.0"},"autoload":{"psr-4":{"Liberu\\Foundation\\Integrations\\":"src/"}},"extra":{"liberu":{"name":"integrations"},"laravel":{"providers":["Liberu\\Foundation\\Integrations\\IntegrationsServiceProvider"]}}}
+{
+  "name": "liberu/integrations",
+  "version": "1.0.0",
+  "description": "Provider adapter registry and protected connection lifecycle.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/database": "^13.0",
+    "illuminate/support": "^13.0",
+    "liberu/module-manager": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Integrations\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "integrations"
+    }
+  }
+}

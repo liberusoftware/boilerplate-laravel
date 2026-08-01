@@ -2,8 +2,8 @@
 
 namespace Liberu\Foundation\Analytics\Meta\Support;
 
-use Liberu\Foundation\Analytics\Contracts\AnalyticsDestination;
-use Liberu\Foundation\Analytics\Data\AnalyticsEvent;
+use Liberu\Analytics\Contracts\AnalyticsDestination;
+use Liberu\Analytics\Contracts\AnalyticsEvent;
 use Liberu\Foundation\Analytics\Meta\Contracts\MetaTransport;
 
 final readonly class MetaDestination implements AnalyticsDestination

@@ -270,69 +270,46 @@ Troubleshooting
 
 Modular Architecture
 --------------------
-This boilerplate uses a single, custom module system rooted at `app/Modules/`, under the
-app's own `App\Modules\` PSR-4 namespace. There is no `internachi/modular`, no per-module
-`composer.json`/composer-merge-plugin, and no `app-modules/` directory — none of that is
-used. Modules have a DB-backed lifecycle (install/enable/disable/uninstall) managed by
-`ModuleManager`, and an enabled module's Filament resources/pages/widgets are auto-discovered
-per panel by `App\Filament\Plugins\ModuleFilamentPlugin`. `app/Modules/Blog/` is the reference
-implementation — copy its shape when adding a module.
-
-Manage modules from `/admin` → **Modules**: the list shows every module discovered from disk
-with enable/disable/install/uninstall actions (backed by `ModuleManager`); there is no artisan
-`module:*` command.
+The application is composed from independently versioned `liberu-module` Composer packages
+installed in `modules/`. Composer owns installation and autoloading, while each package's
+`module.json` describes runtime capabilities and dependencies. `config/modules.php` explicitly
+selects the application composition; the module manager validates and dependency-orders that
+graph before registering providers.
 
 ### Module Features
 
-- PSR-4 under the existing `App\` autoload — no per-module `composer.json`, no
-  composer-merge-plugin, no `internachi/modular`/`app-modules/`.
-- `module.json` (not `composer.json`) declares `name`, `version`, `description`,
-  `dependencies`, and a `config` map.
-- Lifecycle hooks — `onInstall`/`onEnable`/`onDisable`/`onUninstall` on your `BaseModule`
-  subclass — each firing a `Module{Installed,Enabled,Disabled,Uninstalled}` event.
-- Panel-targeted Filament auto-discovery: `Filament/Admin/{Resources,Pages,Widgets}` is
-  discovered into the `/admin` panel, `Filament/App/{Resources,Pages,Widgets}` into `/app`
-  (via `ModuleFilamentPlugin::make()->for('Admin')` / `->for('App')`, registered on each panel).
-- Enabled-gating: routes, views, and translations are only registered for modules the
-  `modules` DB table marks enabled; config and migrations always load regardless of state.
-- Dependency checks: `enable()`/`install()` refuse to run if a declared dependency isn't
-  present and enabled.
-- Admin UI: the `Modules` Filament resource (`app/Filament/Resources/ModuleResource.php`)
-  lists modules and drives enable/disable/install/uninstall.
+- Every module owns its `composer.json`, `module.json`, provider, README, changelog and tests.
+- Composer dependencies control installation; manifest capabilities control runtime composition.
+- Bundled modules default to disabled and are enabled explicitly by the consuming application.
+- Contract-only packages keep adapters independent from concrete implementations.
+- Domain packages remain UI-agnostic; companion `*-filament` modules declare panel plugins in
+  their manifests and consume public domain services or contracts.
+- Architecture tests enforce declared cross-package dependencies and presentation boundaries.
 
 See `docs/MODULE_DEVELOPMENT.md` for a full walkthrough using Blog as the worked example.
 
 ### Module Structure
 
-```
-app/Modules/Blog/
-├── module.json                     # name, version, description, dependencies, config
-├── BlogModule.php                  # main module class, extends BaseModule
-├── Filament/
-│   └── Admin/                      # discovered into the /admin panel
-│       └── Resources/
-│           ├── PostResource.php
-│           └── PostResource/Pages/{ListPosts,CreatePost,EditPost}.php
-│                                    # a Filament/App/ sibling would target the /app panel
-├── Http/Controllers/BlogController.php
-├── Models/Post.php
-├── config/blog.php                 # config('blog.posts_per_page') — file named after the
-│                                    # module merges at its own root key, not blog.blog.*
+```text
+modules/blog/
+├── composer.json
+├── module.json
+├── README.md
+├── CHANGELOG.md
+├── src/
+├── config/
 ├── database/migrations/
-│   └── 2026_07_01_000000_create_module_blog_posts_table.php
-├── resources/views/index.blade.php # view('blog::index')
-└── routes/web.php                  # blog.index route
+├── resources/views/
+├── routes/
+└── tests/
 ```
 
 ### Filament Integration
 
-Each **enabled** module's Filament components are auto-discovered per panel:
-- `Filament/Admin/Resources|Pages|Widgets` → registered into the `/admin` panel
-- `Filament/App/Resources|Pages|Widgets` → registered into the `/app` panel
-- Discovery is done by `App\Filament\Plugins\ModuleFilamentPlugin`, added to each panel's
-  `->plugins([...])` in `AdminPanelProvider`/`AppPanelProvider`
-- A resource whose model has no `team()` relationship (like Blog's `Post`) must override
-  `isScopedToTenant(): false`, same as core resources on the tenant-scoped `/admin` panel
+Enabled presentation modules declare plugin classes under `filament_plugins.admin` or
+`filament_plugins.app` in `module.json`. `App\Filament\ModulePlugins` builds each panel from
+those declarations. This keeps panel providers independent of optional modules and ensures
+that disabling a presentation package removes its UI as well as its provider.
 
 ### Custom Theme Support
 

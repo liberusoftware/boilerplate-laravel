@@ -4,8 +4,8 @@ namespace Liberu\Foundation\Localization;
 
 use Illuminate\Support\ServiceProvider;
 use Liberu\Foundation\Localization\Context\LocaleResolver;
-use Liberu\Foundation\Localization\Livewire\LanguageSwitcher;
-use Livewire\Livewire;
+use Liberu\Foundation\Localization\Translation\TranslationRegistry;
+use Liberu\Localization\Contracts\TranslationProviderRegistry;
 
 final class LocalizationServiceProvider extends ServiceProvider
 {
@@ -13,11 +13,9 @@ final class LocalizationServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/localization.php', 'localization');
         $this->app->singleton(LocaleResolver::class);
+        $this->app->singleton(TranslationRegistry::class);
+        $this->app->alias(TranslationRegistry::class, TranslationProviderRegistry::class);
     }
 
-    public function boot(): void
-    {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'localization');
-        Livewire::component('language-switcher', LanguageSwitcher::class);
-    }
+    public function boot(): void {}
 }

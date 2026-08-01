@@ -1,1 +1,23 @@
-{"name":"liberu/analytics-meta","description":"Consent-aware Meta server-side event mapping and normalized customer-data adapter.","type":"liberu-module","license":"MIT","require":{"php":"^8.5","illuminate/support":"^13.0","liberu/analytics-core":"^1.0","liberu/integrations":"^1.0"},"autoload":{"psr-4":{"Liberu\\Foundation\\Analytics\\Meta\\":"src/"}},"extra":{"liberu":{"name":"analytics-meta"},"laravel":{"providers":["Liberu\\Foundation\\Analytics\\Meta\\AnalyticsMetaServiceProvider"]}}}
+{
+  "name": "liberu/analytics-meta",
+  "version": "1.0.0",
+  "description": "Consent-aware Meta server-side event mapping and normalized customer-data adapter.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/support": "^13.0",
+    "liberu/analytics-contracts": "^1.0",
+    "liberu/integrations": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Analytics\\Meta\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "analytics-meta"
+    }
+  }
+}

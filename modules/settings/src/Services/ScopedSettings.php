@@ -30,6 +30,6 @@ final class ScopedSettings
             }
         }
 
-return $fallback;
+        return $fallback;
     }
 }

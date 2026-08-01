@@ -1,164 +1,113 @@
-# Module Development Guide
+# Module development guide
 
-This app has one module system: the custom `App\Modules\` framework rooted at
-`app/Modules/`. There is no `internachi/modular`, no per-module `composer.json`, no
-composer-merge-plugin, and no `app-modules/` directory — none of that is used or supported.
+Modules are independently versioned Composer packages installed in `modules/{name}`. Composer owns package discovery and autoloading; `module.json` owns runtime metadata, dependency capabilities, enablement defaults and optional Filament plugin declarations. The application explicitly selects enabled modules in `config/modules.php`.
 
-The worked example throughout this guide is `app/Modules/Blog/`, the reference module
-shipped with the app.
+## Package anatomy
 
-## Anatomy
-
-```
-app/Modules/Blog/
-├── module.json                     # name, version, description, dependencies, config
-├── BlogModule.php                  # main module class, extends BaseModule
-├── Filament/
-│   └── Admin/                      # discovered into the /admin panel
-│       └── Resources/
-│           ├── PostResource.php
-│           └── PostResource/Pages/{ListPosts,CreatePost,EditPost}.php
-├── Http/Controllers/BlogController.php
-├── Models/Post.php
-├── config/blog.php
-├── database/migrations/2026_07_01_000000_create_module_blog_posts_table.php
-├── resources/views/index.blade.php
-└── routes/web.php
+```text
+modules/example/
+├── composer.json
+├── module.json
+├── README.md
+├── CHANGELOG.md
+├── src/
+│   └── ExampleServiceProvider.php
+├── config/
+├── database/migrations/
+├── resources/views/
+├── routes/
+└── tests/
 ```
 
-`ModuleManager` only recognizes a directory under `app/Modules/` as a module if it contains
-a `module.json` — this is how framework-internal subfolders (`Contracts/`, `Events/`,
-`Traits/`) are skipped during discovery. The module's main class must resolve as either
-`App\Modules\{Dir}\{Dir}` (e.g. `App\Modules\Blog\BlogModule`) or `App\Modules\{Dir}\{Dir}Module`.
+`composer.json` must use type `liberu-module`, declare a stable package version, map the package namespace, and require every package whose namespace it imports. The manifest name and version must match Composer metadata. Runtime modules declare a provider in `extra.liberu.provider`; they must not use Laravel's `extra.laravel.providers`, because the module manager is the single provider lifecycle authority.
 
-`module.json` fields:
+A typical manifest is:
 
 ```json
 {
-    "name": "Blog",
+    "name": "example",
     "version": "1.0.0",
-    "description": "...",
-    "dependencies": [],
-    "config": { "posts_per_page": 10, "allow_comments": false }
+    "category": "domain",
+    "description": "Example domain capability.",
+    "default_enabled": false,
+    "provides": ["example"],
+    "requires": ["foundation"],
+    "required_capabilities": ["foundation"]
 }
 ```
 
-`name`/`version`/`description`/`dependencies`/`config` are read by `BaseModule::loadModuleInfo()`
-and persisted to the `modules` DB table (`App\Models\Module`) the first time the module is
-discovered.
+Use `integration`, `domain`, `presentation`, or `theme` as the category. Keep framework presentation dependencies out of domain packages. Shared interfaces belong in a small contract package when adapters must depend on a stable boundary without importing an implementation.
 
-## Adding a Filament resource to a panel
+## Dependency and capability rules
 
-Filament components are auto-discovered **per panel** by
-`App\Filament\Plugins\ModuleFilamentPlugin`, which each panel registers as a plugin:
+Declare package dependencies twice where they serve different purposes:
+
+- Composer `require` controls installation, autoloading and compatible package versions.
+- Manifest `requires` and `required_capabilities` control the enabled runtime graph.
+
+`module:validate` checks that Liberu package dependencies are represented consistently, required versions are installed, providers are valid, capability providers are unambiguous and the enabled graph has no missing dependencies or cycles.
+
+Do not query another module's tables or import its models as an informal integration API. Prefer a contract, application service, event or explicitly documented schema extension. A module that alters another module's tables must declare that owner as a dependency and document the extension in its README.
+
+## Enablement and boot
+
+Bundled packages default to disabled in their manifests. The application enables its selected composition explicitly:
 
 ```php
-// AdminPanelProvider
-->plugins([
-    // ...
-    ModuleFilamentPlugin::make()->for('Admin'),
-])
-
-// AppPanelProvider
-->plugins([
-    // ...
-    ModuleFilamentPlugin::make()->for('App'),
-])
+// config/modules.php
+'enabled' => [
+    'module-manager',
+    'foundation',
+    'example',
+],
 ```
 
-For every **enabled** module, the plugin scans:
+The root application bootstraps only the module manager directly. It discovers installed `liberu-module` packages through Composer, validates the selected graph, orders providers by dependencies and registers only enabled modules. Package auto-discovery must not bypass this process.
 
-- `Filament/Admin/Resources` / `Pages` / `Widgets` → registered into the `/admin` panel
-- `Filament/App/Resources` / `Pages` / `Widgets` → registered into the `/app` panel
+Useful commands are:
 
-Namespaces follow the folder: a resource at `app/Modules/Blog/Filament/Admin/Resources/PostResource.php`
-lives in `App\Modules\Blog\Filament\Admin\Resources`. Blog only ships an `Admin` resource
-(`PostResource`); add a `Filament/App/...` sibling if a module needs app-panel components too.
+```bash
+php artisan module:validate
+php artisan foundation:doctor
+composer validate --no-check-publish
+```
 
-If your resource's model has no `team()` relationship, override
-`isScopedToTenant(): bool { return false; }` — the `/admin` panel is tenant-scoped to `Team`
-and will 500 on a non-team-scoped resource otherwise (see `PostResource` for the pattern).
+## Filament presentation adapters
 
-## Routes, views, config, migrations
+Filament code belongs in a companion `*-filament` presentation module rather than its domain module. The presentation manifest declares which panel receives its plugin:
 
-`ModuleServiceProvider` wires these up for every module found under `app/Modules/*`:
-
-- **Routes** — `routes/web.php` / `api.php` / `admin.php`, loaded with `loadRoutesFrom` (no
-  route-group prefix or middleware is applied automatically — declare that in the file itself,
-  e.g. `routes/web.php`'s `Route::get('/blog', ...)->name('blog.index')`).
-- **Views** — `resources/views/` loaded under a namespace derived from `Str::snake($moduleName)`,
-  so Blog's views resolve as `blog::index`.
-- **Translations** — `resources/lang/` loaded the same way, if present.
-- **Config** — `config/*.php` is merged for every module regardless of enabled state. A file
-  named after the module itself merges at the module's own root config key: Blog's
-  `config/blog.php` becomes `config('blog.posts_per_page')`, not the doubled-up
-  `config('blog.blog.posts_per_page')`. Any other filename merges under `{module}.{file}`.
-- **Migrations** — `database/migrations/` is always loaded via `loadMigrationsFrom`, so
-  `php artisan migrate` picks up module migrations regardless of enabled state.
-
-**Routes, views, and translations are gated by enabled state** — config and migrations are not
-(see below).
-
-## Lifecycle
-
-Modules extend `BaseModule` (implements `ModuleInterface`) and can use the `Configurable` +
-`HasModuleHooks` traits. Override the hook methods for custom logic:
-
-```php
-class BlogModule extends BaseModule
+```json
 {
-    protected function onInstall(): void { /* ... */ }
-    protected function onEnable(): void { /* ... */ }
-    protected function onDisable(): void { /* ... */ }
-    protected function onUninstall(): void { /* ... */ }
+    "name": "example-filament",
+    "category": "presentation",
+    "default_enabled": false,
+    "requires": ["example"],
+    "filament_plugins": {
+        "admin": ["Liberu\\ExampleFilament\\ExampleFilamentPlugin"]
+    }
 }
 ```
 
-`ModuleManager` drives the lifecycle:
+Supported panel keys are `admin` and `app`. `App\Filament\ModulePlugins` composes plugin instances from enabled manifests, so panel providers do not hard-code module plugins. The companion package must require the domain package and consume its public services or contracts. It must also provide metadata, tests and a service provider like every runtime module.
 
-- `install($name)` — checks dependencies, runs the module's migrations, publishes assets,
-  calls `onInstall()`, then enables the module. Dispatches `ModuleInstalled`.
-- `enable($name)` / `disable($name)` — check dependencies / dependents, run `onEnable()` /
-  `onDisable()`, persist `enabled` on the `modules` row. Dispatch `ModuleEnabled` / `ModuleDisabled`.
-- `uninstall($name)` — disables the module, rolls back its migrations, removes published
-  assets, calls `onUninstall()`. Dispatches `ModuleUninstalled`.
+Use an `app` declaration for tenant/user-facing functionality and `admin` for operational management. If both surfaces are required, declare both. Plugin identifiers must be unique within a panel.
 
-A module declaring `dependencies` in `module.json` can't be enabled/installed unless every
-dependency is itself present and enabled, and can't be disabled/uninstalled while another
-enabled module depends on it.
+## Routes, views, configuration and migrations
 
-The admin UI for this is the `Modules` Filament resource (`app/Filament/Resources/ModuleResource.php`,
-`/admin` → Modules): it lists every discovered module with enable/disable/install/uninstall
-row actions, backed by `ModuleManager`. There is no artisan `module:*` command.
+Each package service provider owns its resources and loads them only when the module manager registers that package. Namespace views and translations with the module name. Keep migration ownership clear; schema extensions of another package must be additive, dependency-declared and documented.
 
-## Enabled-gating
+Avoid hidden filesystem scanning conventions for application behavior. Composer metadata, the manifest and explicit application enablement should be sufficient to reproduce the composition from the lockfile.
 
-Enabled state lives in the `modules` DB table (`enabled` column, `false` by default). Two
-different defaults apply depending on which side reads it:
+## Testing expectations
 
-- `ModuleServiceProvider` and `ModuleFilamentPlugin` **default to enabled** when no `modules`
-  row exists yet for a module — so a freshly added module's config/routes/Filament components
-  work before the registry has been seeded or `ModuleManager` has run a discovery pass.
-- `BaseModule::isEnabled()` (used by `ModuleManager`) has no such fail-open default — it
-  reflects the persisted DB row, or `module.json`'s `config.enabled` if no row exists yet.
+Every module has package-owned tests under `modules/{name}/tests`. At minimum, metadata tests verify Composer/manifest agreement, dependencies and the provider. Add focused unit or feature tests for the package's actual behavior, contracts, routes, migrations and presentation plugin where applicable.
 
-If a module should ship enabled out of the box, seed it explicitly — Blog's `DatabaseSeeder`
-entry does this:
+The root suites also enforce cross-package boundaries and exercise the assembled application:
 
-```php
-Module::firstOrCreate(['name' => 'Blog'], [
-    'enabled' => true,
-    'version' => '1.0.0',
-    'description' => '...',
-]);
+```bash
+vendor/bin/pest --testsuite=Modules
+vendor/bin/pest --testsuite=Architecture
+vendor/bin/pest
 ```
 
-Once enabled: routes, views, and translations load; the module's Filament components are
-discovered into the panel(s) matching their `Filament/Admin`/`Filament/App` subfolder. Config
-and migrations load either way.
-
-## Testing
-
-See `tests/Unit/ModuleManagerTest.php` and `tests/Feature/ModuleDiscoveryTest.php` for
-coverage of discovery, enable/disable persistence, and lifecycle events — useful as a template
-when adding tests for a new module.
+Before releasing a module, update its changelog, validate the complete graph, run its focused tests and the root suite, then release it from its package repository and update the consuming application's Composer constraint and lockfile.

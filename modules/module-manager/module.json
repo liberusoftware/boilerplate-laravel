@@ -13,5 +13,5 @@
     },
     "suggests": {},
     "capabilities": ["foundation.modules"],
-    "default_enabled": true
+    "default_enabled": false
 }

@@ -35,6 +35,6 @@ Product examples remain isolated in `liberu/blog-core`, `liberu/blog-filament`, 
 
 ## Host boundary
 
-The only classes in `/app` are the host `User` composition model and the two Filament panel composition providers. Root migrations own only application users and Laravel infrastructure. Capability migrations, routes, policies, commands, UI extensions, configuration, translations and views live with their owning module.
+Classes in `/app` are limited to host composition concerns: the `User` composition model, the two Filament panel providers, and the manifest-driven Filament plugin composer. Root migrations own only application users and Laravel infrastructure. Capability migrations, routes, policies, commands, UI extensions, configuration, translations and views live with their owning module.
 
 Run `php artisan module:validate` and `php artisan foundation:doctor` in CI and during deployment. Production may create a validated module cache with `php artisan module:cache`; changes to enabled modules, manifests, lockfiles or environment configuration require rebuilding that cache.

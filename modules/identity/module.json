@@ -9,5 +9,5 @@
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
     "suggests": { "liberu/jetstream-bridge": "^1.0", "liberu/two-factor-authentication": "^1.0", "liberu/profiles": "^1.0" },
     "capabilities": ["identity.authenticate", "identity.recover"],
-    "default_enabled": true
+    "default_enabled": false
 }

@@ -6,8 +6,8 @@
     "version": "1.0.0",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\Theme\\Providers\\ThemeServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/settings": "^1.0" } },
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0", "liberu/settings": "^1.0" } },
     "suggests": {},
     "capabilities": ["foundation.theme-support"],
-    "default_enabled": true
+    "default_enabled": false
 }

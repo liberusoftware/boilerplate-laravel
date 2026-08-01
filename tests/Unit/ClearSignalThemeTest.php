@@ -1,6 +1,7 @@
 <?php
 
 use Filament\Support\Colors\Color;
+use Liberu\Foundation\Filament\Support\ThemeColors;
 use Liberu\Foundation\Theme\Services\ThemeManager;
 
 it('discovers the clear-signal theme', function () {
@@ -17,6 +18,7 @@ it('labels the clear-signal theme', function () {
 });
 
 it('maps clear-signal primary to the Teal Filament palette', function () {
-    expect(app(ThemeManager::class)->getFilamentColors('clear-signal')['primary'])
+    config(['theme.default' => 'clear-signal']);
+    expect(app(ThemeColors::class)->forSite()['primary'])
         ->toBe(Color::Teal);
 });
