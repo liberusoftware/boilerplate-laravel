@@ -1,0 +1,9 @@
+{
+    "name": "liberu/two-factor-authentication",
+    "description": "TOTP enforcement policy and one-time recovery-code primitives.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "illuminate/contracts": "^13.0", "illuminate/support": "^13.0", "liberu/identity": "^1.0" },
+    "autoload": { "psr-4": { "Liberu\\Foundation\\TwoFactor\\": "src/" } },
+    "extra": { "liberu": { "name": "two-factor-authentication" }, "laravel": { "providers": ["Liberu\\Foundation\\TwoFactor\\TwoFactorServiceProvider"] } }
+}

@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "module-manager",
+    "display_name": "Module Manager",
+    "description": "Manifest discovery, dependency resolution, deployment enablement, registry caching, and diagnostics.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\ModuleManager\\ModuleManagerServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {}
+    },
+    "suggests": {},
+    "capabilities": ["foundation.modules"],
+    "default_enabled": true
+}

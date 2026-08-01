@@ -1,9 +1,9 @@
 <?php
 
-use App\Services\TranslationService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Liberu\Foundation\Localization\MyMemory\TranslationService;
 
 test('translation service translates text correctly', function () {
     $service = new TranslationService();

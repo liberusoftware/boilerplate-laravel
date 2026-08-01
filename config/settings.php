@@ -1,6 +1,6 @@
 <?php
 
-use App\Settings\SiteSettings;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelSettings\SettingsCasts\DataCast;
 use Spatie\LaravelSettings\SettingsCasts\DateTimeInterfaceCast;
@@ -21,7 +21,7 @@ return [
     /*
      * The path where the settings classes will be created.
      */
-    'setting_class_path' => app_path('Settings'),
+    'setting_class_path' => base_path('modules/settings/src/Settings'),
 
     /*
      * In these directories settings migrations will be stored and ran when migrating. A settings
@@ -29,7 +29,7 @@ return [
      * a custom defined path when running the command.
      */
     'migrations_paths' => [
-        database_path('settings'),
+        base_path('modules/settings/database/settings'),
     ],
 
     /*
@@ -97,7 +97,7 @@ return [
      * register them.
      */
     'auto_discover_settings' => [
-        app_path('Settings'),
+        base_path('modules/settings/src/Settings'),
     ],
 
     /*

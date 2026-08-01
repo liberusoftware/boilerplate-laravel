@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 
 class UserSeeder extends Seeder
 {

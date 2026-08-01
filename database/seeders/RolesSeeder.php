@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Team;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Illuminate\Database\Seeder;
+use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 

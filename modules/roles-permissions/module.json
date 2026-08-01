@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "roles-permissions",
+    "display_name": "Roles and Permissions",
+    "description": "Contextual role assignments, module-owned permissions, policies, and cache invalidation.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Authorization\\AuthorizationServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["foundation.authorization"],
+    "default_enabled": true
+}

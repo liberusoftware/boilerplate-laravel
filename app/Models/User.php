@@ -22,6 +22,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
+use Liberu\Foundation\Identity\Socialstream\Contracts\ConnectedAccountOwner;
+use Liberu\Foundation\Observability\Contracts\ObservabilityActor;
+use Liberu\Foundation\Organizations\Contracts\OrganizationActor;
+use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
@@ -30,7 +35,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $theme_preference
  * @property string|null $locale
  */
-class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants
+class User extends Authenticatable implements ConnectedAccountOwner, FilamentUser, HasDefaultTenant, HasTenants, ObservabilityActor, OrganizationActor, PrivilegedActor
 {
     use HasApiTokens;
     use HasConnectedAccounts;
@@ -63,6 +68,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         'password',
         'theme_preference',
         'locale',
+        'timezone',
     ];
 
     /**

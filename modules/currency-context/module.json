@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "currency-context",
+    "display_name": "Currency Context",
+    "description": "ISO metadata, precise money values, currency roles, formatting, and effective-dated exchange-rate contracts.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Currency\\CurrencyServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["foundation.currency"],
+    "default_enabled": true
+}

@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "search",
+    "display_name": "Search",
+    "description": "Authorized search queries, filters, pagination, and replaceable model configuration.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Search\\SearchServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "suggests": { "liberu/search-api": "^1.0" },
+    "capabilities": ["foundation.search"],
+    "default_enabled": true
+}

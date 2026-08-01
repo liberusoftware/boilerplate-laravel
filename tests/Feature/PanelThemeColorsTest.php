@@ -2,10 +2,10 @@
 
 use App\Providers\Filament\AdminPanelProvider;
 use App\Providers\Filament\AppPanelProvider;
-use App\Services\ThemeManager;
-use App\Settings\SiteSettings;
 use Filament\Panel;
 use Filament\Support\Colors\Color;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 function setSiteTheme(string $theme): void
 {

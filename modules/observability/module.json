@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "observability",
+    "display_name": "Observability",
+    "description": "Structured diagnostics, exception/job/request monitoring, metrics storage, redaction, and authorized dashboards.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Observability\\ObservabilityServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["foundation.observability"],
+    "default_enabled": true
+}

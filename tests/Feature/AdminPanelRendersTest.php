@@ -1,11 +1,12 @@
 <?php
 
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use Filament\Facades\Filament;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 it('renders the full admin panel for a super_admin without the Role team() error', function () {
     $admin = User::factory()->create();

@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "identity-socialstream",
+    "display_name": "Social Identity",
+    "description": "Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization.",
+    "version": "1.0.0",
+    "category": "adapter",
+    "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0", "liberu/organizations-teams": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["identity.socialstream"],
+    "default_enabled": true
+}

@@ -1,8 +1,8 @@
 <?php
 
-use App\Services\ThemeManager;
-use App\Settings\SiteSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 uses(RefreshDatabase::class);
 

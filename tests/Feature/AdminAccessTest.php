@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Permission\Models\Role;
 
 it('treats an allowlisted email as an admin', function () {

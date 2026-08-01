@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
+use Liberu\Messaging\Core\Models\Message;
 
 it('can create a message between users', function () {
     $sender = User::factory()->create();

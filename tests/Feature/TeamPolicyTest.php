@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Team;
 use App\Models\User;
+use Liberu\Foundation\Organizations\Models\Team;
 
 it('lets an owner update and delete their team', function () {
     $owner = User::factory()->create();

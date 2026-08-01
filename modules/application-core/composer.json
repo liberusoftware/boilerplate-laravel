@@ -1,0 +1,9 @@
+{
+    "name": "liberu/application-core",
+    "description": "Required application metadata, health, clocks, identifiers, and secure HTTP defaults.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "illuminate/http": "^13.0", "illuminate/support": "^13.0", "liberu/module-manager": "^1.0" },
+    "autoload": { "psr-4": { "Liberu\\Foundation\\ApplicationCore\\": "src/" } },
+    "extra": { "liberu": { "name": "application-core" }, "laravel": { "providers": ["Liberu\\Foundation\\ApplicationCore\\ApplicationCoreServiceProvider"] } }
+}

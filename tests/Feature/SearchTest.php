@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\Group;
-use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Liberu\Search\Demo\Models\Group;
+use Liberu\Search\Demo\Models\Post;
 
 uses(RefreshDatabase::class);
 

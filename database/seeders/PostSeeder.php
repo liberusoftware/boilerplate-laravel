@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Liberu\Search\Demo\Models\Post;
 
 class PostSeeder extends Seeder
 {

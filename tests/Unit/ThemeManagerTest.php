@@ -1,9 +1,9 @@
 <?php
 
-use App\Services\ThemeManager;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\FileViewFinder;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 beforeEach(function () {
     $this->themeManager = new ThemeManager();
@@ -54,7 +54,7 @@ test('can get theme path', function () {
 test('can get theme views path', function () {
     $themeViewsPath = $this->themeManager->getThemeViewsPath('default');
 
-    expect($themeViewsPath)->toContain('themes/default/views')
+    expect($themeViewsPath)->toContain('themes/default/resources/views')
         ->and(File::exists($themeViewsPath))->toBeTrue();
 });
 
@@ -71,7 +71,7 @@ test('theme has CSS file', function () {
     $cssPath = $this->themeManager->getThemeCss('default');
 
     expect($cssPath)->not->toBeNull()
-        ->and($cssPath)->toContain('themes/default/css/app.css')
+        ->and($cssPath)->toContain('themes/default/resources/css/app.css')
         ->and(File::exists(base_path($cssPath)))->toBeTrue();
 });
 
@@ -79,7 +79,7 @@ test('theme has JS file', function () {
     $jsPath = $this->themeManager->getThemeJs('default');
 
     expect($jsPath)->not->toBeNull()
-        ->and($jsPath)->toContain('themes/default/js/app.js')
+        ->and($jsPath)->toContain('themes/default/resources/js/app.js')
         ->and(File::exists(base_path($jsPath)))->toBeTrue();
 });
 
@@ -131,7 +131,7 @@ test('theme_views_path helper returns views path', function () {
     $path = theme_views_path('default');
 
     expect($path)->toBeString()
-        ->and($path)->toContain('themes/default/views');
+        ->and($path)->toContain('themes/default/resources/views');
 });
 
 test('repeated setTheme calls do not grow the view finder paths', function () {
@@ -162,7 +162,7 @@ test('dark theme has correct configuration', function () {
 
     expect($config)->toBeArray()
         ->and($config['name'])->toBe('dark')
-        ->and($config['label'])->toBe('Dark Theme')
+        ->and($config['display_name'])->toBe('Liberu Dark')
         ->and($config)->toHaveKey('colors')
         ->and($config['colors']['primary'])->toBe('indigo');
 });
@@ -172,7 +172,7 @@ test('default theme has correct configuration', function () {
 
     expect($config)->toBeArray()
         ->and($config['name'])->toBe('default')
-        ->and($config['label'])->toBe('Default Theme')
+        ->and($config['display_name'])->toBe('Liberu Default')
         ->and($config)->toHaveKey('colors')
         ->and($config['colors']['primary'])->toBe('amber');
 });

@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use App\Services\ThemeManager;
-use App\Settings\SiteSettings;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 it('uses the site theme when no user or session preference is set', function () {
     $settings = app(SiteSettings::class);

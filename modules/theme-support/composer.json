@@ -1,0 +1,12 @@
+{
+    "name": "liberu/theme-support",
+    "description": "Theme discovery and host presentation support for Liberu applications.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "filament/support": "^5.1", "livewire/livewire": "^4.0", "liberu/settings": "^1.0" },
+    "autoload": {
+        "psr-4": { "Liberu\\Foundation\\Theme\\": "src/" },
+        "files": ["src/Support/theme_helpers.php"]
+    },
+    "extra": { "liberu": { "name": "theme-support" }, "laravel": { "providers": ["Liberu\\Foundation\\Theme\\Providers\\ThemeServiceProvider"] } }
+}

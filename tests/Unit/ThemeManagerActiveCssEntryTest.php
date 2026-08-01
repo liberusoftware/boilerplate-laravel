@@ -1,11 +1,15 @@
 <?php
 
-use App\Services\ThemeManager;
 use Illuminate\Support\Facades\File;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
-it('falls back to the main app.css when the active theme has no built bundle', function () {
-    // Default test env has no Vite manifest → viteHasAsset() is false.
-    expect(app(ThemeManager::class)->activeCssEntry())->toBe('resources/css/app.css');
+it('selects the built theme bundle when available and otherwise uses the application bundle', function () {
+    $manager = app(ThemeManager::class);
+    $expected = $manager->viteHasAsset('themes/default/resources/css/app.css')
+        ? 'themes/default/resources/css/app.css'
+        : 'resources/css/app.css';
+
+    expect($manager->activeCssEntry())->toBe($expected);
 });
 
 it('returns the theme bundle path when it is present in the Vite manifest', function () {
@@ -13,7 +17,7 @@ it('returns the theme bundle path when it is present in the Vite manifest', func
     $backup = File::exists($manifestPath) ? File::get($manifestPath) : null;
     File::ensureDirectoryExists(dirname($manifestPath));
     File::put($manifestPath, json_encode([
-        'themes/clear-signal/css/app.css' => ['file' => 'assets/clear-signal.css'],
+        'themes/clear-signal/resources/css/app.css' => ['file' => 'assets/clear-signal.css'],
     ]));
 
     try {
@@ -23,7 +27,7 @@ it('returns the theme bundle path when it is present in the Vite manifest', func
         // manifest-selection logic under test.
         (fn () => $this->activeTheme = 'clear-signal')->call($manager);
 
-        expect($manager->activeCssEntry())->toBe('themes/clear-signal/css/app.css');
+        expect($manager->activeCssEntry())->toBe('themes/clear-signal/resources/css/app.css');
     } finally {
         if ($backup === null) {
             File::delete($manifestPath);

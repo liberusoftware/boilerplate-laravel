@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Group;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Liberu\Search\Demo\Models\Group;
 
 class GroupSeeder extends Seeder
 {

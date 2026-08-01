@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Group;
-use App\Models\Post;
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
+use Liberu\Search\Demo\Models\Group;
+use Liberu\Search\Demo\Models\Post;
 
 use function Pest\Laravel\seed;
 

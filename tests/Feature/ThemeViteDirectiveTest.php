@@ -7,8 +7,7 @@ it('registers a compilable themeVite directive', function () {
     $compiled = Blade::compileString('@themeVite');
 
     expect($compiled)
-        ->toContain('activeCssEntry')
-        ->toContain('resources/js/app.js');
+        ->toContain('activeEntries');
 });
 
 it('renders the welcome page without error', function () {

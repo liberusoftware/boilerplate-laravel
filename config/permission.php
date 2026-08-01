@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Permission;
-use App\Models\Role;
+use Liberu\Foundation\Authorization\Models\Permission;
+use Liberu\Foundation\Authorization\Models\Role;
 use Spatie\Permission\DefaultTeamResolver;
 
 return [

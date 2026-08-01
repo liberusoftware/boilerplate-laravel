@@ -1,50 +1,13 @@
 <?php
 
 return [
+    // Composer-installed module packages. Local paths may be appended for development.
+    'paths' => [base_path('modules')],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Modules Path
-    |--------------------------------------------------------------------------
-    |
-    | The path where modules are stored. By default, modules live in the
-    | app/Modules directory.
-    |
-    */
-
-    'path' => app_path('Modules'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Development Mode
-    |--------------------------------------------------------------------------
-    |
-    | When enabled, modules are reloaded on each request (caching is skipped).
-    |
-    */
-
-    'development' => env('MODULES_DEVELOPMENT', env('APP_DEBUG', false)),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cache Modules
-    |--------------------------------------------------------------------------
-    |
-    | When enabled, the loaded module collection is cached for performance.
-    | Disabled by default to keep discovery deterministic.
-    |
-    */
+    // Runtime state is deployment configuration, distinct from installation and authorization.
+    'enabled' => array_values(array_filter(explode(',', (string) env('MODULES_ENABLED', '')))),
+    'disabled' => array_values(array_filter(explode(',', (string) env('MODULES_DISABLED', '')))),
 
     'cache' => env('MODULES_CACHE', false),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cache Key / TTL
-    |--------------------------------------------------------------------------
-    */
-
-    'cache_key' => 'app.modules',
-
-    'cache_ttl' => 3600,
-
+    'cache_key' => 'liberu.modules.registry.v1',
 ];

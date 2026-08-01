@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\Search\Demo\Models\Group;
 
 uses(RefreshDatabase::class);
 

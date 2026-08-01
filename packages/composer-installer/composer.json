@@ -1,0 +1,1 @@
+{"name":"liberu/composer-installer","description":"Deterministic Composer 2 installer for tracked Liberu modules and themes.","version":"1.0.0","type":"composer-plugin","license":"MIT","require":{"php":"^8.5","composer-plugin-api":"^2.6"},"autoload":{"psr-4":{"Liberu\\ComposerInstaller\\":"src/"}},"extra":{"class":"Liberu\\ComposerInstaller\\Plugin"}}

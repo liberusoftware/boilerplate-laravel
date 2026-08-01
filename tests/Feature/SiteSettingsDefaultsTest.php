@@ -1,6 +1,6 @@
 <?php
 
-use App\Settings\SiteSettings;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
 
 it('seeds default site settings via the settings migration', function () {
     $settings = app(SiteSettings::class);

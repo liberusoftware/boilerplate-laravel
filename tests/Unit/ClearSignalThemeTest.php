@@ -1,7 +1,7 @@
 <?php
 
-use App\Services\ThemeManager;
 use Filament\Support\Colors\Color;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 it('discovers the clear-signal theme', function () {
     $manager = app(ThemeManager::class);

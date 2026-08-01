@@ -1,0 +1,14 @@
+{
+    "name": "liberu/messaging",
+    "description": "Private encrypted messaging capability for Liberu applications.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "illuminate/database": "^13.0", "illuminate/support": "^13.0", "liberu/module-manager": "^1.0" },
+    "autoload": {
+        "psr-4": {
+            "Liberu\\Messaging\\Core\\": "src/",
+            "Liberu\\Messaging\\Core\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "extra": { "liberu": { "name": "messaging" }, "laravel": { "providers": ["Liberu\\Messaging\\Core\\MessagingServiceProvider"] } }
+}

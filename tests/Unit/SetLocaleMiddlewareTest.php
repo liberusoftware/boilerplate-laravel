@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Middleware\SetLocale;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Liberu\Foundation\Localization\Http\Middleware\SetLocale;
 
 uses(RefreshDatabase::class);
 

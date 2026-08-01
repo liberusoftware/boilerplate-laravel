@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "settings-filament",
+    "display_name": "Settings Administration",
+    "description": "Optional Filament settings administration surface.",
+    "version": "1.0.0",
+    "category": "presentation",
+    "provider": "Liberu\\Foundation\\SettingsFilament\\SettingsFilamentServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/settings": "^1.0", "liberu/theme-support": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["foundation.settings.filament"],
+    "default_enabled": true
+}

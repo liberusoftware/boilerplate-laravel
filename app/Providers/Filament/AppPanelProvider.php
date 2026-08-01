@@ -2,10 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Plugins\ModuleFilamentPlugin;
-use App\Http\Middleware\SecurityHeaders;
-use App\Http\Middleware\SetLocale;
-use App\Services\ThemeManager;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -21,6 +17,10 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Liberu\Foundation\ApplicationCore\Http\Middleware\SecurityHeaders;
+use Liberu\Foundation\Filament\FoundationAccountPlugin;
+use Liberu\Foundation\Localization\Http\Middleware\SetLocale;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -54,7 +54,7 @@ class AppPanelProvider extends PanelProvider
                 SecurityHeaders::class,
             ])
             ->plugins([
-                ModuleFilamentPlugin::make()->for('App'),
+                FoundationAccountPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

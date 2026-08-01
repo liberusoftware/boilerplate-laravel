@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
+use Liberu\Foundation\Authorization\Models\Permission;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 
 it('enables team-scoped permissions in config', function () {
     expect(config('permission.teams'))->toBeTrue();

@@ -1,9 +1,9 @@
 <?php
 
-use App\Livewire\LanguageSwitcher;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
+use Liberu\Foundation\Localization\Livewire\LanguageSwitcher;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);

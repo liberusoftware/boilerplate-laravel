@@ -1,6 +1,6 @@
 <?php
 
-use App\Settings\SiteSettings;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
 
 it('round-trips typed site settings through the container', function () {
     $settings = app(SiteSettings::class);

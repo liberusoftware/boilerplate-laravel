@@ -1,9 +1,9 @@
 <?php
 
-use App\Filament\Pages\ManageSiteSettings;
 use App\Models\User;
-use App\Settings\SiteSettings;
 use Filament\Facades\Filament;
+use Liberu\Foundation\Settings\Settings\SiteSettings;
+use Liberu\Foundation\SettingsFilament\Pages\ManageSiteSettings;
 use Livewire\Livewire;
 
 beforeEach(function () {

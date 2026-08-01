@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Team;
 use App\Models\User;
+use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Activitylog\Models\Activity;
 
 it('logs user changes but never the password', function () {

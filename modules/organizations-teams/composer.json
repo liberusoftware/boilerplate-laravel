@@ -1,0 +1,14 @@
+{
+    "name": "liberu/organizations-teams",
+    "description": "Organization, team, membership, invitation, ownership, and context foundation.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "laravel/jetstream": "^5.1", "spatie/laravel-activitylog": "^5.0", "liberu/module-manager": "^1.0" },
+    "autoload": {
+        "psr-4": {
+            "Liberu\\Foundation\\Organizations\\": "src/",
+            "Liberu\\Foundation\\Organizations\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "extra": { "liberu": { "name": "organizations-teams" }, "laravel": { "providers": ["Liberu\\Foundation\\Organizations\\OrganizationsServiceProvider"] } }
+}

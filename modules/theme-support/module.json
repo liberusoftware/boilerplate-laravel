@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "theme-support",
+    "display_name": "Theme Support",
+    "description": "Theme discovery, view overrides, safe asset directives, preferences, and panel palettes.",
+    "version": "1.0.0",
+    "category": "presentation",
+    "provider": "Liberu\\Foundation\\Theme\\Providers\\ThemeServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/settings": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["foundation.theme-support"],
+    "default_enabled": true
+}

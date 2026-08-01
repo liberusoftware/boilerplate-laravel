@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "identity",
+    "display_name": "Identity",
+    "description": "Provider-neutral authentication policy, identifier normalization, and security events.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Identity\\IdentityServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "suggests": { "liberu/jetstream-bridge": "^1.0", "liberu/two-factor-authentication": "^1.0", "liberu/profiles": "^1.0" },
+    "capabilities": ["identity.authenticate", "identity.recover"],
+    "default_enabled": true
+}

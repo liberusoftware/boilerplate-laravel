@@ -370,9 +370,9 @@ Use the per-user theme switcher component:
 
 ### Theme Features
 
-- **Per-theme Tailwind bundles** - A theme can ship a self-contained Tailwind bundle at `/themes/{theme}/css/app.css`, wired into `vite.config.js` `input`. `@themeVite` loads the active theme's built bundle when it's in the Vite manifest, otherwise `resources/css/app.css`.
+- **Per-theme bundles** - A theme declares canonical `/themes/{theme}/resources/css/app.css` and JavaScript entries in `theme.json`. `@themeVite` loads built entries and otherwise uses the application bundle.
 - **Admin-selectable site theme** - Choose the site-wide theme in Site Settings; per-user overrides supported.
-- **Custom Layouts** - Theme-specific Blade layouts in `/themes/{theme}/views/`
+- **Custom Layouts** - Theme-specific Blade layouts in `/themes/{theme}/resources/views/`
 - **User Preferences** - Themes saved to database per user or session
 - **Dynamic Switching** - Switch themes on the fly with the Livewire component
 - **Fallback System** - Falls back to `resources/css/app.css` / default files when a theme has no built bundle or custom file
@@ -401,14 +401,14 @@ Use the per-user theme switcher component:
 
 1. Create theme directories:
 ```bash
-mkdir -p themes/mytheme/views/layouts
-mkdir -p themes/mytheme/css
-mkdir -p themes/mytheme/js
+mkdir -p themes/mytheme/resources/views/layouts
+mkdir -p themes/mytheme/resources/css
+mkdir -p themes/mytheme/resources/js
 ```
 
 2. Create `theme.json` with metadata (set `colors.primary` to a Tailwind color name — e.g. `teal` — to also drive the Filament panel accent).
-3. Create the Tailwind bundle `themes/mytheme/css/app.css` (`@import 'tailwindcss'` + your `@theme` tokens) and any custom layout files.
-4. Wire the bundle into `vite.config.js` — add `'themes/mytheme/css/app.css'` to the Laravel plugin `input` array.
+3. Create semantic tokens and the bundle at `themes/mytheme/resources/css/app.css`, plus any custom layout files.
+4. Declare entries in `theme.json` and wire `themes/mytheme/resources/css/app.css` into the consuming Vite input.
 5. Build assets: `npm run build`. The theme is then selectable site-wide in Site Settings (themes are auto-discovered from `themes/`).
 
 ### Documentation

@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "blog-filament",
+    "display_name": "Blog Administration",
+    "description": "Optional Filament resources for Blog.",
+    "version": "1.0.0",
+    "category": "presentation",
+    "provider": "Liberu\\Blog\\Filament\\BlogFilamentServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/blog-core": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["blog.filament"],
+    "default_enabled": true
+}

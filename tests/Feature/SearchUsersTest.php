@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);

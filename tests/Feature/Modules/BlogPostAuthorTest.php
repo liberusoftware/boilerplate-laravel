@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
-use App\Modules\Blog\Filament\Admin\Resources\PostResource\Pages\CreatePost;
-use App\Modules\Blog\Models\Post;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\Blog\Core\Models\Post;
+use Liberu\Blog\Filament\Resources\PostResource\Pages\CreatePost;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);

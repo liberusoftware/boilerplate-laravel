@@ -1,0 +1,9 @@
+{
+    "name": "liberu/search",
+    "description": "Provider-neutral authorized search contracts and local Eloquent driver.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "illuminate/database": "^13.0", "illuminate/pagination": "^13.0", "liberu/module-manager": "^1.0" },
+    "autoload": { "psr-4": { "Liberu\\Foundation\\Search\\": "src/" } },
+    "extra": { "liberu": { "name": "search" }, "laravel": { "providers": ["Liberu\\Foundation\\Search\\SearchServiceProvider"] } }
+}

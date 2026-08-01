@@ -1,7 +1,7 @@
 <?php
 
-use App\Services\ThemeManager;
 use Filament\Support\Colors\Color;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 it('maps the default theme primary color to the Amber Filament palette', function () {
     $colors = app(ThemeManager::class)->getFilamentColors('default');

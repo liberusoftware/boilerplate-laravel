@@ -1,0 +1,9 @@
+{
+    "name": "liberu/organizations-teams-filament",
+    "description": "Filament administration adapter for organizations and teams.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "filament/filament": "^5.1", "liberu/organizations-teams": "^1.0" },
+    "autoload": { "psr-4": { "Liberu\\Foundation\\OrganizationsFilament\\": "src/" } },
+    "extra": { "liberu": { "name": "organizations-teams-filament" }, "laravel": { "providers": ["Liberu\\Foundation\\OrganizationsFilament\\OrganizationsFilamentServiceProvider"] } }
+}

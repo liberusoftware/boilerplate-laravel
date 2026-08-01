@@ -1,426 +1,47 @@
-# Custom Theme System Documentation
+# Theme system guide
 
-The Laravel Boilerplate includes a powerful, flexible theme system that allows you to customize layouts, CSS, and JavaScript on a per-theme basis.
+The canonical implementation and release guide is [Theme architecture](THEME_ARCHITECTURE.md).
 
-## Overview
+Themes are Composer packages in `/themes/{name}`. Each package declares `type: liberu-theme`, a stable installer name, a complete `theme.json`, a provider, compatibility metadata and canonical assets below `resources/`. The application discovers packages, validates capabilities and inheritance, and safely falls back to the configured default.
 
-The theme system supports:
-- **Custom Layout Files**: Theme-specific Blade layouts in `/themes/{theme_name}/views/`
-- **Custom CSS**: Theme-specific stylesheets in `/themes/{theme_name}/css/app.css`
-- **Custom JavaScript**: Theme-specific scripts in `/themes/{theme_name}/js/app.js`
-- **User Preferences**: Save theme preferences per user or in session
-- **Dynamic Theme Switching**: Switch themes on the fly with Livewire component
-
-## Directory Structure
-
-All themes are located in a single `/themes` root folder for better organization:
-
-```
-themes/
-├── default/
-│   ├── theme.json              # Theme configuration
-│   ├── views/
-│   │   └── layouts/
-│   │       └── app.blade.php   # Custom layout
-│   ├── css/
-│   │   └── app.css             # Theme-specific CSS
-│   └── js/
-│       └── app.js              # Theme-specific JS
-└── dark/
-    ├── theme.json
-    ├── views/
-    │   └── layouts/
-    │       └── app.blade.php
-    ├── css/
-    │   └── app.css
-    └── js/
-        └── app.js
-```
-
-## Creating a New Theme
-
-### 1. Create Theme Directories
-
-```bash
-mkdir -p themes/mytheme/views/layouts
-mkdir -p themes/mytheme/css
-mkdir -p themes/mytheme/js
-```
-
-### 2. Create Theme Configuration
-
-Create `themes/mytheme/theme.json`:
-
-```json
-{
-    "name": "mytheme",
-    "label": "My Custom Theme",
-    "description": "A beautiful custom theme",
-    "version": "1.0.0",
-    "author": "Your Name",
-    "colors": {
-        "primary": "blue",
-        "secondary": "cyan"
-    }
-}
-```
-
-### 3. Create Custom Layout
-
-Create `themes/mytheme/views/layouts/app.blade.php`:
-
-```blade
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name', 'Laravel') }}</title>
-        
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @themeCss
-        @themeJs
-        
-        @livewireStyles
-    </head>
-    <body>
-        <div class="min-h-screen">
-            @yield('content')
-        </div>
-        @livewireScripts
-    </body>
-</html>
-```
-
-### 4. Create Custom CSS
-
-Create `themes/mytheme/css/app.css`:
-
-```css
-@import 'tailwindcss';
-
-/* Theme Custom Styles */
-:root {
-    --theme-primary: theme('colors.blue.600');
-    --theme-secondary: theme('colors.cyan.600');
-}
-
-@layer components {
-    .theme-btn-primary {
-        @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded;
-    }
-}
-```
-
-### 5. Create Custom JavaScript
-
-Create `themes/mytheme/js/app.js`:
-
-```javascript
-console.log('My custom theme loaded');
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Theme-specific initialization
-});
-```
-
-### 6. Build Assets
-
-```bash
-npm run build
-```
-
-## Using Themes in Your Application
-
-### In Blade Templates
-
-```blade
-{{-- Get current theme --}}
-{{ active_theme() }}
-
-{{-- Use theme-specific layout --}}
-@extends(theme_layout('app'))
-
-{{-- Include theme CSS and JS --}}
-@themeCss
-@themeJs
-
-{{-- Generate theme asset URL --}}
-<img src="{{ theme_asset('images/logo.png') }}" alt="Logo">
-```
-
-### In PHP/Controllers
+## Use
 
 ```php
-// Get theme manager
-$theme = app(\App\Services\ThemeManager::class);
-
-// Get active theme
-$activeTheme = theme()->getActiveTheme();
-
-// Set theme
 set_theme('dark');
-
-// Check if theme exists
-if (theme()->themeExists('mytheme')) {
-    // Theme exists
-}
-
-// Get all themes
-$themes = theme()->getThemes();
-
-// Get theme views path
-$viewsPath = theme_views_path();
+$current = active_theme();
 ```
 
-### Theme Switcher Component
-
-Add the theme switcher to any view:
-
 ```blade
+@themeVite
 <livewire:theme-switcher />
 ```
 
-Or include it in your navigation:
+`@themeVite` selects declared, built entries and uses the application bundle when unavailable. `@themeAsset`, `@themeCss`, `@themeJs` and `@themeLayout` remain available for explicit composition.
 
-```blade
-<div class="flex items-center space-x-4">
-    <livewire:theme-switcher />
-</div>
+## Create a package
+
+Start with this minimum tree:
+
+```text
+themes/example/
+├── composer.json
+├── theme.json
+├── README.md
+├── CHANGELOG.md
+├── resources/
+│   ├── css/app.css
+│   ├── js/app.js
+│   └── views/
+├── src/ExampleThemeServiceProvider.php
+└── vite.config.js
 ```
 
-## Blade Directives
+Inherit `liberu-base` unless building a shared parent. Consume semantic tokens, use translations and logical CSS properties, keep JavaScript progressive and CSP-safe, and never implement module workflows in a theme. Add its entries to the consuming application build or run the package build, then validate:
 
-The theme system provides several Blade directives:
-
-- `@themeCss` - Includes theme-specific CSS
-- `@themeJs` - Includes theme-specific JavaScript
-- `@themeAsset('path')` - Generates theme asset URL
-- `@themeLayout('app')` - Returns theme layout path
-
-## Helper Functions
-
-- `theme()` - Get ThemeManager instance
-- `active_theme()` - Get active theme name
-- `theme_asset($path, $theme = null)` - Generate theme asset URL
-- `theme_path($theme = null)` - Get theme directory path
-- `theme_views_path($theme = null)` - Get theme views directory path
-- `set_theme($themeName)` - Set active theme
-- `theme_layout($layout)` - Get theme layout path
-
-## Configuration
-
-Edit `config/theme.php` to configure:
-
-```php
-return [
-    'default' => env('THEME_DEFAULT', 'default'),
-    'available' => [
-        'light' => 'Light Mode',
-        'dark' => 'Dark Mode',
-        'auto' => 'System Default',
-    ],
-    'colors' => [
-        'primary' => env('THEME_PRIMARY_COLOR', 'gray'),
-        // ...
-    ],
-    'persist' => env('THEME_PERSIST', true),
-];
-```
-
-## User Preferences
-
-Theme preferences are automatically saved:
-- To the database if user is authenticated (`users.theme_preference`)
-- To the session for guests
-
-## Fallback Behavior
-
-If a theme doesn't have a custom file, the system falls back to defaults:
-- Layout: Falls back to `resources/views/layouts/app.blade.php`
-- CSS: Falls back to `resources/css/app.css`
-- JS: Falls back to `resources/js/app.js`
-
-## Best Practices
-
-1. **Keep themes self-contained** - Each theme should work independently
-2. **Use theme.json** - Document your theme with proper metadata
-3. **Test thoroughly** - Test theme switching and asset loading
-4. **Optimize assets** - Run `npm run build` for production
-5. **Cache considerations** - Clear cache after theme changes: `php artisan cache:clear`
-
-## Vite Integration
-
-The system automatically discovers theme assets. Vite configuration includes:
-
-```javascript
-// Theme assets are automatically included from /themes folder
-const themeAssets = [
-    ...glob.sync("themes/*/css/app.css"),
-    ...glob.sync("themes/*/js/app.js"),
-];
-```
-
-## Example Themes
-
-The boilerplate includes two example themes:
-
-### Default Theme
-- Located in `themes/default/`
-- Light color scheme
-- Gray primary colors
-
-### Dark Theme
-- Located in `themes/dark/`
-- Dark color scheme
-- Indigo/purple accents
-- Forces dark mode on HTML element
-
-## Troubleshooting
-
-**Theme not switching:**
-- Clear cache: `php artisan cache:clear`
-- Check theme exists in `themes/` directory
-- Verify theme.json is valid JSON
-
-**Assets not loading:**
-- Run `npm run build`
-- Check file paths in theme directories
-- Verify Vite is properly configured
-
-**Layout not applying:**
-- Use `@extends(theme_layout('app'))` in views
-- Check layout file exists in theme's views/layouts directory
-- Verify ThemeServiceProvider is registered
-
-## Advanced Usage
-
-### Custom View Paths
-
-The ThemeManager automatically prepends theme view paths to Laravel's view finder, so theme views take precedence over default views.
-
-### Theme Detection
-
-Override theme detection in `ThemeServiceProvider`:
-
-```php
-protected function determineActiveTheme(): string
-{
-    // Custom logic here
-    return 'mytheme';
-}
-```
-
-### Dynamic Theme Loading
-
-Load themes from external sources by extending `ThemeManager`.
-
-## Implementation Notes
-
-### Core Components
-
-#### ThemeManager Service (`app/Services/ThemeManager.php`)
-- Loads themes from `/themes` directory
-- Manages active theme selection
-- Registers theme view paths with Laravel
-- Provides methods for theme operations
-- Handles theme asset paths for Vite
-
-#### ThemeServiceProvider (`app/Providers/ThemeServiceProvider.php`)
-- Registers ThemeManager as singleton
-- Sets active theme from user preferences or config
-- Provides Blade directives: `@themeCss`, `@themeJs`, `@themeAsset()`, `@themeLayout()`
-- Shares theme data with all views
-
-#### Theme Helpers (`app/Helpers/theme_helpers.php`)
-- `theme()` - Get ThemeManager instance
-- `active_theme()` - Get current theme name
-- `set_theme($name)` - Switch themes
-- `theme_asset($path)` - Generate theme asset URLs
-- `theme_path($theme)` - Get theme directory
-- `theme_views_path($theme)` - Get theme views directory
-- `theme_layout($layout)` - Get theme layout path
-
-#### Livewire Theme Switcher
-- Component: `app/Livewire/ThemeSwitcher.php`
-- View: `resources/views/livewire/theme-switcher.blade.php`
-
-Provides UI for users to switch between available themes with:
-- Dropdown menu showing all themes
-- Active theme indicator
-- Theme descriptions
-- Automatic page reload after switching
-
-#### User Preferences
-- Database migration: `database/migrations/2026_02_16_215049_add_theme_preference_to_users_table.php`
-- Adds `theme_preference` column to users table
-- Automatically saves theme choice for authenticated users
-- Falls back to session for guests
-
-### Testing
-
-Comprehensive test suite in `tests/Unit/ThemeManagerTest.php`:
-- Theme loading and discovery
-- Theme switching
-- Path resolution
-- Helper function validation
-- Configuration verification
-
-Run tests:
 ```bash
-php artisan test --filter ThemeManagerTest
+php artisan theme:validate
+php artisan theme:cache
+npm run build
 ```
 
-A demo page is available at `resources/views/theme-demo.blade.php`.
-
-### Benefits of Single Root Folder
-
-1. **Better Organization**: All theme files in one place
-2. **Easier Management**: Create/delete themes by managing single directory
-3. **Clearer Structure**: Intuitive hierarchy for developers
-4. **Simplified Deployment**: Single directory to sync/deploy
-5. **Better Version Control**: Easier to track theme changes
-6. **Portable Themes**: Can package entire theme as zip
-
-## Migration from Old Structure
-
-Old structure (split across resources):
-```
-resources/views/themes/{theme}/
-resources/css/themes/{theme}/
-resources/js/themes/{theme}/
-```
-
-New structure (unified):
-```
-themes/{theme}/views/
-themes/{theme}/css/
-themes/{theme}/js/
-```
-
-All paths updated throughout the system:
-- ✅ ThemeManager service
-- ✅ ThemeServiceProvider
-- ✅ Blade directives
-- ✅ Helper functions
-- ✅ Vite configuration
-- ✅ Documentation
-
-## Future Enhancements
-
-Potential improvements:
-- Theme marketplace/repository
-- Theme hot-reloading in development
-- Theme preview mode
-- Per-page theme overrides
-- Theme inheritance
-- Theme builder UI
-- Import/export themes
-- Theme analytics
-
-## Support
-
-For issues or questions about the theme system, please refer to:
-- Repository: https://github.com/liberusoftware/boilerplate-laravel
-- Documentation: See README.md
+Release from the independent theme repository. Consumers update Composer constraints and lockfile, reinstall, review the tracked `/themes` diff, and rerun accessibility, visual, security and performance gates.

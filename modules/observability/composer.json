@@ -1,0 +1,9 @@
+{
+    "name": "liberu/observability",
+    "description": "Structured diagnostics, monitoring dashboards, health signals, and redaction defaults.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "laravel/horizon": "^5.0", "laravel/pulse": "^1.7", "laravel/telescope": "^5.0", "liberu/module-manager": "^1.0" },
+    "autoload": { "psr-4": { "Liberu\\Foundation\\Observability\\": "src/" } },
+    "extra": { "liberu": { "name": "observability" }, "laravel": { "providers": ["Liberu\\Foundation\\Observability\\ObservabilityServiceProvider"] } }
+}

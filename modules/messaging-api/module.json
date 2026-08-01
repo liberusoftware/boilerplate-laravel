@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "messaging-api",
+    "display_name": "Messaging API",
+    "description": "Authenticated private-message endpoints with validation and policy enforcement.",
+    "version": "1.0.0",
+    "category": "presentation",
+    "provider": "Liberu\\Messaging\\Api\\MessagingApiServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/messaging": "^1.0" } },
+    "suggests": {},
+    "capabilities": ["messaging.api"],
+    "default_enabled": true
+}

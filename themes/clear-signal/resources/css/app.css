@@ -1,0 +1,2 @@
+@import '../../../liberu-base/resources/css/app.css';
+@layer tokens { :root { --color-canvas:#fafcfc;--color-surface:#ffffff;--color-surface-muted:#f1f5f5;--color-text:#2a3338;--color-text-muted:#626e74;--color-border:#dce4e4;--color-action-primary:#0b6b74;--color-action-primary-hover:#075963;--color-focus:#027a8a; } }

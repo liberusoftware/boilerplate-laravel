@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
-use App\Modules\Blog\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\Blog\Core\Models\Post;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);

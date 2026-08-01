@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Middleware\SetLocale;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\App;
+use Liberu\Foundation\Localization\Http\Middleware\SetLocale;
 
 it('applies a request locale through the registered web middleware group', function () {
     $this->get('/?locale=es')->assertOk();

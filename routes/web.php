@@ -22,5 +22,3 @@ Route::get('/dashboard', function () {
 
     return redirect()->route('filament.app.pages.dashboard');
 })->middleware(['auth:sanctum', config('jetstream.auth_session')])->name('dashboard');
-
-require __DIR__.'/socialstream.php';

@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role as SpatieRole;
 

@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "localization",
+    "display_name": "Localization",
+    "description": "Locale negotiation, user preference, translations, timezone context, and RTL hooks.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Localization\\LocalizationServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "suggests": { "liberu/localization-mymemory": "^1.0" },
+    "capabilities": ["foundation.localization"],
+    "default_enabled": true
+}

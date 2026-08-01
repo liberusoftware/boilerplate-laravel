@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\User;
-use App\Services\ThemeManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
+use Liberu\Foundation\Theme\Services\ThemeManager;
 
 it('binds the ThemeManager singleton and the theme alias to one instance', function () {
     expect(app(ThemeManager::class))->toBeInstanceOf(ThemeManager::class)
@@ -16,20 +16,20 @@ it('registers the theme blade directives', function () {
 });
 
 it('renders the themeAsset directive against the active theme', function () {
-    expect(Blade::render("@themeAsset('css/app.css')"))
-        ->toContain('themes/'.active_theme().'/css/app.css');
+    expect(Blade::render("@themeAsset('resources/css/app.css')"))
+        ->toContain('themes/'.active_theme().'/resources/css/app.css');
 });
 
-it('resolves a shared view name to the active theme override and follows switches', function () {
+it('resolves a shared view name through the active theme inheritance chain', function () {
     app(ThemeManager::class)->setTheme('dark');
     expect(View::getFinder()->find('layouts.app'))
-        ->toContain('themes/dark/views/layouts/app.blade.php');
+        ->toContain('themes/liberu-base/resources/views/layouts/app.blade.php');
 
     View::getFinder()->flush();
 
     app(ThemeManager::class)->setTheme('default');
     expect(View::getFinder()->find('layouts.app'))
-        ->toContain('themes/default/views/layouts/app.blade.php');
+        ->toContain('themes/liberu-base/resources/views/layouts/app.blade.php');
 });
 
 it('does not throw rendering themeCss/themeJs when the theme asset is not in the Vite manifest', function () {

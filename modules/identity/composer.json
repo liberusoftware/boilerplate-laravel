@@ -1,0 +1,9 @@
+{
+    "name": "liberu/identity",
+    "description": "Provider-neutral identity policy, normalization, and versioned security events.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "require": { "php": "^8.5", "illuminate/support": "^13.0", "liberu/module-manager": "^1.0" },
+    "autoload": { "psr-4": { "Liberu\\Foundation\\Identity\\": "src/" } },
+    "extra": { "liberu": { "name": "identity" }, "laravel": { "providers": ["Liberu\\Foundation\\Identity\\IdentityServiceProvider"] } }
+}

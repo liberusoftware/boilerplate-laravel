@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Role;
-use App\Models\Team;
 use App\Models\User;
 use Filament\Facades\Filament;
+use Liberu\Foundation\Authorization\Models\Role;
+use Liberu\Foundation\Organizations\Models\Team;
 
 it('lets any authenticated user reach the app panel', function () {
     $user = User::factory()->create();

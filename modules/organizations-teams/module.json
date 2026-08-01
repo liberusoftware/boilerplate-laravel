@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "organizations-teams",
+    "display_name": "Organizations and Teams",
+    "description": "Teams, memberships, invitations, ownership, switching, and current-context boundaries.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Organizations\\OrganizationsServiceProvider",
+    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberu/module-manager": "^1.0" } },
+    "suggests": { "liberu/organizations-teams-filament": "^1.0" },
+    "capabilities": ["foundation.organizations", "foundation.teams"],
+    "default_enabled": true
+}

@@ -1,12 +1,12 @@
 <?php
 
-use App\Filament\Resources\UserResource;
-use App\Filament\Resources\UserResource\Pages\ListUsers;
-use App\Models\Team;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
+use Liberu\Foundation\IdentityFilament\Resources\UserResource;
+use Liberu\Foundation\IdentityFilament\Resources\UserResource\Pages\ListUsers;
+use Liberu\Foundation\Organizations\Models\Team;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
