@@ -9,6 +9,7 @@ abstract class TestCase extends Orchestra
 {
     protected function defineEnvironment($app): void
     {
+        $this->usePackageOrCompositionBasePath($app);
         $app['config']->set('modules.paths', [dirname(__DIR__)]);
         $app['config']->set('modules.enabled', ['module-manager']);
         $app['config']->set('modules.disabled', []);
@@ -16,6 +17,7 @@ abstract class TestCase extends Orchestra
 
     protected function getPackageProviders($app): array
     {
+        $this->usePackageOrCompositionBasePath($app);
         $app['config']->set('modules.paths', [dirname(__DIR__)]);
         $app['config']->set('modules.enabled', ['module-manager']);
 
@@ -26,5 +28,11 @@ abstract class TestCase extends Orchestra
         );
 
         return [LivewireServiceProvider::class, $manifest['provider']];
+    }
+
+    private function usePackageOrCompositionBasePath($app): void
+    {
+        $compositionRoot = dirname(__DIR__, 3);
+        $app->useBasePath(is_dir($compositionRoot.'/themes') ? $compositionRoot : dirname(__DIR__));
     }
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 - 2026-08-01
+
+- Make standalone Testbench booting independent of the host application's base path.
+
 ## 1.0.4 - 2026-08-01
 
 - Add a validated, machine-readable feature catalog for runtime discovery and diagnostics.
