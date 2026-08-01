@@ -6,7 +6,7 @@
 
 [![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)](https://www.php.net/) [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)](https://laravel.com/) [![Filament](https://img.shields.io/badge/Filament-5-FDAE4B)](https://filamentphp.com/) [![Livewire](https://img.shields.io/badge/Livewire-4-FB70A9)](https://livewire.laravel.com/)
 
-[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml) [![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml) [![Latest release](https://img.shields.io/github/v/release/liberusoftware/boilerplate-laravel?sort=semver)](https://github.com/liberusoftware/boilerplate-laravel/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![Install](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/install.yml) [![Tests](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/tests.yml) [![Docker](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/docker.yml/badge.svg?branch=main)](https://github.com/liberusoftware/boilerplate-laravel/actions/workflows/docker.yml) [![Codecov](https://codecov.io/gh/liberusoftware/boilerplate-laravel/branch/main/graph/badge.svg)](https://codecov.io/gh/liberusoftware/boilerplate-laravel) [![Latest release](https://img.shields.io/github/v/release/liberusoftware/boilerplate-laravel?sort=semver)](https://github.com/liberusoftware/boilerplate-laravel/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
 Liberu Boilerplate is the deployable reference host for the Liberu Composer ecosystem. It combines independently released capability, presentation, and theme packages while keeping application bootstrapping, environment configuration, panel composition, and cross-package tests in one place.
 
@@ -30,7 +30,7 @@ Liberu Boilerplate is the deployable reference host for the Liberu Composer ecos
 | Filament | 5.x |
 | Livewire | 4.x |
 | Composer | 2.x |
-| Node.js | Current LTS |
+| Node.js | Latest stable release |
 | Database | A Laravel-supported SQL database |
 
 ## Quick start
