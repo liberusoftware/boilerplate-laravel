@@ -5476,16 +5476,16 @@
             "time": "2026-08-01T05:32:16+00:00"
         },
         {
-            "name": "liberu/composer-installer",
+            "name": "liberusoftware/composer-installer",
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/liberu/composer-installer.git",
+                "url": "https://github.com/liberusoftware/composer-installer.git",
                 "reference": "cf3b616e85e4979a9215dd908d776e9bae67b21b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberu/composer-installer/zipball/cf3b616e85e4979a9215dd908d776e9bae67b21b",
+                "url": "https://api.github.com/repos/liberusoftware/composer-installer/zipball/cf3b616e85e4979a9215dd908d776e9bae67b21b",
                 "reference": "cf3b616e85e4979a9215dd908d776e9bae67b21b",
                 "shasum": ""
             },
@@ -5507,8 +5507,8 @@
             ],
             "description": "Deterministic Composer 2 installer for tracked Liberu modules and themes.",
             "support": {
-                "source": "https://github.com/liberu/composer-installer/tree/1.0.0",
-                "issues": "https://github.com/liberu/composer-installer/issues"
+                "source": "https://github.com/liberusoftware/composer-installer/tree/1.0.0",
+                "issues": "https://github.com/liberusoftware/composer-installer/issues"
             },
             "time": "2026-08-01T05:34:10+00:00"
         },

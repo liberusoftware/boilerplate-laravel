@@ -3,7 +3,7 @@
     "name": "search-demo",
     "display_name": "Search Demo",
     "description": "Runnable reference records used to exercise search filters and authorization.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "category": "product",
     "provider": "Liberu\\Search\\Demo\\SearchDemoServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0", "liberusoftware/search": "^1.0" } },

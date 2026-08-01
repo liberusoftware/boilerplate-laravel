@@ -15,7 +15,7 @@ Each package includes `composer.json`, the canonical `theme.json`, provider, REA
 
 ## Installation and tracked sources
 
-`liberu/composer-installer` is a Composer 2 plugin that handles both `liberu-theme` and `liberu-module`, validates kebab-case installer names, rejects unsafe paths and collisions, and installs deterministically to `/themes` or `/modules`. Consuming applications explicitly require released theme packages, authorize the plugin, commit their lockfile, and commit the reproduced installed directories.
+`liberusoftware/composer-installer` is a Composer 2 plugin that handles both `liberu-theme` and `liberu-module`, validates kebab-case installer names, rejects unsafe paths and collisions, and installs deterministically to `/themes` or `/modules`. Consuming applications explicitly require released theme packages, authorize the plugin, commit their lockfile, and commit the reproduced installed directories.
 
 This repository is also the integration workspace for the bundled packages, so their authoritative package sources are already present at the installer destinations. Root path repositories require every bundled theme explicitly; Composer recognizes the tracked source at the deterministic installer path instead of overwriting it. Release consumers use the same package requirements against released package repositories.
 

@@ -72,7 +72,7 @@ composer update --with-all-dependencies
 composer update liberusoftware/search --with-dependencies
 ```
 
-The trusted [`liberu/composer-installer`](https://github.com/liberu/composer-installer) places packages according to type:
+The trusted [`liberusoftware/composer-installer`](https://github.com/liberusoftware/composer-installer) places packages according to type:
 
 | Composer type | Install path | Repository convention |
 |---|---|---|

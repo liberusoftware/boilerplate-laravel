@@ -3,7 +3,7 @@
     "name": "two-factor-authentication",
     "display_name": "Two-Factor Authentication",
     "description": "TOTP enforcement, trusted-device policy, and single-use recovery primitives.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\TwoFactor\\TwoFactorServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/identity": "^1.0" } },

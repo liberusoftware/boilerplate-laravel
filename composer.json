@@ -10,7 +10,7 @@
     ],
     "license": "MIT",
     "repositories": [
-        { "type": "vcs", "url": "https://github.com/liberu/composer-installer.git" },
+        { "type": "vcs", "url": "https://github.com/liberusoftware/composer-installer.git" },
         { "type": "vcs", "url": "https://github.com/liberusoftware/analytics-contracts.git" },
         { "type": "vcs", "url": "https://github.com/liberusoftware/localization-contracts.git" },
         { "type": "vcs", "url": "https://github.com/liberusoftware/module-activity-comments.git" },
@@ -78,7 +78,7 @@
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.0",
-        "liberu/composer-installer": "^1.0",
+        "liberusoftware/composer-installer": "^1.0",
         "liberusoftware/analytics-contracts": "^1.0",
         "liberusoftware/localization-contracts": "^1.0",
         "liberusoftware/activity-comments": "^1.0",
@@ -194,7 +194,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "liberu/composer-installer": true,
+            "liberusoftware/composer-installer": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }

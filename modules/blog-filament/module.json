@@ -3,7 +3,7 @@
     "name": "blog-filament",
     "display_name": "Blog Administration",
     "description": "Optional Filament resources for Blog.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "category": "presentation",
     "provider": "Liberu\\Blog\\Filament\\BlogFilamentServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/blog-core": "^1.0" } },

@@ -3,7 +3,7 @@
     "name": "identity-filament",
     "display_name": "Identity Administration",
     "description": "Optional Filament user and role administration surface.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\IdentityFilament\\IdentityFilamentServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/roles-permissions": "^1.0" } },
