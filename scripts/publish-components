@@ -77,8 +77,15 @@ for path in "${paths[@]}"; do
 
     if [[ "$mode" == "push" ]]; then
         split_branch="publish/${repository}-$$"
+        git branch -D "$split_branch" >/dev/null 2>&1 || true
         git subtree split --prefix="$path" -b "$split_branch"
-        git push "git@github.com:$organisation/$repository.git" "$split_branch:$branch"
+        remote_url="git@github.com:$organisation/$repository.git"
+        if git fetch "$remote_url" "$branch"; then
+            git switch "$split_branch"
+            git merge --allow-unrelated-histories --strategy=ours --no-edit FETCH_HEAD
+            git switch -
+        fi
+        git push "$remote_url" "$split_branch:$branch"
         git branch -D "$split_branch"
     fi
 done
