@@ -35,6 +35,7 @@ done
 [[ "$only" =~ ^(all|modules|themes|scripts|meta)$ ]] || { printf 'Invalid --only value.\n' >&2; exit 2; }
 command -v git >/dev/null || { printf 'git is required.\n' >&2; exit 1; }
 command -v php >/dev/null || { printf 'php is required to read the configuration.\n' >&2; exit 1; }
+command -v rsync >/dev/null || { printf 'rsync is required.\n' >&2; exit 1; }
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
 [[ -f "$config" ]] || { printf 'Configuration not found: %s\n' "$config" >&2; exit 1; }
@@ -65,16 +66,15 @@ publish_path() {
     [[ "$mode" == "dry-run" ]] && return
     ensure_repository "$repository" "$genre package extracted from $meta_repository"
     [[ "$mode" == "create" ]] && return
-    local split_branch="publish/${repository}-$$" remote_url="git@github.com:$organisation/$repository.git"
-    git branch -D "$split_branch" >/dev/null 2>&1 || true
-    git subtree split --prefix="$path" -b "$split_branch" >/dev/null
-    if git fetch "$remote_url" "$branch"; then
-        git switch --quiet "$split_branch"
-        git merge --allow-unrelated-histories --strategy=ours --no-edit FETCH_HEAD >/dev/null
-        git switch --quiet -
+    local staging
+    staging="$(mktemp -d)/$repository"
+    git clone --quiet --branch "$branch" "git@github.com:$organisation/$repository.git" "$staging"
+    rsync -a --delete --exclude='.git' "$path/" "$staging/"
+    git -C "$staging" add -A
+    if ! git -C "$staging" diff --cached --quiet; then
+        git -C "$staging" commit --quiet -m "Synchronize from $meta_repository"
+        git -C "$staging" push origin "$branch"
     fi
-    git push "$remote_url" "$split_branch:$branch"
-    git branch -D "$split_branch" >/dev/null
 }
 
 for kind in modules themes scripts; do
