@@ -19,6 +19,7 @@ use Liberu\Foundation\Identity\Contracts\InvitationValidator;
 use Liberu\Foundation\Identity\Contracts\RegistrationPolicy;
 use Liberu\Foundation\Identity\Socialstream\Actions\HandleInvalidState;
 use Liberu\Foundation\Identity\Socialstream\Actions\SetUserPassword;
+use Liberu\Foundation\Identity\Socialstream\Actions\UpdateConnectedAccount;
 use Liberu\Foundation\Identity\Socialstream\Contracts\ConnectedAccountOwner;
 use Liberu\Foundation\Identity\Socialstream\Models\ConnectedAccount as FoundationConnectedAccount;
 use Liberu\Foundation\Identity\Socialstream\Policies\ConnectedAccountPolicy;
@@ -285,6 +286,32 @@ it('rethrows invalid social provider state and authorizes connected account owne
         ->and($policy->view($owner, $account))->toBeTrue()
         ->and($policy->update($owner, $account))->toBeTrue()
         ->and($policy->delete($owner, $account))->toBeTrue();
+});
+
+it('updates a connected account from a social provider profile', function () {
+    Gate::before(fn () => true);
+    $owner = User::factory()->create();
+    $account = FoundationConnectedAccount::factory()->for($owner)->create();
+    $providerUser = Mockery::mock(Laravel\Socialite\Contracts\User::class);
+    $providerUser->shouldReceive('getId')->andReturn('provider-123');
+    $providerUser->shouldReceive('getName')->andReturn('Coverage Person');
+    $providerUser->shouldReceive('getNickname')->andReturn('coverage');
+    $providerUser->shouldReceive('getEmail')->andReturn('social@example.test');
+    $providerUser->shouldReceive('getAvatar')->andReturn('https://example.test/avatar.png');
+    $providerUser->token = 'access-token';
+    $providerUser->tokenSecret = 'token-secret';
+    $providerUser->refreshToken = 'refresh-token';
+    $providerUser->expiresIn = 3600;
+
+    $updated = (new UpdateConnectedAccount())
+        ->update($owner, $account, 'GITHUB', $providerUser);
+
+    expect($updated->fresh()->only(['provider', 'provider_id', 'name', 'nickname', 'email', 'avatar_path']))
+        ->toBe([
+            'provider' => 'github', 'provider_id' => 'provider-123', 'name' => 'Coverage Person',
+            'nickname' => 'coverage', 'email' => 'social@example.test',
+            'avatar_path' => 'https://example.test/avatar.png',
+        ]);
 });
 
 it('runs module theme and foundation operational commands', function () {
