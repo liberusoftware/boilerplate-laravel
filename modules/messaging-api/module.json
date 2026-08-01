@@ -3,7 +3,7 @@
     "name": "messaging-api",
     "display_name": "Messaging API",
     "description": "Authenticated private-message endpoints with validation and policy enforcement.",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "category": "presentation",
     "provider": "Liberu\\Messaging\\Api\\MessagingApiServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/messaging": "^1.0" } },

@@ -3,7 +3,7 @@
     "name": "messaging",
     "display_name": "Messaging",
     "description": "Authorized private messages encrypted at rest with unread state and participant policies.",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "category": "capability",
     "provider": "Liberu\\Messaging\\Core\\MessagingServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },

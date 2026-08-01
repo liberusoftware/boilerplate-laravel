@@ -3,7 +3,7 @@
     "name": "module-manager",
     "display_name": "Module Manager",
     "description": "Manifest discovery, dependency resolution, deployment enablement, registry caching, and diagnostics.",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\ModuleManager\\ModuleManagerServiceProvider",
     "requires": {
