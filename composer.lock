@@ -6502,16 +6502,16 @@
         },
         {
             "name": "liberusoftware/module-manager",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-module-manager.git",
-                "reference": "5932386840193fd651ba00c13e9455ac47ff4a1d"
+                "reference": "a9933bd27de72295bbe1cfca6766b500492ae44d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-module-manager/zipball/5932386840193fd651ba00c13e9455ac47ff4a1d",
-                "reference": "5932386840193fd651ba00c13e9455ac47ff4a1d",
+                "url": "https://api.github.com/repos/liberusoftware/module-module-manager/zipball/a9933bd27de72295bbe1cfca6766b500492ae44d",
+                "reference": "a9933bd27de72295bbe1cfca6766b500492ae44d",
                 "shasum": ""
             },
             "require": {
@@ -6549,7 +6549,7 @@
                 "MIT"
             ],
             "description": "Deterministic manifest discovery and runtime enablement for Liberu modules.",
-            "time": "2026-08-01T14:52:00+00:00"
+            "time": "2026-08-01T15:07:05+00:00"
         },
         {
             "name": "liberusoftware/notifications",
