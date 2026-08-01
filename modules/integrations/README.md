@@ -14,6 +14,16 @@ Provider credentials, adapter capabilities, OAuth boundaries, rotation, connecti
 
 - `foundation.integrations`
 
+### Declared features
+
+- Provider credentials
+- Adapter capabilities
+- OAuth boundaries
+- Rotation
+- Connection tests
+- Sync
+- Reconciliation
+
 ## Requirements and installation
 
 | Dependency | Supported version |

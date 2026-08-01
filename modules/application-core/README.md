@@ -14,6 +14,14 @@ Application metadata, health/readiness, secure response defaults, clocks, and sh
 
 - `foundation.application-core`
 
+### Declared features
+
+- Application metadata
+- Health/readiness
+- Secure response defaults
+- Clocks
+- Shared identifiers
+
 ## Requirements and installation
 
 | Dependency | Supported version |

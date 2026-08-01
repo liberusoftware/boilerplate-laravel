@@ -48,6 +48,7 @@ it('gives every runtime module complete package metadata', function () {
             ->and($composer['extra']['liberu']['name'] ?? null)->toBe($manifest['name'])
             ->and($composer['extra']['laravel']['providers'] ?? [])->toBe([])
             ->and($manifest['requires']['packages'] ?? [])->toBe($moduleDependencies)
+            ->and($manifest['features'] ?? [])->not->toBeEmpty()
             ->and(class_exists($manifest['provider']))->toBeTrue()
             ->and(is_subclass_of($manifest['provider'], ServiceProvider::class))->toBeTrue();
     }

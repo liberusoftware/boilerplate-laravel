@@ -14,6 +14,10 @@ Interactive locale selection for Livewire applications. This repository owns thi
 
 - `foundation.localization.livewire`
 
+### Declared features
+
+- Interactive locale selection for Livewire applications
+
 ## Requirements and installation
 
 | Dependency | Supported version |

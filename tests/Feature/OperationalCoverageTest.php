@@ -36,6 +36,7 @@ it('reports invalid modules from validation and doctor commands', function () {
         'name' => 'invalid-command', 'display_name' => 'Invalid', 'description' => 'Invalid',
         'version' => '1.0.0', 'category' => 'capability', 'provider' => 'Missing\\Provider',
         'requires' => ['packages' => [], 'capabilities' => []], 'capabilities' => [],
+        'features' => ['Validation diagnostics'],
         'default_enabled' => true,
     ], JSON_THROW_ON_ERROR));
     file_put_contents($directory.'/composer.json', json_encode(['name' => 'local/invalid-command']));

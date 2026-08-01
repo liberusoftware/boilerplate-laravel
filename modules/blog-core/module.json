@@ -6,8 +6,23 @@
     "version": "1.0.3",
     "category": "product",
     "provider": "Liberu\\Blog\\Core\\BlogServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },
-    "suggests": { "liberusoftware/blog-filament": "^1.0" },
-    "capabilities": ["blog.publish"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/blog-filament": "^1.0"
+    },
+    "capabilities": [
+        "blog.publish"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Blog publishing",
+        "Persistence",
+        "Public presentation defaults"
+    ]
 }

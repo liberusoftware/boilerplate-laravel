@@ -14,6 +14,13 @@ Authorized search queries, filters, pagination, and replaceable model configurat
 
 - `foundation.search`
 
+### Declared features
+
+- Authorized search queries
+- Filters
+- Pagination
+- Replaceable model configuration
+
 ## Requirements and installation
 
 | Dependency | Supported version |

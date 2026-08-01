@@ -6,8 +6,20 @@
     "version": "1.0.3",
     "category": "product",
     "provider": "Liberu\\Search\\Demo\\SearchDemoServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0", "liberusoftware/search": "^1.0" } },
-    "suggests": {},
-    "capabilities": ["search.demo"],
-    "default_enabled": false
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0",
+            "liberusoftware/search": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "search.demo"
+    ],
+    "default_enabled": false,
+    "features": [
+        "Runnable reference records used to exercise search filters and authorization"
+    ]
 }

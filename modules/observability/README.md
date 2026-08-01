@@ -14,6 +14,14 @@ Structured diagnostics, exception/job/request monitoring, metrics storage, redac
 
 - `foundation.observability`
 
+### Declared features
+
+- Structured diagnostics
+- Exception/job/request monitoring
+- Metrics storage
+- Redaction
+- Authorized dashboards
+
 ## Requirements and installation
 
 | Dependency | Supported version |

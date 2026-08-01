@@ -14,6 +14,10 @@ Optional Filament user and role administration surface. This repository owns thi
 
 - `foundation.identity.filament`
 
+### Declared features
+
+- Optional Filament user and role administration surface
+
 ## Requirements and installation
 
 | Dependency | Supported version |

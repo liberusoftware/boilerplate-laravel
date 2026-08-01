@@ -14,6 +14,14 @@ Consent-aware Google event mapping, property/stream configuration, validation, e
 
 - `analytics.google`
 
+### Declared features
+
+- Consent-aware Google event mapping
+- Property/stream configuration
+- Validation
+- Ecommerce parameters
+- Diagnostics
+
 ## Requirements and installation
 
 | Dependency | Supported version |

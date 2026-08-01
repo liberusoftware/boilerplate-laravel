@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Liberu\Foundation\ModuleManager\Cache\RegistryCache;
 use Liberu\Foundation\ModuleManager\Console\CacheModulesCommand;
 use Liberu\Foundation\ModuleManager\Console\ClearModulesCommand;
+use Liberu\Foundation\ModuleManager\Console\ListFeaturesCommand;
 use Liberu\Foundation\ModuleManager\Console\ListModulesCommand;
 use Liberu\Foundation\ModuleManager\Console\ModuleStatusCommand;
 use Liberu\Foundation\ModuleManager\Console\ValidateModulesCommand;
@@ -38,7 +39,7 @@ final class ModuleManagerServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../config/modules.php' => config_path('modules.php')], 'modules-config');
 
         if ($this->app->runningInConsole()) {
-            $this->commands([CacheModulesCommand::class, ClearModulesCommand::class, ListModulesCommand::class, ModuleStatusCommand::class, ValidateModulesCommand::class]);
+            $this->commands([CacheModulesCommand::class, ClearModulesCommand::class, ListFeaturesCommand::class, ListModulesCommand::class, ModuleStatusCommand::class, ValidateModulesCommand::class]);
         }
     }
 }

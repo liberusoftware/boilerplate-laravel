@@ -14,6 +14,10 @@ Optional Filament team administration resources. This repository owns this capab
 
 - `foundation.organizations.filament`
 
+### Declared features
+
+- Optional Filament team administration resources
+
 ## Requirements and installation
 
 | Dependency | Supported version |

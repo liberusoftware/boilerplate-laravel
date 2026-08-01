@@ -15,6 +15,12 @@ Provider-neutral authentication policy, identifier normalization, and security e
 - `identity.authenticate`
 - `identity.recover`
 
+### Declared features
+
+- Provider-neutral authentication policy
+- Identifier normalization
+- Security events
+
 ## Requirements and installation
 
 | Dependency | Supported version |

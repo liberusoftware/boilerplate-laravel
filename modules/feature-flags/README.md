@@ -14,6 +14,15 @@ Typed flags, environment/tenant/actor targeting, stable rollout, ownership, expi
 
 - `foundation.feature-flags`
 
+### Declared features
+
+- Typed flags
+- Environment/tenant/actor targeting
+- Stable rollout
+- Ownership
+- Expiry
+- Telemetry boundaries
+
 ## Requirements and installation
 
 | Dependency | Supported version |

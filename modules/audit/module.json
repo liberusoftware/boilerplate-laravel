@@ -1,1 +1,28 @@
-{"$schema":"https://schemas.liberu.dev/module/v1.json","name":"audit","display_name":"Audit","description":"Actor, tenant, request and correlation-aware material-change audit with export and retention boundaries.","version":"1.0.3","category":"foundation","provider":"Liberu\\Foundation\\Audit\\AuditServiceProvider","requires":{"php":"^8.5","laravel":"^13.0","packages":{"liberusoftware/module-manager":"^1.0"}},"suggests":{"liberusoftware/observability":"^1.0"},"capabilities":["foundation.audit"],"default_enabled": true}
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "audit",
+    "display_name": "Audit",
+    "description": "Actor, tenant, request and correlation-aware material-change audit with export and retention boundaries.",
+    "version": "1.0.3",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Audit\\AuditServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/observability": "^1.0"
+    },
+    "capabilities": [
+        "foundation.audit"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Actor",
+        "Tenant",
+        "Request and correlation-aware material-change audit with export and retention boundaries"
+    ]
+}

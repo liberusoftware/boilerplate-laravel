@@ -6,8 +6,25 @@
     "version": "1.0.3",
     "category": "adapter",
     "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/identity": "^1.0", "liberusoftware/module-manager": "^1.0", "liberusoftware/organizations-teams": "^1.0" } },
-    "suggests": {},
-    "capabilities": ["identity.socialstream"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/identity": "^1.0",
+            "liberusoftware/module-manager": "^1.0",
+            "liberusoftware/organizations-teams": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "identity.socialstream"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Social provider redirects",
+        "Callbacks",
+        "Identity linking",
+        "Protected credentials",
+        "Account synchronization"
+    ]
 }

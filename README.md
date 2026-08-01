@@ -84,6 +84,14 @@ The trusted [`liberusoftware/composer-installer`](https://github.com/liberusoftw
 
 Installation, runtime enablement, authorisation, and commercial entitlement are separate concerns. `config/modules.php` selects the enabled capability graph; the module manager validates dependencies and orders providers without scanning application classes manually.
 
+Every module also publishes a validated feature catalog in `module.json`. Hosts can inspect the complete catalog or search it without loading module internals:
+
+```bash
+php artisan module:features
+php artisan module:features health
+php artisan module:status application-core
+```
+
 ## Module and theme development
 
 A module owns one cohesive capability and communicates through public contracts, actions, events, registries, or stable identifiers. Domain modules do not depend on Filament or themes; optional `*-filament`, `*-api`, and `*-livewire` packages provide presentation adapters.

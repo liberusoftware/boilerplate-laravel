@@ -6,8 +6,24 @@
     "version": "1.0.3",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Settings\\SettingsServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },
-    "suggests": { "liberusoftware/settings-filament": "^1.0" },
-    "capabilities": ["foundation.settings"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/settings-filament": "^1.0"
+    },
+    "capabilities": [
+        "foundation.settings"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Typed application",
+        "Organization",
+        "Team/site",
+        "User settings with validation and deterministic cache invalidation"
+    ]
 }

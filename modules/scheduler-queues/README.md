@@ -14,6 +14,16 @@ Unique/idempotent job policy, schedules, locks, retries, failures, monitoring, a
 
 - `foundation.scheduler-queues`
 
+### Declared features
+
+- Unique/idempotent job policy
+- Schedules
+- Locks
+- Retries
+- Failures
+- Monitoring
+- Graceful deployment conventions
+
 ## Requirements and installation
 
 | Dependency | Supported version |

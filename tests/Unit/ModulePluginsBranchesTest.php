@@ -54,6 +54,7 @@ function pluginManifest(string $name, string $plugin): Manifest
         'name' => $name, 'display_name' => $name, 'description' => 'Test', 'version' => '1.0.0',
         'category' => 'presentation', 'provider' => ServiceProvider::class,
         'requires' => ['packages' => [], 'capabilities' => []], 'capabilities' => [],
+        'features' => ['Plugin registration'],
         'default_enabled' => true, 'presentation' => ['filament' => ['admin' => [$plugin]]],
     ], JSON_THROW_ON_ERROR));
     file_put_contents($dir.'/composer.json', json_encode(['name' => 'local/'.$name]));

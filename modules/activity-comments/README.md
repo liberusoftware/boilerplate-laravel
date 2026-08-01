@@ -14,6 +14,15 @@ Generic authorized activity timelines, mentions, subscriptions, internal comment
 
 - `foundation.activity-comments`
 
+### Declared features
+
+- Generic authorized activity timelines
+- Mentions
+- Subscriptions
+- Internal comments
+- Attachments
+- Visibility controls
+
 ## Requirements and installation
 
 | Dependency | Supported version |

@@ -6,9 +6,26 @@
     "version": "1.0.3",
     "category": "presentation",
     "provider": "Liberu\\Blog\\Filament\\BlogFilamentServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/blog-core": "^1.0" } },
-    "suggests": {},
-    "presentation": { "filament": { "admin": ["Liberu\\Blog\\Filament\\BlogFilamentPlugin"] } },
-    "capabilities": ["blog.filament"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/blog-core": "^1.0"
+        }
+    },
+    "suggests": [],
+    "presentation": {
+        "filament": {
+            "admin": [
+                "Liberu\\Blog\\Filament\\BlogFilamentPlugin"
+            ]
+        }
+    },
+    "capabilities": [
+        "blog.filament"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Optional Filament resources for Blog"
+    ]
 }

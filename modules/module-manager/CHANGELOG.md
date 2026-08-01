@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.1.0 - 2026-08-01
+## Unreleased
+
+- Add a validated, machine-readable feature catalog for runtime discovery and diagnostics.
+- Add standalone tests that keep feature metadata consistent and unique.
+
+## Unreleased
 
 - Add startup compatibility validation, status diagnostics, and atomic production registry caching.
 

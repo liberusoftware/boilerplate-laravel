@@ -14,6 +14,14 @@ Social provider redirects, callbacks, identity linking, protected credentials, a
 
 - `identity.socialstream`
 
+### Declared features
+
+- Social provider redirects
+- Callbacks
+- Identity linking
+- Protected credentials
+- Account synchronization
+
 ## Requirements and installation
 
 | Dependency | Supported version |

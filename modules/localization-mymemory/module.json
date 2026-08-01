@@ -6,8 +6,22 @@
     "version": "1.0.3",
     "category": "adapter",
     "provider": "Liberu\\Foundation\\Localization\\MyMemory\\MyMemoryServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/localization-contracts": "^1.0" }, "capabilities": { "foundation.localization": "^1.0" } },
-    "suggests": {},
-    "capabilities": ["localization.machine-translation.mymemory"],
-    "default_enabled": false
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/localization-contracts": "^1.0"
+        },
+        "capabilities": {
+            "foundation.localization": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "localization.machine-translation.mymemory"
+    ],
+    "default_enabled": false,
+    "features": [
+        "Optional cached MyMemory machine-translation provider adapter"
+    ]
 }

@@ -38,6 +38,38 @@ final class ModuleRegistry
         return $this->modules;
     }
 
+    /** @return array<string, list<string>> */
+    public function searchFeatures(string $query = ''): array
+    {
+        $query = mb_strtolower(trim($query));
+        $matches = [];
+
+        foreach ($this->modules as $name => $manifest) {
+            $features = array_values(array_filter(
+                $manifest->features(),
+                fn (string $feature): bool => $query === '' || str_contains(mb_strtolower($feature), $query),
+            ));
+            if ($features !== []) {
+                $matches[$name] = $features;
+            }
+        }
+
+        ksort($matches);
+
+        return $matches;
+    }
+
+    /** @return list<Manifest> */
+    public function providingFeature(string $feature): array
+    {
+        $feature = mb_strtolower(trim($feature));
+
+        return array_values(array_filter(
+            $this->modules,
+            fn (Manifest $manifest): bool => in_array($feature, array_map('mb_strtolower', $manifest->features()), true),
+        ));
+    }
+
     /** @return list<Manifest> */
     public function resolve(array $enabled, array $disabled = []): array
     {

@@ -15,7 +15,7 @@ final readonly class Manifest
     {
         $data = json_decode((string) file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
 
-        foreach (['name', 'display_name', 'description', 'version', 'category', 'provider', 'requires', 'capabilities', 'default_enabled'] as $key) {
+        foreach (['name', 'display_name', 'description', 'version', 'category', 'provider', 'requires', 'capabilities', 'features', 'default_enabled'] as $key) {
             if (! array_key_exists($key, $data)) {
                 throw new InvalidManifest("Manifest {$path} is missing required key [{$key}].");
             }
@@ -25,8 +25,8 @@ final readonly class Manifest
             throw new InvalidManifest("Manifest {$path} has an invalid module name.");
         }
 
-        if (! is_array($data['requires']) || ! is_array($data['capabilities'])) {
-            throw new InvalidManifest("Manifest {$path} has invalid requires or capabilities metadata.");
+        if (! is_array($data['requires']) || ! is_array($data['capabilities']) || ! is_array($data['features'])) {
+            throw new InvalidManifest("Manifest {$path} has invalid requires, capabilities, or features metadata.");
         }
 
         if (! in_array($data['category'], self::CATEGORIES, true)) {
@@ -41,6 +41,20 @@ final readonly class Manifest
             if (! is_string($capability) || ! preg_match('/^[a-z0-9]+(?:[.-][a-z0-9]+)*$/', $capability)) {
                 throw new InvalidManifest("Manifest {$path} has an invalid capability.");
             }
+        }
+
+        if ($data['features'] === []) {
+            throw new InvalidManifest("Manifest {$path} must declare at least one feature.");
+        }
+
+        foreach ($data['features'] as $feature) {
+            if (! is_string($feature) || trim($feature) !== $feature || $feature === '' || mb_strlen($feature) > 120) {
+                throw new InvalidManifest("Manifest {$path} has an invalid feature.");
+            }
+        }
+
+        if (count(array_unique(array_map('mb_strtolower', $data['features']))) !== count($data['features'])) {
+            throw new InvalidManifest("Manifest {$path} has duplicate features.");
         }
 
         return new self(dirname($path), $data);
@@ -80,6 +94,12 @@ final readonly class Manifest
     public function capabilities(): array
     {
         return array_values($this->data['capabilities']);
+    }
+
+    /** @return list<string> */
+    public function features(): array
+    {
+        return array_values($this->data['features']);
     }
 
     /** @return array<string, string> */

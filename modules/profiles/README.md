@@ -14,6 +14,15 @@ Controlled names, locale, timezone, avatar, contact, and theme preferences. This
 
 - `identity.profiles`
 
+### Declared features
+
+- Controlled names
+- Locale
+- Timezone
+- Avatar
+- Contact
+- Theme preferences
+
 ## Requirements and installation
 
 | Dependency | Supported version |

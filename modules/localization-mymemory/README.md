@@ -14,6 +14,10 @@ Optional cached MyMemory machine-translation provider adapter. This repository o
 
 - `localization.machine-translation.mymemory`
 
+### Declared features
+
+- Optional cached MyMemory machine-translation provider adapter
+
 ## Requirements and installation
 
 | Dependency | Supported version |

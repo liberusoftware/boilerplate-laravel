@@ -14,6 +14,16 @@ Local environment, fixtures, quality scripts, CI, architecture checks, documenta
 
 - `foundation.developer-experience`
 
+### Declared features
+
+- Local environment
+- Fixtures
+- Quality scripts
+- CI
+- Architecture checks
+- Documentation
+- Upgrade diagnostics
+
 ## Requirements and installation
 
 | Dependency | Supported version |

@@ -9,9 +9,18 @@
     "requires": {
         "php": "^8.5",
         "laravel": "^13.0",
-        "packages": {}
+        "packages": []
     },
-    "suggests": {},
-    "capabilities": ["foundation.modules"],
-    "default_enabled": true
+    "suggests": [],
+    "capabilities": [
+        "foundation.modules"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Manifest discovery",
+        "Dependency resolution",
+        "Deployment enablement",
+        "Registry caching",
+        "Diagnostics"
+    ]
 }

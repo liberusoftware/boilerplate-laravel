@@ -6,8 +6,23 @@
     "version": "1.0.3",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Currency\\CurrencyServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },
-    "suggests": {},
-    "capabilities": ["foundation.currency"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "foundation.currency"
+    ],
+    "default_enabled": true,
+    "features": [
+        "ISO metadata",
+        "Precise money values",
+        "Currency roles",
+        "Formatting",
+        "Effective-dated exchange-rate contracts"
+    ]
 }

@@ -16,13 +16,14 @@ final class ListModulesCommand extends Command
         $enabled = collect($registry->resolve((array) config('modules.enabled', []), (array) config('modules.disabled', [])))
             ->keyBy(fn ($manifest) => $manifest->name());
 
-        $this->table(['Module', 'Version', 'Category', 'Enabled', 'Capabilities'], array_map(
+        $this->table(['Module', 'Version', 'Category', 'Enabled', 'Capabilities', 'Features'], array_map(
             fn ($manifest): array => [
                 $manifest->name(),
                 $manifest->version(),
                 $manifest->category(),
                 $enabled->has($manifest->name()) ? 'yes' : 'no',
                 implode(', ', $manifest->capabilities()),
+                count($manifest->features()),
             ],
             $registry->all(),
         ));

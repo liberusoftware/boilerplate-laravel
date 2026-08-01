@@ -14,6 +14,13 @@ Contextual role assignments, module-owned permissions, policies, and cache inval
 
 - `foundation.authorization`
 
+### Declared features
+
+- Contextual role assignments
+- Module-owned permissions
+- Policies
+- Cache invalidation
+
 ## Requirements and installation
 
 | Dependency | Supported version |

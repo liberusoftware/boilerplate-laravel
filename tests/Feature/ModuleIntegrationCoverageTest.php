@@ -439,6 +439,9 @@ it('runs module theme and foundation operational commands', function () {
     config()->set('theme.cache_path', $themeCache);
 
     expect(Artisan::call('module:list'))->toBe(0)
+        ->and(Artisan::call('module:features'))->toBe(0)
+        ->and(Artisan::call('module:features', ['query' => 'health']))->toBe(0)
+        ->and(Artisan::output())->toContain('Health/readiness')
         ->and(Artisan::call('module:status', ['name' => 'missing']))->toBe(1)
         ->and(Artisan::call('module:status', ['name' => 'application-core']))->toBe(0)
         ->and(Artisan::call('module:validate'))->toBe(0)

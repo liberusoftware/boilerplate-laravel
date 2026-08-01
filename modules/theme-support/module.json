@@ -6,8 +6,24 @@
     "version": "1.0.3",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\Theme\\Providers\\ThemeServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0", "liberusoftware/settings": "^1.0" } },
-    "suggests": {},
-    "capabilities": ["foundation.theme-support"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0",
+            "liberusoftware/settings": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "foundation.theme-support"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Theme discovery",
+        "View overrides",
+        "Safe asset directives",
+        "Preferences",
+        "Panel palettes"
+    ]
 }

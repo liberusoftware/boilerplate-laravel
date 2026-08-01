@@ -14,6 +14,14 @@ Theme discovery, view overrides, safe asset directives, preferences, and panel p
 
 - `foundation.theme-support`
 
+### Declared features
+
+- Theme discovery
+- View overrides
+- Safe asset directives
+- Preferences
+- Panel palettes
+
 ## Requirements and installation
 
 | Dependency | Supported version |

@@ -20,7 +20,7 @@ function makeCoverageManifest(array $overrides = [], ?string $package = null): M
         'version' => '1.0.0', 'category' => 'capability',
         'provider' => ServiceProvider::class,
         'requires' => ['packages' => [], 'capabilities' => []],
-        'capabilities' => [], 'default_enabled' => true,
+        'capabilities' => [], 'features' => ['Example feature'], 'default_enabled' => true,
     ], $overrides);
     file_put_contents($dir.'/module.json', json_encode($data, JSON_THROW_ON_ERROR));
     if ($package) {
@@ -41,6 +41,7 @@ it('exposes and normalizes all manifest metadata', function () {
         ->and($manifest->category())->toBe('presentation')
         ->and($manifest->provider())->toBe(ServiceProvider::class)
         ->and($manifest->defaultEnabled())->toBeTrue()
+        ->and($manifest->features())->toBe(['Example feature'])
         ->and($manifest->requiredPackages())->toBe([])
         ->and($manifest->requiredCapabilities())->toBe([])
         ->and($manifest->phpConstraint())->toBe('^8.5')
@@ -56,7 +57,7 @@ it('rejects malformed manifests', function (array $mutation, string $message) {
         'version' => '1.0.0', 'category' => 'capability',
         'provider' => ServiceProvider::class,
         'requires' => ['packages' => [], 'capabilities' => []],
-        'capabilities' => [], 'default_enabled' => true,
+        'capabilities' => [], 'features' => ['Example feature'], 'default_enabled' => true,
     ];
     foreach ($mutation as $key => $value) {
         if ($value === null) {
@@ -72,10 +73,16 @@ it('rejects malformed manifests', function (array $mutation, string $message) {
 })->with([
     'missing key' => [['description' => null], 'missing required key'],
     'name' => [['name' => 'Bad Name'], 'invalid module name'],
-    'metadata' => [['requires' => 'bad'], 'invalid requires or capabilities'],
+    'metadata' => [['requires' => 'bad'], 'invalid requires, capabilities, or features'],
     'category' => [['category' => 'unknown'], 'invalid category'],
     'default' => [['default_enabled' => 1], 'default_enabled must be boolean'],
     'capability' => [['capabilities' => ['Bad capability']], 'invalid capability'],
+    'missing features' => [['features' => null], 'missing required key'],
+    'features metadata' => [['features' => 'bad'], 'invalid requires, capabilities, or features'],
+    'empty features' => [['features' => []], 'at least one feature'],
+    'invalid feature' => [['features' => [' feature']], 'invalid feature'],
+    'long feature' => [['features' => [str_repeat('x', 121)]], 'invalid feature'],
+    'duplicate feature' => [['features' => ['Feature', 'feature']], 'duplicate features'],
 ]);
 
 it('loads writes and clears a valid registry cache and rejects invalid cache data', function () {
@@ -175,13 +182,18 @@ it('reports an installed Composer version mismatch and a non-provider class', fu
 });
 
 it('orders dependencies and exposes lookup and enabled state', function () {
-    $foundation = makeCoverageManifest(['name' => 'foundation', 'capabilities' => ['foundation.ready']], 'local/foundation');
+    $foundation = makeCoverageManifest(['name' => 'foundation', 'capabilities' => ['foundation.ready'], 'features' => ['Health checks', 'Readiness']], 'local/foundation');
     $feature = makeCoverageManifest(['name' => 'feature', 'requires' => [
         'packages' => ['local/foundation' => '^1.0'], 'capabilities' => ['foundation.ready' => '^1.0'],
     ]], 'local/feature');
     $registry = new ModuleRegistry(['feature' => $feature, 'foundation' => $foundation]);
     expect($registry->has('feature'))->toBeTrue()->and($registry->has('absent'))->toBeFalse()
         ->and($registry->get('feature'))->toBe($feature)->and($registry->get('absent'))->toBeNull()
+        ->and($registry->searchFeatures())->toHaveKeys(['feature', 'foundation'])
+        ->and($registry->searchFeatures('health'))->toBe(['foundation' => ['Health checks']])
+        ->and($registry->searchFeatures('missing'))->toBe([])
+        ->and($registry->providingFeature(' readiness '))->toBe([$foundation])
+        ->and($registry->providingFeature('missing'))->toBe([])
         ->and(array_map(fn (Manifest $item) => $item->name(), $registry->resolve([])))->toBe(['foundation', 'feature'])
         ->and($registry->enabled('feature'))->toBeTrue()
         ->and($registry->enabled('feature', [], ['feature']))->toBeFalse();

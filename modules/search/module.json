@@ -6,8 +6,25 @@
     "version": "1.0.3",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Search\\SearchServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/identity": "^1.0", "liberusoftware/module-manager": "^1.0" } },
-    "suggests": { "liberusoftware/search-api": "^1.0" },
-    "capabilities": ["foundation.search"],
-    "default_enabled": true
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/identity": "^1.0",
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/search-api": "^1.0"
+    },
+    "capabilities": [
+        "foundation.search"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Authorized search queries",
+        "Filters",
+        "Pagination",
+        "Replaceable model configuration"
+    ]
 }

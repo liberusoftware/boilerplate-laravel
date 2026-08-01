@@ -8,6 +8,7 @@ it('parses every repository module manifest through the canonical value object',
         $manifest = Manifest::fromFile($path);
         expect($manifest->name())->not->toBeEmpty()
             ->and($manifest->version())->toMatch('/^\d+\.\d+\.\d+$/')
-            ->and($manifest->capabilities())->toBeArray();
+            ->and($manifest->capabilities())->toBeArray()
+            ->and($manifest->features())->not->toBeEmpty();
     }
 });
