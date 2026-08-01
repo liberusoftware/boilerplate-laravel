@@ -3,7 +3,7 @@
     "name": "identity-socialstream",
     "display_name": "Social Identity",
     "description": "Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "adapter",
     "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/identity": "^1.0", "liberusoftware/module-manager": "^1.0", "liberusoftware/organizations-teams": "^1.0" } },

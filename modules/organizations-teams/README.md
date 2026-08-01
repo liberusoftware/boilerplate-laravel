@@ -30,7 +30,7 @@ Install the released package from the project root:
 composer require liberusoftware/organizations-teams
 ```
 
-The trusted `liberu/composer-installer` places it in `/modules/organizations-teams`. The installed directory remains tracked by the host repository, while Composer and its lock file remain the source of version truth. Installation does not imply runtime enablement or commercial entitlement.
+The trusted `liberusoftware/composer-installer` places it in `/modules/organizations-teams`. The installed directory remains tracked by the host repository, while Composer and its lock file remain the source of version truth. Installation does not imply runtime enablement or commercial entitlement.
 
 ## Architecture and integration
 

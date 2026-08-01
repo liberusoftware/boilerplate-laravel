@@ -31,15 +31,22 @@ final class ModuleDiscovery
         foreach ($paths as $root) {
             foreach (glob(rtrim($root, '/').'/*/module.json') ?: [] as $path) {
                 $manifest = Manifest::fromFile($path);
-                if (isset($modules[$manifest->name()])) {
-                    throw new InvalidManifest("Duplicate module [{$manifest->name()}].");
-                }
                 if (! is_file($manifest->path.'/composer.json')) {
                     throw new InvalidManifest("Module [{$manifest->name()}] has no composer.json.");
                 }
                 $composer = json_decode((string) file_get_contents($manifest->path.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
                 $package = $composer['name'] ?? null;
-                if (! is_string($package) || isset($packageNames[$package])) {
+                if (! is_string($package)) {
+                    throw new InvalidManifest("Module [{$manifest->name()}] has a missing or duplicate Composer package name.");
+                }
+                if (isset($modules[$manifest->name()])) {
+                    if (($packageNames[$package] ?? null) === $manifest->name()
+                        && $modules[$manifest->name()]->version() === $manifest->version()) {
+                        continue;
+                    }
+                    throw new InvalidManifest("Duplicate module [{$manifest->name()}].");
+                }
+                if (isset($packageNames[$package])) {
                     throw new InvalidManifest("Module [{$manifest->name()}] has a missing or duplicate Composer package name.");
                 }
                 $packageNames[$package] = $manifest->name();

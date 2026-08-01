@@ -3,7 +3,7 @@
     "name": "blog-core",
     "display_name": "Blog",
     "description": "Blog publishing, persistence, and public presentation defaults.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "product",
     "provider": "Liberu\\Blog\\Core\\BlogServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },

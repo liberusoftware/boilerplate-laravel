@@ -3,7 +3,7 @@
     "name": "application-core",
     "display_name": "Application Core",
     "description": "Application metadata, health/readiness, secure response defaults, clocks, and shared identifiers.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\ApplicationCore\\ApplicationCoreServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },

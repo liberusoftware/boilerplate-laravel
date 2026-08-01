@@ -3,7 +3,7 @@
     "name": "settings",
     "display_name": "Settings",
     "description": "Typed application, organization, team/site, and user settings with validation and deterministic cache invalidation.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Settings\\SettingsServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },

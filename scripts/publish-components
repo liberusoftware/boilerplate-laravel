@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
-organisation="liberusoftware"
 mode="dry-run"
 visibility="public"
 branch="main"
+only="all"
+config="${META_CONFIG:-.liberu-meta.json}"
 
 usage() {
     cat <<'EOF'
-Usage: scripts/publish-components [--create] [--push] [--private] [--org ORGANISATION] [--branch BRANCH]
+Usage: publish-components [--create|--push] [--private] [--config FILE]
+                          [--org OWNER] [--branch BRANCH] [--only KIND]
 
-Without --create or --push the command prints the repositories it would publish.
---create creates missing repositories with gh. --push also creates missing repositories
-and publishes every module, theme, and this meta repository.
+KIND is all, modules, themes, scripts, or meta. Repository names and component
+paths come from .liberu-meta.json. With no mutation flag, this is a dry run.
 EOF
 }
 
@@ -22,80 +22,80 @@ while (($#)); do
         --create) mode="create" ;;
         --push) mode="push" ;;
         --private) visibility="private" ;;
-        --org) shift; organisation="${1:?--org requires a value}" ;;
+        --config) shift; config="${1:?--config requires a value}" ;;
+        --org) shift; META_ORGANIZATION="${1:?--org requires a value}" ;;
         --branch) shift; branch="${1:?--branch requires a value}" ;;
+        --only) shift; only="${1:?--only requires a value}" ;;
         --help|-h) usage; exit 0 ;;
         *) printf 'Unknown argument: %s\n' "$1" >&2; usage >&2; exit 2 ;;
     esac
     shift
 done
 
-command -v gh >/dev/null || { printf 'gh is required.\n' >&2; exit 1; }
+[[ "$only" =~ ^(all|modules|themes|scripts|meta)$ ]] || { printf 'Invalid --only value.\n' >&2; exit 2; }
 command -v git >/dev/null || { printf 'git is required.\n' >&2; exit 1; }
-
+command -v php >/dev/null || { printf 'php is required to read the configuration.\n' >&2; exit 1; }
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
+[[ -f "$config" ]] || { printf 'Configuration not found: %s\n' "$config" >&2; exit 1; }
 
-if [[ "$mode" == "push" ]] && [[ -n "$(git status --porcelain)" ]]; then
-    printf 'Refusing to publish a dirty worktree. Commit all intended changes first.\n' >&2
+json() { php -r '$d=json_decode(file_get_contents($argv[1]),true,512,JSON_THROW_ON_ERROR); foreach(explode(".",$argv[2]) as $k){$d=$d[$k]??null;} if(is_scalar($d)) echo $d;' "$config" "$1"; }
+organisation="${META_ORGANIZATION:-$(json organization)}"
+meta_repository="${META_REPOSITORY:-$(json repository)}"
+genre="${META_GENRE:-$(json genre)}"
+
+if [[ "$mode" != "dry-run" ]]; then
+    command -v gh >/dev/null || { printf 'gh is required for GitHub changes.\n' >&2; exit 1; }
+    gh auth status --hostname github.com >/dev/null
+fi
+if [[ "$mode" == "push" && -n "$(git status --porcelain)" ]]; then
+    printf 'Refusing to publish a dirty worktree. Commit intended changes first.\n' >&2
     exit 1
 fi
 
-gh auth status --hostname github.com >/dev/null
-
-declare -a paths=()
-while IFS= read -r path; do
-    paths+=("$path")
-done < <(find modules themes -mindepth 1 -maxdepth 1 -type d -print | LC_ALL=C sort)
-paths+=("scripts")
-
-repository_for() {
-    local path="$1"
-    case "$path" in
-        modules/*) printf 'module-%s' "${path#modules/}" ;;
-        themes/*) printf 'theme-%s' "${path#themes/}" ;;
-        scripts) printf 'boilerplate-scripts' ;;
-        *) return 1 ;;
-    esac
-}
-
 ensure_repository() {
-    local repository="$1"
-    local description="$2"
-    if gh repo view "$organisation/$repository" >/dev/null 2>&1; then
-        return
-    fi
-    printf 'Creating %s/%s\n' "$organisation" "$repository"
+    local repository="$1" description="$2"
+    gh repo view "$organisation/$repository" >/dev/null 2>&1 && return
     gh repo create "$organisation/$repository" "--$visibility" --description "$description" --disable-wiki
 }
 
-for path in "${paths[@]}"; do
-    repository="$(repository_for "$path")"
-    printf '%-42s <- %s\n' "$organisation/$repository" "$path"
-
-    if [[ "$mode" != "dry-run" ]]; then
-        ensure_repository "$repository" "Liberu ${repository#*-} ${repository%%-*} package"
+publish_path() {
+    local path="$1" repository="$2"
+    printf '%-48s <- %s\n' "$organisation/$repository" "$path"
+    [[ "$mode" == "dry-run" ]] && return
+    ensure_repository "$repository" "$genre package extracted from $meta_repository"
+    [[ "$mode" == "create" ]] && return
+    local split_branch="publish/${repository}-$$" remote_url="git@github.com:$organisation/$repository.git"
+    git branch -D "$split_branch" >/dev/null 2>&1 || true
+    git subtree split --prefix="$path" -b "$split_branch" >/dev/null
+    if git fetch "$remote_url" "$branch"; then
+        git switch --quiet "$split_branch"
+        git merge --allow-unrelated-histories --strategy=ours --no-edit FETCH_HEAD >/dev/null
+        git switch --quiet -
     fi
+    git push "$remote_url" "$split_branch:$branch"
+    git branch -D "$split_branch" >/dev/null
+}
 
-    if [[ "$mode" == "push" ]]; then
-        split_branch="publish/${repository}-$$"
-        git branch -D "$split_branch" >/dev/null 2>&1 || true
-        git subtree split --prefix="$path" -b "$split_branch"
-        remote_url="git@github.com:$organisation/$repository.git"
-        if git fetch "$remote_url" "$branch"; then
-            git switch "$split_branch"
-            git merge --allow-unrelated-histories --strategy=ours --no-edit FETCH_HEAD
-            git switch -
-        fi
-        git push "$remote_url" "$split_branch:$branch"
-        git branch -D "$split_branch"
+for kind in modules themes scripts; do
+    [[ "$only" == "all" || "$only" == "$kind" ]] || continue
+    path="$(json "components.$kind.path")"
+    [[ -d "$path" ]] || continue
+    fixed_repository="$(json "components.$kind.repository")"
+    prefix="$(json "components.$kind.repositoryPrefix")"
+    if [[ -n "$fixed_repository" ]]; then
+        publish_path "$path" "$fixed_repository"
+    else
+        while IFS= read -r component; do
+            publish_path "$component" "$prefix$(basename "$component")"
+        done < <(find "$path" -mindepth 1 -maxdepth 1 -type d -print | LC_ALL=C sort)
     fi
 done
 
-printf '%-42s <- %s\n' "$organisation/boilerplate-laravel" '.'
-if [[ "$mode" != "dry-run" ]]; then
-    ensure_repository "boilerplate-laravel" 'Modular Laravel application foundation and reference implementation'
-fi
-if [[ "$mode" == "push" ]]; then
-    git push "git@github.com:$organisation/boilerplate-laravel.git" "HEAD:$branch"
+if [[ "$only" == "all" || "$only" == "meta" ]]; then
+    printf '%-48s <- .\n' "$organisation/$meta_repository"
+    if [[ "$mode" != "dry-run" ]]; then
+        ensure_repository "$meta_repository" "$genre meta repository"
+        [[ "$mode" == "push" ]] && git push "git@github.com:$organisation/$meta_repository.git" "HEAD:$branch"
+    fi
 fi

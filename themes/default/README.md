@@ -26,7 +26,7 @@ Install from the host project root:
 composer require liberusoftware/theme-default
 ```
 
-The trusted `liberu/composer-installer` places the package in `/themes/default`. Composer and its lock file remain the source of version truth, and the installed theme directory is committed by the host.
+The trusted `liberusoftware/composer-installer` places the package in `/themes/default`. Composer and its lock file remain the source of version truth, and the installed theme directory is committed by the host.
 
 ## Compatibility
 

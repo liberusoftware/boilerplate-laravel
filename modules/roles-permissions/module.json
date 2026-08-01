@@ -3,7 +3,7 @@
     "name": "roles-permissions",
     "display_name": "Roles and Permissions",
     "description": "Contextual role assignments, module-owned permissions, policies, and cache invalidation.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Authorization\\AuthorizationServiceProvider",
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0", "liberusoftware/organizations-teams": "^1.0" } },
