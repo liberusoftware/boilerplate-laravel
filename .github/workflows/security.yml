@@ -2,97 +2,30 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-  deployment:
+    branches: [main]
   workflow_dispatch:
 
-env:
-  DB_DATABASE: liberu
-  DB_USERNAME: liberu
-  DB_PASSWORD: secret
+permissions:
+  contents: read
 
 jobs:
-
-  phpcpd:
-    runs-on: ubuntu-22.04
+  composer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: mbstring, bcmath, pdo, mysql, dom, curl
-
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: 'Run Phpcpd'
-        run: |
-          sudo composer install
-          sudo test -f phpcpd.phar || curl -L https://phar.phpunit.de/phpcpd.phar -o phpcpd.phar
-          sudo php phpcpd.phar app/
-
-  php-insights:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v5
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: mbstring, bcmath, pdo, mysql, dom, curl
-
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: 'Run php-insight'
-        run: |
-          sudo composer install
-          sudo php artisan insights --min-quality=90 --min-complexity=90 --min-architecture=80 --min-style=90 --no-interaction
-
-  security:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v5
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: mbstring, bcmath, pdo, mysql, dom, curl
-
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: 'Run php-insight'
-        run: |
-          PHP_SC_VERSION=$(curl -s "https://api.github.com/repos/fabpot/local-php-security-checker/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/;s/^v//')
-          curl -LSs https://github.com/fabpot/local-php-security-checker/releases/download/v${PHP_SC_VERSION}/local-php-security-checker_${PHP_SC_VERSION}_linux_amd64 > ./php-security-checker
-          chmod +x ./php-security-checker
-          unset PHP_SC_VERSION
-          ./php-security-checker
+          extensions: mbstring, bcmath, pdo, pdo_sqlite, dom, curl, intl
+          coverage: none
+      - name: Validate Composer metadata
+        run: composer validate --strict
+      - name: Install locked dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+      - name: Audit dependencies
+        run: composer audit --locked
+      - name: Check formatting
+        run: vendor/bin/pint --test

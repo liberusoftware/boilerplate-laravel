@@ -66,7 +66,7 @@ foreach ($packages as $package => $repository) {
         $failures[$package] = is_array($message) ? ($message['status'] ?? $response['body']) : $response['body'];
         fwrite(STDERR, "  {$endpoint} failed ({$response['status']})\n");
     } else {
-        fwrite(STDOUT, "  ".($endpoint === 'update-package' ? 'updated' : 'submitted')."\n");
+        fwrite(STDOUT, '  '.($endpoint === 'update-package' ? 'updated' : 'submitted')."\n");
     }
 }
 
@@ -93,5 +93,6 @@ function request(string $url, ?string $body = null, ?string $authorization = nul
     if ($response === false) {
         throw new RuntimeException(curl_error($handle));
     }
+
     return ['status' => (int) curl_getinfo($handle, CURLINFO_RESPONSE_CODE), 'body' => (string) $response];
 }
