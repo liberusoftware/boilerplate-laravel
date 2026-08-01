@@ -15,13 +15,99 @@
             <directory>tests/Architecture</directory>
         </testsuite>
         <testsuite name="Modules">
-            <directory suffix="Test.php">modules</directory>
+            <directory>modules/activity-comments/tests</directory>
+            <directory>modules/analytics-core/tests</directory>
+            <directory>modules/analytics-google/tests</directory>
+            <directory>modules/analytics-meta/tests</directory>
+            <directory>modules/api-access/tests</directory>
+            <directory>modules/application-core/tests</directory>
+            <directory>modules/audit/tests</directory>
+            <directory>modules/blog-core/tests</directory>
+            <directory>modules/blog-filament/tests</directory>
+            <directory>modules/currency-context/tests</directory>
+            <directory>modules/developer-experience/tests</directory>
+            <directory>modules/feature-flags/tests</directory>
+            <directory>modules/files-media/tests</directory>
+            <directory>modules/foundation-filament/tests</directory>
+            <directory>modules/identity/tests</directory>
+            <directory>modules/identity-filament/tests</directory>
+            <directory>modules/identity-socialstream/tests</directory>
+            <directory>modules/import-export/tests</directory>
+            <directory>modules/integrations/tests</directory>
+            <directory>modules/jetstream-bridge/tests</directory>
+            <directory>modules/localization/tests</directory>
+            <directory>modules/localization-livewire/tests</directory>
+            <directory>modules/localization-mymemory/tests</directory>
+            <directory>modules/messaging/tests</directory>
+            <directory>modules/messaging-api/tests</directory>
+            <directory>modules/messaging-filament/tests</directory>
+            <directory>modules/module-manager/tests</directory>
+            <directory>modules/notifications/tests</directory>
+            <directory>modules/observability/tests</directory>
+            <directory>modules/organizations-teams/tests</directory>
+            <directory>modules/organizations-teams-filament/tests</directory>
+            <directory>modules/profiles/tests</directory>
+            <directory>modules/roles-permissions/tests</directory>
+            <directory>modules/roles-permissions-filament/tests</directory>
+            <directory>modules/scheduler-queues/tests</directory>
+            <directory>modules/search/tests</directory>
+            <directory>modules/search-api/tests</directory>
+            <directory>modules/search-demo/tests</directory>
+            <directory>modules/sessions-devices/tests</directory>
+            <directory>modules/settings/tests</directory>
+            <directory>modules/settings-filament/tests</directory>
+            <directory>modules/theme-support/tests</directory>
+            <directory>modules/two-factor-authentication/tests</directory>
+            <directory>modules/webhooks/tests</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
             <directory>app</directory>
-            <directory>modules/*/src</directory>
+            <directory>modules/activity-comments/src</directory>
+            <directory>modules/analytics-core/src</directory>
+            <directory>modules/analytics-google/src</directory>
+            <directory>modules/analytics-meta/src</directory>
+            <directory>modules/api-access/src</directory>
+            <directory>modules/application-core/src</directory>
+            <directory>modules/audit/src</directory>
+            <directory>modules/blog-core/src</directory>
+            <directory>modules/blog-filament/src</directory>
+            <directory>modules/currency-context/src</directory>
+            <directory>modules/developer-experience/src</directory>
+            <directory>modules/feature-flags/src</directory>
+            <directory>modules/files-media/src</directory>
+            <directory>modules/foundation-filament/src</directory>
+            <directory>modules/identity/src</directory>
+            <directory>modules/identity-filament/src</directory>
+            <directory>modules/identity-socialstream/src</directory>
+            <directory>modules/import-export/src</directory>
+            <directory>modules/integrations/src</directory>
+            <directory>modules/jetstream-bridge/src</directory>
+            <directory>modules/localization/src</directory>
+            <directory>modules/localization-livewire/src</directory>
+            <directory>modules/localization-mymemory/src</directory>
+            <directory>modules/messaging/src</directory>
+            <directory>modules/messaging-api/src</directory>
+            <directory>modules/messaging-filament/src</directory>
+            <directory>modules/module-manager/src</directory>
+            <directory>modules/notifications/src</directory>
+            <directory>modules/observability/src</directory>
+            <directory>modules/organizations-teams/src</directory>
+            <directory>modules/organizations-teams-filament/src</directory>
+            <directory>modules/profiles/src</directory>
+            <directory>modules/roles-permissions/src</directory>
+            <directory>modules/roles-permissions-filament/src</directory>
+            <directory>modules/scheduler-queues/src</directory>
+            <directory>modules/search/src</directory>
+            <directory>modules/search-api/src</directory>
+            <directory>modules/search-demo/src</directory>
+            <directory>modules/sessions-devices/src</directory>
+            <directory>modules/settings/src</directory>
+            <directory>modules/settings-filament/src</directory>
+            <directory>modules/theme-support/src</directory>
+            <directory>modules/two-factor-authentication/src</directory>
+            <directory>modules/webhooks/src</directory>
         </include>
     </source>
     <php>
@@ -36,6 +122,7 @@
         <env name="DB_URL" value=""/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="MODULES_ENABLED" value="search-demo"/>
+        <env name="MODULES_DISABLED" value="analytics-google,analytics-meta,localization-mymemory"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>

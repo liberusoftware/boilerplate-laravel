@@ -29,6 +29,8 @@ it('gives every theme complete metadata and an autoloadable provider', function 
         $directory = dirname($theme['path']);
         $manifest = $theme['manifest'];
         $composer = json_decode(file_get_contents($directory.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
+        $sourceNamespace = array_key_first($composer['autoload']['psr-4']);
+        $testNamespace = $sourceNamespace.'Tests\\';
 
         expect(basename($directory))->toBe($name)
             ->and($directory.'/composer.json')->toBeFile()
@@ -39,6 +41,12 @@ it('gives every theme complete metadata and an autoloadable provider', function 
             ->and($composer['type'] ?? null)->toBe('liberu-theme')
             ->and($composer['version'] ?? null)->toBe($manifest['version'])
             ->and($composer['extra']['liberu']['name'] ?? null)->toBe($name)
+            ->and($composer['autoload-dev']['psr-4'][$testNamespace] ?? null)->toBe('tests/')
+            ->and($composer['require-dev']['orchestra/testbench'] ?? null)->toBe('^11.1')
+            ->and($composer['require-dev']['pestphp/pest'] ?? null)->toBe('^5.0')
+            ->and($directory.'/phpunit.xml')->toBeFile()
+            ->and($directory.'/.github/workflows/tests.yml')->toBeFile()
+            ->and($directory.'/tests/Architecture/PackageMetadataTest.php')->toBeFile()
             ->and(class_exists($manifest['provider']))->toBeTrue()
             ->and(is_subclass_of($manifest['provider'], ServiceProvider::class))->toBeTrue();
 

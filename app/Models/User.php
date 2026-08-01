@@ -149,7 +149,10 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function hasAdminAccess(): bool
     {
-        return app(AnyTeamRoleLookup::class)->holds($this, ['super_admin', 'admin']);
+        return $this->hasRoleInAnyTeam([
+            (string) config('filament-shield.super_admin.name', 'super_admin'),
+            (string) config('app.admin_role', 'admin'),
+        ]);
     }
 
     /**
@@ -159,7 +162,12 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function isSuperAdmin(): bool
     {
-        return app(AnyTeamRoleLookup::class)->holds($this, [(string) config('filament-shield.super_admin.name', 'super_admin')]);
+        return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'));
+    }
+
+    public function hasRoleInAnyTeam(string|array $roles): bool
+    {
+        return app(AnyTeamRoleLookup::class)->hasRoleInAnyTeam($this, $roles);
     }
 
     public function authorizationIdentifier(): int|string

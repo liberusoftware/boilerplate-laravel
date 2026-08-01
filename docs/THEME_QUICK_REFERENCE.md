@@ -107,7 +107,7 @@ if (theme()->themeExists('mytheme')) {
 ## ThemeManager Methods
 
 ```php
-$manager = app(\App\Services\ThemeManager::class);
+$manager = app(\Liberu\Foundation\Theme\Services\ThemeManager::class);
 
 // Get all themes
 $themes = $manager->getThemes();

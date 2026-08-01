@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\ServiceProvider;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 function moduleDirectories(): array
 {
@@ -11,14 +14,22 @@ function modulePhpFiles(string $module): array
 {
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($module.'/src'));
 
-    return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile() && $file->getExtension() === 'php'));
+    return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile()
+        && $file->getExtension() === 'php'
+        && ! str_contains($file->getPathname(), '/vendor/')));
 }
 
 function allModulePhpFiles(string $module): array
 {
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($module));
+    $directories = new RecursiveDirectoryIterator($module);
+    $filtered = new RecursiveCallbackFilterIterator(
+        $directories,
+        fn (SplFileInfo $file) => ! ($file->isDir() && $file->getFilename() === 'vendor'),
+    );
+    $iterator = new RecursiveIteratorIterator($filtered);
 
-    return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile() && $file->getExtension() === 'php'));
+    return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile()
+        && $file->getExtension() === 'php'));
 }
 
 it('gives every runtime module complete package metadata', function () {
@@ -47,7 +58,7 @@ it('requires every module to exercise its service provider in the application', 
         $test = $module.'/tests/Integration/ServiceProviderTest.php';
 
         expect($test)->toBeFile()
-            ->and(file_get_contents($test))->toContain('->register($provider, true)');
+            ->and(file_get_contents($test))->toContain('getProvider(');
     }
 });
 
@@ -67,8 +78,47 @@ it('autoloads each module test namespace in its standalone package', function ()
         $integrationTest = $module.'/tests/Integration/ServiceProviderTest.php';
 
         expect($composer['autoload-dev']['psr-4'][$testNamespace] ?? null)->toBe('tests/')
+            ->and($composer['require-dev']['orchestra/testbench'] ?? null)->toBe('^11.1')
+            ->and($composer['require-dev']['pestphp/pest'] ?? null)->toBe('^5.0')
+            ->and($module.'/phpunit.xml')->toBeFile()
+            ->and($module.'/.github/workflows/tests.yml')->toBeFile()
             ->and(file_get_contents($integrationTest))->toContain("namespace {$testNamespace}Integration;");
     }
+});
+
+it('classifies every installed module as enabled or explicitly disabled', function () {
+    $installed = array_map('basename', moduleDirectories());
+    $enabled = config('modules.available.enabled', []);
+    $disabled = config('modules.available.disabled', []);
+    sort($installed);
+    sort($enabled);
+    sort($disabled);
+    $classified = array_values(array_unique(array_merge($enabled, $disabled)));
+    sort($classified);
+
+    expect(array_intersect($enabled, $disabled))->toBe([])
+        ->and($classified)->toBe($installed)
+        ->and($disabled)->toContain('analytics-google', 'analytics-meta', 'localization-mymemory', 'search-demo');
+});
+
+it('lists every installed module explicitly in the host PHPUnit suites', function () {
+    $root = dirname(__DIR__, 2);
+    $xml = simplexml_load_file($root.'/phpunit.xml');
+    $expectedTests = $expectedSources = [];
+    foreach (moduleDirectories() as $module) {
+        $name = basename($module);
+        $expectedTests[] = "modules/{$name}/tests";
+        $expectedSources[] = "modules/{$name}/src";
+    }
+    $actualTests = array_map('strval', $xml->xpath('//testsuite[@name="Modules"]/directory'));
+    $actualSources = array_map('strval', $xml->xpath('//source/include/directory[starts-with(text(), "modules/")]'));
+    sort($expectedTests);
+    sort($expectedSources);
+    sort($actualTests);
+    sort($actualSources);
+
+    expect($actualTests)->toBe($expectedTests)
+        ->and($actualSources)->toBe($expectedSources);
 });
 
 it('keeps filament out of non-presentation modules', function () {

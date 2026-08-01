@@ -148,7 +148,8 @@
         "liberusoftware/search-demo": "^1.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.8",
-        "pestphp/pest": "5.x-dev",
+        "orchestra/testbench": "^11.1",
+        "pestphp/pest": "^5.0",
         "pestphp/pest-plugin-laravel": "5.x-dev",
         "phpunit/phpunit": "^13.1.8",
         "spatie/laravel-ignition": "^2.4"
@@ -163,7 +164,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "classmap": [
+            "modules/*/tests",
+            "themes/*/tests"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [

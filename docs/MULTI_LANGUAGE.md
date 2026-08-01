@@ -188,7 +188,7 @@ console.log(translations.welcome);
 The `TranslationService` class provides programmatic access to translations:
 
 ```php
-use App\Services\TranslationService;
+use Liberu\Foundation\Localization\MyMemory\TranslationService;
 
 $service = app(TranslationService::class);
 
@@ -250,7 +250,7 @@ The middleware automatically uses the authenticated user's preferred language.
 You can extend the `TranslationService` to use a different translation API:
 
 ```php
-namespace App\Services;
+namespace Liberu\Foundation\Localization\MyMemory;
 
 class CustomTranslationService extends TranslationService
 {
@@ -424,7 +424,7 @@ Edit `config/app.php`:
 
 2. **Update TranslationService**
 
-Edit `app/Services/TranslationService.php`:
+Edit `modules/localization-mymemory/src/TranslationService.php`:
 
 ```php
 public const SUPPORTED_LANGUAGES = [

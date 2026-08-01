@@ -24,5 +24,17 @@
     "psr-4": {
       "Liberu\\Foundation\\Audit\\Tests\\": "tests/"
     }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
+  "scripts": {
+    "test": "pest"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   }
 }

@@ -4,6 +4,10 @@
 !/modules/**
 !/themes/
 !/themes/**
+/modules/*/vendor/
+/themes/*/vendor/
+/modules/*/composer.lock
+/themes/*/composer.lock
 node_modules/
 npm-debug.log
 yarn-error.log

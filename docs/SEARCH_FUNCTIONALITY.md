@@ -168,7 +168,7 @@ GET /api/search/all?query=developer&per_page=10
 ## Models
 
 ### Post Model
-Located at: `app/Models/Post.php`
+Located at: `modules/search-demo/src/Models/Post.php`
 
 **Relationships**:
 - `author()`: BelongsTo User
@@ -181,7 +181,7 @@ Located at: `app/Models/Post.php`
 - `search($query)`: Search by title or content
 
 ### Group Model
-Located at: `app/Models/Group.php`
+Located at: `modules/search-demo/src/Models/Group.php`
 
 **Relationships**:
 - `owner()`: BelongsTo User
@@ -204,7 +204,7 @@ Located at: `app/Models/User.php`
 ## Service Layer
 
 ### SearchService
-Located at: `app/Services/SearchService.php`
+Located at: `modules/search/src/Services/SearchService.php`
 
 **Methods**:
 - `searchUsers(array $filters)`: Search users with advanced filters

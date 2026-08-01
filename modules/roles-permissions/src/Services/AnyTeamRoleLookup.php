@@ -7,9 +7,10 @@ use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
 
 final class AnyTeamRoleLookup
 {
-    /** @param list<string> $roles */
-    public function holds(PrivilegedActor $actor, array $roles): bool
+    /** @param string|list<string> $roles */
+    public function hasRoleInAnyTeam(PrivilegedActor $actor, string|array $roles): bool
     {
+        $roles = (array) $roles;
         if ($roles === []) {
             return false;
         }

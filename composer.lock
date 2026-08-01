@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72b1b04a12ece8b5132bd7f6c5bd9e6e",
+    "content-hash": "cf59cbd06c3c7bfa928e7ea979ce9169",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -16470,6 +16470,86 @@
             "time": "2026-05-28T08:00:58+00:00"
         },
         {
+            "name": "laravel/pail",
+            "version": "v1.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/pail.git",
+                "reference": "2f7d27dada8effc48b8c424445a69cca7007daaa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/pail/zipball/2f7d27dada8effc48b8c424445a69cca7007daaa",
+                "reference": "2f7d27dada8effc48b8c424445a69cca7007daaa",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "illuminate/console": "^10.24|^11.0|^12.0|^13.0",
+                "illuminate/contracts": "^10.24|^11.0|^12.0|^13.0",
+                "illuminate/log": "^10.24|^11.0|^12.0|^13.0",
+                "illuminate/process": "^10.24|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.24|^11.0|^12.0|^13.0",
+                "nunomaduro/termwind": "^1.15|^2.0",
+                "php": "^8.2",
+                "symfony/console": "^6.0|^7.0|^8.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^10.24|^11.0|^12.0|^13.0",
+                "laravel/pint": "^1.13",
+                "orchestra/testbench-core": "^8.13|^9.17|^10.8|^11.0",
+                "pestphp/pest": "^2.20|^3.0|^4.0",
+                "pestphp/pest-plugin-type-coverage": "^2.3|^3.0|^4.0",
+                "phpstan/phpstan": "^1.12.27",
+                "symfony/var-dumper": "^6.3|^7.0|^8.0",
+                "symfony/yaml": "^6.3|^7.0|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Pail\\PailServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Pail\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Nuno Maduro",
+                    "email": "enunomaduro@gmail.com"
+                }
+            ],
+            "description": "Easily delve into your Laravel application's log files directly from the command line.",
+            "homepage": "https://github.com/laravel/pail",
+            "keywords": [
+                "dev",
+                "laravel",
+                "logs",
+                "php",
+                "tail"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/pail/issues",
+                "source": "https://github.com/laravel/pail"
+            },
+            "time": "2026-05-20T22:24:57+00:00"
+        },
+        {
             "name": "laravel/pint",
             "version": "v1.30.2",
             "source": {
@@ -16919,17 +16999,427 @@
             "time": "2026-07-15T19:09:14+00:00"
         },
         {
-            "name": "pestphp/pest",
-            "version": "5.x-dev",
+            "name": "orchestra/canvas",
+            "version": "v11.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pestphp/pest.git",
-                "reference": "b63626a94d5188f21d2f9cf7438eb4a71f4bb041"
+                "url": "https://github.com/orchestral/canvas.git",
+                "reference": "d240410f4cd89b380d7d89b5bbaf60c32f4fb691"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/b63626a94d5188f21d2f9cf7438eb4a71f4bb041",
-                "reference": "b63626a94d5188f21d2f9cf7438eb4a71f4bb041",
+                "url": "https://api.github.com/repos/orchestral/canvas/zipball/d240410f4cd89b380d7d89b5bbaf60c32f4fb691",
+                "reference": "d240410f4cd89b380d7d89b5bbaf60c32f4fb691",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "composer/semver": "^3.0",
+                "illuminate/console": "^13.0.0",
+                "illuminate/database": "^13.0.0",
+                "illuminate/filesystem": "^13.0.0",
+                "illuminate/support": "^13.0.0",
+                "orchestra/canvas-core": "^11.0.0",
+                "orchestra/sidekick": "~1.1.23|~1.2.20",
+                "orchestra/testbench-core": "^11.0.0",
+                "php": "^8.3",
+                "symfony/yaml": "^7.4.0|^8.0.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^13.0.0",
+                "laravel/pint": "^1.24",
+                "mockery/mockery": "^1.6.10",
+                "phpstan/phpstan": "^2.1.14",
+                "phpunit/phpunit": "^11.5.50|^12.5.8|^13.0.0"
+            },
+            "bin": [
+                "canvas"
+            ],
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Orchestra\\Canvas\\LaravelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Orchestra\\Canvas\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com"
+                }
+            ],
+            "description": "Code Generators for Laravel Applications and Packages",
+            "support": {
+                "issues": "https://github.com/orchestral/canvas/issues",
+                "source": "https://github.com/orchestral/canvas/tree/v11.0.1"
+            },
+            "time": "2026-03-18T22:46:12+00:00"
+        },
+        {
+            "name": "orchestra/canvas-core",
+            "version": "v11.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/canvas-core.git",
+                "reference": "88d091ff989748e2ca447bca0cd06ab14671ba82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/canvas-core/zipball/88d091ff989748e2ca447bca0cd06ab14671ba82",
+                "reference": "88d091ff989748e2ca447bca0cd06ab14671ba82",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "composer/semver": "^3.0",
+                "illuminate/console": "^13.0",
+                "illuminate/support": "^13.0",
+                "orchestra/sidekick": "~1.1.23|~1.2.20",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "laravel/framework": "^13.0",
+                "laravel/pint": "^1.24",
+                "mockery/mockery": "^1.6.10",
+                "orchestra/testbench-core": "^11.0",
+                "phpstan/phpstan": "^2.1.17",
+                "phpunit/phpunit": "^11.5.50|^12.5.8|^13.0.0",
+                "symfony/yaml": "^7.4|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Orchestra\\Canvas\\Core\\LaravelServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Orchestra\\Canvas\\Core\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com"
+                }
+            ],
+            "description": "Code Generators Builder for Laravel Applications and Packages",
+            "support": {
+                "issues": "https://github.com/orchestral/canvas/issues",
+                "source": "https://github.com/orchestral/canvas-core/tree/v11.0.0"
+            },
+            "time": "2026-03-16T15:10:50+00:00"
+        },
+        {
+            "name": "orchestra/sidekick",
+            "version": "v1.2.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/sidekick.git",
+                "reference": "267a71b56cb2fe1a634d69fc99889c671b77ff43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/sidekick/zipball/267a71b56cb2fe1a634d69fc99889c671b77ff43",
+                "reference": "267a71b56cb2fe1a634d69fc99889c671b77ff43",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "composer/semver": "^3.0",
+                "php": "^8.1",
+                "symfony/polyfill-php83": "^1.32"
+            },
+            "require-dev": {
+                "fakerphp/faker": "^1.21",
+                "laravel/framework": "^10.48.29|^11.44.7|^12.1.1|^13.0",
+                "laravel/pint": "^1.4",
+                "mockery/mockery": "^1.5.1",
+                "orchestra/testbench-core": "^8.37.0|^9.14.0|^10.2.0|^11.0",
+                "phpstan/phpstan": "^2.1.14",
+                "phpunit/phpunit": "^10.0|^11.0|^12.0",
+                "symfony/process": "^6.0|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Eloquent/functions.php",
+                    "src/Filesystem/functions.php",
+                    "src/Http/functions.php",
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Orchestra\\Sidekick\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com"
+                }
+            ],
+            "description": "Packages Toolkit Utilities and Helpers for Laravel",
+            "support": {
+                "issues": "https://github.com/orchestral/sidekick/issues",
+                "source": "https://github.com/orchestral/sidekick/tree/v1.2.20"
+            },
+            "time": "2026-01-12T11:09:33+00:00"
+        },
+        {
+            "name": "orchestra/testbench",
+            "version": "v11.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/testbench.git",
+                "reference": "997f33e5200c7e8db4756b35a9deb3f5f3086759"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/997f33e5200c7e8db4756b35a9deb3f5f3086759",
+                "reference": "997f33e5200c7e8db4756b35a9deb3f5f3086759",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "fakerphp/faker": "^1.23",
+                "laravel/framework": "^13.1.1",
+                "mockery/mockery": "^1.6.10",
+                "orchestra/testbench-core": "^11.2.0",
+                "orchestra/workbench": "^11.0.1",
+                "php": "^8.3",
+                "phpunit/phpunit": "^11.5.50|^12.5.8|^13.0.0",
+                "symfony/process": "^7.4.5|^8.0.5",
+                "symfony/yaml": "^7.4|^8.0",
+                "vlucas/phpdotenv": "^5.6.1"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com",
+                    "homepage": "https://github.com/crynobone"
+                }
+            ],
+            "description": "Laravel Testing Helper for Packages Development",
+            "homepage": "https://packages.tools/testbench/",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "dev",
+                "laravel",
+                "laravel-packages",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/orchestral/testbench/issues",
+                "source": "https://github.com/orchestral/testbench/tree/v11.1.0"
+            },
+            "time": "2026-04-09T05:11:06+00:00"
+        },
+        {
+            "name": "orchestra/testbench-core",
+            "version": "v11.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/testbench-core.git",
+                "reference": "a6773cd554177edb800f1e610d128b5acf813783"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/a6773cd554177edb800f1e610d128b5acf813783",
+                "reference": "a6773cd554177edb800f1e610d128b5acf813783",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "orchestra/sidekick": "~1.1.23|~1.2.20",
+                "php": "^8.3",
+                "symfony/deprecation-contracts": "^2.5|^3.0",
+                "symfony/polyfill-php84": "^1.34.0"
+            },
+            "conflict": {
+                "brianium/paratest": "<7.3.0|>=8.0.0",
+                "laravel/framework": "<13.10.0|>=14.0.0",
+                "laravel/serializable-closure": ">=2.0.0 <2.0.10|>=3.0.0",
+                "nunomaduro/collision": "<8.9.0|>=9.0.0",
+                "phpunit/phpunit": "<11.5.50|>=12.0.0 <12.5.8|>=13.3.0"
+            },
+            "require-dev": {
+                "fakerphp/faker": "^1.24",
+                "laravel/framework": "^13.10.0",
+                "laravel/pint": "^1.24",
+                "laravel/serializable-closure": "^2.0.10",
+                "mockery/mockery": "^1.6.10",
+                "phpstan/phpstan": "^2.1.38",
+                "phpunit/phpunit": "^11.5.50|^12.5.8|^13.0.0",
+                "spatie/laravel-ray": "^1.43.6",
+                "symfony/process": "^7.4.5|^8.0.5",
+                "symfony/yaml": "^7.4.0|^8.0.0",
+                "vlucas/phpdotenv": "^5.6.1"
+            },
+            "suggest": {
+                "brianium/paratest": "Allow using parallel testing (^7.3).",
+                "ext-pcntl": "Required to use all features of the console signal trapping.",
+                "fakerphp/faker": "Allow using Faker for testing (^1.23).",
+                "laravel/framework": "Required for testing (^13.9.0).",
+                "mockery/mockery": "Allow using Mockery for testing (^1.6).",
+                "nunomaduro/collision": "Allow using Laravel style tests output and parallel testing (^8.9).",
+                "orchestra/testbench-dusk": "Allow using Laravel Dusk for testing (^11.0).",
+                "phpunit/phpunit": "Allow using PHPUnit for testing (^11.5.50|^12.5.8|^13.0.0).",
+                "symfony/process": "Required to use Orchestra\\Testbench\\remote function (^7.4|^8.0).",
+                "symfony/yaml": "Required for Testbench CLI (^7.4|^8.0).",
+                "vlucas/phpdotenv": "Required for Testbench CLI (^5.6.1)."
+            },
+            "bin": [
+                "testbench"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Orchestra\\Testbench\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com",
+                    "homepage": "https://github.com/crynobone"
+                }
+            ],
+            "description": "Testing Helper for Laravel Development",
+            "homepage": "https://packages.tools/testbench",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "dev",
+                "laravel",
+                "laravel-packages",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/orchestral/testbench/issues",
+                "source": "https://github.com/orchestral/testbench-core"
+            },
+            "time": "2026-06-23T11:50:08+00:00"
+        },
+        {
+            "name": "orchestra/workbench",
+            "version": "v11.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/orchestral/workbench.git",
+                "reference": "78f27959b8e5caa72c996c6ccd0ddfeff462cb2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/orchestral/workbench/zipball/78f27959b8e5caa72c996c6ccd0ddfeff462cb2b",
+                "reference": "78f27959b8e5caa72c996c6ccd0ddfeff462cb2b",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.2",
+                "fakerphp/faker": "^1.23",
+                "laravel/framework": "^13.0.0",
+                "laravel/pail": "^1.2.5",
+                "laravel/tinker": "^3.0.0",
+                "nunomaduro/collision": "^8.9",
+                "orchestra/canvas": "^11.0.1",
+                "orchestra/sidekick": "~1.1.23|~1.2.20",
+                "orchestra/testbench-core": "^11.1.0",
+                "php": "^8.3",
+                "symfony/process": "^7.4|^8.0",
+                "symfony/yaml": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.22.0",
+                "mockery/mockery": "^1.6.12",
+                "phpstan/phpstan": "^2.1.33",
+                "phpunit/phpunit": "^11.5.50|^12.5.8|^13.0.0",
+                "spatie/laravel-ray": "^1.43.6"
+            },
+            "suggest": {
+                "ext-pcntl": "Required to use all features of the console signal trapping."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Orchestra\\Workbench\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mior Muhammad Zaki",
+                    "email": "crynobone@gmail.com"
+                }
+            ],
+            "description": "Workbench Companion for Laravel Packages Development",
+            "keywords": [
+                "dev",
+                "laravel",
+                "laravel-packages",
+                "testing"
+            ],
+            "support": {
+                "issues": "https://github.com/orchestral/workbench/issues",
+                "source": "https://github.com/orchestral/workbench/tree/v11.2.0"
+            },
+            "time": "2026-07-22T09:55:13+00:00"
+        },
+        {
+            "name": "pestphp/pest",
+            "version": "v5.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pestphp/pest.git",
+                "reference": "ae080becd6f036a2c83d9ebdd90079a06de118b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/ae080becd6f036a2c83d9ebdd90079a06de118b3",
+                "reference": "ae080becd6f036a2c83d9ebdd90079a06de118b3",
                 "shasum": ""
             },
             "require": {
@@ -16959,7 +17449,6 @@
                 "pestphp/pest-plugin-type-coverage": "^5.0.0",
                 "psy/psysh": "^0.12.24"
             },
-            "default-branch": true,
             "bin": [
                 "bin/pest"
             ],
@@ -17025,7 +17514,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/5.x"
+                "source": "https://github.com/pestphp/pest/tree/v5.0.2"
             },
             "funding": [
                 {
@@ -17037,7 +17526,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-30T15:53:41+00:00"
+            "time": "2026-07-29T19:27:11+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
@@ -19940,7 +20429,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "pestphp/pest": 20,
         "pestphp/pest-plugin-laravel": 20
     },
     "prefer-stable": true,

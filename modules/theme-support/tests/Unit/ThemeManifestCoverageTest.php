@@ -5,9 +5,7 @@ use Liberu\Foundation\Theme\Cache\ThemeCache;
 use Liberu\Foundation\Theme\Discovery\ThemeDiscovery;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 use Liberu\Foundation\Theme\Manifests\ThemeManifest;
-use Tests\TestCase;
-
-uses(TestCase::class);
+use Liberu\Foundation\Theme\Tests\TestCase;
 
 function writeCoverageTheme(array $changes = [], bool $asset = true): string
 {

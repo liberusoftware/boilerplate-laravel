@@ -40,7 +40,7 @@
 ### File Breakdown
 
 #### Core Theme System (8 files)
-1. `app/Services/ThemeManager.php` - Theme management service
+1. `modules/theme-support/src/Services/ThemeManager.php` - Theme management service
 2. `app/Providers/ThemeServiceProvider.php` - Laravel integration
 3. `app/Helpers/theme_helpers.php` - Helper functions
 4. `app/Livewire/ThemeSwitcher.php` - UI component
