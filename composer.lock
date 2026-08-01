@@ -7218,21 +7218,25 @@
         },
         {
             "name": "liberusoftware/theme-base",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-liberu-base.git",
-                "reference": "d5e73efe4785c78a2d5756fb6f637a08691f3bf3"
+                "reference": "3f53da5004cae26d604d65634239f2ee7ce8792c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-liberu-base/zipball/d5e73efe4785c78a2d5756fb6f637a08691f3bf3",
-                "reference": "d5e73efe4785c78a2d5756fb6f637a08691f3bf3",
+                "url": "https://api.github.com/repos/liberusoftware/theme-liberu-base/zipball/3f53da5004cae26d604d65634239f2ee7ce8792c",
+                "reference": "3f53da5004cae26d604d65634239f2ee7ce8792c",
                 "shasum": ""
             },
             "require": {
                 "liberusoftware/theme-support": "^1.0",
                 "php": "^8.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^11.1",
+                "pestphp/pest": "^5.0"
             },
             "type": "liberu-theme",
             "extra": {
@@ -7245,34 +7249,44 @@
                     "Liberu\\Themes\\Base\\": "src/"
                 }
             },
+            "autoload-dev": {
+                "psr-4": {
+                    "Liberu\\Themes\\Base\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Shared semantic tokens and accessible presentation primitives for Liberu themes.",
-            "support": {
-                "source": "https://github.com/liberusoftware/theme-liberu-base/tree/1.0.3",
-                "issues": "https://github.com/liberusoftware/theme-liberu-base/issues"
-            },
-            "time": "2026-08-01T07:30:44+00:00"
+            "time": "2026-08-01T14:59:58+00:00"
         },
         {
             "name": "liberusoftware/theme-clear-signal",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-clear-signal.git",
-                "reference": "910bc8545e6b2d3a90911a09c7c79482a758c5d8"
+                "reference": "1e0b8797a0d3381ec850638fa8258740ba7b1abb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-clear-signal/zipball/910bc8545e6b2d3a90911a09c7c79482a758c5d8",
-                "reference": "910bc8545e6b2d3a90911a09c7c79482a758c5d8",
+                "url": "https://api.github.com/repos/liberusoftware/theme-clear-signal/zipball/1e0b8797a0d3381ec850638fa8258740ba7b1abb",
+                "reference": "1e0b8797a0d3381ec850638fa8258740ba7b1abb",
                 "shasum": ""
             },
             "require": {
                 "liberusoftware/theme-base": "^1.0",
                 "liberusoftware/theme-support": "^1.0",
                 "php": "^8.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^11.1",
+                "pestphp/pest": "^5.0"
             },
             "type": "liberu-theme",
             "extra": {
@@ -7285,34 +7299,44 @@
                     "Liberu\\Themes\\ClearSignal\\": "src/"
                 }
             },
+            "autoload-dev": {
+                "psr-4": {
+                    "Liberu\\Themes\\ClearSignal\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Clear Signal public theme for Liberu applications.",
-            "support": {
-                "source": "https://github.com/liberusoftware/theme-clear-signal/tree/1.0.3",
-                "issues": "https://github.com/liberusoftware/theme-clear-signal/issues"
-            },
-            "time": "2026-08-01T07:30:43+00:00"
+            "time": "2026-08-01T14:59:43+00:00"
         },
         {
             "name": "liberusoftware/theme-dark",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-dark.git",
-                "reference": "e60335124f2c5c4a68faa04ab7c7d7f55549aae0"
+                "reference": "17a8b052a130d410b46be48fba553ac43f8b1947"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-dark/zipball/e60335124f2c5c4a68faa04ab7c7d7f55549aae0",
-                "reference": "e60335124f2c5c4a68faa04ab7c7d7f55549aae0",
+                "url": "https://api.github.com/repos/liberusoftware/theme-dark/zipball/17a8b052a130d410b46be48fba553ac43f8b1947",
+                "reference": "17a8b052a130d410b46be48fba553ac43f8b1947",
                 "shasum": ""
             },
             "require": {
                 "liberusoftware/theme-base": "^1.0",
                 "liberusoftware/theme-support": "^1.0",
                 "php": "^8.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^11.1",
+                "pestphp/pest": "^5.0"
             },
             "type": "liberu-theme",
             "extra": {
@@ -7325,34 +7349,44 @@
                     "Liberu\\Themes\\Dark\\": "src/"
                 }
             },
+            "autoload-dev": {
+                "psr-4": {
+                    "Liberu\\Themes\\Dark\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Liberu dark public theme.",
-            "support": {
-                "source": "https://github.com/liberusoftware/theme-dark/tree/1.0.3",
-                "issues": "https://github.com/liberusoftware/theme-dark/issues"
-            },
-            "time": "2026-08-01T07:30:46+00:00"
+            "time": "2026-08-01T14:59:49+00:00"
         },
         {
             "name": "liberusoftware/theme-default",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-default.git",
-                "reference": "bc5fbb11af9df63561bfe39dbe448b39ec54a13b"
+                "reference": "4f01be28e002c88dba4dc98fc4b4892d0d40c504"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-default/zipball/bc5fbb11af9df63561bfe39dbe448b39ec54a13b",
-                "reference": "bc5fbb11af9df63561bfe39dbe448b39ec54a13b",
+                "url": "https://api.github.com/repos/liberusoftware/theme-default/zipball/4f01be28e002c88dba4dc98fc4b4892d0d40c504",
+                "reference": "4f01be28e002c88dba4dc98fc4b4892d0d40c504",
                 "shasum": ""
             },
             "require": {
                 "liberusoftware/theme-base": "^1.0",
                 "liberusoftware/theme-support": "^1.0",
                 "php": "^8.5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^11.1",
+                "pestphp/pest": "^5.0"
             },
             "type": "liberu-theme",
             "extra": {
@@ -7365,15 +7399,21 @@
                     "Liberu\\Themes\\DefaultTheme\\": "src/"
                 }
             },
+            "autoload-dev": {
+                "psr-4": {
+                    "Liberu\\Themes\\DefaultTheme\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Liberu default public theme.",
-            "support": {
-                "source": "https://github.com/liberusoftware/theme-default/tree/1.0.3",
-                "issues": "https://github.com/liberusoftware/theme-default/issues"
-            },
-            "time": "2026-08-01T07:30:47+00:00"
+            "time": "2026-08-01T14:59:55+00:00"
         },
         {
             "name": "liberusoftware/theme-support",
