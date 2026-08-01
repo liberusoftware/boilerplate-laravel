@@ -10,5 +10,5 @@
     "suggests": {},
     "presentation": { "filament": { "admin": ["Liberu\\Foundation\\OrganizationsFilament\\OrganizationsFilamentPlugin"] } },
     "capabilities": ["foundation.organizations.filament"],
-    "default_enabled": false
+    "default_enabled": true
 }

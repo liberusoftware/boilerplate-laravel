@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\jetstreambridge\tests\Integration;
+namespace Liberu\Foundation\JetstreamBridge\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

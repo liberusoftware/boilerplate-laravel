@@ -14,6 +14,13 @@ function modulePhpFiles(string $module): array
     return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile() && $file->getExtension() === 'php'));
 }
 
+function allModulePhpFiles(string $module): array
+{
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($module));
+
+    return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile() && $file->getExtension() === 'php'));
+}
+
 it('gives every runtime module complete package metadata', function () {
     foreach (moduleDirectories() as $module) {
         expect($module.'/composer.json')->toBeFile()
@@ -44,12 +51,23 @@ it('requires every module to exercise its service provider in the application', 
     }
 });
 
-it('prevents modules from depending on the host application', function () {
+it('prevents every module PHP boundary from referencing the host application', function () {
     foreach (moduleDirectories() as $module) {
-        foreach (modulePhpFiles($module) as $file) {
-            expect(file_get_contents($file->getPathname()))
-                ->not->toMatch('/(?:use|new|extends|implements)\s+App\\\\/');
+        foreach (allModulePhpFiles($module) as $file) {
+            expect(file_get_contents($file->getPathname()))->not->toContain('App\\');
         }
+    }
+});
+
+it('autoloads each module test namespace in its standalone package', function () {
+    foreach (moduleDirectories() as $module) {
+        $composer = json_decode(file_get_contents($module.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
+        $sourceNamespace = array_key_first($composer['autoload']['psr-4']);
+        $testNamespace = $sourceNamespace.'Tests\\';
+        $integrationTest = $module.'/tests/Integration/ServiceProviderTest.php';
+
+        expect($composer['autoload-dev']['psr-4'][$testNamespace] ?? null)->toBe('tests/')
+            ->and(file_get_contents($integrationTest))->toContain("namespace {$testNamespace}Integration;");
     }
 });
 
@@ -84,7 +102,7 @@ it('lets Composer own every module and theme autoload boundary', function () {
 
     foreach (array_merge(glob($root.'/modules/*/composer.json') ?: [], glob($root.'/themes/*/composer.json') ?: []) as $packageFile) {
         $package = json_decode(file_get_contents($packageFile), true, flags: JSON_THROW_ON_ERROR);
-        expect($composer['require'])->toHaveKey($package['name']);
+        expect(array_merge($composer['require'], $composer['require-dev']))->toHaveKey($package['name']);
     }
 });
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\analyticscore\tests\Integration;
+namespace Liberu\Foundation\Analytics\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

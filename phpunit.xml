@@ -21,50 +21,7 @@
     <source>
         <include>
             <directory>app</directory>
-            <directory>modules/activity-comments/src</directory>
-            <directory>modules/analytics-core/src</directory>
-            <directory>modules/analytics-google/src</directory>
-            <directory>modules/analytics-meta/src</directory>
-            <directory>modules/api-access/src</directory>
-            <directory>modules/application-core/src</directory>
-            <directory>modules/audit/src</directory>
-            <directory>modules/blog-core/src</directory>
-            <directory>modules/blog-filament/src</directory>
-            <directory>modules/currency-context/src</directory>
-            <directory>modules/developer-experience/src</directory>
-            <directory>modules/feature-flags/src</directory>
-            <directory>modules/files-media/src</directory>
-            <directory>modules/foundation-filament/src</directory>
-            <directory>modules/identity/src</directory>
-            <directory>modules/identity-filament/src</directory>
-            <directory>modules/identity-socialstream/src</directory>
-            <directory>modules/import-export/src</directory>
-            <directory>modules/integrations/src</directory>
-            <directory>modules/jetstream-bridge/src</directory>
-            <directory>modules/localization/src</directory>
-            <directory>modules/localization-livewire/src</directory>
-            <directory>modules/localization-mymemory/src</directory>
-            <directory>modules/messaging/src</directory>
-            <directory>modules/messaging-api/src</directory>
-            <directory>modules/messaging-filament/src</directory>
-            <directory>modules/module-manager/src</directory>
-            <directory>modules/notifications/src</directory>
-            <directory>modules/observability/src</directory>
-            <directory>modules/organizations-teams/src</directory>
-            <directory>modules/organizations-teams-filament/src</directory>
-            <directory>modules/profiles/src</directory>
-            <directory>modules/roles-permissions/src</directory>
-            <directory>modules/roles-permissions-filament/src</directory>
-            <directory>modules/scheduler-queues/src</directory>
-            <directory>modules/search/src</directory>
-            <directory>modules/search-api/src</directory>
-            <directory>modules/search-demo/src</directory>
-            <directory>modules/sessions-devices/src</directory>
-            <directory>modules/settings/src</directory>
-            <directory>modules/settings-filament/src</directory>
-            <directory>modules/theme-support/src</directory>
-            <directory>modules/two-factor-authentication/src</directory>
-            <directory>modules/webhooks/src</directory>
+            <directory>modules/*/src</directory>
         </include>
     </source>
     <php>
@@ -78,6 +35,7 @@
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="DB_URL" value=""/>
         <env name="MAIL_MAILER" value="array"/>
+        <env name="MODULES_ENABLED" value="search-demo"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>

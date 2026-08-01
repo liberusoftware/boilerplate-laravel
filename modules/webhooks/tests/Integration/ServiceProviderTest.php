@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\webhooks\tests\Integration;
+namespace Liberu\Foundation\Webhooks\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

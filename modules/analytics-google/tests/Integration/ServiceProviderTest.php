@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\analyticsgoogle\tests\Integration;
+namespace Liberu\Foundation\Analytics\Google\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

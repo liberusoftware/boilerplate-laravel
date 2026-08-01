@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79225f3bded874fcc3ad7c6d8dc8247b",
+    "content-hash": "72b1b04a12ece8b5132bd7f6c5bd9e6e",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -6698,49 +6698,6 @@
             "support": {
                 "source": "https://github.com/liberusoftware/module-search-api/tree/1.0.3",
                 "issues": "https://github.com/liberusoftware/module-search-api/issues"
-            },
-            "time": "2026-08-01T07:35:34+00:00"
-        },
-        {
-            "name": "liberusoftware/search-demo",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/liberusoftware/module-search-demo.git",
-                "reference": "81faa37adddb57af62e0d5f5d8bf88589a235da7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-search-demo/zipball/81faa37adddb57af62e0d5f5d8bf88589a235da7",
-                "reference": "81faa37adddb57af62e0d5f5d8bf88589a235da7",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^13.0",
-                "illuminate/support": "^13.0",
-                "liberusoftware/module-manager": "^1.0",
-                "liberusoftware/search": "^1.0",
-                "php": "^8.5"
-            },
-            "type": "liberu-module",
-            "extra": {
-                "liberu": {
-                    "name": "search-demo"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Liberu\\Search\\Demo\\": "src/",
-                    "Liberu\\Search\\Demo\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "Reference searchable post and group records for the boilerplate integration test bed.",
-            "support": {
-                "source": "https://github.com/liberusoftware/module-search-demo/tree/1.0.3",
-                "issues": "https://github.com/liberusoftware/module-search-demo/issues"
             },
             "time": "2026-08-01T07:35:34+00:00"
         },
@@ -16678,6 +16635,49 @@
                 "issues": "https://github.com/liberusoftware/boilerplate-scripts/issues"
             },
             "time": "2026-08-01T07:40:58+00:00"
+        },
+        {
+            "name": "liberusoftware/search-demo",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/liberusoftware/module-search-demo.git",
+                "reference": "81faa37adddb57af62e0d5f5d8bf88589a235da7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/liberusoftware/module-search-demo/zipball/81faa37adddb57af62e0d5f5d8bf88589a235da7",
+                "reference": "81faa37adddb57af62e0d5f5d8bf88589a235da7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "liberusoftware/module-manager": "^1.0",
+                "liberusoftware/search": "^1.0",
+                "php": "^8.5"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "search-demo"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Search\\Demo\\": "src/",
+                    "Liberu\\Search\\Demo\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Reference searchable post and group records for the boilerplate integration test bed.",
+            "support": {
+                "source": "https://github.com/liberusoftware/module-search-demo/tree/1.0.3",
+                "issues": "https://github.com/liberusoftware/module-search-demo/issues"
+            },
+            "time": "2026-08-01T07:35:34+00:00"
         },
         {
             "name": "mockery/mockery",

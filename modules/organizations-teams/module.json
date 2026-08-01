@@ -9,5 +9,5 @@
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0" } },
     "suggests": { "liberusoftware/organizations-teams-filament": "^1.0" },
     "capabilities": ["foundation.organizations", "foundation.teams"],
-    "default_enabled": false
+    "default_enabled": true
 }

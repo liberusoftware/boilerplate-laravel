@@ -9,5 +9,5 @@
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/localization-contracts": "^1.0", "liberusoftware/module-manager": "^1.0" } },
     "suggests": { "liberusoftware/localization-livewire": "^1.0", "liberusoftware/localization-mymemory": "^1.0" },
     "capabilities": ["foundation.localization"],
-    "default_enabled": false
+    "default_enabled": true
 }

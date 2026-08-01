@@ -15,9 +15,11 @@ it('discovers canonical packages from the modules directory', function () {
 
 it('resolves enabled modules in stable dependency order', function () {
     $registry = (new ModuleDiscovery())->discover([base_path('modules')]);
-    $names = array_map(fn (Manifest $manifest) => $manifest->name(), $registry->resolve((array) config('modules.enabled', [])));
+    $names = array_map(fn (Manifest $manifest) => $manifest->name(), $registry->resolve([]));
 
-    expect($names)->toContain('module-manager', 'blog-core', 'blog-filament', 'search', 'search-api')
+    expect($names)->toHaveCount(40)
+        ->and($names)->not->toContain('analytics-google', 'analytics-meta', 'localization-mymemory', 'search-demo')
+        ->and($names)->toContain('module-manager', 'blog-core', 'blog-filament', 'search', 'search-api')
         ->and(array_search('module-manager', $names, true))->toBeLessThan(array_search('blog-core', $names, true))
         ->and(array_search('blog-core', $names, true))->toBeLessThan(array_search('blog-filament', $names, true))
         ->and(array_search('search', $names, true))->toBeLessThan(array_search('search-api', $names, true));

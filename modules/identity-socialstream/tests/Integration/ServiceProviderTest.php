@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\identitysocialstream\tests\Integration;
+namespace Liberu\Foundation\Identity\Socialstream\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

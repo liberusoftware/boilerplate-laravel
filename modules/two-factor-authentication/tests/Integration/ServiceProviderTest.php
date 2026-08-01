@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\twofactorauthentication\tests\Integration;
+namespace Liberu\Foundation\TwoFactor\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

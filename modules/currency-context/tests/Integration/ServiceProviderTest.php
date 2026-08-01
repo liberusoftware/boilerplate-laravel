@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\currencycontext\tests\Integration;
+namespace Liberu\Foundation\Currency\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

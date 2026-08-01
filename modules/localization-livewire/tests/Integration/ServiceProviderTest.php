@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\localizationlivewire\tests\Integration;
+namespace Liberu\Foundation\LocalizationLivewire\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

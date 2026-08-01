@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\activitycomments\tests\Integration;
+namespace Liberu\Foundation\ActivityComments\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

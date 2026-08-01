@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\messagingapi\tests\Integration;
+namespace Liberu\Messaging\Api\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

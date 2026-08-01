@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\analyticsmeta\tests\Integration;
+namespace Liberu\Foundation\Analytics\Meta\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

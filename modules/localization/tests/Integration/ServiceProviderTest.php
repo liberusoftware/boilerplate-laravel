@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\localization\tests\Integration;
+namespace Liberu\Foundation\Localization\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

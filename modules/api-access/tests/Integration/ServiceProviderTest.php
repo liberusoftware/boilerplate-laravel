@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\apiaccess\tests\Integration;
+namespace Liberu\Foundation\ApiAccess\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\identity\tests\Integration;
+namespace Liberu\Foundation\Identity\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

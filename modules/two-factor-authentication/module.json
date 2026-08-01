@@ -9,5 +9,5 @@
     "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/identity": "^1.0" } },
     "suggests": { "liberusoftware/audit": "^1.0" },
     "capabilities": ["identity.two-factor"],
-    "default_enabled": false
+    "default_enabled": true
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\featureflags\tests\Integration;
+namespace Liberu\Foundation\FeatureFlags\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

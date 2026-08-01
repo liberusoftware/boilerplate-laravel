@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\rolespermissionsfilament\tests\Integration;
+namespace Liberu\Foundation\AuthorizationFilament\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

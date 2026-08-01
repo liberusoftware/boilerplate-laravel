@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\schedulerqueues\tests\Integration;
+namespace Liberu\Foundation\SchedulerQueues\Tests\Integration;
 
 use Illuminate\Support\ServiceProvider;
 use Tests\TestCase;

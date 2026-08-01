@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -23,6 +22,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
+use Liberu\Foundation\Authorization\Services\AnyTeamRoleLookup;
 use Liberu\Foundation\Identity\Socialstream\Contracts\ConnectedAccountOwner;
 use Liberu\Foundation\Observability\Contracts\ObservabilityActor;
 use Liberu\Foundation\Organizations\Contracts\OrganizationActor;
@@ -149,17 +149,7 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function hasAdminAccess(): bool
     {
-        /** @var string $pivot */
-        $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
-        /** @var string $roles */
-        $roles = config('permission.table_names.roles', 'roles');
-
-        return DB::table($pivot)
-            ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
-            ->where("{$pivot}.model_id", $this->getKey())
-            ->where("{$pivot}.model_type", $this->getMorphClass())
-            ->whereIn("{$roles}.name", ['super_admin', 'admin'])
-            ->exists();
+        return app(AnyTeamRoleLookup::class)->holds($this, ['super_admin', 'admin']);
     }
 
     /**
@@ -169,19 +159,17 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function isSuperAdmin(): bool
     {
-        /** @var string $pivot */
-        $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
-        /** @var string $roles */
-        $roles = config('permission.table_names.roles', 'roles');
-        /** @var string $superAdmin */
-        $superAdmin = config('filament-shield.super_admin.name', 'super_admin');
+        return app(AnyTeamRoleLookup::class)->holds($this, [(string) config('filament-shield.super_admin.name', 'super_admin')]);
+    }
 
-        return DB::table($pivot)
-            ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
-            ->where("{$pivot}.model_id", $this->getKey())
-            ->where("{$pivot}.model_type", $this->getMorphClass())
-            ->where("{$roles}.name", $superAdmin)
-            ->exists();
+    public function authorizationIdentifier(): int|string
+    {
+        return $this->getKey();
+    }
+
+    public function authorizationType(): string
+    {
+        return $this->getMorphClass();
     }
 
     public function getDefaultTenant(Panel $panel): ?Model
@@ -230,15 +218,6 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function isAdmin(): bool
     {
-        if (in_array($this->email, (array) config('app.admin_emails', []), true)) {
-            return true;
-        }
-
-        return DB::table('model_has_roles')
-            ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
-            ->where('model_has_roles.model_id', $this->getKey())
-            ->where('model_has_roles.model_type', $this->getMorphClass())
-            ->where('roles.name', 'super_admin')
-            ->exists();
+        return in_array($this->email, (array) config('app.admin_emails', []), true) || $this->isSuperAdmin();
     }
 }
