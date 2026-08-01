@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Filesystem\Filesystem;
+use Liberu\Foundation\Theme\Cache\ThemeCache;
 use Liberu\Foundation\Theme\Discovery\ThemeDiscovery;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 use Liberu\Foundation\Theme\Manifests\ThemeManifest;
@@ -71,6 +73,26 @@ it('rejects malformed theme discovery directories', function (Closure $arrange, 
 it('rejects a missing themes directory', function () {
     expect(fn () => (new ThemeDiscovery())->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5))))
         ->toThrow(InvalidTheme::class, 'tracked themes directory is missing');
+});
+
+it('ignores tracked directories that do not contain a theme manifest', function () {
+    $root = sys_get_temp_dir().'/themes-with-notes-'.bin2hex(random_bytes(5));
+    mkdir($root.'/notes', 0777, true);
+
+    expect((new ThemeDiscovery())->discover($root))->toBe([]);
+});
+
+it('reports theme cache filesystem write and delete failures', function () {
+    $files = Mockery::mock(Filesystem::class);
+    $files->shouldReceive('put')->andReturnFalse();
+    expect(fn () => (new ThemeCache($files))->write([], '/cache/themes'))
+        ->toThrow(InvalidTheme::class, 'Unable to write');
+
+    $files = Mockery::mock(Filesystem::class);
+    $files->shouldReceive('isFile')->andReturnTrue();
+    $files->shouldReceive('delete')->andReturnFalse();
+    expect(fn () => (new ThemeCache($files))->clear('/cache/themes'))
+        ->toThrow(InvalidTheme::class, 'Unable to clear');
 });
 
 it('rejects invalid theme manifests', function (array $changes, string $message, bool $asset = true) {

@@ -2,13 +2,21 @@
 
 namespace Liberu\Foundation\Theme\Cache;
 
+use Illuminate\Filesystem\Filesystem;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 
 final class ThemeCache
 {
+    private readonly Filesystem $files;
+
+    public function __construct(?Filesystem $files = null)
+    {
+        $this->files = $files ?? new Filesystem();
+    }
+
     public function load(string $path): array
     {
-        $themes = unserialize((string) file_get_contents($path), ['allowed_classes' => true]);
+        $themes = unserialize($this->files->get($path), ['allowed_classes' => true]);
         if (! is_array($themes)) {
             throw new InvalidTheme('Theme registry cache is invalid.');
         }
@@ -19,14 +27,14 @@ final class ThemeCache
     public function write(array $themes, string $path): void
     {
         $tmp = $path.'.'.getmypid().'.tmp';
-        if (file_put_contents($tmp, serialize($themes), LOCK_EX) === false || ! rename($tmp, $path)) {
+        if ($this->files->put($tmp, serialize($themes), true) === false || ! $this->files->move($tmp, $path)) {
             throw new InvalidTheme('Unable to write theme cache.');
         }
     }
 
     public function clear(string $path): void
     {
-        if (is_file($path) && ! unlink($path)) {
+        if ($this->files->isFile($path) && ! $this->files->delete($path)) {
             throw new InvalidTheme('Unable to clear theme cache.');
         }
     }

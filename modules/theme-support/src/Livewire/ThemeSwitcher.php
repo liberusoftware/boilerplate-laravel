@@ -28,7 +28,7 @@ class ThemeSwitcher extends Component
             return;
         }
 
-        set_theme($theme);
+        $themeManager->persistTheme($theme);
         $this->currentTheme = $theme;
         $this->dispatch('theme-changed', theme: $theme);
         session()->flash('message', __('Theme changed successfully.'));

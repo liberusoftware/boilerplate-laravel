@@ -46,7 +46,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run tests
-        run: php artisan test --coverage-clover=coverage.xml --min=83
+        run: php artisan test --coverage-clover=coverage.xml --min=100
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

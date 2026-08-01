@@ -23,10 +23,8 @@ final class ModuleManagerServiceProvider extends ServiceProvider
             (string) config('modules.cache_path'),
         ));
 
-        $errors = (new ModuleValidator())->validate($this->app->make(ModuleRegistry::class), Application::VERSION);
-        if ($errors !== []) {
-            throw new \RuntimeException("Module validation failed:\n- ".implode("\n- ", $errors));
-        }
+        $this->app->make(ModuleValidationGuard::class)
+            ->ensureValid($this->app->make(ModuleRegistry::class), Application::VERSION);
 
         foreach ($this->app->make(ModuleRegistry::class)->resolve(config('modules.enabled', []), config('modules.disabled', [])) as $module) {
             if ($module->name() !== 'module-manager') {
