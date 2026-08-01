@@ -47,12 +47,14 @@ declare -a paths=()
 while IFS= read -r path; do
     paths+=("$path")
 done < <(find modules themes -mindepth 1 -maxdepth 1 -type d -print | LC_ALL=C sort)
+paths+=("scripts")
 
 repository_for() {
     local path="$1"
     case "$path" in
         modules/*) printf 'module-%s' "${path#modules/}" ;;
         themes/*) printf 'theme-%s' "${path#themes/}" ;;
+        scripts) printf 'boilerplate-scripts' ;;
         *) return 1 ;;
     esac
 }

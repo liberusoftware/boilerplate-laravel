@@ -16,6 +16,7 @@ if (! $dryRun && ($username === '' || $token === '')) {
 $files = array_merge(
     glob($root.'/modules/*/composer.json') ?: [],
     glob($root.'/themes/*/composer.json') ?: [],
+    [$root.'/scripts/composer.json'],
     [$root.'/composer.json'],
 );
 
@@ -28,6 +29,8 @@ foreach ($files as $file) {
 
     if ($relative === '') {
         $repository = 'boilerplate-laravel';
+    } elseif ($relative === 'scripts') {
+        $repository = 'boilerplate-scripts';
     } elseif (str_starts_with($relative, 'modules/')) {
         $repository = 'module-'.basename($relative);
     } else {

@@ -1,0 +1,17 @@
+{
+    "name": "liberusoftware/boilerplate-scripts",
+    "description": "Release, repository splitting, and Packagist publishing automation for Liberu Composer packages.",
+    "version": "1.0.0",
+    "type": "liberusoftware-scripts",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5"
+    },
+    "bin": [
+        "publish-components",
+        "submit-packagist.php"
+    ],
+    "support": {
+        "source": "https://github.com/liberusoftware/boilerplate-scripts"
+    }
+}
