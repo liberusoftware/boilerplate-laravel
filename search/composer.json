@@ -1,0 +1,51 @@
+{
+  "name": "liberu/search",
+  "description": "Provider-neutral authorized search contracts and local Eloquent driver.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "illuminate/database": "^13.0",
+    "illuminate/pagination": "^13.0"
+  },
+  "require-dev": {
+    "liberu/package-testbench": "^1.0",
+    "pestphp/pest": "^5.0",
+    "pestphp/pest-plugin-laravel": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Search\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\Search\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "search"
+    }
+  },
+  "version": "1.0.3",
+  "scripts": {
+    "test": "pest --ci"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../package-testbench",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}

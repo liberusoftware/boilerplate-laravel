@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <testsuites>
+        <!-- OPTION B: boundary suite is shipped by the testbench, zero files here -->
+        <testsuite name="Boundary">
+            <directory>vendor/liberu/package-testbench/tests/Boundary</directory>
+        </testsuite>
+        <testsuite name="Package">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <source><include><directory>src</directory></include></source>
+</phpunit>

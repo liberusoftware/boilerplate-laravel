@@ -1,0 +1,35 @@
+{
+  "name": "liberu/module-identity-core-filament",
+  "description": "Filament administration adapter for the configured Liberu identity model.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "filament/filament": "^5.1",
+    "liberu/roles-permissions": "^1.0"
+  },
+  "require-dev": {
+    "liberu/package-testbench": "^1.0",
+    "pestphp/pest": "^5.0",
+    "pestphp/pest-plugin-laravel": "^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\IdentityFilament\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\IdentityFilament\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "identity-filament"
+    }
+  },
+  "version": "1.0.3",
+  "scripts": {
+    "test": "pest --ci"
+  }
+}
