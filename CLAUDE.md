@@ -231,3 +231,32 @@ asserts across several packages. Only tests needing nothing from the host belong
 ## PHP 8.5 notes
 
 - `PDO::MYSQL_ATTR_SSL_CA` is deprecated; `config/database.php` uses `Pdo\Mysql::ATTR_SSL_CA`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues on `liberusoftware/boilerplate-laravel`, driven by the `gh` CLI.
+See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical roles, each label string equal to its name (`needs-triage`, `needs-info`,
+`ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — one root `CONTEXT.md` and one `docs/adr/` covering the host plus every
+`modules/` and `themes/` package. See `docs/agents/domain.md`.
+
+### Handoffs
+
+Session handoff documents go in **`docs/handoffs/`**, named `YYYY-MM-DD-<topic>.md` — never in
+`/tmp` or any OS temp directory. WSL's `/tmp` is wiped on restart and is invisible to everyone
+else, so a handoff written there is lost precisely when the next session needs it.
+
+This overrides the `/handoff` skill's default of writing to the OS temp directory.
+
+A handoff references artifacts rather than restating them — link the spec, ADR, issue or commit
+by path or URL. What belongs in it is only what those artifacts cannot hold: environment state,
+traps that cost time, uncommitted work, and what the next session should do.

@@ -46,3 +46,8 @@ composer.phar
 /boilerplate-laravel
 docs/superpowers
 .superpowers
+
+# local tooling: runtime version pins and diagram config
+.lerd.yaml
+.node-version
+.php-version

@@ -1,0 +1,11 @@
+{
+    "servers": {
+        "lerd": {
+            "args": [
+                "mcp"
+            ],
+            "command": "lerd",
+            "type": "stdio"
+        }
+    }
+}
