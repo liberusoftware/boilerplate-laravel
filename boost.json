@@ -1,0 +1,25 @@
+{
+    "agents": [
+        "junie",
+        "cursor",
+        "claude_code",
+        "copilot",
+        "antigravity"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "sail": false,
+    "skills": [
+        "fortify-development",
+        "laravel-best-practices",
+        "configuring-horizon",
+        "octane-development",
+        "pulse-development",
+        "socialite-development",
+        "livewire-development",
+        "pest-testing",
+        "tailwindcss-development"
+    ]
+}

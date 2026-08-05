@@ -51,3 +51,9 @@ docs/superpowers
 .lerd.yaml
 .node-version
 .php-version
+
+# Laravel Boost writes the same skills into one directory per editor; keep Claude's
+.agents/
+.cursor/skills/
+.github/skills/
+.junie/skills/

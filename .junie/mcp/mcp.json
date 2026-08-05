@@ -5,6 +5,13 @@
                 "mcp"
             ],
             "command": "lerd"
+        },
+        "laravel-boost": {
+            "command": "/usr/local/bin/php",
+            "args": [
+                "/home/tom/code/boilerplate-laravel/artisan",
+                "boost:mcp"
+            ]
         }
     }
 }
