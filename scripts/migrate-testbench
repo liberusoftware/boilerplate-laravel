@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Migrate every package onto liberusoftware/package-testbench (step 4).
+
+Each package stops shipping a test bootstrap and its two boundary test files, and
+points its phpunit.xml at the suite the testbench ships. A new boundary rule then
+becomes a testbench release every repository picks up, rather than a 44-repository
+sweep.
+
+Idempotent: re-running on a migrated package changes nothing.
+"""
+import json
+import pathlib
+import shutil
+import sys
+
+ROOT = pathlib.Path('/home/tom/code/boilerplate-laravel')
+
+CALLER = """name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
+
+  install:
+    uses: liberusoftware/.github/.github/workflows/package-install.yml@main
+
+  compatibility:
+    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main
+"""
+
+BOUNDARY_SUITE = """        <!-- Shipped by the testbench, not by this repository: a new boundary rule is a
+             testbench release every package picks up, rather than a fleet-wide sweep.
+             Opting out of a rule means editing this file. -->
+        <testsuite name="Boundary">
+            <directory suffix="Test.php">vendor/liberusoftware/package-testbench/tests/Boundary/{kind}</directory>
+        </testsuite>
+"""
+
+
+def migrate(pkg: pathlib.Path, kind: str) -> str:
+    changed = []
+    tests = pkg / 'tests'
+
+    # The testbench ships these two suites; a package keeping its own copies would
+    # pin the rules of the day it was written.
+    for stale in ('TestCase.php', 'Architecture', 'Integration'):
+        target = tests / stale
+        if target.is_dir():
+            shutil.rmtree(target)
+            changed.append(f'-tests/{stale}/')
+        elif target.is_file():
+            target.unlink()
+            changed.append(f'-tests/{stale}')
+
+    own = sorted(d.name for d in tests.glob('*') if d.is_dir())
+    pest = tests / 'Pest.php'
+    if own:
+        binding = ', '.join(f"'{d}'" for d in own)
+        pest.write_text(
+            "<?php\n\nuse Liberu\\PackageTestbench\\PackageTestCase;\n\n"
+            f"pest()->extend(PackageTestCase::class)->in({binding});\n"
+        )
+        changed.append('~tests/Pest.php')
+    elif pest.exists():
+        # Nothing of its own left to bind; the boundary suite binds itself.
+        pest.unlink()
+        changed.append('-tests/Pest.php')
+
+    composer_file = pkg / 'composer.json'
+    composer = json.loads(composer_file.read_text())
+    wanted = {'liberusoftware/package-testbench': '^1.1', 'pestphp/pest': '^5.0'}
+    if composer.get('require-dev') != wanted:
+        composer['require-dev'] = wanted
+        composer_file.write_text(json.dumps(composer, indent=2) + '\n')
+        changed.append('~composer.json')
+
+    phpunit_file = pkg / 'phpunit.xml'
+    phpunit = phpunit_file.read_text()
+    if 'package-testbench/tests/Boundary' not in phpunit:
+        phpunit = phpunit.replace(
+            '    </testsuites>',
+            BOUNDARY_SUITE.format(kind=kind) + '    </testsuites>',
+        )
+        phpunit_file.write_text(phpunit)
+        changed.append('~phpunit.xml')
+
+    workflow = pkg / '.github/workflows/tests.yml'
+    if workflow.read_text() != CALLER:
+        workflow.write_text(CALLER)
+        changed.append('~tests.yml')
+
+    return ', '.join(changed) or 'already migrated'
+
+
+def main() -> int:
+    for base, kind in (('modules', 'Module'), ('themes', 'Theme')):
+        for pkg in sorted((ROOT / base).iterdir()):
+            if pkg.is_dir():
+                print(f'{pkg.relative_to(ROOT)!s:<44}{migrate(pkg, kind)}')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
