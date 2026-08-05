@@ -4,17 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Shape of this repository
 
-This is a **composition host**, not an application. `app/` holds exactly four files:
+This is a **composition host**, not an application. `app/` holds exactly five files:
 
 ```
 app/Models/User.php                            the one host model
 app/Filament/ModulePlugins.php                 composes panel plugins from enabled modules
+app/Support/ThemeColors.php                    maps the site theme to a Filament palette
 app/Providers/Filament/AdminPanelProvider.php
 app/Providers/Filament/AppPanelProvider.php
 ```
 
-Everything else — search, theming, localization, settings, authorization,
-observability — lives in **38 `liberu-module` packages** under `modules/` and
+Everything else — search, theming, localization, settings, roles and permissions,
+observability — lives in **40 `liberu-module` packages** under `modules/` and
 **4 `liberu-theme` packages** under `themes/`. Both directories are Composer install
 targets *and* tracked in Git (`.gitignore` negates them explicitly).
 
@@ -72,14 +73,16 @@ Installation never implies boot: no package declares `extra.laravel.providers`, 
 auto-discovery finds nothing to register, and an architecture rule asserts that stays true.
 Enablement is a separate, explicit decision.
 
-`config/modules.php` holds two lists. `$applicationModules` (35 names) is the default for
+`config/modules.php` holds two lists. `$applicationModules` (37 names) is the default for
 `MODULES_ENABLED`; `$optionalAdapters` (`analytics-google`, `analytics-meta`,
 `localization-mymemory`) is the default for `MODULES_DISABLED` — they need third-party
 credentials, so they ship installed but off. **Disabled beats enabled**, and either env var
 replaces its whole list. Every directory under `modules/` must appear in one of the two,
 enforced by `tests/Architecture/ModuleBoundariesTest.php`.
 
-All 38 manifests declare `default_enabled: false`; the enabled list is the working lever.
+Every manifest declares its own `default_enabled` — true except for the three optional adapters.
+The literal lists still win today; §3.6 of `docs/CONFORMANCE.md` deletes them in step 3, at which
+point the manifests become the only lever.
 
 Domain packages stay presentation-agnostic. Filament UI lives in companion `*-filament`
 packages whose manifests declare `admin` and/or `app` plugin classes; `App\Filament\ModulePlugins`
@@ -131,7 +134,7 @@ into the admin panel at their default tenant, and everyone else to `filament.app
 
 Fortify provides the primitives, Jetstream adds teams and profile management,
 `bursteri/socialstream` adds OAuth, Spatie Permission provides team-scoped roles
-(`permission.teams => true`, models pointing at `Liberu\Foundation\Authorization\Models\Role`
+(`permission.teams => true`, models pointing at `Liberu\Foundation\RolesPermissions\Models\Role`
 and `Permission`).
 
 `User` implements seven contracts from four packages — `PrivilegedActor` (`isSuperAdmin`),
@@ -190,7 +193,7 @@ A fresh install must run `npm run build`.
 **and** both panels. Precedence is request > session > user, so a stale session locale can shadow
 a freshly logged-in user until the session is flushed.
 
-`LanguageSwitcher` lives in `localization-livewire`; mount `<livewire:language-switcher />` where
+`LanguageSwitcher` lives in `localization-core-livewire`; mount `<livewire:language-switcher />` where
 a switcher is wanted — it isn't mounted anywhere yet. On-demand machine translation is
 `localization-mymemory`, **disabled by default** (needs the MyMemory API).
 

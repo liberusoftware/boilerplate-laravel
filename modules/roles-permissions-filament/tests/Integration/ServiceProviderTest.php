@@ -1,8 +1,8 @@
 <?php
 
-namespace Liberu\Foundation\AuthorizationFilament\Tests\Integration;
+namespace Liberu\Foundation\RolesPermissionsFilament\Tests\Integration;
 
-use Liberu\Foundation\AuthorizationFilament\Tests\TestCase;
+use Liberu\Foundation\RolesPermissionsFilament\Tests\TestCase;
 
 final class ServiceProviderTest extends TestCase
 {

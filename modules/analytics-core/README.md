@@ -50,7 +50,7 @@ The trusted `liberusoftware/composer-installer` places it in `/modules/analytics
 - Package type: `liberu-module`
 - Installer name: `analytics-core`
 - Category: `foundation`
-- Service provider: `Liberu\Foundation\Analytics\AnalyticsServiceProvider`
+- Service provider: `Liberu\Analytics\Core\AnalyticsServiceProvider`
 - Enabled by default: `no`
 
 ### Public contracts

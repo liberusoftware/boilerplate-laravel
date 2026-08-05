@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Authorization\Tests;
+namespace Liberu\Foundation\RolesPermissions\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Meta\Support;
+namespace Liberu\Analytics\Meta\Support;
 
 final class MetaCustomerNormalizer
 {

@@ -1,8 +1,8 @@
 <?php
 
 use Liberu\Analytics\Contracts\AnalyticsEvent;
-use Liberu\Foundation\Analytics\Meta\Contracts\MetaTransport;
-use Liberu\Foundation\Analytics\Meta\Support\MetaDestination;
+use Liberu\Analytics\Meta\Contracts\MetaTransport;
+use Liberu\Analytics\Meta\Support\MetaDestination;
 
 it('delivers events to the Meta transport under its registered name', function () {
     $event = new AnalyticsEvent('event-id', 'purchase', '1', new DateTimeImmutable('@100'), 'test', null, null, null, 'en', 'USD', 'analytics', ['value' => 10]);

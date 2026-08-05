@@ -12,7 +12,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Liberu\\Foundation\\Analytics\\": "src/"
+      "Liberu\\Analytics\\Core\\": "src/"
     }
   },
   "extra": {
@@ -20,10 +20,10 @@
       "name": "analytics-core"
     }
   },
-  "version": "1.0.4",
+  "version": "1.1.0",
   "autoload-dev": {
     "psr-4": {
-      "Liberu\\Foundation\\Analytics\\Tests\\": "tests/"
+      "Liberu\\Analytics\\Core\\Tests\\": "tests/"
     }
   },
   "require-dev": {

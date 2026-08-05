@@ -45,7 +45,7 @@ The trusted `liberusoftware/composer-installer` places it in `/modules/analytics
 - Package type: `liberu-module`
 - Installer name: `analytics-meta`
 - Category: `adapter`
-- Service provider: `Liberu\Foundation\Analytics\Meta\AnalyticsMetaServiceProvider`
+- Service provider: `Liberu\Analytics\Meta\AnalyticsMetaServiceProvider`
 - Enabled by default: `no`
 
 ### Public contracts

@@ -1,9 +1,9 @@
 <?php
 
 use Liberu\Analytics\Contracts\AnalyticsEvent;
-use Liberu\Foundation\Analytics\Google\Contracts\GoogleTransport;
-use Liberu\Foundation\Analytics\Google\Support\GoogleDestination;
-use Liberu\Foundation\Analytics\Google\Support\GoogleEventMapper;
+use Liberu\Analytics\Google\Contracts\GoogleTransport;
+use Liberu\Analytics\Google\Support\GoogleDestination;
+use Liberu\Analytics\Google\Support\GoogleEventMapper;
 
 it('delivers mapped events to the Google transport under its registered name', function () {
     $event = new AnalyticsEvent('event-id', 'purchase', '1', new DateTimeImmutable('@100'), 'test', null, null, null, 'en', 'USD', 'analytics', ['value' => 10]);

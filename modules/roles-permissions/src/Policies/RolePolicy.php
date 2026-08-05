@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Liberu\Foundation\Authorization\Policies;
+namespace Liberu\Foundation\RolesPermissions\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Foundation\Auth\User as AuthUser;

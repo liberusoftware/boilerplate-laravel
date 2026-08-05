@@ -1,8 +1,8 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Google\Tests\Integration;
+namespace Liberu\Analytics\Google\Tests\Integration;
 
-use Liberu\Foundation\Analytics\Google\Tests\TestCase;
+use Liberu\Analytics\Google\Tests\TestCase;
 
 final class ServiceProviderTest extends TestCase
 {

@@ -3,7 +3,6 @@
 namespace Liberu\Foundation\Theme\Tests;
 
 use Illuminate\Hashing\HashServiceProvider;
-use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -41,6 +40,6 @@ abstract class TestCase extends Orchestra
             flags: JSON_THROW_ON_ERROR,
         );
 
-        return [LivewireServiceProvider::class, $manifest['provider']];
+        return [$manifest['provider']];
     }
 }

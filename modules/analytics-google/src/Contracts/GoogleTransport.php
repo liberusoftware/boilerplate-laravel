@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Google\Contracts;
+namespace Liberu\Analytics\Google\Contracts;
 
 interface GoogleTransport
 {

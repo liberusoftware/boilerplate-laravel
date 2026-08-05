@@ -2,8 +2,8 @@
 
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
-use Liberu\Foundation\Authorization\Models\Role;
 use Liberu\Foundation\Organizations\Models\Team;
+use Liberu\Foundation\RolesPermissions\Models\Role;
 
 use function Pest\Laravel\seed;
 

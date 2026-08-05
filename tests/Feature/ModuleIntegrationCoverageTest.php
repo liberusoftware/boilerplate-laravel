@@ -11,8 +11,6 @@ use Liberu\Foundation\ApplicationCore\Health\ReadinessRegistry;
 use Liberu\Foundation\ApplicationCore\Http\Controllers\ReadinessController;
 use Liberu\Foundation\Audit\Support\AuditContext;
 use Liberu\Foundation\Audit\Support\DatabaseAuditRecorder;
-use Liberu\Foundation\Authorization\Policies\RolePolicy;
-use Liberu\Foundation\Authorization\Services\BreakGlass;
 use Liberu\Foundation\Currency\Services\CurrencyPreferenceResolver;
 use Liberu\Foundation\FeatureFlags\Support\FlagEvaluator;
 use Liberu\Foundation\Identity\Contracts\InvitationValidator;
@@ -35,6 +33,8 @@ use Liberu\Foundation\Organizations\Models\Team;
 use Liberu\Foundation\Organizations\Services\CurrentTeamResolver;
 use Liberu\Foundation\Profiles\Actions\UpdateProfile;
 use Liberu\Foundation\Profiles\Data\ProfileUpdate;
+use Liberu\Foundation\RolesPermissions\Policies\RolePolicy;
+use Liberu\Foundation\RolesPermissions\Services\BreakGlass;
 use Liberu\Foundation\Search\Registry\IndexableRegistry;
 use Liberu\Foundation\Search\Services\LocalSearchIndexer;
 use Liberu\Foundation\Sessions\Queries\SessionReader;
@@ -322,7 +322,7 @@ it('runs module theme and foundation operational commands', function () {
 
     expect(Artisan::call('module:list'))->toBe(0)
         ->and(Artisan::call('module:status', ['name' => 'missing']))->toBe(1)
-        ->and(Artisan::call('module:status', ['name' => 'application-core']))->toBe(0)
+        ->and(Artisan::call('module:status', ['name' => 'application']))->toBe(0)
         ->and(Artisan::call('module:validate'))->toBe(0)
         ->and(Artisan::call('foundation:doctor'))->toBe(0)
         ->and(Artisan::call('module:cache'))->toBe(0)

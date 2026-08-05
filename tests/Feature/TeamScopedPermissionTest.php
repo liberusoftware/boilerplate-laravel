@@ -2,9 +2,9 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
-use Liberu\Foundation\Authorization\Models\Permission;
-use Liberu\Foundation\Authorization\Models\Role;
 use Liberu\Foundation\Organizations\Models\Team;
+use Liberu\Foundation\RolesPermissions\Models\Permission;
+use Liberu\Foundation\RolesPermissions\Models\Role;
 
 it('enables team-scoped permissions in config', function () {
     expect(config('permission.teams'))->toBeTrue();

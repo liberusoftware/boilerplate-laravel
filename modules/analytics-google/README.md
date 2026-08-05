@@ -45,7 +45,7 @@ The trusted `liberusoftware/composer-installer` places it in `/modules/analytics
 - Package type: `liberu-module`
 - Installer name: `analytics-google`
 - Category: `adapter`
-- Service provider: `Liberu\Foundation\Analytics\Google\AnalyticsGoogleServiceProvider`
+- Service provider: `Liberu\Analytics\Google\AnalyticsGoogleServiceProvider`
 - Enabled by default: `no`
 
 ### Public contracts

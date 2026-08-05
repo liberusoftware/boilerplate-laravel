@@ -1,0 +1,40 @@
+{
+  "name": "liberusoftware/module-manager-filament",
+  "description": "Filament operations presentation adapter for the Liberu Module Manager.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "filament/filament": "^5.0",
+    "liberusoftware/module-manager": "^1.0",
+    "liberusoftware/observability": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\ModuleManagerFilament\\": "src/"
+    }
+  },
+  "extra": {
+    "liberu": {
+      "name": "module-manager-filament"
+    }
+  },
+  "version": "1.1.0",
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\ModuleManagerFilament\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
+  "scripts": {
+    "test": "pest"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}

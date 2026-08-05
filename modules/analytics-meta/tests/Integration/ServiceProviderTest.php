@@ -1,8 +1,8 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Meta\Tests\Integration;
+namespace Liberu\Analytics\Meta\Tests\Integration;
 
-use Liberu\Foundation\Analytics\Meta\Tests\TestCase;
+use Liberu\Analytics\Meta\Tests\TestCase;
 
 final class ServiceProviderTest extends TestCase
 {

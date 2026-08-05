@@ -1,9 +1,9 @@
 <?php
 
-namespace Liberu\Foundation\Authorization\Services;
+namespace Liberu\Foundation\RolesPermissions\Services;
 
 use Illuminate\Support\Facades\DB;
-use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
+use Liberu\Foundation\RolesPermissions\Contracts\PrivilegedActor;
 
 final class AnyTeamRoleLookup
 {

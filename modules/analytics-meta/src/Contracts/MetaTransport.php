@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Meta\Contracts;
+namespace Liberu\Analytics\Meta\Contracts;
 
 interface MetaTransport
 {

@@ -1,14 +1,14 @@
 <?php
 
 $applicationModules = [
-    'activity-comments', 'analytics-core', 'api-access', 'application-core', 'audit',
+    'activity-comments', 'analytics-core', 'api-access', 'application', 'audit',
     'currency-context', 'developer-experience', 'feature-flags',
-    'files-media', 'foundation-filament', 'identity', 'identity-filament', 'identity-socialstream',
-    'import-export', 'integrations', 'jetstream-bridge', 'localization', 'localization-livewire',
-    'module-manager', 'notifications', 'observability',
+    'files-media', 'identity-core', 'identity-core-filament', 'identity-socialstream',
+    'import-export', 'integrations', 'jetstream-bridge', 'localization-core', 'localization-core-livewire',
+    'module-manager', 'module-manager-filament', 'notifications', 'observability',
     'organizations-teams', 'organizations-teams-filament', 'profiles', 'roles-permissions',
-    'roles-permissions-filament', 'scheduler-queues', 'search', 'search-api', 'sessions-devices', 'settings',
-    'settings-filament', 'theme-support', 'two-factor-authentication', 'webhooks',
+    'roles-permissions-filament', 'scheduler-queues', 'search', 'search-api', 'sessions-devices', 'sessions-devices-filament', 'settings',
+    'settings-filament', 'theme-support', 'theme-support-livewire', 'two-factor-authentication', 'webhooks',
 ];
 
 // Installed but deliberately off: each needs third-party credentials, so booting them

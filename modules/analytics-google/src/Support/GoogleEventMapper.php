@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Google\Support;
+namespace Liberu\Analytics\Google\Support;
 
 use InvalidArgumentException;
 use Liberu\Analytics\Contracts\AnalyticsEvent;

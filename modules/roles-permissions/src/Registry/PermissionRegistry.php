@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Authorization\Registry;
+namespace Liberu\Foundation\RolesPermissions\Registry;
 
 use InvalidArgumentException;
 

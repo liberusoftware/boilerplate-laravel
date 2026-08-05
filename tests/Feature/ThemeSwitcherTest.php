@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Liberu\Foundation\Theme\Livewire\ThemeSwitcher;
+use Liberu\Foundation\ThemeSupportLivewire\Livewire\ThemeSwitcher;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);

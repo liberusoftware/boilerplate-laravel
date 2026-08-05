@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Meta\Tests;
+namespace Liberu\Analytics\Meta\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 

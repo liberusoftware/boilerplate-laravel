@@ -1,10 +1,10 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Google\Support;
+namespace Liberu\Analytics\Google\Support;
 
 use Liberu\Analytics\Contracts\AnalyticsDestination;
 use Liberu\Analytics\Contracts\AnalyticsEvent;
-use Liberu\Foundation\Analytics\Google\Contracts\GoogleTransport;
+use Liberu\Analytics\Google\Contracts\GoogleTransport;
 
 final readonly class GoogleDestination implements AnalyticsDestination
 {

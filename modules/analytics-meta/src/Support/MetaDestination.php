@@ -1,10 +1,10 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Meta\Support;
+namespace Liberu\Analytics\Meta\Support;
 
 use Liberu\Analytics\Contracts\AnalyticsDestination;
 use Liberu\Analytics\Contracts\AnalyticsEvent;
-use Liberu\Foundation\Analytics\Meta\Contracts\MetaTransport;
+use Liberu\Analytics\Meta\Contracts\MetaTransport;
 
 final readonly class MetaDestination implements AnalyticsDestination
 {

@@ -3,8 +3,8 @@
     "name": "theme-support",
     "display_name": "Theme Support",
     "description": "Theme discovery, view overrides, safe asset directives, preferences, and panel palettes.",
-    "version": "1.0.4",
-    "category": "presentation",
+    "version": "1.1.0",
+    "category": "foundation",
     "provider": "Liberu\\Foundation\\Theme\\Providers\\ThemeServiceProvider",
     "requires": {
         "php": "^8.5",

@@ -1,10 +1,10 @@
 <?php
 
-namespace Liberu\Foundation\Analytics;
+namespace Liberu\Analytics\Core;
 
 use Illuminate\Support\ServiceProvider;
 use Liberu\Analytics\Contracts\AnalyticsDestinationRegistry;
-use Liberu\Foundation\Analytics\Support\DestinationRegistry;
+use Liberu\Analytics\Core\Support\DestinationRegistry;
 
 final class AnalyticsServiceProvider extends ServiceProvider
 {

@@ -1,7 +1,7 @@
 <?php
 
 use Liberu\Analytics\Contracts\AnalyticsEvent;
-use Liberu\Foundation\Analytics\Google\Support\GoogleEventMapper;
+use Liberu\Analytics\Google\Support\GoogleEventMapper;
 
 it('maps the neutral analytics envelope to Google parameters', function () {
     $event = new AnalyticsEvent('evt-1', 'purchase', '1', new DateTimeImmutable('@1'), 'checkout', null, null, null, 'en', 'EUR', 'analytics', ['value' => 12]);

@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "theme-support-livewire",
+    "display_name": "Theme Support Livewire",
+    "description": "Interactive theme selection for Livewire applications.",
+    "version": "1.1.0",
+    "category": "presentation",
+    "provider": "Liberu\\Foundation\\ThemeSupportLivewire\\ThemeSupportLivewireServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/theme-support": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "foundation.theme-support.livewire"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Interactive theme selection for Livewire applications"
+    ]
+}

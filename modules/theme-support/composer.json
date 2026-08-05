@@ -5,7 +5,6 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "livewire/livewire": "^4.0",
     "liberusoftware/module-manager": "^1.0",
     "liberusoftware/settings": "^1.0"
   },
@@ -22,7 +21,7 @@
       "name": "theme-support"
     }
   },
-  "version": "1.0.4",
+  "version": "1.1.0",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Theme\\Tests\\": "tests/"

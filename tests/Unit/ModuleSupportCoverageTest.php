@@ -2,16 +2,14 @@
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Hashing\Hasher;
+use Liberu\Analytics\Core\Support\EventSanitizer;
 use Liberu\Foundation\ActivityComments\Support\Visibility;
-use Liberu\Foundation\Analytics\Support\EventSanitizer;
 use Liberu\Foundation\ApiAccess\Support\TokenPolicy;
 use Liberu\Foundation\ApplicationCore\Health\ReadinessCheck;
 use Liberu\Foundation\ApplicationCore\Health\ReadinessRegistry;
 use Liberu\Foundation\ApplicationCore\Support\EnvironmentValidator;
 use Liberu\Foundation\ApplicationCore\Support\SystemClock;
 use Liberu\Foundation\ApplicationCore\Support\UuidIdentifierFactory;
-use Liberu\Foundation\Authorization\Registry\PermissionRegistry;
-use Liberu\Foundation\Authorization\Services\SeparationOfDuty;
 use Liberu\Foundation\Currency\Enums\CurrencyRole;
 use Liberu\Foundation\Currency\Exceptions\UnknownCurrency;
 use Liberu\Foundation\Currency\Services\CurrencyContext;
@@ -36,6 +34,8 @@ use Liberu\Foundation\Notifications\Support\NotificationPolicy;
 use Liberu\Foundation\Observability\Support\NullMetrics;
 use Liberu\Foundation\Observability\Support\Redactor;
 use Liberu\Foundation\Observability\Support\SloRegistry;
+use Liberu\Foundation\RolesPermissions\Registry\PermissionRegistry;
+use Liberu\Foundation\RolesPermissions\Services\SeparationOfDuty;
 use Liberu\Foundation\SchedulerQueues\Support\JobPolicy;
 use Liberu\Foundation\TwoFactor\Enforcement\TwoFactorPolicy;
 use Liberu\Foundation\TwoFactor\Recovery\RecoveryCodeHasher;

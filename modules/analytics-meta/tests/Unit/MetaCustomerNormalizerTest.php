@@ -1,6 +1,6 @@
 <?php
 
-use Liberu\Foundation\Analytics\Meta\Support\MetaCustomerNormalizer;
+use Liberu\Analytics\Meta\Support\MetaCustomerNormalizer;
 
 it('normalizes customer identifiers before one-way hashing', function () {
     $normalizer = new MetaCustomerNormalizer();

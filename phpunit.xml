@@ -22,23 +22,23 @@
             <directory suffix="Test.php">modules/analytics-google/tests</directory>
             <directory suffix="Test.php">modules/analytics-meta/tests</directory>
             <directory suffix="Test.php">modules/api-access/tests</directory>
-            <directory suffix="Test.php">modules/application-core/tests</directory>
+            <directory suffix="Test.php">modules/application/tests</directory>
             <directory suffix="Test.php">modules/audit/tests</directory>
             <directory suffix="Test.php">modules/currency-context/tests</directory>
             <directory suffix="Test.php">modules/developer-experience/tests</directory>
             <directory suffix="Test.php">modules/feature-flags/tests</directory>
             <directory suffix="Test.php">modules/files-media/tests</directory>
-            <directory suffix="Test.php">modules/foundation-filament/tests</directory>
-            <directory suffix="Test.php">modules/identity/tests</directory>
-            <directory suffix="Test.php">modules/identity-filament/tests</directory>
+            <directory suffix="Test.php">modules/identity-core/tests</directory>
+            <directory suffix="Test.php">modules/identity-core-filament/tests</directory>
             <directory suffix="Test.php">modules/identity-socialstream/tests</directory>
             <directory suffix="Test.php">modules/import-export/tests</directory>
             <directory suffix="Test.php">modules/integrations/tests</directory>
             <directory suffix="Test.php">modules/jetstream-bridge/tests</directory>
-            <directory suffix="Test.php">modules/localization/tests</directory>
-            <directory suffix="Test.php">modules/localization-livewire/tests</directory>
+            <directory suffix="Test.php">modules/localization-core/tests</directory>
+            <directory suffix="Test.php">modules/localization-core-livewire/tests</directory>
             <directory suffix="Test.php">modules/localization-mymemory/tests</directory>
             <directory suffix="Test.php">modules/module-manager/tests</directory>
+            <directory suffix="Test.php">modules/module-manager-filament/tests</directory>
             <directory suffix="Test.php">modules/notifications/tests</directory>
             <directory suffix="Test.php">modules/observability/tests</directory>
             <directory suffix="Test.php">modules/organizations-teams/tests</directory>
@@ -50,9 +50,11 @@
             <directory suffix="Test.php">modules/search/tests</directory>
             <directory suffix="Test.php">modules/search-api/tests</directory>
             <directory suffix="Test.php">modules/sessions-devices/tests</directory>
+            <directory suffix="Test.php">modules/sessions-devices-filament/tests</directory>
             <directory suffix="Test.php">modules/settings/tests</directory>
             <directory suffix="Test.php">modules/settings-filament/tests</directory>
             <directory suffix="Test.php">modules/theme-support/tests</directory>
+            <directory suffix="Test.php">modules/theme-support-livewire/tests</directory>
             <directory suffix="Test.php">modules/two-factor-authentication/tests</directory>
             <directory suffix="Test.php">modules/webhooks/tests</directory>
         </testsuite>
@@ -71,23 +73,23 @@
             <directory>modules/analytics-google/src</directory>
             <directory>modules/analytics-meta/src</directory>
             <directory>modules/api-access/src</directory>
-            <directory>modules/application-core/src</directory>
+            <directory>modules/application/src</directory>
             <directory>modules/audit/src</directory>
             <directory>modules/currency-context/src</directory>
             <directory>modules/developer-experience/src</directory>
             <directory>modules/feature-flags/src</directory>
             <directory>modules/files-media/src</directory>
-            <directory>modules/foundation-filament/src</directory>
-            <directory>modules/identity/src</directory>
-            <directory>modules/identity-filament/src</directory>
+            <directory>modules/identity-core/src</directory>
+            <directory>modules/identity-core-filament/src</directory>
             <directory>modules/identity-socialstream/src</directory>
             <directory>modules/import-export/src</directory>
             <directory>modules/integrations/src</directory>
             <directory>modules/jetstream-bridge/src</directory>
-            <directory>modules/localization/src</directory>
-            <directory>modules/localization-livewire/src</directory>
+            <directory>modules/localization-core/src</directory>
+            <directory>modules/localization-core-livewire/src</directory>
             <directory>modules/localization-mymemory/src</directory>
             <directory>modules/module-manager/src</directory>
+            <directory>modules/module-manager-filament/src</directory>
             <directory>modules/notifications/src</directory>
             <directory>modules/observability/src</directory>
             <directory>modules/organizations-teams/src</directory>
@@ -99,9 +101,11 @@
             <directory>modules/search/src</directory>
             <directory>modules/search-api/src</directory>
             <directory>modules/sessions-devices/src</directory>
+            <directory>modules/sessions-devices-filament/src</directory>
             <directory>modules/settings/src</directory>
             <directory>modules/settings-filament/src</directory>
             <directory>modules/theme-support/src</directory>
+            <directory>modules/theme-support-livewire/src</directory>
             <directory>modules/two-factor-authentication/src</directory>
             <directory>modules/webhooks/src</directory>
         </include>

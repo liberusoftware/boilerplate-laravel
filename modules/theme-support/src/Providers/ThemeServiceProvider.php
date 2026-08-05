@@ -10,9 +10,7 @@ use Illuminate\View\View as ViewContract;
 use Liberu\Foundation\Theme\Console\ThemeCacheCommand;
 use Liberu\Foundation\Theme\Console\ThemeClearCommand;
 use Liberu\Foundation\Theme\Console\ThemeValidateCommand;
-use Liberu\Foundation\Theme\Livewire\ThemeSwitcher;
 use Liberu\Foundation\Theme\Services\ThemeManager;
-use Livewire\Livewire;
 
 class ThemeServiceProvider extends ServiceProvider
 {
@@ -34,7 +32,6 @@ class ThemeServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'theme');
-        Livewire::component('theme-switcher', ThemeSwitcher::class);
         if ($this->app->runningInConsole()) {
             $this->commands([ThemeCacheCommand::class, ThemeClearCommand::class, ThemeValidateCommand::class]);
         }

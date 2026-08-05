@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Google\Tests;
+namespace Liberu\Analytics\Google\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
 

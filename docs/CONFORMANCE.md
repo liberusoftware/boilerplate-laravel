@@ -380,12 +380,32 @@ monorepo a change touching 40 packages is one diff and one green run; after the 
 coordinated releases. So the split is **last**, and each package is created in its final form and
 published exactly once.
 
+**One diff, but not one green run.** Step 2 proved the second half of that claim false. `modules/`
+is a Composer *install target*, so `vendor/composer/installed.json` owns the autoload map, and it
+was written from each package's *published* composer.json. File contents under `modules/*/src` are
+read live through that map, but the psr-4 prefixes and package names in it are frozen until a
+reinstall — and a reinstall fetches from GitHub, discarding the local edit. So the monorepo can
+change what a class *does* and still be green, but the moment it changes what a class is *called*
+or what package owns it, the host cannot boot until the wave is published.
+
+Confirmed twice: applying the analytics namespace rename gave `analytics-core: provider
+Liberu\Analytics\Core\AnalyticsServiceProvider is not autoloadable`, and
+`composer update --dry-run liberusoftware/identity-core` gave *"could not be found in any
+version"*. The atomic-commit principle still holds for authoring; it does not hold for verifying.
+
+Practical consequence for steps 2 and 3: **the gate is each package's own suite, not the host's.**
+A package suite boots Testbench against the files on disk and never consults `installed.json`, so
+it is the only check available before publish. A package whose dependency was renamed in the same
+wave cannot even install standalone — that is expected, not a defect, and it clears when the wave
+lands. The host suite becomes a gate again only once the wave is published and root is repointed,
+which is why step 2 now ends in a release wave rather than a green host run.
+
 | Step | Work | Gate |
 | --- | --- | --- |
 | **−1** | Installer: four fixes (§4), publish, repoint root | clean locked install places every package |
 | **0** | Exile the six out-of-scope packages via `publish-components`; strip from root, config and host tests | host green at 38 modules + 4 themes — **done**, see §4 |
 | **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green |
-| **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | host green; nothing published |
+| **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | every changed package's own suite green, or blocked only on a same-wave rename; nothing published |
 | **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green |
 | **4** | Migrate every package onto the testbench and the three workflows; add `config.allow-plugins` | every package suite green |
 | **5** | Redistribute the 9 clean + 16 actor-dependent host tests into their owning packages | host and package suites green |

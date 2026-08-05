@@ -1,7 +1,7 @@
 <?php
 
 use Liberu\Analytics\Contracts\AnalyticsDestination;
-use Liberu\Foundation\Analytics\Support\DestinationRegistry;
+use Liberu\Analytics\Core\Support\DestinationRegistry;
 
 it('rejects duplicate and unknown analytics destinations', function () {
     $destination = Mockery::mock(AnalyticsDestination::class);

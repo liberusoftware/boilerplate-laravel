@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Support;
+namespace Liberu\Analytics\Core\Support;
 
 use Liberu\Analytics\Contracts\AnalyticsEvent;
 

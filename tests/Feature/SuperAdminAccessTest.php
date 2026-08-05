@@ -2,8 +2,8 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Liberu\Foundation\Authorization\Models\Role;
 use Liberu\Foundation\Organizations\Models\Team;
+use Liberu\Foundation\RolesPermissions\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 uses(RefreshDatabase::class);

@@ -1,5 +1,5 @@
 <?php
 
-use Liberu\Foundation\Analytics\Tests\TestCase;
+use Liberu\Analytics\Core\Tests\TestCase;
 
 pest()->extend(TestCase::class)->in('Architecture', 'Integration', 'Unit');

@@ -41,7 +41,7 @@ The trusted `liberusoftware/composer-installer` places it in `/modules/roles-per
 - Package type: `liberu-module`
 - Installer name: `roles-permissions-filament`
 - Category: `presentation`
-- Service provider: `Liberu\Foundation\AuthorizationFilament\AuthorizationFilamentServiceProvider`
+- Service provider: `Liberu\Foundation\RolesPermissionsFilament\RolesPermissionsFilamentServiceProvider`
 - Enabled by default: `no`
 
 ### Public contracts
