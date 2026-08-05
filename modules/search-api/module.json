@@ -3,7 +3,7 @@
     "name": "search-api",
     "display_name": "Search API",
     "description": "Authenticated, rate-limited HTTP endpoints for Search.",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\SearchApi\\SearchApiServiceProvider",
     "requires": {

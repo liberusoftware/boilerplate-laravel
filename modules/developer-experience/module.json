@@ -3,7 +3,7 @@
     "name": "developer-experience",
     "display_name": "Developer Experience",
     "description": "Local environment, fixtures, quality scripts, CI, architecture checks, documentation, and upgrade diagnostics.",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\DeveloperExperience\\DeveloperExperienceServiceProvider",
     "requires": {
