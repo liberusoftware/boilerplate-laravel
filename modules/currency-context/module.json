@@ -3,7 +3,7 @@
     "name": "currency-context",
     "display_name": "Currency Context",
     "description": "ISO metadata, precise money values, currency roles, formatting, and effective-dated exchange-rate contracts.",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Currency\\CurrencyServiceProvider",
     "requires": {
