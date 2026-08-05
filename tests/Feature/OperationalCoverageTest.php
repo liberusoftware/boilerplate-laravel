@@ -4,12 +4,6 @@ use App\Models\User;
 use Liberu\Foundation\Search\Contracts\SearchIndexer;
 use Liberu\Foundation\Search\Registry\IndexableRegistry;
 
-it('renders only published posts on the blog index', function () {
-    config()->set('blog.posts_per_page', 'invalid');
-
-    $this->get('/blog')->assertOk()->assertViewHas('posts');
-});
-
 it('reindexes every record of a requested search type', function () {
     User::factory()->count(2)->create();
     $registry = new IndexableRegistry();

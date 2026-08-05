@@ -16,7 +16,7 @@ This matrix maps the canonical foundation catalog to independently owned Compose
 | Currency context | `liberusoftware/currency-context` | precise money, ISO metadata, scoped preferences, formatting and immutable rate snapshots |
 | Notifications | `liberusoftware/notifications` | delivery contracts, templates, preferences and inbox model |
 | Files and media | `liberusoftware/files-media` | storage/access contracts and malware-scanning boundary |
-| Search | `liberusoftware/search`, `liberusoftware/search-api`, `liberusoftware/search-demo` | driver-neutral indexing/search, reindex operations, authenticated API and isolated demo projections |
+| Search | `liberusoftware/search`, `liberusoftware/search-api` | driver-neutral indexing/search, reindex operations and an authenticated API |
 | Audit | `liberusoftware/audit` | actor-aware append records and tamper-evident hash chain |
 | Feature flags | `liberusoftware/feature-flags` | deterministic scoped evaluation and exposure boundary |
 | API access | `liberusoftware/api-access` | token policy, service identities and idempotency handling |
@@ -31,7 +31,7 @@ This matrix maps the canonical foundation catalog to independently owned Compose
 | Developer experience | `liberusoftware/developer-experience` | foundation doctor and architecture diagnostics |
 | Presentation composition | `liberusoftware/foundation-filament`, `liberusoftware/theme-support` | optional operational/account pages, theme discovery, inheritance and asset selection |
 
-Product examples remain isolated in `liberusoftware/blog-core`, `liberusoftware/blog-filament`, `liberusoftware/messaging-core`, and `liberusoftware/messaging-api`; no foundation package depends on them.
+Product examples are no longer installed here. `blog-core`, `blog-filament`, `messaging`, `messaging-api`, `messaging-filament` and `search-demo` each own a repository of their own — see §3.4 of `docs/CONFORMANCE.md`. No foundation package ever depended on them, which is what made removing them a matter of dropping six Composer requires.
 
 ## Host boundary
 

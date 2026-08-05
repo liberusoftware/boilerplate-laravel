@@ -2,8 +2,8 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Liberu\Search\Demo\Models\Group;
-use Liberu\Search\Demo\Models\Post;
+use Tests\Fixtures\Models\Group;
+use Tests\Fixtures\Models\Post;
 
 uses(RefreshDatabase::class);
 

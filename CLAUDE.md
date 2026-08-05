@@ -13,8 +13,8 @@ app/Providers/Filament/AdminPanelProvider.php
 app/Providers/Filament/AppPanelProvider.php
 ```
 
-Everything else — search, messaging, theming, localization, settings, authorization,
-observability, blog — lives in **44 `liberu-module` packages** under `modules/` and
+Everything else — search, theming, localization, settings, authorization,
+observability — lives in **38 `liberu-module` packages** under `modules/` and
 **4 `liberu-theme` packages** under `themes/`. Both directories are Composer install
 targets *and* tracked in Git (`.gitignore` negates them explicitly).
 
@@ -72,14 +72,14 @@ Installation never implies boot: no package declares `extra.laravel.providers`, 
 auto-discovery finds nothing to register, and an architecture rule asserts that stays true.
 Enablement is a separate, explicit decision.
 
-`config/modules.php` holds two lists. `$applicationModules` (41 names) is the default for
+`config/modules.php` holds two lists. `$applicationModules` (35 names) is the default for
 `MODULES_ENABLED`; `$optionalAdapters` (`analytics-google`, `analytics-meta`,
 `localization-mymemory`) is the default for `MODULES_DISABLED` — they need third-party
 credentials, so they ship installed but off. **Disabled beats enabled**, and either env var
 replaces its whole list. Every directory under `modules/` must appear in one of the two,
 enforced by `tests/Architecture/ModuleBoundariesTest.php`.
 
-All 44 manifests declare `default_enabled: false`; the enabled list is the working lever.
+All 38 manifests declare `default_enabled: false`; the enabled list is the working lever.
 
 Domain packages stay presentation-agnostic. Filament UI lives in companion `*-filament`
 packages whose manifests declare `admin` and/or `app` plugin classes; `App\Filament\ModulePlugins`

@@ -59,7 +59,13 @@ class SearchService
      */
     public function searchPosts(array $filters): LengthAwarePaginator
     {
-        $query = config('search.models.post')::query()->with('user');
+        $model = $this->modelFor('post');
+
+        if ($model === null) {
+            return $this->emptyPage($filters);
+        }
+
+        $query = $model::query()->with('user');
 
         // Search by title or content
         if (! empty($filters['query'])) {
@@ -103,7 +109,13 @@ class SearchService
      */
     public function searchGroups(array $filters): LengthAwarePaginator
     {
-        $query = config('search.models.group')::query()->with('owner');
+        $model = $this->modelFor('group');
+
+        if ($model === null) {
+            return $this->emptyPage($filters);
+        }
+
+        $query = $model::query()->with('owner');
 
         // Search by name or description
         if (! empty($filters['query'])) {
@@ -158,16 +170,42 @@ class SearchService
         }
 
         // Search posts
-        if (! isset($filters['types']) || in_array('posts', (array) $filters['types'])) {
+        if ((! isset($filters['types']) || in_array('posts', (array) $filters['types'])) && $this->modelFor('post') !== null) {
             $results['posts'] = $this->searchPosts(array_merge($filters, ['per_page' => $perPage]));
         }
 
         // Search groups
-        if (! isset($filters['types']) || in_array('groups', (array) $filters['types'])) {
+        if ((! isset($filters['types']) || in_array('groups', (array) $filters['types'])) && $this->modelFor('group') !== null) {
             $results['groups'] = $this->searchGroups(array_merge($filters, ['per_page' => $perPage]));
         }
 
         return $results;
+    }
+
+    /**
+     * The Eloquent class registered for a searchable type.
+     *
+     * Only `user` has a default; `post` and `group` are supplied by whichever
+     * package brings those concepts, so a composition that installs none leaves
+     * them null. Reading a null as a class name is fatal, so callers must be able
+     * to tell "no such type here" from "no results".
+     *
+     * @return class-string|null
+     */
+    private function modelFor(string $type): ?string
+    {
+        $model = config("search.models.{$type}");
+
+        return is_string($model) && class_exists($model) ? $model : null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return LengthAwarePaginator<int, mixed>
+     */
+    private function emptyPage(array $filters): LengthAwarePaginator
+    {
+        return new LengthAwarePaginator([], 0, max(1, $this->toInt($filters['per_page'] ?? 15)));
     }
 
     /**

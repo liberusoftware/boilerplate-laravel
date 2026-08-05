@@ -42,8 +42,6 @@ use Liberu\Foundation\TwoFactor\Recovery\RecoveryCodeHasher;
 use Liberu\Foundation\Webhooks\Support\RetrySchedule;
 use Liberu\Foundation\Webhooks\Support\SigningSecretVault;
 use Liberu\Foundation\Webhooks\Support\WebhookSigner;
-use Liberu\Messaging\Core\Models\Message;
-use Liberu\Messaging\Core\Policies\MessagePolicy;
 
 it('covers activity visibility decisions', function () {
     expect(Visibility::Public->visible(false, false, false))->toBeTrue()
@@ -243,23 +241,6 @@ it('formats locale-aware values and lists', function () {
         ->and($formatter->list(['one', 'two'], 'en'))->toBe('one and two')
         ->and($formatter->list(['one', 'two'], 'fr'))->toBe('one two')
         ->and($formatter->list(['one', 'two', 'three'], 'en'))->toBe('one, two, three');
-});
-
-it('authorizes message participants', function () {
-    $actor = Mockery::mock(Authenticatable::class);
-    $actor->shouldReceive('getAuthIdentifier')->andReturn(10);
-    $message = new Message(['sender_id' => 10, 'recipient_id' => 20]);
-    $other = new Message(['sender_id' => 30, 'recipient_id' => 40]);
-    $policy = new MessagePolicy();
-
-    expect($policy->viewAny($actor))->toBeTrue()
-        ->and($policy->create($actor))->toBeTrue()
-        ->and($policy->view($actor, $message))->toBeTrue()
-        ->and($policy->view($actor, $other))->toBeFalse()
-        ->and($policy->update($actor, $message))->toBeTrue()
-        ->and($policy->update($actor, $other))->toBeFalse()
-        ->and($policy->delete($actor, $message))->toBeTrue()
-        ->and($policy->delete($actor, $other))->toBeFalse();
 });
 
 it('covers notification retry and quiet-hour policy', function () {

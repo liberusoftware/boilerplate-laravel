@@ -2,12 +2,12 @@
 
 $applicationModules = [
     'activity-comments', 'analytics-core', 'api-access', 'application-core', 'audit',
-    'blog-core', 'blog-filament', 'currency-context', 'developer-experience', 'feature-flags',
+    'currency-context', 'developer-experience', 'feature-flags',
     'files-media', 'foundation-filament', 'identity', 'identity-filament', 'identity-socialstream',
-    'import-export', 'integrations', 'jetstream-bridge', 'localization', 'localization-livewire', 'messaging',
-    'messaging-api', 'messaging-filament', 'module-manager', 'notifications', 'observability',
+    'import-export', 'integrations', 'jetstream-bridge', 'localization', 'localization-livewire',
+    'module-manager', 'notifications', 'observability',
     'organizations-teams', 'organizations-teams-filament', 'profiles', 'roles-permissions',
-    'roles-permissions-filament', 'scheduler-queues', 'search', 'search-api', 'search-demo', 'sessions-devices', 'settings',
+    'roles-permissions-filament', 'scheduler-queues', 'search', 'search-api', 'sessions-devices', 'settings',
     'settings-filament', 'theme-support', 'two-factor-authentication', 'webhooks',
 ];
 

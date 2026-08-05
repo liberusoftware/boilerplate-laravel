@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             RolesSeeder::class,
             UserSeeder::class,
-            GroupSeeder::class,
-            PostSeeder::class,
         ]);
 
     }

@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Liberu\Blog\Core\Models\Post;
 use Liberu\Foundation\Authorization\Models\Role;
 use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Permission\PermissionRegistrar;
@@ -40,5 +39,5 @@ it('lets a super_admin view resources with NO team context set', function () {
     app(PermissionRegistrar::class)->setPermissionsTeamId(null); // the failing production case
 
     expect($user->can('viewAny', User::class))->toBeTrue();
-    expect($user->can('viewAny', Post::class))->toBeTrue();
+    expect($user->can('viewAny', Team::class))->toBeTrue();
 });

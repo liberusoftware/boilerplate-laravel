@@ -306,6 +306,7 @@ Found by executing rather than reading. None is optional.
 | **`module-manager` tests read the host** | `ManifestTest` globs `$root.'/modules/*/module.json'` — passes only inside the monorepo | make it a composition test or fixture-driven |
 | **Two architecture rules broken** | see §3.8 | fix while rewriting |
 | **`composer.lock` out of date** | `composer install` warns it disagrees with `composer.json` | resolve before step −1 |
+| **`search` is built around the demo it is losing** | `SearchService::searchPosts()`/`searchGroups()` read `config('search.models.post')`/`.group`, which ship as `null` and were set only by `search-demo`'s provider. With the demo exiled, `/api/search/posts` and `/api/search/groups` raise `Class name must be a valid object or a string` — a fatal, not an empty result | guard the unconfigured type now; move the demo-shaped methods and their two controller actions into `search-demo` at step 2 |
 
 **Fixed in this repository** — the four that live here, verified rather than asserted:
 
@@ -323,7 +324,52 @@ published repository, and the monorepo is the side that is behind. See the corre
 package may be published from here until that is reconciled, because `publish-components` mirrors
 with `--delete`.
 
-**Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion (step 3).
+**Step 0 is done.** The six left; the host is green at **38 modules + 4 themes**, 265 passed across
+`Architecture`, `Unit` and `Feature`, all 13 architecture rules passing.
+
+Each of the six was confirmed **byte-identical** to its published repository — including `.github/` —
+before its directory was removed, so nothing was published from here and nothing was lost. Removal
+went through `composer update`, not `rm`: the installer owns those paths, so dropping the requires is
+what deletes the directories, and the lock records it.
+
+Two things the plan did not anticipate, both found by running the suite afterwards:
+
+- **`search` was built around the demo** — see the new row above. `SearchService` now resolves a
+  searchable type through one `modelFor()` helper that returns null for an unconfigured or
+  non-existent class; `searchPosts()`/`searchGroups()` return an empty page, and `searchAll()` omits
+  the type entirely rather than reporting zero results for something the composition does not have.
+  `modules/search/tests/Unit/UnconfiguredModelTest.php` covers both, written red first.
+- **The host's search tests were the demo's tests.** 39 of them drove `Liberu\Search\Demo\Models\*`.
+  They are not demo tests, though — what they actually pin down is `SearchService`'s two security
+  rules, that a draft is unreachable through search and that a non-public group is, and those live in
+  the surviving package. So the host now owns two fixture models under `tests/Fixtures/`, registered
+  from `Tests\TestCase::refreshApplication()` — the one hook that runs *before* `RefreshDatabase`
+  migrates. Their tables are `search_fixture_posts`/`search_fixture_groups`, prefixed deliberately:
+  §3.4 faulted `search-demo` for creating unprefixed `posts` and `groups`, and re-creating them under
+  `tests/` would have reintroduced the same objection. The six test files changed by two `use` lines
+  each; every assertion is unchanged.
+
+The tests that were **deleted** rather than re-fixtured are the ones with no surviving subject:
+`MessageTest` (5), `MessageApiTest` (15), `BlogPostAuthorTest`, `BlogResourceCoverageTest`, the blog
+index case in `OperationalCoverageTest`, and the message-policy case in `ModuleSupportCoverageTest`.
+They exercise exiled code, so they belong to the exiled repositories, and they cannot run there until
+the testbench ships its v1.1 actor (§3.7) — every one of them needs `App\Models\User`. They are
+preserved at `33550079` and must be adopted by `module-messaging`, `module-messaging-api` and
+`module-blog-*` as part of step 5; copying them across now would only add files nothing runs.
+
+Host tests that merely *used* an exiled package as an example were repointed, not deleted:
+`CanonicalModuleDiscoveryTest` now orders `settings` before `settings-filament`, and
+`ModuleFilamentPluginsTest` disables `identity-filament` — chosen because no other manifest requires
+it, so the test exercises plugin composition rather than dependency resolution. `ResourceDefinitions`
+and `SuperAdminGateTeamAgnosticTest` swapped the blog `Post` for a surviving model.
+
+Also corrected while here: the landing page advertised "real-time chat & messaging" as a shipped
+feature in three places. Two remain unaddressed and are **not** a step-0 gate — the hero mock still
+renders a Messages screen, and Reverb is still unwired (`CLAUDE.md`); both are a design decision, not
+a mechanical strip.
+
+**Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion
+(step 3). Until then the working invocation is the three named suites, not a bare `vendor/bin/pest`.
 
 ## 5. Migration sequence
 
@@ -337,7 +383,7 @@ published exactly once.
 | Step | Work | Gate |
 | --- | --- | --- |
 | **−1** | Installer: four fixes (§4), publish, repoint root | clean locked install places every package |
-| **0** | Exile the six out-of-scope packages via `publish-components`; strip from root, config and host tests | host green at 38 modules + 4 themes |
+| **0** | Exile the six out-of-scope packages via `publish-components`; strip from root, config and host tests | host green at 38 modules + 4 themes — **done**, see §4 |
 | **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green |
 | **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | host green; nothing published |
 | **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green |
