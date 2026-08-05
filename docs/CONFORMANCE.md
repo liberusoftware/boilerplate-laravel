@@ -370,6 +370,50 @@ feature in three places. Two remain unaddressed and are **not** a step-0 gate �
 renders a Messages screen, and Reverb is still unwired (`CLAUDE.md`); both are a design decision, not
 a mechanical strip.
 
+**Step 2 is done, and it ended in a release wave.** The renames are applied, published as **1.1.0**
+across 25 repositories, and root is repointed. `composer update` reported 8 installs, 17 upgrades
+and 6 removals — the removals being `application-core`, `foundation-filament`, `identity`,
+`identity-filament`, `localization` and `localization-livewire`, the names the renames replaced.
+The host is green again at 265 passed, 12 skipped, all 13 architecture rules, and the reinstall
+produced a **zero diff in `modules/` and `themes/`**, which is the first time §6.2's gate has
+actually been exercised: Composer fetched all 44 packages from GitHub over the tracked source and
+changed nothing.
+
+Five of the eight "new" repositories were **renames**, not creations, so history, tags and inbound
+URLs survive; only `module-module-manager-filament`, `module-sessions-devices-filament` and
+`module-theme-support-livewire` were created. `module-foundation-filament` is now orphaned.
+
+Four things the plan did not anticipate:
+
+- **The atomic-commit principle does not extend to verification** — see the correction opening §5.
+  The gate for a rename wave is each package's own suite, and eight packages could not even install
+  standalone until the wave landed, because their dependency had been renamed in the same wave.
+- **`publish-components` would have shipped `vendor/`** and could have fast-forwarded `main` from a
+  feature branch. Both are new rows above, both fixed here.
+- **It also required an SSH key it never needed.** The clone and meta push hardcoded
+  `git@github.com:` while every mutation in the script goes through `gh`, which authenticates over
+  https; on a machine with no key this failed with `Host key verification failed` and published
+  nothing. The remote now follows `gh config get git_protocol`.
+- **Publishing mirrors all 40 modules, not the ones a branch changed.** Three untouched packages
+  still pushed, because the monorepo was *behind* what had been published from them. §3.1 reconciled
+  that divergence once, by pulling upstream down through `composer update` — but the tracked source
+  drifted back, and `--delete` sent the stale copy out again. All three were broken standalone, and
+  the first sweep missed them by covering only changed packages: `module-manager` registered a
+  `Livewire\LivewireServiceProvider` it does not require, reproducing **the exact 33-failure defect
+  §3.1 records as already fixed upstream**, and `currency-context` and `localization-mymemory` each
+  bound a test case per file on top of their own `Pest.php` binding. Caught by re-sweeping **all
+  40**, fixed, and given 1.1.0 tags of their own — their `1.0.x` tags point at the broken commits and
+  root requires `^1.0`, so without a new tag Composer would have kept resolving the break. This also
+  closes §3.1's last open item, that the fleet was "fixed on `main` but not re-released".
+  **Two lessons: the publish gate is every package, not the diff; and a reconciliation that is not
+  committed to the tracked source does not hold.**
+
+Not done in step 2, and deliberately: the `Modules` and `Themes` testsuites still fail from the host
+(`Class "Liberu\Foundation\ActivityComments\Tests\TestCase" not found`) because root `autoload-dev`
+maps only `Tests\`. That is the §3.8 defect whose fix is dropping the suites in step 3, so the host
+gate remains `Architecture`, `Unit` and `Feature`. Moving `SearchService`'s demo-shaped methods into
+`search-demo` also remains open.
+
 **Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion
 (step 3). Until then the working invocation is the three named suites, not a bare `vendor/bin/pest`.
 
@@ -407,7 +451,7 @@ which is why step 2 now ends in a release wave rather than a green host run.
 | **−1** | Installer: four fixes (§4), publish, repoint root | clean locked install places every package |
 | **0** | Exile the six out-of-scope packages via `publish-components`; strip from root, config and host tests | host green at 38 modules + 4 themes — **done**, see §4 |
 | **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green |
-| **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | every changed package's own suite green, or blocked only on a same-wave rename; nothing published |
+| **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | every package's own suite green, or blocked only on a same-wave rename — **done**, published as 1.1.0, see below |
 | **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green |
 | **4** | Migrate every package onto the testbench and the three workflows; add `config.allow-plugins` | every package suite green |
 | **5** | Redistribute the 9 clean + 16 actor-dependent host tests into their owning packages | host and package suites green |
