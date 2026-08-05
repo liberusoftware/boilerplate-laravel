@@ -26,6 +26,11 @@
       "Liberu\\Foundation\\Identity\\Socialstream\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "identity-socialstream"

@@ -245,6 +245,15 @@ Found by executing rather than reading. None is optional.
 | **Two architecture rules broken** | see §3.8 | fix while rewriting |
 | **`composer.lock` out of date** | `composer install` warns it disagrees with `composer.json` | resolve before step −1 |
 
+**Fixed in this repository** — the four that live here, verified rather than asserted:
+
+- **`config.allow-plugins`** now declared by all 48 packages, pinned by a new architecture rule. `composer update` in `modules/search`, `modules/analytics-{core,google,meta}`, `modules/module-manager` and `themes/dark` succeeds **without `--no-plugins`**, and each package's suite then runs green standalone.
+- **`analytics-core`** no longer imports `Analytics\Google\*` / `Analytics\Meta\*`; those assertions moved into the adapters' own suites, so no coverage was lost.
+- **`module-manager`'s `ManifestTest`** reads its own `module.json` instead of globbing the consuming application. The fleet-wide parse moved into the host's existing package-metadata rule rather than becoming a new one.
+- **Both broken architecture rules** work: the `Architecture` suite now boots the app for `config('modules.*')`, and the theme-parent rule throws with the offending theme named. Each was mutation-tested — deliberately violated and confirmed red — because both were previously green by accident.
+
+**Still open:** the two installer defects belong to `liberusoftware/composer-installer`, a separate repository (step −1); the host `Modules`/`Themes` testbench failure is resolved by §3.8's suite deletion (step 3); `composer.lock` needs a root Composer run, which currently clobbers the tree (§3.1).
+
 ## 5. Migration sequence
 
 [Sequence the package migration](https://github.com/liberusoftware/boilerplate-laravel/issues/622)

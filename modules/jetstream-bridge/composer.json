@@ -25,6 +25,11 @@
       "Liberu\\Foundation\\JetstreamBridge\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "jetstream-bridge"

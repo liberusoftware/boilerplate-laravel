@@ -23,6 +23,11 @@
       "Liberu\\Foundation\\DeveloperExperience\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "developer-experience"

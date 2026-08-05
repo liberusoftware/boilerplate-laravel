@@ -24,6 +24,11 @@
       "Liberu\\Messaging\\Core\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "messaging"

@@ -24,6 +24,11 @@
       "Liberu\\Foundation\\ApiAccess\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "api-access"

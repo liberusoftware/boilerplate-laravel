@@ -23,6 +23,11 @@
       "Liberu\\Foundation\\SearchApi\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "search-api"

@@ -24,6 +24,11 @@
       "Liberu\\Foundation\\SettingsFilament\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "settings-filament"

@@ -23,6 +23,11 @@
       "Liberu\\Foundation\\FeatureFlags\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "feature-flags"

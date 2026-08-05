@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\ServiceProvider;
+use Liberu\Foundation\ModuleManager\Manifest;
 
 function moduleDirectories(): array
 {
@@ -32,6 +33,25 @@ it('gives every runtime module complete package metadata', function () {
             ->and($manifest['requires']['packages'] ?? [])->toBe($moduleDependencies)
             ->and(class_exists($manifest['provider']))->toBeTrue()
             ->and(is_subclass_of($manifest['provider'], ServiceProvider::class))->toBeTrue();
+
+        // Every installed manifest must survive the canonical parser. Owning it here keeps
+        // module-manager's own suite free of the consuming application's modules/ directory.
+        expect(Manifest::fromFile($module.'/module.json')->version())->toMatch('/^\d+\.\d+\.\d+$/');
+    }
+});
+
+it('lets every package install standalone', function () {
+    $root = dirname(__DIR__, 2);
+    $packageFiles = array_merge(glob($root.'/modules/*/composer.json') ?: [], glob($root.'/themes/*/composer.json') ?: []);
+
+    expect($packageFiles)->not->toBeEmpty();
+
+    foreach ($packageFiles as $packageFile) {
+        $package = json_decode(file_get_contents($packageFile), true, flags: JSON_THROW_ON_ERROR);
+
+        if (($package['config']['allow-plugins']['pestphp/pest-plugin'] ?? null) !== true) {
+            throw new RuntimeException("{$package['name']} must allow pestphp/pest-plugin, or its standalone composer update aborts before installing Pest.");
+        }
     }
 });
 
@@ -109,8 +129,11 @@ it('resolves every declared theme parent', function () {
         if ($parent === '') {
             continue;
         }
-        expect($themes)->toHaveKey($parent, "Theme [{$name}] inherits from missing theme [{$parent}].")
-            ->and($parent)->not->toBe($name);
+        if (! array_key_exists($parent, $themes)) {
+            throw new RuntimeException("Theme [{$name}] inherits from missing theme [{$parent}].");
+        }
+
+        expect($parent)->not->toBe($name);
     }
 });
 

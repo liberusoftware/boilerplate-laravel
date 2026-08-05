@@ -23,6 +23,11 @@
       "Liberu\\Foundation\\TwoFactor\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "two-factor-authentication"

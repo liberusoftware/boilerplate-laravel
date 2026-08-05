@@ -23,6 +23,11 @@
       "Liberu\\Foundation\\ImportExport\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "import-export"

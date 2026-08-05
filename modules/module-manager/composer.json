@@ -23,6 +23,11 @@
       "Liberu\\Foundation\\ModuleManager\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "module-manager"

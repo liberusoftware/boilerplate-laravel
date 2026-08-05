@@ -25,6 +25,11 @@
       "Liberu\\Search\\Demo\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
   "extra": {
     "liberu": {
       "name": "search-demo"
