@@ -73,16 +73,16 @@ Installation never implies boot: no package declares `extra.laravel.providers`, 
 auto-discovery finds nothing to register, and an architecture rule asserts that stays true.
 Enablement is a separate, explicit decision.
 
-`config/modules.php` holds two lists. `$applicationModules` (37 names) is the default for
-`MODULES_ENABLED`; `$optionalAdapters` (`analytics-google`, `analytics-meta`,
-`localization-mymemory`) is the default for `MODULES_DISABLED` — they need third-party
-credentials, so they ship installed but off. **Disabled beats enabled**, and either env var
-replaces its whole list. Every directory under `modules/` must appear in one of the two,
-enforced by `tests/Architecture/ModuleBoundariesTest.php`.
+**A manifest's own `default_enabled` is what boots it** — true for 37 of the 40, false for
+`analytics-google`, `analytics-meta` and `localization-mymemory`, which need third-party
+credentials and so ship installed but off. `config/modules.php` names no modules at all; it holds
+only `MODULES_ENABLED` and `MODULES_DISABLED`, both empty by default. `MODULES_ENABLED` adds
+modules their manifests leave off, `MODULES_DISABLED` removes modules their manifests turn on, and
+**disabled beats both**. Adding a module to a composition is therefore installing it; there is no
+second list to remember.
 
-Every manifest declares its own `default_enabled` — true except for the three optional adapters.
-The literal lists still win today; §3.6 of `docs/CONFORMANCE.md` deletes them in step 3, at which
-point the manifests become the only lever.
+Disabling a module something else requires is a `DependencyResolutionFailed`, not a quiet omission.
+Two architecture rules pin all of this, including that config stays list-free.
 
 Domain packages stay presentation-agnostic. Filament UI lives in companion `*-filament`
 packages whose manifests declare `admin` and/or `app` plugin classes; `App\Filament\ModulePlugins`
@@ -93,15 +93,29 @@ implementation independence, small contract packages (`liberusoftware/analytics-
 
 ### Architecture tests
 
-`tests/Architecture/ModuleBoundariesTest.php` holds 12 executable rules: package metadata
-consistency, every module exercising its provider, no `App\` dependency from module `src/`,
-no Filament in non-presentation modules, `-api` adapters not importing domain models, Composer
-owning every autoload boundary, `-filament` modules declaring plugins, declared cross-package
-namespace dependencies, enabled/disabled accounting for every installed module, `phpunit.xml`
-running and measuring every module, theme parents resolving, and themes shipping the assets
-they declare.
+`tests/Architecture/ModuleBoundariesTest.php` holds 15 executable rules: package metadata
+consistency, every package installing standalone, enablement deriving from manifests, both env
+overrides behaving, every module exercising its provider, no `App\` dependency from module `src/`,
+no Filament in non-presentation modules, `-api` adapters not importing domain models, theme parents
+resolving, themes shipping the assets they declare, Composer owning every autoload boundary, one
+Composer vendor across the fleet, every declared Filament plugin class existing, `-filament` modules
+declaring plugins, and declared cross-package namespace dependencies.
 
-This is the cheapest place to enforce a boundary. Prefer adding a rule here over adding prose.
+**Rules that filter on the vendor prefix derive it** from the package's own name via
+`packageVendor()`. A hardcoded `liberusoftware/` would assert the spelling rather than the boundary,
+and passes or fails 43 packages depending on which vendor §3.2 settled on.
+
+Two things deliberately *not* asserted here, because a rule that cannot fire reads as coverage it
+does not provide:
+
+- **Plugin id uniqueness.** `ModulePlugins` rejects a duplicate while composing the panels, which
+  happens when this suite boots the app — so the guard always fires first. It is covered in
+  `tests/Unit/ModuleFilamentPluginsTest.php` instead, where it can actually fail.
+- **A renamed package.** `ModuleValidationGuard` fails the boot with "Composer package is not
+  installed" before any rule body runs.
+
+This is the cheapest place to enforce a boundary. Prefer adding a rule here over adding prose — but
+check the rule can be the thing that catches the fault, not the second thing to notice it.
 
 ### Packages are standalone-testable
 
@@ -214,12 +228,18 @@ Pest 5 / PHPUnit 13, SQLite in-memory (env overrides in `phpunit.xml`; no `.env.
 database config needed). Base class `tests/TestCase.php`, Pest config `tests/Pest.php`
 (`Feature` gets `RefreshDatabase`).
 
-Five testsuites: `Unit`, `Feature`, `Architecture`, `Modules`, `Themes`. The `Modules` and
-`Themes` suites list each package's `tests` directory explicitly rather than scanning — PHPUnit
-does **not** expand wildcards in `<directory>` or `<exclude>`, and a package whose standalone
-suite has been run locally has a `vendor/` that must not be swept in. The same applies to the
-`<source>` coverage list. Both lists are guarded by an architecture rule, so neither can drift
-from what is installed.
+Three testsuites: `Unit`, `Feature`, `Architecture`. **The host measures the host** — coverage
+`<source>` is `app` alone, and package tests are not run from here. Each package runs and measures
+itself against its own `phpunit.xml`, standalone:
+
+```bash
+cd modules/search && composer update && vendor/bin/pest
+```
+
+There were `Modules` and `Themes` suites listing all 44 packages, plus every package's `src` in
+`<source>`. They are gone (§3.8): the host cannot resolve a package's `Tests\` namespace anyway —
+root `autoload-dev` maps only `Tests\` — so they failed with `Class "…\Tests\TestCase" not found`
+the moment anything reinstalled.
 
 Note that most of `tests/Unit` is integration-shaped: it boots the app, reads host config and
 asserts across several packages. Only tests needing nothing from the host belong in a package.
