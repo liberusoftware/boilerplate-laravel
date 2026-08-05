@@ -113,8 +113,9 @@ installed module files in a consuming application; changes flow module repo → 
 > - **`module-manager` did not work standalone at all** — 33 errors. `tests/TestCase.php` registered `Livewire\LivewireServiceProvider` without `livewire/livewire` in `require-dev`, and repointed the application base path at the package root, which has no `bootstrap/cache`. Confirmed against a pristine clone, so it predates this effort. Now 33 passing.
 > - **`theme-support`'s own 17 tests exercise the helpers its release had emptied**, which settles that the gutted file was a regression rather than an intentional removal.
 >
-> Still outstanding: the fleet is fixed on `main` but **not re-released**. Until each package is
-> tagged, `composer update` still resolves the broken `1.0.4`.
+> **Released.** All 44 packages are tagged `1.1.0` — 25 in the step 2 wave and the remaining 19 in
+> step 3, once a clean install proved they were still resolving `1.0.4`. `composer update` now
+> resolves the fixed tree, and the §6.2 zero-diff gate is green.
 
 ### 3.2 Composer vendor stays `liberusoftware/`
 
@@ -319,7 +320,9 @@ Found by executing rather than reading. None is optional.
 
 **Fixed in `liberusoftware/composer-installer`** — branch `fix/installer-defects`, unpublished. `plugin-modifies-install-path` declared; collision detection now reads the working tree, so a directory whose `composer.json` names a different package fails the install instead of being written over. A real `composer install` was used to confirm both, and all 48 packages in this tree still resolve to their current paths. One consequence for §5 step 8: a package that keeps its directory while changing its Composer name now fails until the old directory is removed — by design, but it makes a rename `rm -rf` the old target, then install.
 
-**`composer.lock` is no longer stale.** A root `composer install` reports "Nothing to install, update or remove" with no lock warning, and `composer validate` passes. Note this does **not** exercise §6.2: Composer no-ops when the installed state already matches the lock. The zero-diff gate needs a *clean* install, which is the path that reinstalls all 48 packages over the tracked source — still red until step 8.
+**`composer.lock` is no longer stale.** A root `composer install` reports "Nothing to install, update or remove" with no lock warning, and `composer validate` passes. Note this does **not** exercise §6.2: Composer no-ops when the installed state already matches the lock. The zero-diff gate needs a *clean* install, which is the path that reinstalls every package over the tracked source.
+
+**The zero-diff gate is green, at step 3 rather than step 8.** `rm -rf vendor && composer install` now rewrites **nothing** under `modules/` or `themes/`. It took two passes to get there: the first clean install still rewrote 23 files, because the 19 packages outside the step 2 wave were resolving `1.0.4` tags that predate the workflow fix and the theme metadata tests §3.1 records the monorepo winning on. Their `main` branches were already correct — only the tag was stale. Tagging them `1.1.0` closed it. The check is now enforced in `install.yml`, so it cannot regress silently, and step 8's remaining content is the split itself rather than "republish from final source".
 
 **Blocking, found while starting step 0:** every one of the 48 packages has diverged from its
 published repository, and the monorepo is the side that is behind. See the correction in §3.1. No
@@ -414,6 +417,46 @@ maps only `Tests\`. That is the §3.8 defect whose fix is dropping the suites in
 gate remains `Architecture`, `Unit` and `Feature`. Moving `SearchService`'s demo-shaped methods into
 `search-demo` also remains open.
 
+**Step 3 is done, and the rule count went the wrong way — 12 to 15, not 12 to 6.**
+
+§3.8's arithmetic assumed 7 rules could move to `package-testbench`'s boundary suites. The testbench
+is authored, but **no package requires it yet** — that is step 4. Deleting those 7 now would leave
+the fleet unguarded across two steps to make a count in a plan come true, so they stay until step 4
+actually lands their replacement. What did change is the other five:
+
+- **2 replaced.** The runtime-selection rule diffed installed modules against the literal lists,
+  and the coverage rule policed a `phpunit.xml` that no longer lists packages. In their place:
+  enablement derives from the manifests and config holds no names, and both override levers behave
+  — including that disabling a depended-on module is a `DependencyResolutionFailed`, not a quiet
+  omission.
+- **3 added**, one of them §3.8's: the fleet publishes under one Composer vendor, and every declared
+  Filament plugin class exists. Both rules that filter on the vendor prefix now **derive** it via
+  `packageVendor()`.
+
+**Two rules §3.8 asked for were dropped for failing their mutation test rather than passing it.**
+A static plugin-id uniqueness rule and a renamed-package rule can never fire: `ModulePlugins` and
+`ModuleValidationGuard` both reject those conditions while the Architecture suite boots the
+application, so the rule is at best the second thing to notice. Mutating each one proved it — the
+failure came from the runtime guard, not the rule. The plugin guards moved to
+`tests/Unit/ModuleFilamentPluginsTest.php`, against real manifests on disk, where deleting the guard
+turns the test red. **A rule that cannot be the thing that catches the fault is not coverage.**
+
+`config/modules.php` names nothing now. `ModuleRegistry::resolve()` already honoured each manifest's
+`default_enabled`, so the two literal lists were only ever a second source of truth that could drift.
+
+`phpunit.xml` is three suites and `app` alone. The `Modules` and `Themes` suites could not have
+worked from the host in any case — root `autoload-dev` maps only `Tests\`, so they died with
+`Class "…\Tests\TestCase" not found` the moment anything reinstalled. `vendor/bin/pest` runs clean
+again without a suite filter: 269 passed, 12 skipped. Measuring `app` alone puts host coverage at
+**99.1%**, so `tests.yml`'s threshold moves 83 → 99.
+
+Workflows: `main.yml` deleted as a straight duplicate of `tests.yml`, `security.yml` folded into it
+(`composer validate --strict`, `composer audit --locked`, `pint --test`), `release.yml` added, and
+the §6.2 zero-diff check added to `install.yml`.
+
+Still open from §3.9: package repos are not yet thin callers of reusable workflows in
+`liberusoftware/.github`. That is step 4 work, alongside the testbench migration.
+
 **Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion
 (step 3). Until then the working invocation is the three named suites, not a bare `vendor/bin/pest`.
 
@@ -452,12 +495,12 @@ which is why step 2 now ends in a release wave rather than a green host run.
 | **0** | Exile the six out-of-scope packages via `publish-components`; strip from root, config and host tests | host green at 38 modules + 4 themes — **done**, see §4 |
 | **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green |
 | **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | every package's own suite green, or blocked only on a same-wave rename — **done**, published as 1.1.0, see below |
-| **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green |
+| **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green — **done**, see below; rules went 12→15, not 12→6 |
 | **4** | Migrate every package onto the testbench and the three workflows; add `config.allow-plugins` | every package suite green |
 | **5** | Redistribute the 9 clean + 16 actor-dependent host tests into their owning packages | host and package suites green |
 | **6** | Re-measure coverage; set each repo's ratchet threshold | thresholds recorded |
 | **7** | **Pilot one leaf package** end to end: split, CI green, publish, require, `composer update` | **zero `modules/` diff** |
-| **8** | Remaining waves, leaves before dependents; enable the §6.2 check | zero diff per wave |
+| **8** | Remaining waves, leaves before dependents | zero diff per wave — the §6.2 check is already enabled and green, from step 3 |
 | **9** | Archive `boilerplate-scripts` and `publish-components` | — |
 
 The pilot works because `modules/<name>` is the same path whether committed source or Composer
