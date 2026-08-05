@@ -4,12 +4,6 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Liberu\Foundation\Localization\MyMemory\TranslationService;
-use Orchestra\Testbench\TestCase;
-
-// TranslationService is constructed directly, so only the framework's HTTP client and
-// cache are needed — MyMemoryServiceProvider is deliberately not registered, since its
-// boot() resolves a TranslationProviderRegistry that lives in the localization module.
-uses(TestCase::class);
 
 test('translation service translates text correctly', function () {
     $service = new TranslationService();

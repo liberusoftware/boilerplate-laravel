@@ -2,7 +2,6 @@
 
 namespace Liberu\Foundation\ModuleManager\Tests;
 
-use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -27,12 +26,18 @@ abstract class TestCase extends Orchestra
             flags: JSON_THROW_ON_ERROR,
         );
 
-        return [LivewireServiceProvider::class, $manifest['provider']];
+        return [$manifest['provider']];
     }
 
     private function usePackageOrCompositionBasePath($app): void
     {
+        // Inside the monorepo, point the app at the composition root so discovery
+        // sees every sibling package. Standalone, leave Testbench's own skeleton
+        // base path alone — the package root has no bootstrap/cache to write to.
         $compositionRoot = dirname(__DIR__, 3);
-        $app->setBasePath(is_dir($compositionRoot.'/themes') ? $compositionRoot : dirname(__DIR__));
+
+        if (is_dir($compositionRoot.'/themes')) {
+            $app->setBasePath($compositionRoot);
+        }
     }
 }
