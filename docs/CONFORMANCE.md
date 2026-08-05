@@ -73,8 +73,9 @@ installed module files in a consuming application; changes flow module repo → 
 > with `--delete`, so running it in its current form destroys the upstream deltas across every
 > package it touches. Which side wins, per package, is an open decision.
 >
-> Incidental: `theme-support`, `two-factor-authentication`, `webhooks` and `clear-signal` ship a
-> **committed `vendor/` directory** upstream.
+> Incidental: `activity-comments`, `clear-signal`, `module-manager` and `theme-support` ship a
+> **committed `vendor/` directory** upstream. Anything pushing to those repos must stage named
+> paths — `git add -A` there commits an entire dependency tree.
 >
 > Re-measure with `scripts/audit-divergence`; results land in `storage/app/divergence.tsv`.
 >
@@ -101,6 +102,19 @@ installed module files in a consuming application; changes flow module repo → 
 > Because `modules/` is now Composer output, those 11 survive only until the next `composer update`.
 > **They must be pushed upstream and released before the §6.2 zero-diff gate can ever go green** —
 > that is now the real content of step 8, and it is larger than "republish from final source".
+>
+> **Pushed upstream.** All 48 package repositories now carry the workflow, the restored helpers and
+> the missing tests, each verified locally against its current release before pushing. **CI is green
+> on 48 of 48** — previously every repository failed every run it had ever attempted.
+>
+> Turning CI on immediately found two defects nobody had catalogued, both invisible while the
+> workflow could not start:
+>
+> - **`module-manager` did not work standalone at all** — 33 errors. `tests/TestCase.php` registered `Livewire\LivewireServiceProvider` without `livewire/livewire` in `require-dev`, and repointed the application base path at the package root, which has no `bootstrap/cache`. Confirmed against a pristine clone, so it predates this effort. Now 33 passing.
+> - **`theme-support`'s own 17 tests exercise the helpers its release had emptied**, which settles that the gutted file was a regression rather than an intentional removal.
+>
+> Still outstanding: the fleet is fixed on `main` but **not re-released**. Until each package is
+> tagged, `composer update` still resolves the broken `1.0.4`.
 
 ### 3.2 Composer vendor stays `liberusoftware/`
 
