@@ -306,6 +306,8 @@ Found by executing rather than reading. None is optional.
 | **`module-manager` tests read the host** | `ManifestTest` globs `$root.'/modules/*/module.json'` — passes only inside the monorepo | make it a composition test or fixture-driven |
 | **Two architecture rules broken** | see §3.8 | fix while rewriting |
 | **`composer.lock` out of date** | `composer install` warns it disagrees with `composer.json` | resolve before step −1 |
+| **`publish-components` would publish `vendor/`** | its rsync excludes only `.git`, but `modules/*/vendor` and `modules/*/composer.lock` are gitignored here and appear the moment a package's standalone suite is run — the very workflow `CLAUDE.md:58` prescribes. A dry rsync of `modules/analytics-core` alone listed **23,990** `vendor/` entries for transfer | fixed here: `vendor/`, `composer.lock`, `node_modules/` and `.phpunit.result.cache` are excluded |
+| **`publish-components` can fast-forward `main` from a feature branch** | the meta step is `git push … HEAD:$branch`, so publishing while checked out anywhere but `main` silently advances `main` to the working branch | fixed here: the meta push refuses unless `HEAD` is on `$branch` |
 | **`search` is built around the demo it is losing** | `SearchService::searchPosts()`/`searchGroups()` read `config('search.models.post')`/`.group`, which ship as `null` and were set only by `search-demo`'s provider. With the demo exiled, `/api/search/posts` and `/api/search/groups` raise `Class name must be a valid object or a string` — a fatal, not an empty result | guard the unconfigured type now; move the demo-shaped methods and their two controller actions into `search-demo` at step 2 |
 
 **Fixed in this repository** — the four that live here, verified rather than asserted:
