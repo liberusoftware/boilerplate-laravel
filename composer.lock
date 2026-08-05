@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "23be1e937513159ae97f6153ccee0650",
+    "content-hash": "86c9af7bc2d711b989892f1844d8109a",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5477,29 +5477,40 @@
         },
         {
             "name": "liberusoftware/composer-installer",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/composer-installer.git",
-                "reference": "e993419a16e152ba6d4663c9544665fabc784623"
+                "reference": "470e3b95f6232424c69d67e4f7dad6f3619c37c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/composer-installer/zipball/e993419a16e152ba6d4663c9544665fabc784623",
-                "reference": "e993419a16e152ba6d4663c9544665fabc784623",
+                "url": "https://api.github.com/repos/liberusoftware/composer-installer/zipball/470e3b95f6232424c69d67e4f7dad6f3619c37c4",
+                "reference": "470e3b95f6232424c69d67e4f7dad6f3619c37c4",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.6",
                 "php": "^8.5"
             },
+            "require-dev": {
+                "composer/composer": "^2.6",
+                "laravel/pint": "^1.14",
+                "pestphp/pest": "^5.0"
+            },
             "type": "composer-plugin",
             "extra": {
-                "class": "Liberu\\ComposerInstaller\\Plugin"
+                "class": "Liberu\\ComposerInstaller\\Plugin",
+                "plugin-modifies-install-path": true
             },
             "autoload": {
                 "psr-4": {
                     "Liberu\\ComposerInstaller\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Liberu\\ComposerInstaller\\Tests\\": "tests/"
                 }
             },
             "license": [
@@ -5507,10 +5518,10 @@
             ],
             "description": "Deterministic Composer 2 installer for tracked Liberu modules and themes.",
             "support": {
-                "source": "https://github.com/liberusoftware/composer-installer/tree/1.0.2",
+                "source": "https://github.com/liberusoftware/composer-installer/tree/1.1.0",
                 "issues": "https://github.com/liberusoftware/composer-installer/issues"
             },
-            "time": "2026-08-01T07:24:44+00:00"
+            "time": "2026-08-05T07:59:00+00:00"
         },
         {
             "name": "liberusoftware/currency-context",

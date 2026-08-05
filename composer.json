@@ -88,7 +88,7 @@
         "liberusoftware/audit": "^1.0",
         "liberusoftware/blog-core": "^1.0",
         "liberusoftware/blog-filament": "^1.0",
-        "liberusoftware/composer-installer": "^1.0",
+        "liberusoftware/composer-installer": "^1.1",
         "liberusoftware/currency-context": "^1.0",
         "liberusoftware/developer-experience": "^1.0",
         "liberusoftware/feature-flags": "^1.0",
