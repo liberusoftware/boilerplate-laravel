@@ -252,7 +252,11 @@ Found by executing rather than reading. None is optional.
 - **`module-manager`'s `ManifestTest`** reads its own `module.json` instead of globbing the consuming application. The fleet-wide parse moved into the host's existing package-metadata rule rather than becoming a new one.
 - **Both broken architecture rules** work: the `Architecture` suite now boots the app for `config('modules.*')`, and the theme-parent rule throws with the offending theme named. Each was mutation-tested — deliberately violated and confirmed red — because both were previously green by accident.
 
-**Still open:** the two installer defects belong to `liberusoftware/composer-installer`, a separate repository (step −1); the host `Modules`/`Themes` testbench failure is resolved by §3.8's suite deletion (step 3); `composer.lock` needs a root Composer run, which currently clobbers the tree (§3.1).
+**Fixed in `liberusoftware/composer-installer`** — branch `fix/installer-defects`, unpublished. `plugin-modifies-install-path` declared; collision detection now reads the working tree, so a directory whose `composer.json` names a different package fails the install instead of being written over. A real `composer install` was used to confirm both, and all 48 packages in this tree still resolve to their current paths. One consequence for §5 step 8: a package that keeps its directory while changing its Composer name now fails until the old directory is removed — by design, but it makes a rename `rm -rf` the old target, then install.
+
+**`composer.lock` is no longer stale.** A root `composer install` reports "Nothing to install, update or remove" with no lock warning, and `composer validate` passes. Note this does **not** exercise §6.2: Composer no-ops when the installed state already matches the lock. The zero-diff gate needs a *clean* install, which is the path that reinstalls all 48 packages over the tracked source — still red until step 8.
+
+**Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion (step 3); publishing the installer and repointing the root (step −1).
 
 ## 5. Migration sequence
 
