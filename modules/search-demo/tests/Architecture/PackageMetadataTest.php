@@ -12,6 +12,8 @@ it('exposes internally consistent package metadata', function () {
         ->and($composer['version'])->toBe($manifest['version'])
         ->and($composer['extra']['liberu']['name'])->toBe($manifest['name'])
         ->and($manifest['requires']['packages'] ?? [])->toBe($dependencies)
+        ->and($manifest['features'] ?? [])->not->toBeEmpty()
+        ->and($manifest['features'])->toHaveCount(count(array_unique(array_map('mb_strtolower', $manifest['features']))))
         ->and(class_exists($manifest['provider']))->toBeTrue()
         ->and(is_subclass_of($manifest['provider'], ServiceProvider::class))->toBeTrue();
 });

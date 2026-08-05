@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use InvalidArgumentException;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 
 class SetUserPassword implements SetsUserPasswords
@@ -17,7 +18,9 @@ class SetUserPassword implements SetsUserPasswords
      */
     public function set(mixed $user, array $input): void
     {
-        assert($user instanceof Model);
+        if (! $user instanceof Model) {
+            throw new InvalidArgumentException('Passwords can only be set on Eloquent user models.');
+        }
 
         Validator::make($input, [
             'password' => ['required', 'string', Password::default(), 'confirmed'],

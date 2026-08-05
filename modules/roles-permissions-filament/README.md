@@ -14,6 +14,10 @@ Filament role and permission management through the authorization capability. Th
 
 - `foundation.authorization.filament`
 
+### Declared features
+
+- Filament role and permission management through the authorization capability
+
 ## Requirements and installation
 
 | Dependency | Supported version |

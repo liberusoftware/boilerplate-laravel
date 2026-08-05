@@ -77,6 +77,30 @@ installed module files in a consuming application; changes flow module repo → 
 > **committed `vendor/` directory** upstream.
 >
 > Re-measure with `scripts/audit-divergence`; results land in `storage/app/divergence.tsv`.
+>
+> **Reconciled.** Resolved in favour of upstream, pulled down with `composer update
+> "liberusoftware/*"` rather than an rsync — Composer is the mechanism §3.1 is moving toward, and
+> `ModuleValidator` compares each manifest against `Composer\InstalledVersions`, so the lock has to
+> move with the files. Version skew is now **zero across all 48**.
+>
+> Three host changes were required by upstream's contracts, none cosmetic:
+>
+> - `PrivilegedActor` gained `authorizationIdentifier()` and `authorizationType()`, and promoted `hasRoleInAnyTeam()` to public. The pivot query moved into `Liberu\Foundation\Authorization\Services\AnyTeamRoleLookup`, so `App\Models\User` now delegates instead of keeping its own copy.
+> - `Manifest::fromFile()` now requires a `features` key.
+> - Package `ServiceProviderTest`s assert `getProvider()` after Testbench boots rather than calling `register()`, so the architecture rule matches either shape.
+>
+> **The monorepo still wins on 11 files, deliberately**, and each is a defect upstream should adopt:
+>
+> | Kept here | Why |
+> | --- | --- |
+> | `.github/workflows/tests.yml` × 48 | upstream's references `shivammathur/setup-php@v3` and `ramsey/composer-install@v4`, **neither of which exists** — upstream CI fails on every package, every run |
+> | `theme-support/src/Support/theme_helpers.php` | upstream 1.0.4 ships this file containing **only `<?php`** — all seven helpers deleted while `autoload.files` still loads it. A hard regression its broken CI never caught |
+> | `analytics-core` `DestinationsCoverageTest`, `module-manager` `ManifestTest` | upstream still carries both §4 defects |
+> | 8 tests absent upstream | `ThemeMetadataTest` × 4, `CurrencyContextTest`, `TranslationServiceHttpTest`, `GoogleDestinationTest`, `MetaDestinationTest` |
+>
+> Because `modules/` is now Composer output, those 11 survive only until the next `composer update`.
+> **They must be pushed upstream and released before the §6.2 zero-diff gate can ever go green** —
+> that is now the real content of step 8, and it is larger than "republish from final source".
 
 ### 3.2 Composer vendor stays `liberusoftware/`
 

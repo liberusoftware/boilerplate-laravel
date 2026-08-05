@@ -14,6 +14,13 @@ Typed application, organization, team/site, and user settings with validation an
 
 - `foundation.settings`
 
+### Declared features
+
+- Typed application
+- Organization
+- Team/site
+- User settings with validation and deterministic cache invalidation
+
 ## Requirements and installation
 
 | Dependency | Supported version |

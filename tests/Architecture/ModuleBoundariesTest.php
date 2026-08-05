@@ -79,8 +79,12 @@ it('requires every module to exercise its service provider in the application', 
     foreach (moduleDirectories() as $module) {
         $test = $module.'/tests/Integration/ServiceProviderTest.php';
 
-        expect($test)->toBeFile()
-            ->and(file_get_contents($test))->toContain('->register($provider, true)');
+        expect($test)->toBeFile();
+
+        // Matches either shape: registering the provider explicitly, or asserting it
+        // is already registered after Testbench boots it. Both prove the provider is
+        // exercised against a real application rather than merely instantiated.
+        expect(file_get_contents($test))->toMatch('/\$this->app->(register|getProvider)\(/');
     }
 });
 

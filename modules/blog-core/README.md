@@ -14,6 +14,12 @@ Blog publishing, persistence, and public presentation defaults. This repository 
 
 - `blog.publish`
 
+### Declared features
+
+- Blog publishing
+- Persistence
+- Public presentation defaults
+
 ## Requirements and installation
 
 | Dependency | Supported version |

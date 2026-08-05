@@ -14,6 +14,11 @@ Authenticated, rate-limited HTTP endpoints for Search. This repository owns this
 
 - `foundation.search.api`
 
+### Declared features
+
+- Authenticated
+- Rate-limited HTTP endpoints for Search
+
 ## Requirements and installation
 
 | Dependency | Supported version |

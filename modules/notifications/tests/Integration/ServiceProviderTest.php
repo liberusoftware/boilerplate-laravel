@@ -2,20 +2,18 @@
 
 namespace Liberu\Foundation\Notifications\Tests\Integration;
 
-use Illuminate\Support\ServiceProvider;
-use Orchestra\Testbench\TestCase;
+use Liberu\Foundation\Notifications\Tests\TestCase;
 
 final class ServiceProviderTest extends TestCase
 {
-    public function test_declared_service_provider_registers_with_the_application(): void
+    public function test_declared_service_provider_boots_in_testbench(): void
     {
-        $packagePath = dirname(__DIR__, 2);
-        $manifest = json_decode((string) file_get_contents($packagePath.'/module.json'), true, flags: JSON_THROW_ON_ERROR);
-        $provider = $manifest['provider'];
+        $manifest = json_decode(
+            file_get_contents(dirname(__DIR__, 2).'/module.json'),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
 
-        $instance = $this->app->register($provider, true);
-
-        self::assertInstanceOf(ServiceProvider::class, $instance);
-        self::assertSame($instance, $this->app->getProvider($provider));
+        self::assertNotNull($this->app->getProvider($manifest['provider']));
     }
 }

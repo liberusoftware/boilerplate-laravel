@@ -14,6 +14,10 @@ Authorized private messages encrypted at rest with unread state and participant 
 
 - `messaging.private`
 
+### Declared features
+
+- Authorized private messages encrypted at rest with unread state and participant policies
+
 ## Requirements and installation
 
 | Dependency | Supported version |

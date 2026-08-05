@@ -1,1 +1,29 @@
-{"$schema":"https://schemas.liberu.dev/module/v1.json","name":"analytics-meta","display_name":"Meta Server-Side Tracking","description":"Consent-aware Meta event mapping, browser/server deduplication, normalization/hashing, protected configuration, and diagnostics.","version":"1.0.3","category":"adapter","provider":"Liberu\\Foundation\\Analytics\\Meta\\AnalyticsMetaServiceProvider","requires":{"php":"^8.5","laravel":"^13.0","packages":{"liberusoftware/analytics-contracts":"^1.0","liberusoftware/integrations":"^1.0"}},"suggests":{},"capabilities":["analytics.meta"],"default_enabled":false}
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "analytics-meta",
+    "display_name": "Meta Server-Side Tracking",
+    "description": "Consent-aware Meta event mapping, browser/server deduplication, normalization/hashing, protected configuration, and diagnostics.",
+    "version": "1.0.4",
+    "category": "adapter",
+    "provider": "Liberu\\Foundation\\Analytics\\Meta\\AnalyticsMetaServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/analytics-contracts": "^1.0",
+            "liberusoftware/integrations": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "analytics.meta"
+    ],
+    "default_enabled": false,
+    "features": [
+        "Consent-aware Meta event mapping",
+        "Browser/server deduplication",
+        "Normalization/hashing",
+        "Protected configuration",
+        "Diagnostics"
+    ]
+}

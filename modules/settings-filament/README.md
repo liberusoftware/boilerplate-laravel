@@ -14,6 +14,10 @@ Optional Filament settings administration surface. This repository owns this cap
 
 - `foundation.settings.filament`
 
+### Declared features
+
+- Optional Filament settings administration surface
+
 ## Requirements and installation
 
 | Dependency | Supported version |

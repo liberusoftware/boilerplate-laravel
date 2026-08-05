@@ -3,6 +3,7 @@
 namespace Liberu\Foundation\Identity\Socialstream\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Socialstream;
@@ -15,7 +16,9 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
      */
     public function create(mixed $user, string $provider, ProviderUser $providerUser): ConnectedAccount
     {
-        assert($user instanceof Model);
+        if (! $user instanceof Model) {
+            throw new InvalidArgumentException('Connected accounts require an Eloquent user model.');
+        }
 
         return Socialstream::connectedAccountModel()::forceCreate([
             'user_id' => $user->id,

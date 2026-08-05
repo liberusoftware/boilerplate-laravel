@@ -15,6 +15,15 @@ Teams, memberships, invitations, ownership, switching, and current-context bound
 - `foundation.organizations`
 - `foundation.teams`
 
+### Declared features
+
+- Teams
+- Memberships
+- Invitations
+- Ownership
+- Switching
+- Current-context boundaries
+
 ## Requirements and installation
 
 | Dependency | Supported version |

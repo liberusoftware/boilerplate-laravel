@@ -14,6 +14,12 @@ Actor, tenant, request and correlation-aware material-change audit with export a
 
 - `foundation.audit`
 
+### Declared features
+
+- Actor
+- Tenant
+- Request and correlation-aware material-change audit with export and retention boundaries
+
 ## Requirements and installation
 
 | Dependency | Supported version |

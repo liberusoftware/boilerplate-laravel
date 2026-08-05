@@ -14,6 +14,14 @@ ISO metadata, precise money values, currency roles, formatting, and effective-da
 
 - `foundation.currency`
 
+### Declared features
+
+- ISO metadata
+- Precise money values
+- Currency roles
+- Formatting
+- Effective-dated exchange-rate contracts
+
 ## Requirements and installation
 
 | Dependency | Supported version |

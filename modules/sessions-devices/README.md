@@ -14,6 +14,12 @@ Privacy-conscious active-session inventory, current-session protection, and revo
 
 - `identity.sessions`
 
+### Declared features
+
+- Privacy-conscious active-session inventory
+- Current-session protection
+- Revocation
+
 ## Requirements and installation
 
 | Dependency | Supported version |

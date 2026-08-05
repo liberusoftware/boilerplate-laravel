@@ -3,11 +3,23 @@
     "name": "search-api",
     "display_name": "Search API",
     "description": "Authenticated, rate-limited HTTP endpoints for Search.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\SearchApi\\SearchApiServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/search": "^1.0" } },
-    "suggests": {},
-    "capabilities": ["foundation.search.api"],
-    "default_enabled": false
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/search": "^1.0"
+        }
+    },
+    "suggests": [],
+    "capabilities": [
+        "foundation.search.api"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Authenticated",
+        "Rate-limited HTTP endpoints for Search"
+    ]
 }

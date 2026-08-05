@@ -2,17 +2,18 @@
 
 namespace Liberu\Foundation\Currency\Tests;
 
-use Liberu\Foundation\Currency\CurrencyServiceProvider;
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use Orchestra\Testbench\TestCase as Orchestra;
 
-abstract class TestCase extends BaseTestCase
+abstract class TestCase extends Orchestra
 {
-    /**
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return array<int, class-string>
-     */
     protected function getPackageProviders($app): array
     {
-        return [CurrencyServiceProvider::class];
+        $manifest = json_decode(
+            file_get_contents(dirname(__DIR__).'/module.json'),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+
+        return [$manifest['provider']];
     }
 }

@@ -14,6 +14,10 @@ Runnable reference records used to exercise search filters and authorization. Th
 
 - `search.demo`
 
+### Declared features
+
+- Runnable reference records used to exercise search filters and authorization
+
 ## Requirements and installation
 
 | Dependency | Supported version |

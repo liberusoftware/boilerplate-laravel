@@ -14,6 +14,10 @@ Authenticated inbox and conversation presentation for Filament panels. This repo
 
 - `messaging.filament`
 
+### Declared features
+
+- Authenticated inbox and conversation presentation for Filament panels
+
 ## Requirements and installation
 
 | Dependency | Supported version |

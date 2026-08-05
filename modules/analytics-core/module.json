@@ -1,1 +1,36 @@
-{"$schema":"https://schemas.liberu.dev/module/v1.json","name":"analytics-core","display_name":"Analytics Core","description":"Versioned event envelopes, consent, mapping, minimization, routing, deduplication, queues, redaction, and delivery audit.","version":"1.0.3","category":"foundation","provider":"Liberu\\Foundation\\Analytics\\AnalyticsServiceProvider","requires":{"php":"^8.5","laravel":"^13.0","packages":{"liberusoftware/analytics-contracts":"^1.0","liberusoftware/module-manager":"^1.0"}},"suggests":{"liberusoftware/analytics-google":"^1.0","liberusoftware/analytics-meta":"^1.0"},"capabilities":["analytics.route"],"default_enabled": false}
+{
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "analytics-core",
+    "display_name": "Analytics Core",
+    "description": "Versioned event envelopes, consent, mapping, minimization, routing, deduplication, queues, redaction, and delivery audit.",
+    "version": "1.0.4",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Analytics\\AnalyticsServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/analytics-contracts": "^1.0",
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/analytics-google": "^1.0",
+        "liberusoftware/analytics-meta": "^1.0"
+    },
+    "capabilities": [
+        "analytics.route"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Versioned event envelopes",
+        "Consent",
+        "Mapping",
+        "Minimization",
+        "Routing",
+        "Deduplication",
+        "Queues",
+        "Redaction",
+        "Delivery audit"
+    ]
+}

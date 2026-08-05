@@ -4,6 +4,7 @@ namespace Liberu\Foundation\JetstreamBridge\Actions\Jetstream;
 
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 use Laravel\Jetstream\Contracts\DeletesTeams;
 use Laravel\Jetstream\Contracts\DeletesUsers;
 
@@ -34,7 +35,9 @@ class DeleteUser implements DeletesUsers
      */
     public function delete($user)
     {
-        assert($user instanceof User);
+        if (! $user instanceof User) {
+            throw new InvalidArgumentException('Only Laravel user models can be deleted.');
+        }
 
         DB::transaction(function () use ($user) {
             $this->deleteTeams($user);

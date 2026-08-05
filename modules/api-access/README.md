@@ -14,6 +14,16 @@ Token and service-identity policy, scopes, versions, rate limits, idempotency, e
 
 - `foundation.api-access`
 
+### Declared features
+
+- Token and service-identity policy
+- Scopes
+- Versions
+- Rate limits
+- Idempotency
+- Expiry
+- Revocation
+
 ## Requirements and installation
 
 | Dependency | Supported version |

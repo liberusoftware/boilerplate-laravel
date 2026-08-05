@@ -14,6 +14,10 @@ Accessible account security/preferences and authorized foundation operations dia
 
 - `foundation.filament`
 
+### Declared features
+
+- Accessible account security/preferences and authorized foundation operations diagnostics
+
 ## Requirements and installation
 
 | Dependency | Supported version |

@@ -8,12 +8,14 @@ use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
 use Liberu\Foundation\Authorization\Models\Role;
 use Liberu\Foundation\Authorization\Policies\RolePolicy;
 use Liberu\Foundation\Authorization\Registry\PermissionRegistry;
+use Liberu\Foundation\Authorization\Services\AnyTeamRoleLookup;
 
 final class AuthorizationServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         $this->app->singleton(PermissionRegistry::class);
+        $this->app->singleton(AnyTeamRoleLookup::class);
     }
 
     public function boot(): void

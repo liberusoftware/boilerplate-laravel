@@ -14,6 +14,18 @@ Versioned event envelopes, consent, mapping, minimization, routing, deduplicatio
 
 - `analytics.route`
 
+### Declared features
+
+- Versioned event envelopes
+- Consent
+- Mapping
+- Minimization
+- Routing
+- Deduplication
+- Queues
+- Redaction
+- Delivery audit
+
 ## Requirements and installation
 
 | Dependency | Supported version |

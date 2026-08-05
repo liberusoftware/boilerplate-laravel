@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Liberu\Foundation\ModuleManager\Cache\RegistryCache;
 use Liberu\Foundation\ModuleManager\Console\CacheModulesCommand;
 use Liberu\Foundation\ModuleManager\Console\ClearModulesCommand;
+use Liberu\Foundation\ModuleManager\Console\ListFeaturesCommand;
 use Liberu\Foundation\ModuleManager\Console\ListModulesCommand;
 use Liberu\Foundation\ModuleManager\Console\ModuleStatusCommand;
 use Liberu\Foundation\ModuleManager\Console\ValidateModulesCommand;
@@ -23,12 +24,17 @@ final class ModuleManagerServiceProvider extends ServiceProvider
             (string) config('modules.cache_path'),
         ));
 
-        $errors = (new ModuleValidator())->validate($this->app->make(ModuleRegistry::class), Application::VERSION);
-        if ($errors !== []) {
-            throw new \RuntimeException("Module validation failed:\n- ".implode("\n- ", $errors));
+        $registry = $this->app->make(ModuleRegistry::class);
+        $modules = $registry->resolve(config('modules.enabled', []), config('modules.disabled', []));
+        $selected = [];
+        foreach ($modules as $module) {
+            $selected[$module->name()] = $module;
         }
 
-        foreach ($this->app->make(ModuleRegistry::class)->resolve(config('modules.enabled', []), config('modules.disabled', [])) as $module) {
+        $this->app->make(ModuleValidationGuard::class)
+            ->ensureValid(new ModuleRegistry($selected), Application::VERSION);
+
+        foreach ($modules as $module) {
             if ($module->name() !== 'module-manager') {
                 $this->app->register($module->provider());
             }
@@ -40,7 +46,7 @@ final class ModuleManagerServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../config/modules.php' => config_path('modules.php')], 'modules-config');
 
         if ($this->app->runningInConsole()) {
-            $this->commands([CacheModulesCommand::class, ClearModulesCommand::class, ListModulesCommand::class, ModuleStatusCommand::class, ValidateModulesCommand::class]);
+            $this->commands([CacheModulesCommand::class, ClearModulesCommand::class, ListFeaturesCommand::class, ListModulesCommand::class, ModuleStatusCommand::class, ValidateModulesCommand::class]);
         }
     }
 }

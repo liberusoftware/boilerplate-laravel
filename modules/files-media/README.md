@@ -14,6 +14,17 @@ Secure storage contracts, uploads, validation, scanning, metadata, transformatio
 
 - `foundation.files-media`
 
+### Declared features
+
+- Secure storage contracts
+- Uploads
+- Validation
+- Scanning
+- Metadata
+- Transformations
+- Access
+- Retention
+
 ## Requirements and installation
 
 | Dependency | Supported version |

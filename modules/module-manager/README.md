@@ -14,6 +14,14 @@ Manifest discovery, dependency resolution, deployment enablement, registry cachi
 
 - `foundation.modules`
 
+### Declared features
+
+- Manifest discovery
+- Dependency resolution
+- Deployment enablement
+- Registry caching
+- Diagnostics
+
 ## Requirements and installation
 
 | Dependency | Supported version |
@@ -46,6 +54,7 @@ The trusted `liberusoftware/composer-installer` places it in `/modules/module-ma
 
 ### Commands
 
+- `module:features {query?}` lists or searches feature declarations across installed modules.
 - `src/Console/CacheModulesCommand.php`
 - `src/Console/ClearModulesCommand.php`
 - `src/Console/ListModulesCommand.php`

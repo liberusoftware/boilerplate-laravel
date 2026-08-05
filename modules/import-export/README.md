@@ -14,6 +14,18 @@ Schemas, mapping, dry runs, validation, queued execution, progress, error report
 
 - `foundation.import-export`
 
+### Declared features
+
+- Schemas
+- Mapping
+- Dry runs
+- Validation
+- Queued execution
+- Progress
+- Error reports
+- Authorization
+- Retention
+
 ## Requirements and installation
 
 | Dependency | Supported version |

@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -23,6 +22,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
+use Liberu\Foundation\Authorization\Services\AnyTeamRoleLookup;
 use Liberu\Foundation\Identity\Socialstream\Contracts\ConnectedAccountOwner;
 use Liberu\Foundation\Observability\Contracts\ObservabilityActor;
 use Liberu\Foundation\Organizations\Contracts\OrganizationActor;
@@ -149,7 +149,7 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function hasAdminAccess(): bool
     {
-        return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'), 'admin');
+        return $this->hasRoleInAnyTeam([(string) config('filament-shield.super_admin.name', 'super_admin'), 'admin']);
     }
 
     /**
@@ -162,24 +162,30 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
         return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'));
     }
 
+    /** The pivot columns AnyTeamRoleLookup matches this actor on. */
+    public function authorizationIdentifier(): int|string
+    {
+        return $this->getKey();
+    }
+
+    public function authorizationType(): string
+    {
+        return $this->getMorphClass();
+    }
+
     /**
      * Team-agnostic role check. Spatie's hasRole() is bound to the active team
      * context, which is unset on plain web requests and when canAccessPanel()
-     * runs, so query the pivot directly across every team.
+     * runs, so the pivot is queried directly across every team.
+     *
+     * The query itself moved into the authorization package in 1.0.4; the host
+     * delegates rather than keeping its own copy.
+     *
+     * @param  string|list<string>  $roles
      */
-    private function hasRoleInAnyTeam(string ...$names): bool
+    public function hasRoleInAnyTeam(string|array $roles): bool
     {
-        /** @var string $pivot */
-        $pivot = config('permission.table_names.model_has_roles', 'model_has_roles');
-        /** @var string $roles */
-        $roles = config('permission.table_names.roles', 'roles');
-
-        return DB::table($pivot)
-            ->join($roles, "{$roles}.id", '=', "{$pivot}.role_id")
-            ->where("{$pivot}.model_id", $this->getKey())
-            ->where("{$pivot}.model_type", $this->getMorphClass())
-            ->whereIn("{$roles}.name", $names)
-            ->exists();
+        return app(AnyTeamRoleLookup::class)->hasRoleInAnyTeam($this, $roles);
     }
 
     public function getDefaultTenant(Panel $panel): ?Model

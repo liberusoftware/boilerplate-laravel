@@ -2,6 +2,7 @@
 
 namespace Liberu\Foundation\Theme\Services;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
@@ -58,6 +59,17 @@ final class ThemeManager
         }
         $this->activeTheme = $theme;
         $this->registerThemePaths();
+    }
+
+    public function persistTheme(string $theme): void
+    {
+        $this->setTheme($theme);
+        session(['theme_preference' => $this->activeTheme]);
+
+        $user = auth()->user();
+        if ($user instanceof Model) {
+            $user->update(['theme_preference' => $this->activeTheme]);
+        }
     }
 
     public function selectForSurface(string $surface, ?string $site = null, ?string $tenant = null): string

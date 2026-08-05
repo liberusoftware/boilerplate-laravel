@@ -14,6 +14,17 @@ Endpoint registration, signing, filtering, delivery evidence, backoff, rotation,
 
 - `foundation.webhooks`
 
+### Declared features
+
+- Endpoint registration
+- Signing
+- Filtering
+- Delivery evidence
+- Backoff
+- Rotation
+- Replay
+- Logs
+
 ## Requirements and installation
 
 | Dependency | Supported version |

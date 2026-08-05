@@ -7,23 +7,9 @@
     "php": "^8.5",
     "liberusoftware/theme-support": "^1.0"
   },
-  "require-dev": {
-    "orchestra/testbench": "^11.1",
-    "pestphp/pest": "^5.0"
-  },
   "autoload": {
     "psr-4": {
       "Liberu\\Themes\\Base\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Liberu\\Themes\\Base\\Tests\\": "tests/"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
     }
   },
   "extra": {
@@ -31,5 +17,22 @@
       "name": "liberu-base"
     }
   },
-  "version": "1.0.3"
+  "version": "1.0.4",
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Themes\\Base\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "pest"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
 }

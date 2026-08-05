@@ -14,6 +14,10 @@ Authenticated private-message endpoints with validation and policy enforcement. 
 
 - `messaging.api`
 
+### Declared features
+
+- Authenticated private-message endpoints with validation and policy enforcement
+
 ## Requirements and installation
 
 | Dependency | Supported version |

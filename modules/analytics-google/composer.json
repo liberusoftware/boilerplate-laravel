@@ -9,23 +9,9 @@
     "liberusoftware/analytics-contracts": "^1.0",
     "liberusoftware/integrations": "^1.0"
   },
-  "require-dev": {
-    "orchestra/testbench": "^11.1",
-    "pestphp/pest": "^5.0"
-  },
   "autoload": {
     "psr-4": {
       "Liberu\\Foundation\\Analytics\\Google\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Liberu\\Foundation\\Analytics\\Google\\Tests\\": "tests/"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
     }
   },
   "extra": {
@@ -33,5 +19,22 @@
       "name": "analytics-google"
     }
   },
-  "version": "1.0.3"
+  "version": "1.0.4",
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\Analytics\\Google\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^11.1",
+    "pestphp/pest": "^5.0"
+  },
+  "scripts": {
+    "test": "pest"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
 }

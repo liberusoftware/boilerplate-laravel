@@ -14,6 +14,14 @@ Consent-aware Meta event mapping, browser/server deduplication, normalization/ha
 
 - `analytics.meta`
 
+### Declared features
+
+- Consent-aware Meta event mapping
+- Browser/server deduplication
+- Normalization/hashing
+- Protected configuration
+- Diagnostics
+
 ## Requirements and installation
 
 | Dependency | Supported version |

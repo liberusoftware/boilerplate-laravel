@@ -14,6 +14,12 @@ TOTP enforcement, trusted-device policy, and single-use recovery primitives. Thi
 
 - `identity.two-factor`
 
+### Declared features
+
+- TOTP enforcement
+- Trusted-device policy
+- Single-use recovery primitives
+
 ## Requirements and installation
 
 | Dependency | Supported version |

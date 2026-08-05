@@ -14,6 +14,10 @@ Optional Filament resources for Blog. This repository owns this capability as an
 
 - `blog.filament`
 
+### Declared features
+
+- Optional Filament resources for Blog
+
 ## Requirements and installation
 
 | Dependency | Supported version |

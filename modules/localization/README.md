@@ -14,6 +14,14 @@ Locale negotiation, user preference, translations, timezone context, and RTL hoo
 
 - `foundation.localization`
 
+### Declared features
+
+- Locale negotiation
+- User preference
+- Translations
+- Timezone context
+- RTL hooks
+
 ## Requirements and installation
 
 | Dependency | Supported version |

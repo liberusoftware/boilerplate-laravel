@@ -3,11 +3,28 @@
     "name": "roles-permissions",
     "display_name": "Roles and Permissions",
     "description": "Contextual role assignments, module-owned permissions, policies, and cache invalidation.",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Authorization\\AuthorizationServiceProvider",
-    "requires": { "php": "^8.5", "laravel": "^13.0", "packages": { "liberusoftware/module-manager": "^1.0", "liberusoftware/organizations-teams": "^1.0" } },
-    "suggests": { "liberusoftware/roles-permissions-filament": "^1.0" },
-    "capabilities": ["foundation.authorization"],
-    "default_enabled": false
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0",
+            "liberusoftware/organizations-teams": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/roles-permissions-filament": "^1.0"
+    },
+    "capabilities": [
+        "foundation.authorization"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Contextual role assignments",
+        "Module-owned permissions",
+        "Policies",
+        "Cache invalidation"
+    ]
 }

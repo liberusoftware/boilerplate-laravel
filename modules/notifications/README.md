@@ -14,6 +14,15 @@ Localized templates, channel preferences, inbox state, retries, delivery status,
 
 - `foundation.notifications`
 
+### Declared features
+
+- Localized templates
+- Channel preferences
+- Inbox state
+- Retries
+- Delivery status
+- Quiet hours
+
 ## Requirements and installation
 
 | Dependency | Supported version |

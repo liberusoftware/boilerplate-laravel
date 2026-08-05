@@ -14,6 +14,14 @@ Fortify and Jetstream-compatible registration, profile, password, team, and acco
 
 - `foundation.jetstream-bridge`
 
+### Declared features
+
+- Fortify and Jetstream-compatible registration
+- Profile
+- Password
+- Team
+- Account-deletion actions
+
 ## Requirements and installation
 
 | Dependency | Supported version |
