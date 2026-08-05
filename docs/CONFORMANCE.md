@@ -50,9 +50,33 @@ installed module files in a consuming application; changes flow module repo → 
 **Enforced by:** the §6.2 clean-install zero-diff check in the host's `install.yml`.
 
 > **Verified failing today.** A root `composer install` deleted **110 tracked files** and modified
-> **92**, because the published packages are stale and contain no `tests/`, `phpunit.xml` or
-> `.github/`. The zero-diff gate cannot be switched on until every package has been republished
-> from final source — step 8.
+> **92**. The zero-diff gate cannot be switched on until every package has been republished from
+> final source — step 8.
+>
+> **Correction, measured across all 48 packages.** The original reading of that clobber — that the
+> published packages are stale and carry no `tests/`, `phpunit.xml` or `.github/` — is **wrong**.
+> They carry all three. The monorepo is the side that is behind:
+>
+> | | |
+> | --- | --- |
+> | Packages diverged from their published repo | **48 of 48** — none identical |
+> | Version skew | 47 at local `1.0.3` vs published `1.0.4`; `module-manager` at `1.0.3` vs `1.0.6` |
+> | Present upstream, absent here | `tests/Pest.php` in all 48, `tests/TestCase.php` in 47 — the per-package Testbench bootstrap that `package-testbench` replaces |
+> | Differing in both | 8 files in every package: `composer.json`, `module.json`, `README.md`, `CHANGELOG.md`, `phpunit.xml`, `.github/workflows/tests.yml`, and both shipped test files |
+>
+> The divergence runs **both ways** — the monorepo's `tests.yml` is richer, the four themes'
+> `ThemeMetadataTest.php` exists only here — so reconciliation is a merge, not a mirror. Mirroring
+> `module-blog-core` from here would regress it `1.0.4` → `1.0.3`, drop its `features` key and flip
+> `default_enabled` from `true` to `false`.
+>
+> **This blocks steps 0, 7 and 8**, which all publish from the monorepo. `publish-components` rsyncs
+> with `--delete`, so running it in its current form destroys the upstream deltas across every
+> package it touches. Which side wins, per package, is an open decision.
+>
+> Incidental: `theme-support`, `two-factor-authentication`, `webhooks` and `clear-signal` ship a
+> **committed `vendor/` directory** upstream.
+>
+> Re-measure with `scripts/audit-divergence`; results land in `storage/app/divergence.tsv`.
 
 ### 3.2 Composer vendor stays `liberusoftware/`
 
@@ -256,7 +280,12 @@ Found by executing rather than reading. None is optional.
 
 **`composer.lock` is no longer stale.** A root `composer install` reports "Nothing to install, update or remove" with no lock warning, and `composer validate` passes. Note this does **not** exercise §6.2: Composer no-ops when the installed state already matches the lock. The zero-diff gate needs a *clean* install, which is the path that reinstalls all 48 packages over the tracked source — still red until step 8.
 
-**Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion (step 3); publishing the installer and repointing the root (step −1).
+**Blocking, found while starting step 0:** every one of the 48 packages has diverged from its
+published repository, and the monorepo is the side that is behind. See the correction in §3.1. No
+package may be published from here until that is reconciled, because `publish-components` mirrors
+with `--delete`.
+
+**Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion (step 3).
 
 ## 5. Migration sequence
 
