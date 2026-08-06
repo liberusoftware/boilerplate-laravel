@@ -5075,16 +5075,16 @@
         },
         {
             "name": "liberusoftware/activity-comments",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-activity-comments.git",
-                "reference": "ef968e9d77809d94f1d471367201555cf9ea2605"
+                "reference": "4ccc9799ead890e01c5d9c2e530c9ec95ddbe6c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-activity-comments/zipball/ef968e9d77809d94f1d471367201555cf9ea2605",
-                "reference": "ef968e9d77809d94f1d471367201555cf9ea2605",
+                "url": "https://api.github.com/repos/liberusoftware/module-activity-comments/zipball/4ccc9799ead890e01c5d9c2e530c9ec95ddbe6c6",
+                "reference": "4ccc9799ead890e01c5d9c2e530c9ec95ddbe6c6",
                 "shasum": ""
             },
             "require": {
@@ -5123,10 +5123,10 @@
             ],
             "description": "Generic authorized timelines, comments, mentions, subscriptions, attachments, and visibility.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-activity-comments/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-activity-comments/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-activity-comments/issues"
             },
-            "time": "2026-08-06T18:03:01+00:00"
+            "time": "2026-08-06T19:56:27+00:00"
         },
         {
             "name": "liberusoftware/analytics-contracts",
@@ -5329,16 +5329,16 @@
         },
         {
             "name": "liberusoftware/api-access",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-api-access.git",
-                "reference": "5254fdb52e64ef2b3b102610e0cf42391bb18271"
+                "reference": "3d6d5393738e2829028f22712b5385edf6879a9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-api-access/zipball/5254fdb52e64ef2b3b102610e0cf42391bb18271",
-                "reference": "5254fdb52e64ef2b3b102610e0cf42391bb18271",
+                "url": "https://api.github.com/repos/liberusoftware/module-api-access/zipball/3d6d5393738e2829028f22712b5385edf6879a9f",
+                "reference": "3d6d5393738e2829028f22712b5385edf6879a9f",
                 "shasum": ""
             },
             "require": {
@@ -5378,23 +5378,23 @@
             ],
             "description": "API token, scope, version, rate-limit, idempotency, and revocation policy.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-api-access/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-api-access/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-api-access/issues"
             },
-            "time": "2026-08-06T18:03:12+00:00"
+            "time": "2026-08-06T19:56:38+00:00"
         },
         {
             "name": "liberusoftware/application",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-application.git",
-                "reference": "57352e273509569282f2f783d2e4381d4d949125"
+                "reference": "8bce30790810473ed18a9e52e5d890f2d56f6ce7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-application/zipball/57352e273509569282f2f783d2e4381d4d949125",
-                "reference": "57352e273509569282f2f783d2e4381d4d949125",
+                "url": "https://api.github.com/repos/liberusoftware/module-application/zipball/8bce30790810473ed18a9e52e5d890f2d56f6ce7",
+                "reference": "8bce30790810473ed18a9e52e5d890f2d56f6ce7",
                 "shasum": ""
             },
             "require": {
@@ -5433,23 +5433,23 @@
             ],
             "description": "Required application metadata, health, clocks, identifiers, and secure HTTP defaults.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-application/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-application/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-application/issues"
             },
-            "time": "2026-08-06T18:03:15+00:00"
+            "time": "2026-08-06T19:56:41+00:00"
         },
         {
             "name": "liberusoftware/audit",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-audit.git",
-                "reference": "c70c53233ccbda570bdbc186889be932e21699bc"
+                "reference": "f63c5c81814efdb01a35c0aa0c0ae788bf2c4e45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-audit/zipball/c70c53233ccbda570bdbc186889be932e21699bc",
-                "reference": "c70c53233ccbda570bdbc186889be932e21699bc",
+                "url": "https://api.github.com/repos/liberusoftware/module-audit/zipball/f63c5c81814efdb01a35c0aa0c0ae788bf2c4e45",
+                "reference": "f63c5c81814efdb01a35c0aa0c0ae788bf2c4e45",
                 "shasum": ""
             },
             "require": {
@@ -5488,10 +5488,10 @@
             ],
             "description": "Contextual material-change audit records with correlation and retention boundaries.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-audit/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-audit/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-audit/issues"
             },
-            "time": "2026-08-06T18:03:18+00:00"
+            "time": "2026-08-06T19:56:43+00:00"
         },
         {
             "name": "liberusoftware/composer-installer",
@@ -5598,16 +5598,16 @@
         },
         {
             "name": "liberusoftware/developer-experience",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-developer-experience.git",
-                "reference": "a8e3686106203dbeb6f96717aa52385995b5d29a"
+                "reference": "43cc7ee08e12122c019cb1d889b5165d49e9bf80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-developer-experience/zipball/a8e3686106203dbeb6f96717aa52385995b5d29a",
-                "reference": "a8e3686106203dbeb6f96717aa52385995b5d29a",
+                "url": "https://api.github.com/repos/liberusoftware/module-developer-experience/zipball/43cc7ee08e12122c019cb1d889b5165d49e9bf80",
+                "reference": "43cc7ee08e12122c019cb1d889b5165d49e9bf80",
                 "shasum": ""
             },
             "require": {
@@ -5646,23 +5646,23 @@
             ],
             "description": "Foundation diagnostics and reproducible development/quality conventions.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-developer-experience/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-developer-experience/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-developer-experience/issues"
             },
-            "time": "2026-08-06T18:03:24+00:00"
+            "time": "2026-08-06T19:56:48+00:00"
         },
         {
             "name": "liberusoftware/feature-flags",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-feature-flags.git",
-                "reference": "2ff5c752dd32ebca96b198c968780310670477a4"
+                "reference": "96fbd8493a4fa371fa784ed064bfb519972130b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-feature-flags/zipball/2ff5c752dd32ebca96b198c968780310670477a4",
-                "reference": "2ff5c752dd32ebca96b198c968780310670477a4",
+                "url": "https://api.github.com/repos/liberusoftware/module-feature-flags/zipball/96fbd8493a4fa371fa784ed064bfb519972130b3",
+                "reference": "96fbd8493a4fa371fa784ed064bfb519972130b3",
                 "shasum": ""
             },
             "require": {
@@ -5701,23 +5701,23 @@
             ],
             "description": "Typed rollout flags with stable environment, tenant, and actor targeting.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-feature-flags/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-feature-flags/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-feature-flags/issues"
             },
-            "time": "2026-08-06T18:03:26+00:00"
+            "time": "2026-08-06T19:56:51+00:00"
         },
         {
             "name": "liberusoftware/files-media",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-files-media.git",
-                "reference": "3e20b050d5c39189ee142b4dc0ab510fda0362fa"
+                "reference": "141d8da19319d9f8090662155abc2ca2b25f2e7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-files-media/zipball/3e20b050d5c39189ee142b4dc0ab510fda0362fa",
-                "reference": "3e20b050d5c39189ee142b4dc0ab510fda0362fa",
+                "url": "https://api.github.com/repos/liberusoftware/module-files-media/zipball/141d8da19319d9f8090662155abc2ca2b25f2e7a",
+                "reference": "141d8da19319d9f8090662155abc2ca2b25f2e7a",
                 "shasum": ""
             },
             "require": {
@@ -5756,23 +5756,23 @@
             ],
             "description": "Secure upload policy, malware-scanner contract, media metadata, access, and retention foundations.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-files-media/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-files-media/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-files-media/issues"
             },
-            "time": "2026-08-06T18:03:29+00:00"
+            "time": "2026-08-06T19:56:53+00:00"
         },
         {
             "name": "liberusoftware/identity-core",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-identity-core.git",
-                "reference": "0d1943b335998654fb35c91c32ba5ada4f7270ee"
+                "reference": "f8fdd458d1de38fc181228fa16640439380e9d84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-identity-core/zipball/0d1943b335998654fb35c91c32ba5ada4f7270ee",
-                "reference": "0d1943b335998654fb35c91c32ba5ada4f7270ee",
+                "url": "https://api.github.com/repos/liberusoftware/module-identity-core/zipball/f8fdd458d1de38fc181228fa16640439380e9d84",
+                "reference": "f8fdd458d1de38fc181228fa16640439380e9d84",
                 "shasum": ""
             },
             "require": {
@@ -5810,23 +5810,23 @@
             ],
             "description": "Provider-neutral identity policy, normalization, and versioned security events.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-identity-core/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-identity-core/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-identity-core/issues"
             },
-            "time": "2026-08-06T18:03:32+00:00"
+            "time": "2026-08-06T19:56:56+00:00"
         },
         {
             "name": "liberusoftware/identity-core-filament",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-identity-core-filament.git",
-                "reference": "3a787faa14bfe75a054f02cc5e2432f3b9e0a2d0"
+                "reference": "47b81aad0244b75ecafafc93af7d69f81c761ab5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-identity-core-filament/zipball/3a787faa14bfe75a054f02cc5e2432f3b9e0a2d0",
-                "reference": "3a787faa14bfe75a054f02cc5e2432f3b9e0a2d0",
+                "url": "https://api.github.com/repos/liberusoftware/module-identity-core-filament/zipball/47b81aad0244b75ecafafc93af7d69f81c761ab5",
+                "reference": "47b81aad0244b75ecafafc93af7d69f81c761ab5",
                 "shasum": ""
             },
             "require": {
@@ -5864,23 +5864,23 @@
             ],
             "description": "Filament administration adapter for the configured Liberu identity model.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-identity-core-filament/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-identity-core-filament/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-identity-core-filament/issues"
             },
-            "time": "2026-08-06T18:03:35+00:00"
+            "time": "2026-08-06T19:56:58+00:00"
         },
         {
             "name": "liberusoftware/identity-socialstream",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-identity-socialstream.git",
-                "reference": "1f44b24a69f7dba2ef608acb4227806c34a845cc"
+                "reference": "2c91d2312789c60b7feee17d56b94563d4f48a77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-identity-socialstream/zipball/1f44b24a69f7dba2ef608acb4227806c34a845cc",
-                "reference": "1f44b24a69f7dba2ef608acb4227806c34a845cc",
+                "url": "https://api.github.com/repos/liberusoftware/module-identity-socialstream/zipball/2c91d2312789c60b7feee17d56b94563d4f48a77",
+                "reference": "2c91d2312789c60b7feee17d56b94563d4f48a77",
                 "shasum": ""
             },
             "require": {
@@ -5922,23 +5922,23 @@
             ],
             "description": "Socialstream/Socialite identity-linking provider adapter.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-identity-socialstream/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-identity-socialstream/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-identity-socialstream/issues"
             },
-            "time": "2026-08-06T18:03:38+00:00"
+            "time": "2026-08-06T19:57:01+00:00"
         },
         {
             "name": "liberusoftware/import-export",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-import-export.git",
-                "reference": "d815eff493d072cef2b8ce3ce15305345e87eed8"
+                "reference": "93e5880af9636c43756513dd1f6918c2d2d7b084"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-import-export/zipball/d815eff493d072cef2b8ce3ce15305345e87eed8",
-                "reference": "d815eff493d072cef2b8ce3ce15305345e87eed8",
+                "url": "https://api.github.com/repos/liberusoftware/module-import-export/zipball/93e5880af9636c43756513dd1f6918c2d2d7b084",
+                "reference": "93e5880af9636c43756513dd1f6918c2d2d7b084",
                 "shasum": ""
             },
             "require": {
@@ -5977,23 +5977,23 @@
             ],
             "description": "Versioned transfer schemas, mapping, dry runs, validation, queued progress, reports, and retention.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-import-export/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-import-export/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-import-export/issues"
             },
-            "time": "2026-08-06T18:03:40+00:00"
+            "time": "2026-08-06T19:57:03+00:00"
         },
         {
             "name": "liberusoftware/integrations",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-integrations.git",
-                "reference": "189acdc603e92630160c032957abc1be46910f49"
+                "reference": "de4937a7d6d24bce54893c9586d33189928105ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-integrations/zipball/189acdc603e92630160c032957abc1be46910f49",
-                "reference": "189acdc603e92630160c032957abc1be46910f49",
+                "url": "https://api.github.com/repos/liberusoftware/module-integrations/zipball/de4937a7d6d24bce54893c9586d33189928105ec",
+                "reference": "de4937a7d6d24bce54893c9586d33189928105ec",
                 "shasum": ""
             },
             "require": {
@@ -6032,23 +6032,23 @@
             ],
             "description": "Provider adapter registry and protected connection lifecycle.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-integrations/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-integrations/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-integrations/issues"
             },
-            "time": "2026-08-06T18:03:43+00:00"
+            "time": "2026-08-06T19:57:06+00:00"
         },
         {
             "name": "liberusoftware/jetstream-bridge",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-jetstream-bridge.git",
-                "reference": "95d6d67c89ec4f8691fc0d09faebd14b3677ea73"
+                "reference": "97db958caf1b91279aa403a9057210e380c32592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-jetstream-bridge/zipball/95d6d67c89ec4f8691fc0d09faebd14b3677ea73",
-                "reference": "95d6d67c89ec4f8691fc0d09faebd14b3677ea73",
+                "url": "https://api.github.com/repos/liberusoftware/module-jetstream-bridge/zipball/97db958caf1b91279aa403a9057210e380c32592",
+                "reference": "97db958caf1b91279aa403a9057210e380c32592",
                 "shasum": ""
             },
             "require": {
@@ -6089,10 +6089,10 @@
             ],
             "description": "Fortify and Jetstream-compatible action adapters for Liberu identity capabilities.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-jetstream-bridge/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-jetstream-bridge/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-jetstream-bridge/issues"
             },
-            "time": "2026-08-06T18:03:46+00:00"
+            "time": "2026-08-06T19:57:08+00:00"
         },
         {
             "name": "liberusoftware/localization-contracts",
@@ -6129,16 +6129,16 @@
         },
         {
             "name": "liberusoftware/localization-core",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-localization-core.git",
-                "reference": "c8e309ae3728e642331dc5e4d3b83ae1607c87c6"
+                "reference": "11cbfcd6e5dca21127710f257d1c4b39fab64f37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-localization-core/zipball/c8e309ae3728e642331dc5e4d3b83ae1607c87c6",
-                "reference": "c8e309ae3728e642331dc5e4d3b83ae1607c87c6",
+                "url": "https://api.github.com/repos/liberusoftware/module-localization-core/zipball/11cbfcd6e5dca21127710f257d1c4b39fab64f37",
+                "reference": "11cbfcd6e5dca21127710f257d1c4b39fab64f37",
                 "shasum": ""
             },
             "require": {
@@ -6150,7 +6150,8 @@
                 "php": "^8.5"
             },
             "require-dev": {
-                "liberusoftware/package-testbench": "^1.5",
+                "liberusoftware/package-testbench": "^1.6",
+                "liberusoftware/profiles": "^1.0",
                 "pestphp/pest": "^5.0"
             },
             "type": "liberu-module",
@@ -6179,23 +6180,23 @@
             ],
             "description": "Locale resolution, preferences, propagation, and UI direction for Liberu applications.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-localization-core/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-localization-core/tree/1.3.0",
                 "issues": "https://github.com/liberusoftware/module-localization-core/issues"
             },
-            "time": "2026-08-06T18:03:48+00:00"
+            "time": "2026-08-06T19:57:11+00:00"
         },
         {
             "name": "liberusoftware/localization-core-livewire",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-localization-core-livewire.git",
-                "reference": "c9741686c102fb32485043cd85fa5f2969054e12"
+                "reference": "2efb67f036e679ba1bfc6d3c06203e931a6653bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-localization-core-livewire/zipball/c9741686c102fb32485043cd85fa5f2969054e12",
-                "reference": "c9741686c102fb32485043cd85fa5f2969054e12",
+                "url": "https://api.github.com/repos/liberusoftware/module-localization-core-livewire/zipball/2efb67f036e679ba1bfc6d3c06203e931a6653bb",
+                "reference": "2efb67f036e679ba1bfc6d3c06203e931a6653bb",
                 "shasum": ""
             },
             "require": {
@@ -6233,10 +6234,10 @@
             ],
             "description": "Livewire locale-switching presentation adapter for Liberu Localization.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-localization-core-livewire/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-localization-core-livewire/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-localization-core-livewire/issues"
             },
-            "time": "2026-08-06T18:03:51+00:00"
+            "time": "2026-08-06T19:57:13+00:00"
         },
         {
             "name": "liberusoftware/localization-mymemory",
@@ -6351,16 +6352,16 @@
         },
         {
             "name": "liberusoftware/module-manager-filament",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-module-manager-filament.git",
-                "reference": "17a31d88564055e26bd882e72db08daed3f68cb0"
+                "reference": "d632d4bac01e87ac65229e8112dde3a414a77711"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-module-manager-filament/zipball/17a31d88564055e26bd882e72db08daed3f68cb0",
-                "reference": "17a31d88564055e26bd882e72db08daed3f68cb0",
+                "url": "https://api.github.com/repos/liberusoftware/module-module-manager-filament/zipball/d632d4bac01e87ac65229e8112dde3a414a77711",
+                "reference": "d632d4bac01e87ac65229e8112dde3a414a77711",
                 "shasum": ""
             },
             "require": {
@@ -6399,23 +6400,23 @@
             ],
             "description": "Filament operations presentation adapter for the Liberu Module Manager.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-module-manager-filament/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-module-manager-filament/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-module-manager-filament/issues"
             },
-            "time": "2026-08-06T18:04:01+00:00"
+            "time": "2026-08-06T19:57:23+00:00"
         },
         {
             "name": "liberusoftware/notifications",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-notifications.git",
-                "reference": "09c2fcf4f02cb48bce542c76f9d73df368d0be4d"
+                "reference": "163a1f14526bff6e1341fafab5d13bb084ac00da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-notifications/zipball/09c2fcf4f02cb48bce542c76f9d73df368d0be4d",
-                "reference": "09c2fcf4f02cb48bce542c76f9d73df368d0be4d",
+                "url": "https://api.github.com/repos/liberusoftware/module-notifications/zipball/163a1f14526bff6e1341fafab5d13bb084ac00da",
+                "reference": "163a1f14526bff6e1341fafab5d13bb084ac00da",
                 "shasum": ""
             },
             "require": {
@@ -6454,23 +6455,23 @@
             ],
             "description": "Localized notification preferences, channel policy, inbox delivery state, and quiet hours.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-notifications/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-notifications/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-notifications/issues"
             },
-            "time": "2026-08-06T18:04:05+00:00"
+            "time": "2026-08-06T19:57:26+00:00"
         },
         {
             "name": "liberusoftware/observability",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-observability.git",
-                "reference": "3a67585624c4b106484576c0c72249e83eb45174"
+                "reference": "b80b83f9501c8f2a12a52464cf978dacf8366515"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-observability/zipball/3a67585624c4b106484576c0c72249e83eb45174",
-                "reference": "3a67585624c4b106484576c0c72249e83eb45174",
+                "url": "https://api.github.com/repos/liberusoftware/module-observability/zipball/b80b83f9501c8f2a12a52464cf978dacf8366515",
+                "reference": "b80b83f9501c8f2a12a52464cf978dacf8366515",
                 "shasum": ""
             },
             "require": {
@@ -6510,23 +6511,23 @@
             ],
             "description": "Structured diagnostics, monitoring dashboards, health signals, and redaction defaults.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-observability/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-observability/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-observability/issues"
             },
-            "time": "2026-08-06T18:04:07+00:00"
+            "time": "2026-08-06T19:57:28+00:00"
         },
         {
             "name": "liberusoftware/organizations-teams",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-organizations-teams.git",
-                "reference": "8cb734e60a430f90c796f308f3771d0368f20484"
+                "reference": "05d7cbc331a7b4bdc548bc203be363c5a71ecba7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-organizations-teams/zipball/8cb734e60a430f90c796f308f3771d0368f20484",
-                "reference": "8cb734e60a430f90c796f308f3771d0368f20484",
+                "url": "https://api.github.com/repos/liberusoftware/module-organizations-teams/zipball/05d7cbc331a7b4bdc548bc203be363c5a71ecba7",
+                "reference": "05d7cbc331a7b4bdc548bc203be363c5a71ecba7",
                 "shasum": ""
             },
             "require": {
@@ -6566,23 +6567,23 @@
             ],
             "description": "Organization, team, membership, invitation, ownership, and context foundation.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-organizations-teams/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-organizations-teams/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-organizations-teams/issues"
             },
-            "time": "2026-08-06T18:04:10+00:00"
+            "time": "2026-08-06T19:57:31+00:00"
         },
         {
             "name": "liberusoftware/organizations-teams-filament",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-organizations-teams-filament.git",
-                "reference": "ac0989557b64467d1689ea6d6f56e180ac8d1331"
+                "reference": "fe2566666d07aa45cdf6e916d95f48105c07f537"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-organizations-teams-filament/zipball/ac0989557b64467d1689ea6d6f56e180ac8d1331",
-                "reference": "ac0989557b64467d1689ea6d6f56e180ac8d1331",
+                "url": "https://api.github.com/repos/liberusoftware/module-organizations-teams-filament/zipball/fe2566666d07aa45cdf6e916d95f48105c07f537",
+                "reference": "fe2566666d07aa45cdf6e916d95f48105c07f537",
                 "shasum": ""
             },
             "require": {
@@ -6620,23 +6621,23 @@
             ],
             "description": "Filament administration adapter for organizations and teams.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-organizations-teams-filament/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-organizations-teams-filament/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-organizations-teams-filament/issues"
             },
-            "time": "2026-08-06T18:04:13+00:00"
+            "time": "2026-08-06T19:57:33+00:00"
         },
         {
             "name": "liberusoftware/profiles",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-profiles.git",
-                "reference": "30f300577a6db45996fa175ac95c4b139a5abd0b"
+                "reference": "bef233b1acc66ae7001c56e62b441d67135c2466"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-profiles/zipball/30f300577a6db45996fa175ac95c4b139a5abd0b",
-                "reference": "30f300577a6db45996fa175ac95c4b139a5abd0b",
+                "url": "https://api.github.com/repos/liberusoftware/module-profiles/zipball/bef233b1acc66ae7001c56e62b441d67135c2466",
+                "reference": "bef233b1acc66ae7001c56e62b441d67135c2466",
                 "shasum": ""
             },
             "require": {
@@ -6675,23 +6676,23 @@
             ],
             "description": "Controlled profile updates and user presentation preferences.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-profiles/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-profiles/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-profiles/issues"
             },
-            "time": "2026-08-06T18:04:15+00:00"
+            "time": "2026-08-06T19:57:36+00:00"
         },
         {
             "name": "liberusoftware/roles-permissions",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-roles-permissions.git",
-                "reference": "7bb90d22eff5dde8bf9176ebe60fa6f9cae8aca3"
+                "reference": "35a4524be6fe6f655c1fb3b912a08cefb87c92f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-roles-permissions/zipball/7bb90d22eff5dde8bf9176ebe60fa6f9cae8aca3",
-                "reference": "7bb90d22eff5dde8bf9176ebe60fa6f9cae8aca3",
+                "url": "https://api.github.com/repos/liberusoftware/module-roles-permissions/zipball/35a4524be6fe6f655c1fb3b912a08cefb87c92f1",
+                "reference": "35a4524be6fe6f655c1fb3b912a08cefb87c92f1",
                 "shasum": ""
             },
             "require": {
@@ -6730,23 +6731,23 @@
             ],
             "description": "Contextual roles, permissions, policies, and authorization safeguards.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-roles-permissions/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-roles-permissions/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-roles-permissions/issues"
             },
-            "time": "2026-08-06T18:04:18+00:00"
+            "time": "2026-08-06T19:57:39+00:00"
         },
         {
             "name": "liberusoftware/roles-permissions-filament",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-roles-permissions-filament.git",
-                "reference": "9aa5ed95942a5129ef5ecfc3e86bc5b85c61eb89"
+                "reference": "1efb2d23117086d1e5b3ac9b1bcf79c1042b3c11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-roles-permissions-filament/zipball/9aa5ed95942a5129ef5ecfc3e86bc5b85c61eb89",
-                "reference": "9aa5ed95942a5129ef5ecfc3e86bc5b85c61eb89",
+                "url": "https://api.github.com/repos/liberusoftware/module-roles-permissions-filament/zipball/1efb2d23117086d1e5b3ac9b1bcf79c1042b3c11",
+                "reference": "1efb2d23117086d1e5b3ac9b1bcf79c1042b3c11",
                 "shasum": ""
             },
             "require": {
@@ -6785,23 +6786,23 @@
             ],
             "description": "Filament Shield presentation adapter for Liberu authorization.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-roles-permissions-filament/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-roles-permissions-filament/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-roles-permissions-filament/issues"
             },
-            "time": "2026-08-06T18:04:21+00:00"
+            "time": "2026-08-06T19:57:41+00:00"
         },
         {
             "name": "liberusoftware/scheduler-queues",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-scheduler-queues.git",
-                "reference": "faee32e3979317b3dbc68924c9cf4e1a12019443"
+                "reference": "ed12e81cadad6e58bbb179295a5c2b55be5348ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-scheduler-queues/zipball/faee32e3979317b3dbc68924c9cf4e1a12019443",
-                "reference": "faee32e3979317b3dbc68924c9cf4e1a12019443",
+                "url": "https://api.github.com/repos/liberusoftware/module-scheduler-queues/zipball/ed12e81cadad6e58bbb179295a5c2b55be5348ec",
+                "reference": "ed12e81cadad6e58bbb179295a5c2b55be5348ec",
                 "shasum": ""
             },
             "require": {
@@ -6840,10 +6841,10 @@
             ],
             "description": "Queue idempotency, retry, failure, scheduling, locking, and deployment conventions.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-scheduler-queues/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-scheduler-queues/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-scheduler-queues/issues"
             },
-            "time": "2026-08-06T18:04:23+00:00"
+            "time": "2026-08-06T19:57:44+00:00"
         },
         {
             "name": "liberusoftware/search",
@@ -6903,16 +6904,16 @@
         },
         {
             "name": "liberusoftware/search-api",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-search-api.git",
-                "reference": "7859e43f2220a27178b537728a63975fe67cb55e"
+                "reference": "3eef3e486f44fca0d8aa450dacc605cad81ea1fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-search-api/zipball/7859e43f2220a27178b537728a63975fe67cb55e",
-                "reference": "7859e43f2220a27178b537728a63975fe67cb55e",
+                "url": "https://api.github.com/repos/liberusoftware/module-search-api/zipball/3eef3e486f44fca0d8aa450dacc605cad81ea1fa",
+                "reference": "3eef3e486f44fca0d8aa450dacc605cad81ea1fa",
                 "shasum": ""
             },
             "require": {
@@ -6951,23 +6952,23 @@
             ],
             "description": "HTTP API presentation adapter for Liberu Search.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-search-api/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-search-api/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-search-api/issues"
             },
-            "time": "2026-08-06T18:04:29+00:00"
+            "time": "2026-08-06T19:57:49+00:00"
         },
         {
             "name": "liberusoftware/sessions-devices",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-sessions-devices.git",
-                "reference": "3da51e6c85d71782e238d72d2e197a07515e38ed"
+                "reference": "03a78e1f8544110fa885499bfec0cbf717a7e633"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-sessions-devices/zipball/3da51e6c85d71782e238d72d2e197a07515e38ed",
-                "reference": "3da51e6c85d71782e238d72d2e197a07515e38ed",
+                "url": "https://api.github.com/repos/liberusoftware/module-sessions-devices/zipball/03a78e1f8544110fa885499bfec0cbf717a7e633",
+                "reference": "03a78e1f8544110fa885499bfec0cbf717a7e633",
                 "shasum": ""
             },
             "require": {
@@ -7006,23 +7007,23 @@
             ],
             "description": "Privacy-conscious session inventory and revocation.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-sessions-devices/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-sessions-devices/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-sessions-devices/issues"
             },
-            "time": "2026-08-06T18:04:32+00:00"
+            "time": "2026-08-06T19:57:51+00:00"
         },
         {
             "name": "liberusoftware/sessions-devices-filament",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-sessions-devices-filament.git",
-                "reference": "daeff2584c82fcdb3ac0a895c1878ba895020e5c"
+                "reference": "4746efc340eccc210b60ee71d9658f2ab5a93336"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-sessions-devices-filament/zipball/daeff2584c82fcdb3ac0a895c1878ba895020e5c",
-                "reference": "daeff2584c82fcdb3ac0a895c1878ba895020e5c",
+                "url": "https://api.github.com/repos/liberusoftware/module-sessions-devices-filament/zipball/4746efc340eccc210b60ee71d9658f2ab5a93336",
+                "reference": "4746efc340eccc210b60ee71d9658f2ab5a93336",
                 "shasum": ""
             },
             "require": {
@@ -7060,23 +7061,23 @@
             ],
             "description": "Filament account-security presentation adapter for Liberu Sessions and Devices.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-sessions-devices-filament/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-sessions-devices-filament/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-sessions-devices-filament/issues"
             },
-            "time": "2026-08-06T18:04:35+00:00"
+            "time": "2026-08-06T19:57:54+00:00"
         },
         {
             "name": "liberusoftware/settings",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-settings.git",
-                "reference": "fc94c286f4b2f974828787f32165c32d6a77a02a"
+                "reference": "abf8a8b1a1ec7f1e62b3b28a1424e0ada3c7cffc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-settings/zipball/fc94c286f4b2f974828787f32165c32d6a77a02a",
-                "reference": "fc94c286f4b2f974828787f32165c32d6a77a02a",
+                "url": "https://api.github.com/repos/liberusoftware/module-settings/zipball/abf8a8b1a1ec7f1e62b3b28a1424e0ada3c7cffc",
+                "reference": "abf8a8b1a1ec7f1e62b3b28a1424e0ada3c7cffc",
                 "shasum": ""
             },
             "require": {
@@ -7085,7 +7086,7 @@
                 "spatie/laravel-settings": "^3.0"
             },
             "require-dev": {
-                "liberusoftware/package-testbench": "^1.5",
+                "liberusoftware/package-testbench": "^1.6",
                 "pestphp/pest": "^5.0"
             },
             "type": "liberu-module",
@@ -7114,23 +7115,23 @@
             ],
             "description": "Typed scoped settings foundation for Liberu applications.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-settings/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-settings/tree/1.3.0",
                 "issues": "https://github.com/liberusoftware/module-settings/issues"
             },
-            "time": "2026-08-06T18:04:38+00:00"
+            "time": "2026-08-06T19:57:57+00:00"
         },
         {
             "name": "liberusoftware/settings-filament",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-settings-filament.git",
-                "reference": "b37ee7ab0744e019c295e7093a5a25e3ea283358"
+                "reference": "8310e506a1c28bdbd19fe7ec2e614cb26845a20f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-settings-filament/zipball/b37ee7ab0744e019c295e7093a5a25e3ea283358",
-                "reference": "b37ee7ab0744e019c295e7093a5a25e3ea283358",
+                "url": "https://api.github.com/repos/liberusoftware/module-settings-filament/zipball/8310e506a1c28bdbd19fe7ec2e614cb26845a20f",
+                "reference": "8310e506a1c28bdbd19fe7ec2e614cb26845a20f",
                 "shasum": ""
             },
             "require": {
@@ -7170,23 +7171,23 @@
             ],
             "description": "Filament administration adapter for Liberu Settings.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-settings-filament/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-settings-filament/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-settings-filament/issues"
             },
-            "time": "2026-08-06T18:04:41+00:00"
+            "time": "2026-08-06T19:57:59+00:00"
         },
         {
             "name": "liberusoftware/theme-base",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-liberu-base.git",
-                "reference": "e6201a6ed56833cb0d3f5582d65eb84514338a78"
+                "reference": "920613c3660797c5e1b96739e3b98ddb3a6e2088"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-liberu-base/zipball/e6201a6ed56833cb0d3f5582d65eb84514338a78",
-                "reference": "e6201a6ed56833cb0d3f5582d65eb84514338a78",
+                "url": "https://api.github.com/repos/liberusoftware/theme-liberu-base/zipball/920613c3660797c5e1b96739e3b98ddb3a6e2088",
+                "reference": "920613c3660797c5e1b96739e3b98ddb3a6e2088",
                 "shasum": ""
             },
             "require": {
@@ -7223,23 +7224,23 @@
             ],
             "description": "Shared semantic tokens and accessible presentation primitives for Liberu themes.",
             "support": {
-                "source": "https://github.com/liberusoftware/theme-liberu-base/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/theme-liberu-base/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/theme-liberu-base/issues"
             },
-            "time": "2026-08-06T18:05:33+00:00"
+            "time": "2026-08-06T19:58:44+00:00"
         },
         {
             "name": "liberusoftware/theme-clear-signal",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-clear-signal.git",
-                "reference": "65dc18baff666a246e97b6b84c837cee415eebe2"
+                "reference": "e40f9967925a578bac295a7006bb09a6da59b8a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-clear-signal/zipball/65dc18baff666a246e97b6b84c837cee415eebe2",
-                "reference": "65dc18baff666a246e97b6b84c837cee415eebe2",
+                "url": "https://api.github.com/repos/liberusoftware/theme-clear-signal/zipball/e40f9967925a578bac295a7006bb09a6da59b8a4",
+                "reference": "e40f9967925a578bac295a7006bb09a6da59b8a4",
                 "shasum": ""
             },
             "require": {
@@ -7277,23 +7278,23 @@
             ],
             "description": "Clear Signal public theme for Liberu applications.",
             "support": {
-                "source": "https://github.com/liberusoftware/theme-clear-signal/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/theme-clear-signal/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/theme-clear-signal/issues"
             },
-            "time": "2026-08-06T18:05:13+00:00"
+            "time": "2026-08-06T19:58:24+00:00"
         },
         {
             "name": "liberusoftware/theme-dark",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-dark.git",
-                "reference": "5ec763edf1c44d1eb8ccdc7f5e016e1b1592f453"
+                "reference": "abe94b0ecbe204646b0c641ff7f70c8cd75b987a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-dark/zipball/5ec763edf1c44d1eb8ccdc7f5e016e1b1592f453",
-                "reference": "5ec763edf1c44d1eb8ccdc7f5e016e1b1592f453",
+                "url": "https://api.github.com/repos/liberusoftware/theme-dark/zipball/abe94b0ecbe204646b0c641ff7f70c8cd75b987a",
+                "reference": "abe94b0ecbe204646b0c641ff7f70c8cd75b987a",
                 "shasum": ""
             },
             "require": {
@@ -7331,23 +7332,23 @@
             ],
             "description": "Liberu dark public theme.",
             "support": {
-                "source": "https://github.com/liberusoftware/theme-dark/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/theme-dark/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/theme-dark/issues"
             },
-            "time": "2026-08-06T18:05:22+00:00"
+            "time": "2026-08-06T19:58:33+00:00"
         },
         {
             "name": "liberusoftware/theme-default",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/theme-default.git",
-                "reference": "83303eca23ca4d9efbf521cf7c626cff66183a54"
+                "reference": "dfdb6258e62d7a7082173b0cac8e03723901ec7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/theme-default/zipball/83303eca23ca4d9efbf521cf7c626cff66183a54",
-                "reference": "83303eca23ca4d9efbf521cf7c626cff66183a54",
+                "url": "https://api.github.com/repos/liberusoftware/theme-default/zipball/dfdb6258e62d7a7082173b0cac8e03723901ec7b",
+                "reference": "dfdb6258e62d7a7082173b0cac8e03723901ec7b",
                 "shasum": ""
             },
             "require": {
@@ -7385,10 +7386,10 @@
             ],
             "description": "Liberu default public theme.",
             "support": {
-                "source": "https://github.com/liberusoftware/theme-default/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/theme-default/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/theme-default/issues"
             },
-            "time": "2026-08-06T18:05:31+00:00"
+            "time": "2026-08-06T19:58:41+00:00"
         },
         {
             "name": "liberusoftware/theme-support",
@@ -7449,16 +7450,16 @@
         },
         {
             "name": "liberusoftware/theme-support-livewire",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-theme-support-livewire.git",
-                "reference": "ec5e6b271c7f6309593cb10c616b54849239532d"
+                "reference": "4211dd5e1ca5dbb35eb1acb30613834fb7dc4622"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-theme-support-livewire/zipball/ec5e6b271c7f6309593cb10c616b54849239532d",
-                "reference": "ec5e6b271c7f6309593cb10c616b54849239532d",
+                "url": "https://api.github.com/repos/liberusoftware/module-theme-support-livewire/zipball/4211dd5e1ca5dbb35eb1acb30613834fb7dc4622",
+                "reference": "4211dd5e1ca5dbb35eb1acb30613834fb7dc4622",
                 "shasum": ""
             },
             "require": {
@@ -7496,23 +7497,23 @@
             ],
             "description": "Livewire theme-switching presentation adapter for Liberu Theme Support.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-theme-support-livewire/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-theme-support-livewire/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-theme-support-livewire/issues"
             },
-            "time": "2026-08-06T18:04:48+00:00"
+            "time": "2026-08-06T19:58:06+00:00"
         },
         {
             "name": "liberusoftware/two-factor-authentication",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-two-factor-authentication.git",
-                "reference": "ef6fa345de5ab0d9903b0b8f1083386fa26c6f19"
+                "reference": "2a27bc0da3a473bdbf1103b77ee80928dfc62700"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-two-factor-authentication/zipball/ef6fa345de5ab0d9903b0b8f1083386fa26c6f19",
-                "reference": "ef6fa345de5ab0d9903b0b8f1083386fa26c6f19",
+                "url": "https://api.github.com/repos/liberusoftware/module-two-factor-authentication/zipball/2a27bc0da3a473bdbf1103b77ee80928dfc62700",
+                "reference": "2a27bc0da3a473bdbf1103b77ee80928dfc62700",
                 "shasum": ""
             },
             "require": {
@@ -7551,23 +7552,23 @@
             ],
             "description": "TOTP enforcement policy and one-time recovery-code primitives.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-two-factor-authentication/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-two-factor-authentication/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-two-factor-authentication/issues"
             },
-            "time": "2026-08-06T18:04:52+00:00"
+            "time": "2026-08-06T19:58:09+00:00"
         },
         {
             "name": "liberusoftware/webhooks",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-webhooks.git",
-                "reference": "bab9b435d8f1bf4a163767d56769b83bd7abe18e"
+                "reference": "bf12ab1ca3020b2b6d3c0ac6685444e49043ad13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-webhooks/zipball/bab9b435d8f1bf4a163767d56769b83bd7abe18e",
-                "reference": "bab9b435d8f1bf4a163767d56769b83bd7abe18e",
+                "url": "https://api.github.com/repos/liberusoftware/module-webhooks/zipball/bf12ab1ca3020b2b6d3c0ac6685444e49043ad13",
+                "reference": "bf12ab1ca3020b2b6d3c0ac6685444e49043ad13",
                 "shasum": ""
             },
             "require": {
@@ -7606,10 +7607,10 @@
             ],
             "description": "Signed filtered webhook endpoints, durable delivery attempts, retry, replay, and secret rotation.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-webhooks/tree/1.2.0",
+                "source": "https://github.com/liberusoftware/module-webhooks/tree/1.2.1",
                 "issues": "https://github.com/liberusoftware/module-webhooks/issues"
             },
-            "time": "2026-08-06T18:04:54+00:00"
+            "time": "2026-08-06T19:58:12+00:00"
         },
         {
             "name": "livewire/livewire",
@@ -16973,16 +16974,16 @@
         },
         {
             "name": "laravel/boost",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/boost.git",
-                "reference": "ae6ae78ecd053000d14204cef3c5c37aae6c97ed"
+                "reference": "e4f651a973cb454616c36d324150b6a533913bd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/boost/zipball/ae6ae78ecd053000d14204cef3c5c37aae6c97ed",
-                "reference": "ae6ae78ecd053000d14204cef3c5c37aae6c97ed",
+                "url": "https://api.github.com/repos/laravel/boost/zipball/e4f651a973cb454616c36d324150b6a533913bd1",
+                "reference": "e4f651a973cb454616c36d324150b6a533913bd1",
                 "shasum": ""
             },
             "require": {
@@ -17035,7 +17036,7 @@
                 "issues": "https://github.com/laravel/boost/issues",
                 "source": "https://github.com/laravel/boost"
             },
-            "time": "2026-08-05T17:03:29+00:00"
+            "time": "2026-08-06T19:01:40+00:00"
         },
         {
             "name": "laravel/mcp",
