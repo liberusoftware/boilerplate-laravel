@@ -132,8 +132,9 @@ Actions: `sources`, `fetch`. Debug without opening files by hand.
 - entries come back chronological (oldest first). Raw logs with no timestamps ignore `since`/`level` and just return the last N; a not-running container returns partial output, not an error
 
 #### `worktree` — git worktrees
-Actions: `list`, `add`, `remove`, `db_isolate`, `db_share`.
-- `add` installs deps and offers an asset-worker / build-step prompt; secured sites get `*.<branch>.<site>.test` wildcard cert SANs + nginx `server_name` automatically
+Actions: `list`, `add`, `remove`, `wait`, `db_isolate`, `db_share`.
+- `add` installs deps and offers an asset-worker / build-step prompt; secured sites get `*.<branch>.<site>.test` wildcard cert SANs + nginx `server_name` automatically. It waits for setup and reports `provisioned` (`false` + note means still running, not failed; `timeout_seconds` default 300)
+- `wait` is that readiness check alone, for a worktree made with plain `git worktree add`. **Never** judge readiness from the tree: `node_modules/` exists from the first extracted package and composer fills *existing* `vendor/<org>/` dirs, so both read as finished mid-install, and racing the watcher is how `vendor/` ends up with no `autoload.php`
 - `db_isolate` gives a worktree its own database (seed via `source`: empty|main|<branch>); `db_share` points it back at the main; `remove` keeps an isolated DB unless `keep_db: false`
 - a framework definition can declare what its worktrees need (an isolated database, what it is cloned from, console commands to run once it is in place), so `add` does that work rather than leaving it to be run by hand
 - request timing is recorded per worktree; pass `branch` to `route_timing`, `optimize_route` and `dumps_recent` to read one branch's traffic
@@ -155,7 +156,7 @@ Actions: `list`, `create`, `rename`, `delete`, `assign`, `move`.
 - **Custom container sites** (Node.js, Python, Go, …) — mandatory order: (1) write a Containerfile (default `Containerfile.lerd`); (2) write `.lerd.yaml` with `container: {port: <N>}` (plus optional `domains`, `services`, `secured`); (3) configure the project's `.env` with service hosts (`lerd-mysql`, etc.) and start needed services via `service` `start`; (4) call `site` `link`. Never link before steps 1–3 or the site registers as PHP-FPM; if that happens, `site` `unlink`, write the files, then link again
 - Worker unit names follow `lerd-<worker>-<site>` (per-worktree: `lerd-<worker>-<site>-<branch>`)
 - **Host tools (CLI-only)**: `diag` `status` reports Composer, fnm and mkcert against the versions lerd pins, and flags any that differ. Applying an update is `lerd tools:update`, which has no tool here, so tell the user to run it rather than looking for an action
-- **Sharing a site is CLI-only and deliberate**: `lerd share` (ngrok, cloudflared, Expose, serveo, localhost.run) and the dashboard's share menu put a site on the public internet, and `lerd lan:expose` puts it on the local network. Neither is exposed here, so never claim you can share a site; hand the user the command and let them decide
+- **Sharing a site is CLI-only and deliberate**: `lerd share` (ngrok, cloudflared, Expose, serveo, localhost.run, Pinggy) and the dashboard's share menu put a site on the public internet, the same menu's public share serves it through the user's own reverse proxy on a base domain they control instead of a tunnel service, and `lerd lan:expose` puts it on the local network. None is exposed here, so never claim you can share a site; hand the user the command and let them decide
 
 <!-- lerd:end -->
 
