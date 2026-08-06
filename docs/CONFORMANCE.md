@@ -309,6 +309,7 @@ Found by executing rather than reading. None is optional.
 | **`composer.lock` out of date** | `composer install` warns it disagrees with `composer.json` | resolve before step −1 |
 | **`publish-components` would publish `vendor/`** | its rsync excludes only `.git`, but `modules/*/vendor` and `modules/*/composer.lock` are gitignored here and appear the moment a package's standalone suite is run — the very workflow `CLAUDE.md:58` prescribes. A dry rsync of `modules/analytics-core` alone listed **23,990** `vendor/` entries for transfer | fixed here: `vendor/`, `composer.lock`, `node_modules/` and `.phpunit.result.cache` are excluded |
 | **`publish-components` can fast-forward `main` from a feature branch** | the meta step is `git push … HEAD:$branch`, so publishing while checked out anywhere but `main` silently advances `main` to the working branch | fixed here: the meta push refuses unless `HEAD` is on `$branch` |
+| **34 packages published with no `tests/` directory** | the migration left `tests/` empty for every package with no tests of its own, and Git does not track an empty directory — so the 1.2.0 tarballs had none, and Pest aborts before any suite runs with `The test directory [tests] does not exist`. The fleet sweep did not catch it: the empty directory was still on disk locally. Found only when a `composer update` reinstalled a package over it | a tracked `tests/.gitkeep`, written by `scripts/migrate-testbench`; republished as 1.2.1 |
 | **Two modules cannot boot standalone at all** | Testbench runs no package discovery, so `localization-core-livewire` and `theme-support-livewire` failed every boundary test with `Target class [livewire.finder] does not exist`. Their deleted per-package `TestCase` had hardcoded `LivewireServiceProvider`, which is why nobody had noticed the packages themselves declare no way to boot | fixed in testbench 1.5.0: `PackageTestCase` registers `extra.laravel.providers` of every direct dependency — Laravel's own discovery, scoped to what the package requires |
 | **`localization-mymemory` boots against an implementation it does not depend on** | its provider calls `$this->app->make(TranslationProviderRegistry::class)`, but it requires only `localization-contracts`; nothing in its dependency graph binds one. Standalone it throws `Target [TranslationProviderRegistry] is not instantiable`. The deleted `TestCase` hid this behind an anonymous fake | `require-dev` on `liberusoftware/localization-core`, which testbench 1.5.0 boots. Runtime independence from the implementation is preserved; only the test composition gains one |
 | **`search` is built around the demo it is losing** | `SearchService::searchPosts()`/`searchGroups()` read `config('search.models.post')`/`.group`, which ship as `null` and were set only by `search-demo`'s provider. With the demo exiled, `/api/search/posts` and `/api/search/groups` raise `Class name must be a valid object or a string` — a fatal, not an empty result | guard the unconfigured type now; move the demo-shaped methods and their two controller actions into `search-demo` at step 2 |
@@ -511,6 +512,31 @@ those files (all three are now §4 rows):
   now yields no themes instead of throwing, and the fallback and inheritance guards fire only once
   themes exist. A composition that loses its themes is still caught where that is knowable — the
   host's own rules read `themes/` directly.
+
+**Step 5 has started, and §3.7's actor is not the one it describes.**
+
+`package-testbench` 1.6.0 ships `TestUser`, its factory, the base `users` migration and a
+`UsesTestUser` trait. It implements **none** of the four actor contracts. Doing so would make the
+testbench require Horizon, Pulse, Telescope, Jetstream, Socialite and Socialstream — in all 44 dev
+trees — for four one-method interfaces. Only three host tests touch those contracts, and all three
+assert on the host's own `User`, so they are composition tests either way. What the movable tests
+actually needed was the base `users` table, which is exactly the thing no package owns: `profiles`
+adds `locale`, `theme_preference` and `timezone` to it, `search` adds its indexes, but the table
+belongs to the application.
+
+Moved so far: `settings` takes the three site-settings tests, `localization-core` takes the locale
+middleware suite. Host: 253 passed, 12 skipped.
+
+**Two families cannot move yet, for reasons worth recording rather than retrying:**
+
+- **Themes.** `ThemeManager*` and `ThemeSwitcherTest` assert against installed themes, and themes are
+  discovered from `base_path('themes')` rather than through Composer the way `ModuleDiscovery`
+  resolves modules from `InstalledVersions`. A package therefore cannot see a theme it dev-requires,
+  because Testbench's base path is its own skeleton. Making theme discovery Composer-driven would fix
+  this and the §4 `theme-support` row together; it is a package redesign, not a test move.
+- **Search.** `SearchServiceTest` and the six HTTP search tests depend on the host's post and group
+  fixtures — the fixtures for exactly the methods that leave for `search-demo`. Moving them first
+  would relocate scaffolding for code that is about to be deleted, so search follows that task.
 
 ## 5. Migration sequence
 

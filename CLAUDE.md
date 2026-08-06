@@ -151,6 +151,16 @@ the adapter free of the implementation at runtime while letting its own suite bo
 Anything a package still needs of its own (`tests/Unit`, and the `autoload-dev` mapping when a test
 is namespaced) stays, bound by a two-line `tests/Pest.php`.
 
+**`tests/.gitkeep` is load-bearing.** Git does not track an empty directory, so a package with no
+tests of its own would publish without `tests/` at all — and Pest aborts before any suite runs with
+`The test directory [tests] does not exist`. 34 packages shipped that way once.
+
+A test that needs an authenticated user uses the testbench's `TestUser` and the `UsesTestUser` trait,
+which loads the base `users` migration and brings `RefreshDatabase`. That table is the one thing no
+package owns — `profiles` adds `locale`, `theme_preference` and `timezone` to it, `search` adds its
+indexes. `TestUser` implements none of the fleet's actor contracts; a package needing one subclasses
+it in its own tests.
+
 A test belongs **in the package** only if it needs nothing from the host. Several suites that
 look package-shaped are not: the `ThemeManager*` tests assert on the host's `themes/` directory,
 and `SearchServiceTest`/`SetLocaleMiddlewareTest` use `App\Models\User`. Those are composition
