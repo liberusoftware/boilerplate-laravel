@@ -185,6 +185,15 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
 
 
 def main() -> int:
+    # Given paths, migrate exactly those — the six exiled packages live in their
+    # own repositories and are no longer under modules/, but need the same shape.
+    if sys.argv[1:]:
+        for arg in sys.argv[1:]:
+            pkg = pathlib.Path(arg).resolve()
+            kind = 'Theme' if (pkg / 'theme.json').is_file() else 'Module'
+            print(f'{pkg.name:<44}{migrate(pkg, kind)}')
+        return 0
+
     for base, kind in (('modules', 'Module'), ('themes', 'Theme')):
         for pkg in sorted((ROOT / base).iterdir()):
             if pkg.is_dir():

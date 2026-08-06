@@ -556,10 +556,52 @@ middleware suite. Host: 253 passed, 12 skipped.
   a match arm. An unregistered type is now *absent* from the result rather than present and empty, so
   a caller can tell "this composition has no such type" from "no matches".
 
-The demo surface itself is extracted but **not delivered** — `liberusoftware/module-search-demo` is
-not checked out here — and the same holds for the exiled messaging and blog tests. Two plan
-assumptions failed on contact: those four repositories were never renamed as §3.4 predicted (still
-`module-messaging`, `module-blog-core`) and are still at 1.0.4 on the pre-testbench bootstrap.
+**Both are now delivered, and each of the five repositories is green on its own suite.** All five
+were cloned to `~/code/<repo>`, migrated onto the testbench with `scripts/migrate-testbench`, which
+now takes explicit paths for exactly this, and released as **1.1.0**:
+
+| Repository | Suite | What it took |
+| --- | --- | --- |
+| `module-search-demo` | 50 passed, 2 skipped | the whole demo surface, plus six adopted host suites |
+| `module-messaging` | 11 passed, 2 skipped | nothing beyond the testbench |
+| `module-messaging-api` | 21 passed, 2 skipped | `laravel/sanctum` dev-required; one real defect fixed |
+| `module-blog-core` | 7 passed, 2 skipped | nothing beyond the testbench |
+| `module-blog-filament` | 7 passed, 2 skipped | a fixture panel and a widened provider walk |
+
+Two plan assumptions failed on contact: those four repositories were never renamed as §3.4 predicted
+(still `module-messaging`, `module-blog-core`) and were still at 1.0.4 on the pre-testbench
+bootstrap. Both are recorded rather than retried — the rename is a §3.3 question, not a step-5 one.
+
+**Four things only surfaced once each package was tested on its own dependencies.**
+
+- **`MessageController::users()` selected `profile_photo_path`** — Jetstream's column, which nothing
+  in `messaging-api`'s dependency graph creates. `/api/messages/users` had returned a 500 for four
+  releases in any application without Jetstream, and was invisible because the only thing exercising
+  it was a host that happened to have Jetstream. Fixed by narrowing the select; two of the adopted
+  cases now cover it. **This is the clearest evidence for §3.8's premise** that a package must run
+  against its own tree, not a composition's.
+- **`search` has an unwritten contract with the user model.** `SearchService::searchUsers()` calls
+  `search()` and `role()` on whatever `search.models.user` names, and ships no trait supplying them —
+  the scopes live on the host's own `User`. `search-demo` stands one up in `tests/Fixtures`. A trait
+  in `search` is the real fix and is not done.
+- **A package that extends a dependency's registry must boot it.** `search-demo`, `messaging-api` and
+  `blog-filament` each name a `require` sibling's provider in `getPackageProviders()`. Listing the
+  same package in `require` *and* `require-dev` also works and was the first design, but it earns a
+  `composer validate` warning for a duplication that says nothing true. The testbench's rule stands:
+  a runtime requirement is not a statement about what the package is tested against.
+- **`blog-filament` is the first package in the fleet to boot a Filament panel in its own suite**, so
+  it needed a fixture panel and every `extra.laravel.providers` in the installed tree — the testbench
+  registers only *direct* dependencies', and the Filament stack is transitive. That widened walk is
+  deliberately local until a second `-filament` package needs it; **that is when it moves to
+  `package-testbench`**, not before.
+
+Two adopted tests could not have failed as written and were rewritten rather than copied: the blog
+index case asserted `assertOk()` without ever creating a post, and `BlogResourceCoverageTest`
+rendered an empty table, which cannot fail on a broken column.
+
+The host's `tests/Fixtures/Models/{Post,Group}`, their factories and the fixture migration are
+deleted — no host test had referenced them since the demo methods left, and the suite is unchanged at
+203 passed, which is the evidence.
 
 **§3.9's shape was wrong in one respect: the three are three *workflows*, not three jobs.**
 
