@@ -18,7 +18,7 @@
       "name": "sessions-devices-filament"
     }
   },
-  "version": "1.2.0",
+  "version": "1.2.1",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\SessionsDevicesFilament\\Tests\\": "tests/"

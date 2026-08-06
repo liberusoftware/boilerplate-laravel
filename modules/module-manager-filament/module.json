@@ -3,7 +3,7 @@
     "name": "module-manager-filament",
     "display_name": "Module Manager Administration",
     "description": "Authorized installed-module diagnostics for the admin panel.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\ModuleManagerFilament\\ModuleManagerFilamentServiceProvider",
     "requires": {

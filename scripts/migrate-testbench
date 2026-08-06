@@ -59,6 +59,18 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
             target.unlink()
             changed.append(f'-tests/{stale}')
 
+    # Git does not track an empty directory. Without this the 34 packages with no
+    # tests of their own publish with no tests/ at all, and Pest aborts before any
+    # suite runs: "The test directory [tests] does not exist."
+    keep = tests / '.gitkeep'
+    if not keep.exists():
+        keep.write_text(
+            '# Git does not track an empty directory, so without this file a package with no\n'
+            '# tests of its own publishes without tests/ at all — and Pest aborts before any\n'
+            '# suite runs with "The test directory [tests] does not exist."\n'
+        )
+        changed.append('+tests/.gitkeep')
+
     own = sorted(d.name for d in tests.glob('*') if d.is_dir())
     pest = tests / 'Pest.php'
     if own:

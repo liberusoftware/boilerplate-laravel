@@ -3,7 +3,7 @@
     "name": "roles-permissions-filament",
     "display_name": "Roles and Permissions Filament",
     "description": "Filament role and permission management through the roles and permissions capability.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\RolesPermissionsFilament\\RolesPermissionsFilamentServiceProvider",
     "requires": {

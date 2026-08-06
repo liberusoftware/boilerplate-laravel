@@ -3,7 +3,7 @@
     "name": "audit",
     "display_name": "Audit",
     "description": "Actor, tenant, request and correlation-aware material-change audit with export and retention boundaries.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Audit\\AuditServiceProvider",
     "requires": {

@@ -1,13 +1,10 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Liberu\Foundation\Localization\Http\Middleware\SetLocale;
-
-uses(RefreshDatabase::class);
+use Liberu\PackageTestbench\TestUser;
 
 test('set locale middleware sets locale from request parameter', function () {
     $request = Request::create('/test', 'GET', ['locale' => 'es']);
@@ -37,7 +34,7 @@ test('set locale middleware sets locale from session', function () {
 });
 
 test('set locale middleware sets locale from the authenticated user preference', function () {
-    $this->actingAs(User::factory()->create(['locale' => 'de']));
+    $this->actingAs(TestUser::factory()->create(['locale' => 'de']));
 
     $request = Request::create('/test', 'GET');
     $middleware = new SetLocale();

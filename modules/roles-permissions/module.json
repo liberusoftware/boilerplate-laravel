@@ -3,7 +3,7 @@
     "name": "roles-permissions",
     "display_name": "Roles and Permissions",
     "description": "Contextual role assignments, module-owned permissions, policies, and cache invalidation.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\RolesPermissions\\RolesPermissionsServiceProvider",
     "requires": {
