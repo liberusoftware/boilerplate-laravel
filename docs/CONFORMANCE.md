@@ -658,13 +658,13 @@ which is why step 2 now ends in a release wave rather than a green host run.
 
 | Step | Work | Gate |
 | --- | --- | --- |
-| **−1** | Installer: four fixes (§4), publish, repoint root | clean locked install places every package |
+| **−1** | Installer: four fixes (§4), publish, repoint root | clean locked install places every package — **done** |
 | **0** | Exile the six out-of-scope packages via `publish-components`; strip from root, config and host tests | host green at 38 modules + 4 themes — **done**, see §4 |
-| **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green |
+| **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green — **done**, shipped through 1.7.0 |
 | **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | every package's own suite green, or blocked only on a same-wave rename — **done**, published as 1.1.0, see below |
 | **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green — **done**, see below; rules went 12→15, not 12→6 |
 | **4** | Migrate every package onto the testbench and the three workflows; add `config.allow-plugins` | every package suite green — **done**, see below; rules finally went 15→8 |
-| **5** | Redistribute the 9 clean + 16 actor-dependent host tests into their owning packages | host and package suites green |
+| **5** | Redistribute the 9 clean + 16 actor-dependent host tests into their owning packages | host and package suites green — **done**, see below; five repositories released as 1.1.0 |
 | **6** | Re-measure coverage; set each repo's ratchet threshold | thresholds recorded |
 | **7** | **Pilot one leaf package** end to end: split, CI green, publish, require, `composer update` | **zero `modules/` diff** |
 | **8** | Remaining waves, leaves before dependents | zero diff per wave — the §6.2 check is already enabled and green, from step 3 |
