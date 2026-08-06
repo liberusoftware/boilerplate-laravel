@@ -29,7 +29,7 @@
   },
   "require-dev": {
     "liberusoftware/profiles": "^1.0",
-    "liberusoftware/package-testbench": "^1.6",
+    "liberusoftware/package-testbench": "^1.7",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

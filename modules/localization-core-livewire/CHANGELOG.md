@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 - 2026-08-06
+
+- Adopt the host tests that belong to this package (step 5). They ran in the composition only
+  because the base `users` table lives there; `liberusoftware/package-testbench` 1.6.0 now ships
+  a test actor, so they run against this package alone.
+
 ## 1.2.0 - 2026-08-06
 
 - Move the boundary suites to `liberusoftware/package-testbench`: this repository no longer

@@ -1,12 +1,9 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
 use Liberu\Foundation\LocalizationLivewire\Livewire\LanguageSwitcher;
+use Liberu\PackageTestbench\TestUser;
 use Livewire\Livewire;
-
-uses(RefreshDatabase::class);
 
 test('language switcher component can switch language', function () {
     Livewire::test(LanguageSwitcher::class)
@@ -27,7 +24,7 @@ test('language switcher validates language code', function () {
 });
 
 test('language switcher updates user preference when authenticated', function () {
-    $user = User::factory()->create(['locale' => 'en']);
+    $user = TestUser::factory()->create(['locale' => 'en']);
 
     $this->actingAs($user);
 

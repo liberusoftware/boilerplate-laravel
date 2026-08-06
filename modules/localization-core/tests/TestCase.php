@@ -21,6 +21,8 @@ abstract class TestCase extends PackageTestCase
 
     protected function defineEnvironment($app): void
     {
+        parent::defineEnvironment($app);
+
         // `localization.locales` and not `app.supported_locales`: the package's own
         // config file reads the application's list once, while config is loading, so
         // setting the application key afterwards would arrive too late.

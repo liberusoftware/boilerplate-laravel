@@ -19,6 +19,8 @@ abstract class TestCase extends PackageTestCase
 
     protected function defineEnvironment($app): void
     {
+        parent::defineEnvironment($app);
+
         $app['config']->set('settings.migrations_paths', [dirname(__DIR__).'/database/settings']);
     }
 }
