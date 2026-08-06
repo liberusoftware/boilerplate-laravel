@@ -5,7 +5,7 @@ use Liberu\Foundation\Theme\Cache\ThemeCache;
 use Liberu\Foundation\Theme\Discovery\ThemeDiscovery;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 use Liberu\Foundation\Theme\Manifests\ThemeManifest;
-use Liberu\Foundation\Theme\Tests\TestCase;
+use Liberu\PackageTestbench\PackageTestCase as TestCase;
 
 function writeCoverageTheme(array $changes = [], bool $asset = true): string
 {
@@ -68,9 +68,11 @@ it('rejects malformed theme discovery directories', function (Closure $arrange, 
     }, 'not autoloadable'],
 ]);
 
-it('rejects a missing themes directory', function () {
-    expect(fn () => (new ThemeDiscovery())->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5))))
-        ->toThrow(InvalidTheme::class, 'tracked themes directory is missing');
+// Not an error: this package is installable in an application that ships no
+// themes at all, and the provider discovers while registering. Throwing here is
+// what made the package unbootable outside the host.
+it('finds no themes when the themes directory is absent', function () {
+    expect((new ThemeDiscovery())->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5))))->toBe([]);
 });
 
 it('ignores tracked directories that do not contain a theme manifest', function () {

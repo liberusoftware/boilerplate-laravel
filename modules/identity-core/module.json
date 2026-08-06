@@ -3,7 +3,7 @@
     "name": "identity-core",
     "display_name": "Identity",
     "description": "Provider-neutral authentication policy, identifier normalization, and security events.",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Identity\\IdentityServiceProvider",
     "requires": {

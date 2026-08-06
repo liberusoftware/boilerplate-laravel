@@ -1,9 +1,17 @@
 <?php
 
-use Illuminate\Support\ServiceProvider;
 use Liberu\Foundation\ModuleManager\Exceptions\DependencyResolutionFailed;
 use Liberu\Foundation\ModuleManager\Manifest;
 use Liberu\Foundation\ModuleManager\ModuleRegistry;
+
+/*
+ * What is left here is the whole-graph rules: the ones that read every package at
+ * once and so cannot be run by any single package. Everything a package can check
+ * about itself moved to liberusoftware/package-testbench's boundary suites (§3.8),
+ * where the repository that owns the fault is the one that goes red.
+ *
+ * Adding a rule here means first asking whether the package could run it alone.
+ */
 
 function moduleDirectories(): array
 {
@@ -29,32 +37,6 @@ function modulePhpFiles(string $module): array
 
     return array_values(array_filter(iterator_to_array($iterator), fn (SplFileInfo $file) => $file->isFile() && $file->getExtension() === 'php'));
 }
-
-it('gives every runtime module complete package metadata', function () {
-    foreach (moduleDirectories() as $module) {
-        expect($module.'/composer.json')->toBeFile()
-            ->and($module.'/module.json')->toBeFile()
-            ->and($module.'/README.md')->toBeFile()
-            ->and($module.'/LICENSE.md')->toBeFile()
-            ->and($module.'/CHANGELOG.md')->toBeFile();
-
-        $composer = json_decode(file_get_contents($module.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
-        $manifest = json_decode(file_get_contents($module.'/module.json'), true, flags: JSON_THROW_ON_ERROR);
-        $vendor = packageVendor($composer);
-        $moduleDependencies = array_filter($composer['require'] ?? [], fn ($constraint, $package) => str_starts_with($package, $vendor.'/'), ARRAY_FILTER_USE_BOTH);
-
-        expect($composer['type'] ?? null)->toBe('liberu-module')
-            ->and($composer['extra']['liberu']['name'] ?? null)->toBe($manifest['name'])
-            ->and($composer['extra']['laravel']['providers'] ?? [])->toBe([])
-            ->and($manifest['requires']['packages'] ?? [])->toBe($moduleDependencies)
-            ->and(class_exists($manifest['provider']))->toBeTrue()
-            ->and(is_subclass_of($manifest['provider'], ServiceProvider::class))->toBeTrue();
-
-        // Every installed manifest must survive the canonical parser. Owning it here keeps
-        // module-manager's own suite free of the consuming application's modules/ directory.
-        expect(Manifest::fromFile($module.'/module.json')->version())->toMatch('/^\d+\.\d+\.\d+$/');
-    }
-});
 
 it('lets every package install standalone', function () {
     $root = dirname(__DIR__, 2);
@@ -124,51 +106,6 @@ it('lets an override turn a module on and off again', function () {
         ->toThrow(DependencyResolutionFailed::class, 'Module [search-api] requires enabled package [liberusoftware/search ^1.0].');
 });
 
-it('requires every module to exercise its service provider in the application', function () {
-    foreach (moduleDirectories() as $module) {
-        $test = $module.'/tests/Integration/ServiceProviderTest.php';
-
-        expect($test)->toBeFile();
-
-        // Matches either shape: registering the provider explicitly, or asserting it
-        // is already registered after Testbench boots it. Both prove the provider is
-        // exercised against a real application rather than merely instantiated.
-        expect(file_get_contents($test))->toMatch('/\$this->app->(register|getProvider)\(/');
-    }
-});
-
-it('prevents modules from depending on the host application', function () {
-    foreach (moduleDirectories() as $module) {
-        foreach (modulePhpFiles($module) as $file) {
-            expect(file_get_contents($file->getPathname()))
-                ->not->toMatch('/(?:use|new|extends|implements)\s+App\\\\/');
-        }
-    }
-});
-
-it('keeps filament out of non-presentation modules', function () {
-    foreach (moduleDirectories() as $module) {
-        $manifest = json_decode(file_get_contents($module.'/module.json'), true, flags: JSON_THROW_ON_ERROR);
-        if ($manifest['category'] === 'presentation') {
-            continue;
-        }
-        foreach (modulePhpFiles($module) as $file) {
-            expect(file_get_contents($file->getPathname()))->not->toContain('Filament\\');
-        }
-    }
-});
-
-it('does not let api adapters import domain persistence models', function () {
-    foreach (moduleDirectories() as $module) {
-        if (! str_ends_with($module, '-api')) {
-            continue;
-        }
-        foreach (modulePhpFiles($module) as $file) {
-            expect(file_get_contents($file->getPathname()))->not->toMatch('/use Liberu\\\\.+\\\\Models\\\\/');
-        }
-    }
-});
-
 it('resolves every declared theme parent', function () {
     $themes = [];
     foreach (glob(dirname(__DIR__, 2).'/themes/*/theme.json') ?: [] as $manifestFile) {
@@ -187,19 +124,6 @@ it('resolves every declared theme parent', function () {
         }
 
         expect($parent)->not->toBe($name);
-    }
-});
-
-it('ships every asset a theme declares', function () {
-    foreach (glob(dirname(__DIR__, 2).'/themes/*/theme.json') ?: [] as $manifestFile) {
-        $manifest = json_decode(file_get_contents($manifestFile), true, flags: JSON_THROW_ON_ERROR);
-        $assets = array_merge($manifest['assets']['css'] ?? [], $manifest['assets']['js'] ?? []);
-
-        expect($assets)->not->toBeEmpty();
-
-        foreach ($assets as $asset) {
-            expect(dirname($manifestFile).'/'.$asset)->toBeFile();
-        }
     }
 });
 
@@ -264,17 +188,6 @@ it('declares a Filament plugin class that exists for every panel', function () {
     }
 
     expect($declared)->toBeGreaterThan(0);
-});
-
-it('requires filament presentation modules to declare panel plugins', function () {
-    foreach (moduleDirectories() as $module) {
-        if (! str_ends_with($module, '-filament')) {
-            continue;
-        }
-        $manifest = json_decode(file_get_contents($module.'/module.json'), true, flags: JSON_THROW_ON_ERROR);
-        expect($manifest['category'])->toBe('presentation')
-            ->and($manifest['presentation']['filament'] ?? [])->not->toBeEmpty();
-    }
 });
 
 it('declares every cross-package Liberu namespace dependency in Composer', function () {

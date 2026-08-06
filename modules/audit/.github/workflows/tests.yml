@@ -7,28 +7,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
 
-    steps:
-      - uses: actions/checkout@v5
+  install:
+    uses: liberusoftware/.github/.github/workflows/package-install.yml@main
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.5'
-          extensions: mbstring, pdo, pdo_sqlite, bcmath, zip, intl
-          coverage: none
-
-      # No committed lock file: a released package must resolve against whatever
-      # its constraints currently allow, which is what a consumer will install.
-      - name: Install dependencies
-        run: composer update --no-interaction --prefer-dist --no-progress
-
-      - name: Run tests
-        run: vendor/bin/pest
+  compatibility:
+    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main

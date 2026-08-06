@@ -29,9 +29,15 @@ final class ThemeManager
         $this->themesPath = $themesPath ?? base_path('themes');
         $this->loadThemes();
         $fallback = (string) config('theme.fallback', config('theme.default', 'default'));
-        if (! isset($this->themes[$fallback])) {
+
+        // An application with no themes at all has an inactive theme system, not a
+        // broken one — this package is installable in one, including its own test
+        // application. An application that installs themes but not the fallback is
+        // still misconfigured, and still says so.
+        if ($this->themes !== [] && ! isset($this->themes[$fallback])) {
             throw new InvalidTheme("Safe fallback theme [{$fallback}] is not installed.");
         }
+
         $this->activeTheme = $fallback;
     }
 
@@ -144,6 +150,13 @@ final class ThemeManager
 
     public function inheritanceChain(?string $theme = null): array
     {
+        // With no themes installed there is no chain to walk, and the active theme
+        // is the configured fallback rather than anything that exists. A missing
+        // *parent* among installed themes is still an error — see below.
+        if ($this->themes === []) {
+            return [];
+        }
+
         $name = $theme ?? $this->activeTheme;
         $chain = [];
         $seen = [];

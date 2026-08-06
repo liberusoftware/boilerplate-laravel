@@ -3,14 +3,14 @@
 namespace Liberu\Foundation\Search\Tests\Unit;
 
 use Liberu\Foundation\Search\Services\SearchService;
-use Liberu\Foundation\Search\Tests\TestCase;
+use Liberu\PackageTestbench\PackageTestCase;
 
 /**
  * config('search.models.post') and .group ship as null: nothing in a default
  * composition registers a post or a group model. Reading a null as a class name
  * is a fatal TypeError, so an unconfigured type must search nothing instead.
  */
-final class UnconfiguredModelTest extends TestCase
+final class UnconfiguredModelTest extends PackageTestCase
 {
     public function test_searching_an_unconfigured_type_returns_an_empty_page(): void
     {

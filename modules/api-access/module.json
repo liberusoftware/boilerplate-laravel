@@ -3,7 +3,7 @@
     "name": "api-access",
     "display_name": "API Access",
     "description": "Token and service-identity policy, scopes, versions, rate limits, idempotency, expiry, and revocation.",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\ApiAccess\\ApiAccessServiceProvider",
     "requires": {

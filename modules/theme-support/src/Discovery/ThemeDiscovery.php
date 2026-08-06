@@ -8,10 +8,21 @@ use Liberu\Foundation\Theme\Manifests\ThemeManifest;
 
 final class ThemeDiscovery
 {
+    /**
+     * Every theme installed under the given path.
+     *
+     * A path that is not a directory yields no themes rather than an error. The
+     * provider discovers during `register()`, so throwing here made this package
+     * impossible to boot in any application without a `themes/` tree — including
+     * its own test application, which is why its standalone suite could not run.
+     * A composition that has lost its themes is caught where that is knowable:
+     * the host asserts the directory is populated, and `theme:validate` reports
+     * on it.
+     */
     public function discover(string $path): array
     {
         if (! File::isDirectory($path)) {
-            throw new InvalidTheme('The tracked themes directory is missing.');
+            return [];
         }$themes = [];
         foreach (File::directories($path) as $directory) {
             $manifestPath = $directory.'/theme.json';

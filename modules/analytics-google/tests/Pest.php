@@ -1,5 +1,5 @@
 <?php
 
-use Liberu\Analytics\Google\Tests\TestCase;
+use Liberu\PackageTestbench\PackageTestCase;
 
-pest()->extend(TestCase::class)->in('Architecture', 'Integration', 'Unit');
+pest()->extend(PackageTestCase::class)->in('Unit');

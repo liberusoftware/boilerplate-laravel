@@ -75,7 +75,14 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
 
     composer_file = pkg / 'composer.json'
     composer = json.loads(composer_file.read_text())
-    wanted = {'liberusoftware/package-testbench': '^1.1', 'pestphp/pest': '^5.0'}
+    # orchestra/testbench arrives through the testbench now. Anything else a package
+    # dev-requires stays: a sibling declared there is what lets an adapter boot
+    # against a real implementation of the contract it depends on.
+    wanted = dict(composer.get('require-dev', {}))
+    wanted.pop('orchestra/testbench', None)
+    wanted['liberusoftware/package-testbench'] = '^1.5'
+    wanted['pestphp/pest'] = '^5.0'
+
     if composer.get('require-dev') != wanted:
         composer['require-dev'] = wanted
         composer_file.write_text(json.dumps(composer, indent=2) + '\n')

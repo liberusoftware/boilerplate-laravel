@@ -309,6 +309,8 @@ Found by executing rather than reading. None is optional.
 | **`composer.lock` out of date** | `composer install` warns it disagrees with `composer.json` | resolve before step −1 |
 | **`publish-components` would publish `vendor/`** | its rsync excludes only `.git`, but `modules/*/vendor` and `modules/*/composer.lock` are gitignored here and appear the moment a package's standalone suite is run — the very workflow `CLAUDE.md:58` prescribes. A dry rsync of `modules/analytics-core` alone listed **23,990** `vendor/` entries for transfer | fixed here: `vendor/`, `composer.lock`, `node_modules/` and `.phpunit.result.cache` are excluded |
 | **`publish-components` can fast-forward `main` from a feature branch** | the meta step is `git push … HEAD:$branch`, so publishing while checked out anywhere but `main` silently advances `main` to the working branch | fixed here: the meta push refuses unless `HEAD` is on `$branch` |
+| **Two modules cannot boot standalone at all** | Testbench runs no package discovery, so `localization-core-livewire` and `theme-support-livewire` failed every boundary test with `Target class [livewire.finder] does not exist`. Their deleted per-package `TestCase` had hardcoded `LivewireServiceProvider`, which is why nobody had noticed the packages themselves declare no way to boot | fixed in testbench 1.5.0: `PackageTestCase` registers `extra.laravel.providers` of every direct dependency — Laravel's own discovery, scoped to what the package requires |
+| **`localization-mymemory` boots against an implementation it does not depend on** | its provider calls `$this->app->make(TranslationProviderRegistry::class)`, but it requires only `localization-contracts`; nothing in its dependency graph binds one. Standalone it throws `Target [TranslationProviderRegistry] is not instantiable`. The deleted `TestCase` hid this behind an anonymous fake | `require-dev` on `liberusoftware/localization-core`, which testbench 1.5.0 boots. Runtime independence from the implementation is preserved; only the test composition gains one |
 | **`search` is built around the demo it is losing** | `SearchService::searchPosts()`/`searchGroups()` read `config('search.models.post')`/`.group`, which ship as `null` and were set only by `search-demo`'s provider. With the demo exiled, `/api/search/posts` and `/api/search/groups` raise `Class name must be a valid object or a string` — a fatal, not an empty result | guard the unconfigured type now; move the demo-shaped methods and their two controller actions into `search-demo` at step 2 |
 
 **Fixed in this repository** — the four that live here, verified rather than asserted:
@@ -460,6 +462,56 @@ Still open from §3.9: package repos are not yet thin callers of reusable workfl
 **Still open:** the host `Modules`/`Themes` testbench failure, resolved by §3.8's suite deletion
 (step 3). Until then the working invocation is the three named suites, not a bare `vendor/bin/pest`.
 
+**Step 4 is done, and the rule count finally moved: 15 → 8, not §3.8's 6.**
+
+All 44 packages are on `liberusoftware/package-testbench ^1.5`. None ships a test bootstrap, a
+metadata test or a provider test; each `phpunit.xml` declares a `Boundary` suite pointing into
+`vendor/liberusoftware/package-testbench/tests/Boundary/{Module,Theme}`, and each `tests.yml` is a
+thin caller of the three reusable workflows — closing §3.9's remaining half. The migration is
+`scripts/migrate-testbench`, which is idempotent, so it is re-runnable rather than a one-off.
+
+**All 44 suites are green standalone.** The eight surviving host rules are the whole-graph ones,
+which no single package could run: standalone installability, the two enablement rules, theme parent
+resolution, Composer owning every autoload boundary, one Composer vendor, every declared Filament
+plugin class existing, and cross-package namespace dependencies. Host: 262 passed, 12 skipped.
+
+The count is 8 rather than 6 because the extra two are §3.8's own additions, kept: they read the
+whole fleet at once and are exactly what the testbench cannot see from inside one package.
+
+**Four testbench releases, each forced by something a package suite caught rather than something the
+plan predicted:**
+
+- **1.3.0** — the three rules that cover one kind of package each now decide that in a `skip()`.
+  As guard clauses they returned early, so every domain module in the fleet ran two tests that
+  passed having asserted nothing.
+- **1.4.0** — a package's version must be `MAJOR.MINOR.PATCH`. `Manifest::fromFile()` requires the
+  key and never checks its shape; this was the one assertion in the seven deleted host rules that
+  nothing here replaced.
+- **1.4.1** — **1.3.0 and 1.4.0 shipped a module suite that could not run.** The skip conditions were
+  static closures, which Pest binds to the test case, and every module failed those three tests
+  outright. It shipped because the testbench's own `phpunit.xml` excluded `tests/Boundary` on the
+  grounds that the package is not a module. It is not, but a throwaway fixture is: the suites now run
+  in their own repository against fixture packages. **The one thing a package exists to distribute is
+  the one thing its own CI must execute.**
+- **1.5.0** — `PackageTestCase` boots the providers a package's dependencies declare, because
+  Testbench runs no package discovery. `extra.laravel.providers` of a direct requirement is Laravel's
+  own discovery; a sibling module in `require-dev` is booted too, and one in `require` deliberately
+  is not — their manifests declare that array empty precisely so installing one never boots it.
+
+**Three packages could not boot standalone at all, and none of it was new.** Each had a hand-written
+`TestCase` that papered over it, so the defect was invisible until the shared bootstrap replaced
+those files (all three are now §4 rows):
+
+- both `*-livewire` modules needed `LivewireServiceProvider` and declared no way to get it;
+- `localization-mymemory` boots against a `TranslationProviderRegistry` implementation nothing in its
+  dependency graph binds — its old `TestCase` supplied an anonymous fake. It now `require-dev`s
+  `localization-core`, keeping the adapter free of the implementation at runtime;
+- `theme-support` threw `The tracked themes directory is missing` while *registering*, so it could
+  not boot in any application without a `themes/` tree, including its own test application. Discovery
+  now yields no themes instead of throwing, and the fallback and inheritance guards fire only once
+  themes exist. A composition that loses its themes is still caught where that is knowable — the
+  host's own rules read `themes/` directly.
+
 ## 5. Migration sequence
 
 [Sequence the package migration](https://github.com/liberusoftware/boilerplate-laravel/issues/622)
@@ -496,7 +548,7 @@ which is why step 2 now ends in a release wave rather than a green host run.
 | **1** | Author `package-testbench` (three suites, then v1.1 actor) ∥ reusable workflows in `liberusoftware/.github` | testbench suites green |
 | **2** | **All renames**, in the monorepo: `-core`, `module-*-{surface}`, `foundation-filament` dissolve, `theme-support` Livewire split, analytics namespace, `RolesPermissions`, categories, `default_enabled` | every package's own suite green, or blocked only on a same-wave rename — **done**, published as 1.1.0, see below |
 | **3** | Host: manifest-derived `config/modules.php`, `phpunit.xml`, architecture rules 12→6, `ThemeColors` into `app/`, workflow changes | host green — **done**, see below; rules went 12→15, not 12→6 |
-| **4** | Migrate every package onto the testbench and the three workflows; add `config.allow-plugins` | every package suite green |
+| **4** | Migrate every package onto the testbench and the three workflows; add `config.allow-plugins` | every package suite green — **done**, see below; rules finally went 15→8 |
 | **5** | Redistribute the 9 clean + 16 actor-dependent host tests into their owning packages | host and package suites green |
 | **6** | Re-measure coverage; set each repo's ratchet threshold | thresholds recorded |
 | **7** | **Pilot one leaf package** end to end: split, CI green, publish, require, `composer update` | **zero `modules/` diff** |

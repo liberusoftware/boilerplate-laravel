@@ -93,13 +93,21 @@ implementation independence, small contract packages (`liberusoftware/analytics-
 
 ### Architecture tests
 
-`tests/Architecture/ModuleBoundariesTest.php` holds 15 executable rules: package metadata
-consistency, every package installing standalone, enablement deriving from manifests, both env
-overrides behaving, every module exercising its provider, no `App\` dependency from module `src/`,
-no Filament in non-presentation modules, `-api` adapters not importing domain models, theme parents
-resolving, themes shipping the assets they declare, Composer owning every autoload boundary, one
-Composer vendor across the fleet, every declared Filament plugin class existing, `-filament` modules
-declaring plugins, and declared cross-package namespace dependencies.
+`tests/Architecture/ModuleBoundariesTest.php` holds 8 executable rules, and they are all
+**whole-graph** — each reads every package at once, so no single package could run it: every
+package installing standalone, enablement deriving from manifests, both env overrides behaving,
+theme parents resolving, Composer owning every autoload boundary, one Composer vendor across the
+fleet, every declared Filament plugin class existing, and declared cross-package namespace
+dependencies.
+
+Seven rules a package can check about *itself* moved to `liberusoftware/package-testbench`'s
+boundary suites, which every repository runs against its own files (§3.8): package metadata,
+provider registration, no `App\` dependency, no Filament in non-presentation modules, `-api`
+adapters not importing domain models, `-filament` modules declaring plugins, themes shipping their
+declared assets. A host rule could only ever fail in the host, which is not where the fault is.
+
+Before adding a rule here, ask whether the owning package could run it alone. If it could, it
+belongs in the testbench.
 
 **Rules that filter on the vendor prefix derive it** from the package's own name via
 `packageVendor()`. A hardcoded `liberusoftware/` would assert the spelling rather than the boundary,
@@ -119,11 +127,29 @@ check the rule can be the thing that catches the fault, not the second thing to 
 
 ### Packages are standalone-testable
 
-Every package carries `require-dev` (`orchestra/testbench ^11.1`, `pestphp/pest ^5.0`),
-`autoload-dev` (`<PsrRoot>\Tests\` → `tests/`), its own `phpunit.xml`, and its own
-`.github/workflows/tests.yml` — which `publish-components` carries upstream, so the split
-repositories get real CI. `tests/Integration/ServiceProviderTest.php` boots
-`Orchestra\Testbench\TestCase`, never the host's `Tests\TestCase`.
+Every package carries `require-dev` (`liberusoftware/package-testbench ^1.5`, `pestphp/pest ^5.0`),
+its own `phpunit.xml`, and its own `.github/workflows/tests.yml` — a thin caller of the reusable
+workflows in `liberusoftware/.github`, which `publish-components` carries upstream so the split
+repositories get real CI.
+
+**No package ships a test bootstrap or boundary tests of its own.** Its `phpunit.xml` declares a
+`Boundary` testsuite pointing into
+`vendor/liberusoftware/package-testbench/tests/Boundary/{Module,Theme,Contract}`, so a new boundary
+rule is a testbench release every repository picks up rather than a 44-repository sweep. Opting out
+of a rule means editing that one file. `Liberu\PackageTestbench\PackageTestCase` boots Testbench and
+registers the provider the manifest names, so `getPackageProviders()` overrides are gone too.
+
+It also registers the providers of the package's **dependencies**, because Testbench runs no package
+discovery: `extra.laravel.providers` of any direct requirement, plus the manifest provider of a
+sibling module in `require-dev`. Sibling modules in `require` are deliberately *not* booted — their
+manifests declare that array empty precisely so installing one never boots it.
+
+Practical consequence: a package whose provider needs a peer bound — `localization-mymemory` needs
+something to bind `TranslationProviderRegistry` — declares that peer in `require-dev`. That keeps
+the adapter free of the implementation at runtime while letting its own suite boot a real one.
+
+Anything a package still needs of its own (`tests/Unit`, and the `autoload-dev` mapping when a test
+is namespaced) stays, bound by a two-line `tests/Pest.php`.
 
 A test belongs **in the package** only if it needs nothing from the host. Several suites that
 look package-shaped are not: the `ThemeManager*` tests assert on the host's `themes/` directory,

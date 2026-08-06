@@ -18,9 +18,9 @@
       "name": "clear-signal"
     }
   },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"
   },
   "autoload-dev": {
