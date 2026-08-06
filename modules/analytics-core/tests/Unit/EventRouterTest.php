@@ -2,9 +2,9 @@
 
 use Liberu\Analytics\Contracts\AnalyticsDestination;
 use Liberu\Analytics\Contracts\AnalyticsEvent;
-use Liberu\Foundation\Analytics\Support\ConsentPolicy;
-use Liberu\Foundation\Analytics\Support\DestinationRegistry;
-use Liberu\Foundation\Analytics\Support\EventRouter;
+use Liberu\Analytics\Core\Support\ConsentPolicy;
+use Liberu\Analytics\Core\Support\DestinationRegistry;
+use Liberu\Analytics\Core\Support\EventRouter;
 
 it('routes consented events through registered destinations', function () {
     $destination = new class() implements AnalyticsDestination

@@ -11,7 +11,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Liberu\\Foundation\\Analytics\\Meta\\": "src/"
+      "Liberu\\Analytics\\Meta\\": "src/"
     }
   },
   "extra": {
@@ -19,14 +19,14 @@
       "name": "analytics-meta"
     }
   },
-  "version": "1.0.4",
+  "version": "1.2.1",
   "autoload-dev": {
     "psr-4": {
-      "Liberu\\Foundation\\Analytics\\Meta\\Tests\\": "tests/"
+      "Liberu\\Analytics\\Meta\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

@@ -15,13 +15,11 @@ it('discovers canonical packages from the modules directory', function () {
 
 it('resolves enabled modules in stable dependency order', function () {
     $registry = (new ModuleDiscovery())->discover([base_path('modules')]);
-    $names = array_map(fn (Manifest $manifest) => $manifest->name(), $registry->resolve([]));
+    $names = array_map(fn (Manifest $manifest) => $manifest->name(), $registry->resolve((array) config('modules.enabled', [])));
 
-    expect($names)->toHaveCount(40)
-        ->and($names)->not->toContain('analytics-google', 'analytics-meta', 'localization-mymemory', 'search-demo')
-        ->and($names)->toContain('module-manager', 'blog-core', 'blog-filament', 'search', 'search-api')
-        ->and(array_search('module-manager', $names, true))->toBeLessThan(array_search('blog-core', $names, true))
-        ->and(array_search('blog-core', $names, true))->toBeLessThan(array_search('blog-filament', $names, true))
+    expect($names)->toContain('module-manager', 'settings', 'settings-filament', 'search', 'search-api')
+        ->and(array_search('module-manager', $names, true))->toBeLessThan(array_search('settings', $names, true))
+        ->and(array_search('settings', $names, true))->toBeLessThan(array_search('settings-filament', $names, true))
         ->and(array_search('search', $names, true))->toBeLessThan(array_search('search-api', $names, true));
 });
 
@@ -32,8 +30,7 @@ it('rejects a selected module whose local package dependency is disabled', funct
         'name' => 'dependent', 'display_name' => 'Dependent', 'description' => 'test',
         'version' => '1.0.0', 'category' => 'foundation', 'provider' => 'Provider',
         'requires' => ['packages' => ['liberusoftware/module-manager' => '^1.0']],
-        'capabilities' => ['test.dependent'], 'features' => ['Dependency validation'],
-        'default_enabled' => true,
+        'capabilities' => ['test.dependent'], 'features' => ['Test dependent'], 'default_enabled' => true,
     ], JSON_THROW_ON_ERROR));
     $dependent = Manifest::fromFile($dependentPath);
 

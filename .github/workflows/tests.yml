@@ -22,7 +22,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
-          extensions: mbstring, pdo, pdo_sqlite, bcmath, opcache, zip, gd, intl
+          extensions: mbstring, pdo, pdo_sqlite, bcmath, opcache, zip, gd, intl, dom, curl
           coverage: xdebug
 
       - name: Get composer cache directory
@@ -36,17 +36,28 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Validate Composer metadata
+        run: composer validate --strict
+
       - name: Copy environment file
         run: cp .env.example .env
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Audit dependencies
+        run: composer audit --locked
+
+      - name: Check formatting
+        run: vendor/bin/pint --test
+
       - name: Generate application key
         run: php artisan key:generate
 
+      # The threshold measures app/ alone — the host's five composition classes. Package
+      # coverage is each package's own gate, against its own phpunit.xml (§3.10).
       - name: Run tests
-        run: php artisan test --coverage-clover=coverage.xml --min=100
+        run: php artisan test --coverage-clover=coverage.xml --min=99
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

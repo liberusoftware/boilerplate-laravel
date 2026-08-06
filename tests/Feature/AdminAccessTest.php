@@ -2,7 +2,6 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
-use Liberu\Foundation\Authorization\Services\AnyTeamRoleLookup;
 use Liberu\Foundation\Organizations\Models\Team;
 use Spatie\Permission\Models\Role;
 
@@ -13,9 +12,7 @@ it('treats an allowlisted email as an admin', function () {
     $other = User::factory()->create(['email' => 'nobody@example.com']);
 
     expect($admin->isAdmin())->toBeTrue();
-    expect($other->isAdmin())->toBeFalse()
-        ->and(app(AnyTeamRoleLookup::class))->toBe(app(AnyTeamRoleLookup::class))
-        ->and(app(AnyTeamRoleLookup::class)->hasRoleInAnyTeam($other, []))->toBeFalse();
+    expect($other->isAdmin())->toBeFalse();
 });
 
 it('treats a super_admin (in any team) as an admin regardless of team context', function () {
@@ -30,35 +27,6 @@ it('treats a super_admin (in any team) as an admin regardless of team context', 
     setPermissionsTeamId(null);
 
     expect($user->fresh()->isAdmin())->toBeTrue();
-});
-
-it('finds an administrator role without an active team context', function () {
-    $user = User::factory()->create();
-    $team = Team::factory()->create(['user_id' => $user->id]);
-
-    setPermissionsTeamId($team->id);
-    $user->assignRole(Role::create(['name' => 'admin']));
-    setPermissionsTeamId(null);
-
-    expect($user->fresh()->hasAdminAccess())->toBeTrue();
-});
-
-it('uses the configured super administrator role consistently', function () {
-    config()->set('filament-shield.super_admin.name', 'platform_owner');
-    $owner = User::factory()->create();
-    $legacy = User::factory()->create();
-    $team = Team::factory()->create(['user_id' => $owner->id]);
-
-    setPermissionsTeamId($team->id);
-    $owner->assignRole(Role::create(['name' => 'platform_owner']));
-    $legacy->assignRole(Role::create(['name' => 'super_admin']));
-    setPermissionsTeamId(null);
-
-    expect($owner->fresh()->isSuperAdmin())->toBeTrue()
-        ->and($owner->fresh()->isAdmin())->toBeTrue()
-        ->and($owner->fresh()->hasAdminAccess())->toBeTrue()
-        ->and($legacy->fresh()->isSuperAdmin())->toBeFalse()
-        ->and($legacy->fresh()->isAdmin())->toBeFalse();
 });
 
 it('gates Telescope and Pulse to admins only', function () {

@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Fleet-wide divergence audit: monorepo working tree vs each published repo.
+# No PHP: lerd's php shim cannot read paths outside $HOME, and staging lives outside the repo.
+# TSV: package<TAB>repo<TAB>status<TAB>localVer<TAB>remoteVer<TAB>onlyHere<TAB>onlyThere<TAB>modified
+ROOT="$(git rev-parse --show-toplevel)"
+OUT="${AUDIT_OUT:-$ROOT/storage/app}"
+mkdir -p "$OUT"
+RESULTS="$OUT/divergence.tsv"
+DETAIL="$OUT/divergence-detail.txt"
+# Staging must live under $HOME: lerd's php shim cannot read paths outside it, and
+# a sibling of the repo keeps the clones out of the working tree.
+STAGE="${AUDIT_STAGE:-$HOME/.liberu-divergence-audit}"
+rm -rf "$STAGE"; mkdir -p "$STAGE"
+: > "$RESULTS"
+: > "$DETAIL"
+
+ver() { grep -m1 '"version"' "$1" 2>/dev/null | sed 's/.*: *"\([^"]*\)".*/\1/' || true; }
+
+for d in "$ROOT"/modules/*/ "$ROOT"/themes/*/; do
+  name=$(basename "$d")
+  case "$d" in
+    */themes/*) repo="theme-$name" ;;
+    *)          repo="module-$name" ;;
+  esac
+
+  if ! git clone --quiet --depth 1 --branch main "https://github.com/liberusoftware/$repo.git" "$STAGE/$repo" 2>/dev/null; then
+    printf '%s\t%s\tNO_REPO\t-\t-\t-\t-\t-\n' "$name" "$repo" >> "$RESULTS"
+    continue
+  fi
+  rm -rf "${STAGE:?}/$repo/.git"
+
+  here=$(cd "$d" && find . -type f -not -path './vendor/*' | sort)
+  there=$(cd "$STAGE/$repo" && find . -type f | sort)
+  only_here=$(comm -23 <(printf '%s\n' "$here") <(printf '%s\n' "$there") | grep -c . || true)
+  only_there=$(comm -13 <(printf '%s\n' "$here") <(printf '%s\n' "$there") | grep -c . || true)
+
+  modified=0
+  while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    cmp -s "$d/$f" "$STAGE/$repo/$f" || modified=$((modified + 1))
+  done < <(comm -12 <(printf '%s\n' "$here") <(printf '%s\n' "$there"))
+
+  lv=$(ver "$d/composer.json"); rv=$(ver "$STAGE/$repo/composer.json")
+  if [ "$only_here" -eq 0 ] && [ "$only_there" -eq 0 ] && [ "$modified" -eq 0 ]; then
+    status=IDENTICAL
+  else
+    status=DIVERGED
+  fi
+
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$name" "$repo" "$status" "${lv:-?}" "${rv:-?}" "$only_here" "$only_there" "$modified" >> "$RESULTS"
+
+  {
+    echo "===== $name ($repo) local=${lv:-?} remote=${rv:-?}"
+    comm -13 <(printf '%s\n' "$here") <(printf '%s\n' "$there") | sed 's/^/  ONLY-UPSTREAM /'
+    comm -23 <(printf '%s\n' "$here") <(printf '%s\n' "$there") | sed 's/^/  ONLY-MONOREPO /'
+    while IFS= read -r f; do
+      [ -z "$f" ] && continue
+      cmp -s "$d/$f" "$STAGE/$repo/$f" || echo "  DIFFERS $f"
+    done < <(comm -12 <(printf '%s\n' "$here") <(printf '%s\n' "$there"))
+  } >> "$DETAIL"
+done
+
+rm -rf "$STAGE"
+echo "AUDIT_COMPLETE" >> "$RESULTS"

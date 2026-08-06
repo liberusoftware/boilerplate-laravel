@@ -29,9 +29,11 @@ final class ThemeManager
         $this->themesPath = $themesPath ?? base_path('themes');
         $this->loadThemes();
         $fallback = (string) config('theme.fallback', config('theme.default', 'default'));
+
         if (! isset($this->themes[$fallback])) {
             throw new InvalidTheme("Safe fallback theme [{$fallback}] is not installed.");
         }
+
         $this->activeTheme = $fallback;
     }
 
@@ -125,9 +127,15 @@ final class ThemeManager
         return array_diff($this->themes[$theme]->requiredCapabilities(), $available) === [];
     }
 
+    /**
+     * A theme is wherever it was discovered: a Composer package installed outside
+     * the tracked tree is on disk somewhere the tracked path cannot name.
+     */
     public function getThemePath(?string $theme = null): string
     {
-        return $this->themesPath.'/'.($theme ?? $this->activeTheme);
+        $name = $theme ?? $this->activeTheme;
+
+        return $this->themes[$name]->path ?? $this->themesPath.'/'.$name;
     }
 
     public function getThemeViewsPath(?string $theme = null): string

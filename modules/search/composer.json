@@ -7,7 +7,7 @@
     "php": "^8.5",
     "illuminate/database": "^13.0",
     "illuminate/pagination": "^13.0",
-    "liberusoftware/identity": "^1.0",
+    "liberusoftware/identity-core": "^1.0",
     "liberusoftware/module-manager": "^1.0"
   },
   "autoload": {
@@ -20,14 +20,14 @@
       "name": "search"
     }
   },
-  "version": "1.0.4",
+  "version": "1.3.0",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Search\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.7",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

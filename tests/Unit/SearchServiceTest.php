@@ -2,14 +2,14 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Liberu\Foundation\Search\Registry\SearcherRegistry;
 use Liberu\Foundation\Search\Services\SearchService;
-use Liberu\Search\Demo\Models\Group;
-use Liberu\Search\Demo\Models\Post;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->service = new SearchService();
+    $this->service = app(SearchService::class);
 });
 
 describe('searchUsers', function () {
@@ -56,72 +56,17 @@ describe('searchUsers', function () {
     });
 });
 
-describe('searchPosts', function () {
-    it('excludes drafts by default', function () {
-        $user = User::factory()->create();
-        Post::create(['title' => 'Published', 'content' => 'A', 'user_id' => $user->id, 'status' => 'published', 'published_at' => now()->subDay()]);
-        Post::create(['title' => 'Draft', 'content' => 'B', 'user_id' => $user->id, 'status' => 'draft']);
-
-        $result = $this->service->searchPosts([]);
-        $statuses = array_column($result->items(), 'status');
-        expect($statuses)->not->toContain('draft');
-    });
-
-    it('never includes drafts, even when include_drafts is set', function () {
-        $user = User::factory()->create();
-        Post::create(['title' => 'Draft', 'content' => 'B', 'user_id' => $user->id, 'status' => 'draft']);
-
-        $result = $this->service->searchPosts(['include_drafts' => true, 'status' => 'draft']);
-        expect($result->total())->toBe(0);
-    });
-
-    it('filters by author id', function () {
-        $user1 = User::factory()->create();
-        $user2 = User::factory()->create();
-        Post::create(['title' => 'A', 'content' => 'A', 'user_id' => $user1->id, 'status' => 'published', 'published_at' => now()->subDay()]);
-        Post::create(['title' => 'B', 'content' => 'B', 'user_id' => $user2->id, 'status' => 'published', 'published_at' => now()->subDay()]);
-
-        $result = $this->service->searchPosts(['author_id' => $user1->id]);
-        expect($result->total())->toBe(1);
-    });
-});
-
-describe('searchGroups', function () {
-    it('filters by active status', function () {
-        $owner = User::factory()->create();
-        Group::create(['name' => 'Active Group', 'owner_id' => $owner->id, 'type' => 'public', 'is_active' => true]);
-        Group::create(['name' => 'Inactive Group', 'owner_id' => $owner->id, 'type' => 'public', 'is_active' => false]);
-
-        $result = $this->service->searchGroups(['active_only' => true]);
-        expect($result->total())->toBe(1);
-        expect($result->items()[0]->name)->toBe('Active Group');
-    });
-
-    it('only ever returns public groups, regardless of a type filter', function () {
-        $owner = User::factory()->create();
-        Group::create(['name' => 'Public', 'owner_id' => $owner->id, 'type' => 'public']);
-        Group::create(['name' => 'Private', 'owner_id' => $owner->id, 'type' => 'private']);
-        Group::create(['name' => 'Restricted', 'owner_id' => $owner->id, 'type' => 'restricted']);
-
-        // 'type' is no longer an accepted caller filter — searchGroups always scopes to public.
-        $result = $this->service->searchGroups(['type' => 'private']);
-        expect($result->total())->toBe(1);
-        expect($result->items()[0]->name)->toBe('Public');
-    });
-});
-
 describe('searchAll', function () {
-    it('returns users posts and groups keys', function () {
+    it('covers every registered searcher', function () {
         $result = $this->service->searchAll([]);
-        expect($result)->toHaveKey('users');
-        expect($result)->toHaveKey('posts');
-        expect($result)->toHaveKey('groups');
+        expect(array_keys($result))->toBe(app(SearcherRegistry::class)->types());
     });
 
     it('can limit to specific types', function () {
+        app(SearcherRegistry::class)->register('widgets', fn () => new LengthAwarePaginator([], 0, 15));
+
         $result = $this->service->searchAll(['types' => ['users']]);
         expect($result)->toHaveKey('users');
-        expect($result)->not->toHaveKey('posts');
-        expect($result)->not->toHaveKey('groups');
+        expect($result)->not->toHaveKey('widgets');
     });
 });

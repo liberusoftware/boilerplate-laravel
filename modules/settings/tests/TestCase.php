@@ -2,18 +2,25 @@
 
 namespace Liberu\Foundation\Settings\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Liberu\PackageTestbench\PackageTestCase;
 
-abstract class TestCase extends Orchestra
+/**
+ * The package's own settings migrations, which it publishes rather than loads.
+ *
+ * In an application they are published to `database/settings` and Spatie's
+ * migrator finds them there. Nothing publishes them under Testbench, so the
+ * suite points the migrator at the package's copies — the same files the host
+ * would have received.
+ */
+abstract class TestCase extends PackageTestCase
 {
-    protected function getPackageProviders($app): array
-    {
-        $manifest = json_decode(
-            file_get_contents(dirname(__DIR__).'/module.json'),
-            true,
-            flags: JSON_THROW_ON_ERROR,
-        );
+    use RefreshDatabase;
 
-        return [$manifest['provider']];
+    protected function defineEnvironment($app): void
+    {
+        parent::defineEnvironment($app);
+
+        $app['config']->set('settings.migrations_paths', [dirname(__DIR__).'/database/settings']);
     }
 }

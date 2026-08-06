@@ -96,6 +96,44 @@ test('can get layout path', function () {
         ->and($layoutPath)->toContain('layouts.app');
 });
 
+test('theme helper functions work', function () {
+    expect(function_exists('theme'))->toBeTrue()
+        ->and(function_exists('active_theme'))->toBeTrue()
+        ->and(function_exists('theme_asset'))->toBeTrue()
+        ->and(function_exists('theme_path'))->toBeTrue()
+        ->and(function_exists('theme_views_path'))->toBeTrue()
+        ->and(function_exists('set_theme'))->toBeTrue()
+        ->and(function_exists('theme_layout'))->toBeTrue();
+});
+
+test('active_theme helper returns string', function () {
+    $theme = active_theme();
+
+    expect($theme)->toBeString();
+});
+
+test('theme_asset helper generates URL', function () {
+    $url = theme_asset('images/logo.png');
+
+    expect($url)->toBeString()
+        ->and($url)->toContain('themes/')
+        ->and($url)->toContain('images/logo.png');
+});
+
+test('theme_path helper returns path', function () {
+    $path = theme_path('default');
+
+    expect($path)->toBeString()
+        ->and($path)->toContain('themes/default');
+});
+
+test('theme_views_path helper returns views path', function () {
+    $path = theme_views_path('default');
+
+    expect($path)->toBeString()
+        ->and($path)->toContain('themes/default/resources/views');
+});
+
 test('repeated setTheme calls do not grow the view finder paths', function () {
     $finder = View::getFinder();
 

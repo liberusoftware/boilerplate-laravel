@@ -1,5 +1,8 @@
 # Advanced Search Functionality
 
+> **Where this lives now.** The code described below moved out of `app/` into `modules/search`. Paths and namespaces here have been updated to match; the owning package's `README.md` is the canonical reference.
+
+
 This document describes the advanced search functionality implemented for users, posts, and groups.
 
 ## Overview
@@ -168,7 +171,7 @@ GET /api/search/all?query=developer&per_page=10
 ## Models
 
 ### Post Model
-Located at: `modules/search-demo/src/Models/Post.php`
+Located at: `src/Models/Post.php` in [liberusoftware/module-search-demo](https://github.com/liberusoftware/module-search-demo)
 
 **Relationships**:
 - `author()`: BelongsTo User
@@ -181,7 +184,7 @@ Located at: `modules/search-demo/src/Models/Post.php`
 - `search($query)`: Search by title or content
 
 ### Group Model
-Located at: `modules/search-demo/src/Models/Group.php`
+Located at: `src/Models/Group.php` in [liberusoftware/module-search-demo](https://github.com/liberusoftware/module-search-demo)
 
 **Relationships**:
 - `owner()`: BelongsTo User

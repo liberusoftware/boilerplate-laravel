@@ -4,6 +4,7 @@
 !/modules/**
 !/themes/
 !/themes/**
+# ...except the dependencies a package installs when its own suite is run standalone.
 /modules/*/vendor/
 /themes/*/vendor/
 /modules/*/composer.lock
@@ -45,3 +46,14 @@ composer.phar
 /boilerplate-laravel
 docs/superpowers
 .superpowers
+
+# local tooling: runtime version pins and diagram config
+.lerd.yaml
+.node-version
+.php-version
+
+# Laravel Boost writes the same skills into one directory per editor; keep Claude's
+.agents/
+.cursor/skills/
+.github/skills/
+.junie/skills/

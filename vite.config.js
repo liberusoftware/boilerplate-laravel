@@ -1,16 +1,18 @@
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
-import { globSync, readFileSync } from 'node:fs';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
 
-const themeAssets = globSync('themes/*/theme.json').flatMap((manifestPath) => {
-    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-    const themePath = manifestPath.slice(0, -'/theme.json'.length);
+// Each theme package declares its build entry points in theme.json; that manifest is
+// the single source of truth, so installing a theme is enough to get it built.
+const themeInputs = readdirSync('themes', { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(`themes/${entry.name}/theme.json`))
+    .flatMap((entry) => {
+        const { assets = {} } = JSON.parse(readFileSync(`themes/${entry.name}/theme.json`, 'utf8'));
 
-    return [...(manifest.assets?.css ?? []), ...(manifest.assets?.js ?? [])]
-        .map((asset) => `${themePath}/${asset}`);
-});
+        return [...(assets.css ?? []), ...(assets.js ?? [])].map((asset) => `themes/${entry.name}/${asset}`);
+    });
 
 export default defineConfig({
     plugins: [
@@ -18,7 +20,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                ...themeAssets,
+                ...themeInputs,
             ],
             refresh: true,
             fonts: [

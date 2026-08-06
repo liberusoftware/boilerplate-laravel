@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Support;
+namespace Liberu\Analytics\Core\Support;
 
 use InvalidArgumentException;
 use Liberu\Analytics\Contracts\AnalyticsDestination;

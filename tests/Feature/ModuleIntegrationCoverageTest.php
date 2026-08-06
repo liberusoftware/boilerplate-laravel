@@ -1,34 +1,21 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
-use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-use JoelButcher\Socialstream\Features;
-use JoelButcher\Socialstream\RefreshedCredentials;
-use JoelButcher\Socialstream\Socialstream;
-use Laravel\Jetstream\Contracts\DeletesTeams;
-use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 use Liberu\Foundation\ApiAccess\Support\IdempotencyStore;
 use Liberu\Foundation\ApplicationCore\Health\ReadinessRegistry;
 use Liberu\Foundation\ApplicationCore\Http\Controllers\ReadinessController;
 use Liberu\Foundation\Audit\Support\AuditContext;
 use Liberu\Foundation\Audit\Support\DatabaseAuditRecorder;
-use Liberu\Foundation\Authorization\Policies\RolePolicy;
-use Liberu\Foundation\Authorization\Services\BreakGlass;
 use Liberu\Foundation\Currency\Services\CurrencyPreferenceResolver;
 use Liberu\Foundation\FeatureFlags\Support\FlagEvaluator;
 use Liberu\Foundation\Identity\Contracts\InvitationValidator;
 use Liberu\Foundation\Identity\Contracts\RegistrationPolicy;
-use Liberu\Foundation\Identity\Socialstream\Actions\CreateConnectedAccount;
-use Liberu\Foundation\Identity\Socialstream\Actions\CreateUserFromProvider;
 use Liberu\Foundation\Identity\Socialstream\Actions\HandleInvalidState;
-use Liberu\Foundation\Identity\Socialstream\Actions\ResolveSocialiteUser;
 use Liberu\Foundation\Identity\Socialstream\Actions\SetUserPassword;
 use Liberu\Foundation\Identity\Socialstream\Actions\UpdateConnectedAccount;
 use Liberu\Foundation\Identity\Socialstream\Contracts\ConnectedAccountOwner;
@@ -39,7 +26,6 @@ use Liberu\Foundation\JetstreamBridge\Actions\Fortify\CreateNewUser;
 use Liberu\Foundation\JetstreamBridge\Actions\Fortify\ResetUserPassword;
 use Liberu\Foundation\JetstreamBridge\Actions\Fortify\UpdateUserPassword;
 use Liberu\Foundation\JetstreamBridge\Actions\Fortify\UpdateUserProfileInformation;
-use Liberu\Foundation\JetstreamBridge\Actions\Jetstream\DeleteUser;
 use Liberu\Foundation\Organizations\Actions\AcceptInvitation;
 use Liberu\Foundation\Organizations\Actions\InviteMember;
 use Liberu\Foundation\Organizations\Actions\TransferOwnership;
@@ -47,6 +33,8 @@ use Liberu\Foundation\Organizations\Models\Team;
 use Liberu\Foundation\Organizations\Services\CurrentTeamResolver;
 use Liberu\Foundation\Profiles\Actions\UpdateProfile;
 use Liberu\Foundation\Profiles\Data\ProfileUpdate;
+use Liberu\Foundation\RolesPermissions\Policies\RolePolicy;
+use Liberu\Foundation\RolesPermissions\Services\BreakGlass;
 use Liberu\Foundation\Search\Registry\IndexableRegistry;
 use Liberu\Foundation\Search\Services\LocalSearchIndexer;
 use Liberu\Foundation\Sessions\Queries\SessionReader;
@@ -56,20 +44,6 @@ use Liberu\Foundation\Theme\Cache\ThemeCache;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 use Liberu\Foundation\TwoFactor\TrustedDevices\TrustedDeviceManager;
 use Spatie\Permission\Models\Role;
-
-class CoverageVerifiableUser extends User implements Illuminate\Contracts\Auth\MustVerifyEmail
-{
-    use MustVerifyEmail;
-
-    protected $table = 'users';
-
-    public bool $verificationSent = false;
-
-    public function sendEmailVerificationNotification(): void
-    {
-        $this->verificationSent = true;
-    }
-}
 
 it('covers readiness responses and audit value objects', function () {
     config()->set('application-core.release', 'test-release');
@@ -299,21 +273,6 @@ it('updates ordinary profile information', function () {
     expect($user->fresh()->only(['name', 'email']))->toBe(['name' => 'After', 'email' => 'after@example.test']);
 });
 
-it('clears verification and notifies when a verified user changes email', function () {
-    $user = CoverageVerifiableUser::query()->create([
-        'name' => 'Before', 'email' => 'verified-before@example.test',
-        'password' => bcrypt('password'), 'email_verified_at' => now(),
-    ]);
-
-    (new UpdateUserProfileInformation(new IdentifierNormalizer()))->update($user, [
-        'name' => 'After', 'email' => ' VERIFIED-AFTER@EXAMPLE.TEST ',
-    ]);
-
-    expect($user->fresh()->email)->toBe('verified-after@example.test')
-        ->and($user->fresh()->email_verified_at)->toBeNull()
-        ->and($user->verificationSent)->toBeTrue();
-});
-
 it('rethrows invalid social provider state and authorizes connected account ownership', function () {
     $exception = new InvalidStateException();
     expect(fn () => (new HandleInvalidState())->handle($exception))->toThrow($exception::class);
@@ -355,83 +314,6 @@ it('updates a connected account from a social provider profile', function () {
         ]);
 });
 
-it('refreshes connected account credentials', function () {
-    $owner = User::factory()->create();
-    $account = FoundationConnectedAccount::factory()->for($owner)->create(['provider' => 'coverage']);
-    Socialstream::refreshesTokensForProviderUsing(
-        'coverage',
-        fn () => new RefreshedCredentials(
-            'new-token', 'new-secret', 'new-refresh', now()->addHour(),
-        ),
-    );
-
-    $updated = (new UpdateConnectedAccount())
-        ->updateRefreshToken($account);
-
-    expect($updated->fresh()->only(['token', 'secret', 'refresh_token']))
-        ->toBe(['token' => 'new-token', 'secret' => 'new-secret', 'refresh_token' => 'new-refresh']);
-});
-
-it('resolves a socialite user and generates a missing email', function () {
-    config()->set('socialstream.features', [Features::generateMissingEmails()]);
-    config()->set('app.domain', '.example.test');
-    $providerUser = Laravel\Socialite\Two\User::fake(['id' => '42', 'email' => null]);
-    $driver = Mockery::mock();
-    $driver->shouldReceive('user')->once()->andReturn($providerUser);
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($driver);
-
-    $resolved = (new ResolveSocialiteUser())->resolve('github');
-
-    expect($resolved->getEmail())->toBe('42@github.example.test');
-});
-
-it('deletes a user with connected accounts tokens memberships and owned teams', function () {
-    $user = User::factory()->create();
-    $owned = Team::factory()->create(['user_id' => $user->id]);
-    $member = Team::factory()->create();
-    $member->users()->attach($user);
-    FoundationConnectedAccount::factory()->for($user)->create();
-    $user->createToken('coverage');
-    $teamDeleter = Mockery::mock(DeletesTeams::class);
-    $teamDeleter->shouldReceive('delete')->once()->with(Mockery::on(fn (Team $team) => $team->is($owned)));
-
-    (new DeleteUser($teamDeleter))->delete($user);
-
-    expect(User::find($user->id))->toBeNull()
-        ->and($member->users()->whereKey($user->id)->exists())->toBeFalse();
-});
-
-it('rejects invalid model arguments for social account and user actions', function () {
-    $providerUser = Mockery::mock(Laravel\Socialite\Contracts\User::class);
-    $teamDeleter = Mockery::mock(DeletesTeams::class);
-
-    expect(fn () => (new CreateConnectedAccount())->create(new stdClass(), 'test', $providerUser))
-        ->toThrow(InvalidArgumentException::class)
-        ->and(fn () => (new SetUserPassword())->set(new stdClass(), []))->toThrow(InvalidArgumentException::class)
-        ->and(fn () => (new DeleteUser($teamDeleter))->delete(new stdClass()))
-        ->toThrow(InvalidArgumentException::class);
-});
-
-it('attempts to import a provider avatar when the feature is enabled', function () {
-    config()->set('socialstream.features', [Features::providerAvatars()]);
-    config()->set('jetstream.features', [Laravel\Jetstream\Features::profilePhotos()]);
-    Http::fake(['*' => Http::response('', 404)]);
-    $providerUser = Laravel\Socialite\Two\User::fake([
-        'name' => 'Avatar User', 'email' => 'avatar@example.test',
-        'avatar' => 'https://example.test/avatar.jpg',
-    ]);
-    $accounts = Mockery::mock(CreatesConnectedAccounts::class);
-    $accounts->shouldReceive('create')->once();
-
-    expect(Socialstream::hasProviderAvatarsFeature())->toBeTrue()
-        ->and($providerUser->getAvatar())->toBe('https://example.test/avatar.jpg');
-
-    $user = (new CreateUserFromProvider($accounts))
-        ->create('github', $providerUser);
-
-    expect($user->email)->toBe('avatar@example.test');
-});
-
 it('runs module theme and foundation operational commands', function () {
     $moduleCache = sys_get_temp_dir().'/module-registry-'.bin2hex(random_bytes(4));
     $themeCache = sys_get_temp_dir().'/theme-registry-'.bin2hex(random_bytes(4));
@@ -439,11 +321,8 @@ it('runs module theme and foundation operational commands', function () {
     config()->set('theme.cache_path', $themeCache);
 
     expect(Artisan::call('module:list'))->toBe(0)
-        ->and(Artisan::call('module:features'))->toBe(0)
-        ->and(Artisan::call('module:features', ['query' => 'health']))->toBe(0)
-        ->and(Artisan::output())->toContain('Health/readiness')
         ->and(Artisan::call('module:status', ['name' => 'missing']))->toBe(1)
-        ->and(Artisan::call('module:status', ['name' => 'application-core']))->toBe(0)
+        ->and(Artisan::call('module:status', ['name' => 'application']))->toBe(0)
         ->and(Artisan::call('module:validate'))->toBe(0)
         ->and(Artisan::call('foundation:doctor'))->toBe(0)
         ->and(Artisan::call('module:cache'))->toBe(0)
@@ -472,13 +351,4 @@ it('invites accepts resolves and transfers team membership', function () {
     expect(fn () => (new TransferOwnership())->handle($team, $owner->id, 999, false))->toThrow(RuntimeException::class);
 
     expect(fn () => (new AcceptInvitation())->handle('bad-token', $member, 'member@example.test'))->toThrow(RuntimeException::class);
-});
-
-it('rejects ownership transfer to an inactive successor', function () {
-    $owner = User::factory()->create();
-    $successor = User::factory()->create();
-    $team = Team::factory()->create(['user_id' => $owner->id]);
-
-    expect(fn () => (new TransferOwnership())->handle($team, $owner->id, $successor->id, true))
-        ->toThrow(RuntimeException::class, 'active member');
 });

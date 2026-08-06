@@ -44,7 +44,7 @@ The trusted `liberusoftware/composer-installer` places it in `/modules/roles-per
 - Package type: `liberu-module`
 - Installer name: `roles-permissions`
 - Category: `foundation`
-- Service provider: `Liberu\Foundation\Authorization\AuthorizationServiceProvider`
+- Service provider: `Liberu\Foundation\RolesPermissions\RolesPermissionsServiceProvider`
 - Enabled by default: `no`
 
 ### Public contracts

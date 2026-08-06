@@ -7,7 +7,7 @@
     "php": "^8.5",
     "laravel/fortify": "^1.0",
     "laravel/jetstream": "^5.1",
-    "liberusoftware/identity": "^1.0",
+    "liberusoftware/identity-core": "^1.0",
     "liberusoftware/module-manager": "^1.0",
     "liberusoftware/organizations-teams": "^1.0"
   },
@@ -21,14 +21,14 @@
       "name": "jetstream-bridge"
     }
   },
-  "version": "1.0.4",
+  "version": "1.2.2",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\JetstreamBridge\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

@@ -1,11 +1,11 @@
 {
     "$schema": "https://schemas.liberu.dev/module/v1.json",
     "name": "roles-permissions-filament",
-    "display_name": "Authorization Filament",
-    "description": "Filament role and permission management through the authorization capability.",
-    "version": "1.0.4",
+    "display_name": "Roles and Permissions Filament",
+    "description": "Filament role and permission management through the roles and permissions capability.",
+    "version": "1.2.2",
     "category": "presentation",
-    "provider": "Liberu\\Foundation\\AuthorizationFilament\\AuthorizationFilamentServiceProvider",
+    "provider": "Liberu\\Foundation\\RolesPermissionsFilament\\RolesPermissionsFilamentServiceProvider",
     "requires": {
         "php": "^8.5",
         "laravel": "^13.0",
@@ -17,7 +17,7 @@
     "presentation": {
         "filament": {
             "admin": [
-                "Liberu\\Foundation\\AuthorizationFilament\\AuthorizationFilamentPlugin"
+                "Liberu\\Foundation\\RolesPermissionsFilament\\RolesPermissionsFilamentPlugin"
             ]
         }
     },

@@ -1,0 +1,17 @@
+{
+    "mcpServers": {
+        "lerd": {
+            "args": [
+                "mcp"
+            ],
+            "command": "lerd"
+        },
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

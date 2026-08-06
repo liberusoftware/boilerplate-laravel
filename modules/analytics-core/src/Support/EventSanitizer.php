@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Support;
+namespace Liberu\Analytics\Core\Support;
 
 final class EventSanitizer
 {

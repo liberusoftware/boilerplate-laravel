@@ -1,0 +1,18 @@
+{
+    "servers": {
+        "lerd": {
+            "args": [
+                "mcp"
+            ],
+            "command": "lerd",
+            "type": "stdio"
+        },
+        "laravel-boost": {
+            "command": "php",
+            "args": [
+                "artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

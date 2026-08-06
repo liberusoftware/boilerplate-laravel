@@ -7,7 +7,7 @@
     "php": "^8.5",
     "illuminate/database": "^13.0",
     "illuminate/support": "^13.0",
-    "liberusoftware/identity": "^1.0"
+    "liberusoftware/identity-core": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -19,14 +19,14 @@
       "name": "profiles"
     }
   },
-  "version": "1.0.4",
+  "version": "1.2.2",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Profiles\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

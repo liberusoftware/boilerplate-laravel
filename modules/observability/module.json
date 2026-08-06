@@ -3,7 +3,7 @@
     "name": "observability",
     "display_name": "Observability",
     "description": "Structured diagnostics, exception/job/request monitoring, metrics storage, redaction, and authorized dashboards.",
-    "version": "1.0.4",
+    "version": "1.2.2",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\Observability\\ObservabilityServiceProvider",
     "requires": {

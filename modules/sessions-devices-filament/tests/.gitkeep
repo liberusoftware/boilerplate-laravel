@@ -1,0 +1,3 @@
+# Git does not track an empty directory, so without this file a package with no
+# tests of its own publishes without tests/ at all — and Pest aborts before any
+# suite runs with "The test directory [tests] does not exist."

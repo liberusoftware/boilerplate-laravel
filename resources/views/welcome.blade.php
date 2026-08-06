@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Boilerplate Laravel') }} — a foundation you keep</title>
-    <meta name="description" content="A Laravel + Filament + Livewire boilerplate that ships a credible, working app: auth, teams, roles, chat, themes and multi-language on a polished default.">
+    <meta name="description" content="A Laravel + Filament + Livewire boilerplate that ships a credible, working app: auth, teams, roles, search, themes and multi-language on a polished default.">
 
     @fonts
 
@@ -298,7 +298,7 @@
             <div>
                 <span class="pill reveal" data-d="1"><span class="pill__dot"></span> Laravel 13 · Filament 5 · Livewire</span>
                 <h1 class="reveal" data-d="2">A foundation you <span class="sig">keep</span>, not scaffold you rip out.</h1>
-                <p class="hero__lede reveal" data-d="3">Auth, teams, roles, real-time chat, themes and multi-language — working out of the box on a clean, considered default. Clone it and build your app, not your plumbing.</p>
+                <p class="hero__lede reveal" data-d="3">Auth, teams, roles, search, themes and multi-language — working out of the box on a clean, considered default. Clone it and build your app, not your plumbing.</p>
                 <div class="hero__cta reveal" data-d="3">
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}" class="btn btn--primary">Get started free</a>
@@ -360,9 +360,9 @@
                     <p>Team-scoped Spatie roles with a Filament Shield policy generated for every resource. Multi-tenant by construction.</p>
                 </div>
                 <div class="feature">
-                    <div class="feature__ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                    <h3>Real-time chat &amp; messaging</h3>
-                    <p>Reverb WebSockets over Laravel Echo, with encrypted private messages and group chat already modelled and tested.</p>
+                    <div class="feature__ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+                    <h3>Search across your models</h3>
+                    <p>Register any model as indexable and query it over a REST API, with a reindex command and per-type authorization already wired.</p>
                 </div>
                 <div class="feature">
                     <div class="feature__ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="14.5" r="2.5"/><path d="M8.7 10.8 15 8M9 13.5l6 1.5"/></svg></div>

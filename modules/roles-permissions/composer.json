@@ -11,7 +11,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Liberu\\Foundation\\Authorization\\": "src/"
+      "Liberu\\Foundation\\RolesPermissions\\": "src/"
     }
   },
   "extra": {
@@ -19,14 +19,14 @@
       "name": "roles-permissions"
     }
   },
-  "version": "1.0.4",
+  "version": "1.2.2",
   "autoload-dev": {
     "psr-4": {
-      "Liberu\\Foundation\\Authorization\\Tests\\": "tests/"
+      "Liberu\\Foundation\\RolesPermissions\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

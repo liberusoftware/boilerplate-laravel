@@ -1,11 +1,11 @@
 <?php
 
-namespace Liberu\Foundation\Analytics\Google;
+namespace Liberu\Analytics\Google;
 
 use Illuminate\Support\ServiceProvider;
 use Liberu\Analytics\Contracts\AnalyticsDestinationRegistry;
-use Liberu\Foundation\Analytics\Google\Contracts\GoogleTransport;
-use Liberu\Foundation\Analytics\Google\Support\GoogleDestination;
+use Liberu\Analytics\Google\Contracts\GoogleTransport;
+use Liberu\Analytics\Google\Support\GoogleDestination;
 
 final class AnalyticsGoogleServiceProvider extends ServiceProvider
 {

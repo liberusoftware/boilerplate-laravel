@@ -12,7 +12,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Liberu\\Foundation\\Analytics\\": "src/"
+      "Liberu\\Analytics\\Core\\": "src/"
     }
   },
   "extra": {
@@ -20,14 +20,14 @@
       "name": "analytics-core"
     }
   },
-  "version": "1.0.4",
+  "version": "1.2.1",
   "autoload-dev": {
     "psr-4": {
-      "Liberu\\Foundation\\Analytics\\Tests\\": "tests/"
+      "Liberu\\Analytics\\Core\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "orchestra/testbench": "^11.1",
+    "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

@@ -27,8 +27,6 @@ return [
 
     'admin_emails' => array_filter(array_map('trim', explode(',', (string) env('ADMIN_EMAILS', '')))),
 
-    'admin_role' => env('ADMIN_ROLE', 'admin'),
-
     /*
     |--------------------------------------------------------------------------
     | Application Environment

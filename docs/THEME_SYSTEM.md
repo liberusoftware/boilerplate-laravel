@@ -33,10 +33,16 @@ themes/example/
 │   ├── js/app.js
 │   └── views/
 ├── src/ExampleThemeServiceProvider.php
-└── vite.config.js
+├── phpunit.xml
+├── tests/
+└── .github/workflows/tests.yml
 ```
 
-Inherit `liberu-base` unless building a shared parent. Consume semantic tokens, use translations and logical CSS properties, keep JavaScript progressive and CSP-safe, and never implement module workflows in a theme. Add its entries to the consuming application build or run the package build, then validate:
+Inherit `liberu-base` unless building a shared parent. Consume semantic tokens, use translations and logical CSS properties, keep JavaScript progressive and CSP-safe, and never implement module workflows in a theme.
+
+The consuming application does not need a build change: its `vite.config.js` reads every
+`themes/*/theme.json` and builds whatever `assets.css` and `assets.js` declare. Declare the
+entries there, run `npm run build`, then validate:
 
 ```bash
 php artisan theme:validate

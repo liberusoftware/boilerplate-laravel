@@ -2,19 +2,18 @@ name: Tests
 
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
 
-permissions:
-  contents: read
+# A publish sweep pushes every package within seconds of the others. Superseding
+# this repository's previous run keeps a re-publish from stacking on a sweep that
+# has not finished.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: shivammathur/setup-php@v3
-        with:
-          php-version: '8.5'
-          coverage: none
-      - uses: ramsey/composer-install@v4
-      - run: vendor/bin/pest
+    uses: liberusoftware/.github/.github/workflows/package-tests.yml@main

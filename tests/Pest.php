@@ -8,3 +8,6 @@ pest()->extend(TestCase::class)
     ->in('Feature');
 
 pest()->extend(TestCase::class)->in('Unit');
+
+// The runtime-selection rule reads config('modules.*'), which needs a booted container.
+pest()->extend(TestCase::class)->in('Architecture');

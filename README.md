@@ -89,7 +89,7 @@ Every module also publishes a validated feature catalog in `module.json`. Hosts 
 ```bash
 php artisan module:features
 php artisan module:features health
-php artisan module:status application-core
+php artisan module:status search
 ```
 
 ## Module and theme development

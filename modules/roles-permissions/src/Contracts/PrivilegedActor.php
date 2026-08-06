@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Authorization\Contracts;
+namespace Liberu\Foundation\RolesPermissions\Contracts;
 
 interface PrivilegedActor
 {

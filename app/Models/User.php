@@ -21,12 +21,12 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use Liberu\Foundation\Authorization\Contracts\PrivilegedActor;
-use Liberu\Foundation\Authorization\Services\AnyTeamRoleLookup;
 use Liberu\Foundation\Identity\Socialstream\Contracts\ConnectedAccountOwner;
 use Liberu\Foundation\Observability\Contracts\ObservabilityActor;
 use Liberu\Foundation\Organizations\Contracts\OrganizationActor;
 use Liberu\Foundation\Organizations\Models\Team;
+use Liberu\Foundation\RolesPermissions\Contracts\PrivilegedActor;
+use Liberu\Foundation\RolesPermissions\Services\AnyTeamRoleLookup;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
@@ -149,10 +149,7 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
      */
     public function hasAdminAccess(): bool
     {
-        return $this->hasRoleInAnyTeam([
-            (string) config('filament-shield.super_admin.name', 'super_admin'),
-            (string) config('app.admin_role', 'admin'),
-        ]);
+        return $this->hasRoleInAnyTeam([(string) config('filament-shield.super_admin.name', 'super_admin'), 'admin']);
     }
 
     /**
@@ -165,11 +162,7 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
         return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'));
     }
 
-    public function hasRoleInAnyTeam(string|array $roles): bool
-    {
-        return app(AnyTeamRoleLookup::class)->hasRoleInAnyTeam($this, $roles);
-    }
-
+    /** The pivot columns AnyTeamRoleLookup matches this actor on. */
     public function authorizationIdentifier(): int|string
     {
         return $this->getKey();
@@ -178,6 +171,21 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
     public function authorizationType(): string
     {
         return $this->getMorphClass();
+    }
+
+    /**
+     * Team-agnostic role check. Spatie's hasRole() is bound to the active team
+     * context, which is unset on plain web requests and when canAccessPanel()
+     * runs, so the pivot is queried directly across every team.
+     *
+     * The query itself moved into the authorization package in 1.0.4; the host
+     * delegates rather than keeping its own copy.
+     *
+     * @param  string|list<string>  $roles
+     */
+    public function hasRoleInAnyTeam(string|array $roles): bool
+    {
+        return app(AnyTeamRoleLookup::class)->hasRoleInAnyTeam($this, $roles);
     }
 
     public function getDefaultTenant(Panel $panel): ?Model
@@ -220,12 +228,11 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
 
     /**
      * Admin = super_admin in any team, or an allowlisted email. Used to gate the
-     * Telescope/Pulse dashboards. The role check queries the pivot directly because
-     * Spatie's hasRole() is bound to the active team context, which is unset on the
-     * plain web requests those dashboards serve.
+     * Telescope/Pulse dashboards.
      */
     public function isAdmin(): bool
     {
-        return in_array($this->email, (array) config('app.admin_emails', []), true) || $this->isSuperAdmin();
+        return in_array($this->email, (array) config('app.admin_emails', []), true)
+            || $this->isSuperAdmin();
     }
 }

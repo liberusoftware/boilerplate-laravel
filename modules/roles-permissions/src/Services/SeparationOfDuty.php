@@ -1,6 +1,6 @@
 <?php
 
-namespace Liberu\Foundation\Authorization\Services;
+namespace Liberu\Foundation\RolesPermissions\Services;
 
 final class SeparationOfDuty
 {

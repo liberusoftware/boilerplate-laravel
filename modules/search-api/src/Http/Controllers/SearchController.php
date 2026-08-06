@@ -6,15 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Validation\Rule;
+use Liberu\Foundation\Search\Registry\SearcherRegistry;
 use Liberu\Foundation\Search\Services\SearchService;
 
 class SearchController
 {
     protected SearchService $searchService;
 
-    public function __construct(SearchService $searchService)
+    protected SearcherRegistry $searchers;
+
+    public function __construct(SearchService $searchService, SearcherRegistry $searchers)
     {
         $this->searchService = $searchService;
+        $this->searchers = $searchers;
     }
 
     /**
@@ -26,28 +31,6 @@ class SearchController
         $results = $this->searchService->searchUsers($filters);
 
         return response()->json($this->projectUsers($results));
-    }
-
-    /**
-     * Search posts with advanced filters.
-     */
-    public function posts(Request $request): JsonResponse
-    {
-        $filters = $this->validatePostFilters($request);
-        $results = $this->searchService->searchPosts($filters);
-
-        return response()->json($results);
-    }
-
-    /**
-     * Search groups with advanced filters.
-     */
-    public function groups(Request $request): JsonResponse
-    {
-        $filters = $this->validateGroupFilters($request);
-        $results = $this->searchService->searchGroups($filters);
-
-        return response()->json($results);
     }
 
     /**
@@ -101,45 +84,11 @@ class SearchController
     }
 
     /**
-     * Validate post search filters.
-     *
-     * @return array<string, mixed>
-     */
-    protected function validatePostFilters(Request $request): array
-    {
-        return $request->validate([
-            'query' => 'nullable|string|max:255',
-            'status' => 'nullable|in:draft,published,archived',
-            'author_id' => 'nullable|integer|exists:users,id',
-            'published_from' => 'nullable|date',
-            'published_to' => 'nullable|date',
-            'order_by' => 'nullable|in:title,published_at,created_at',
-            'order_direction' => 'nullable|in:asc,desc',
-            'per_page' => 'nullable|integer|min:1|max:100',
-        ]);
-    }
-
-    /**
-     * Validate group search filters.
-     *
-     * @return array<string, mixed>
-     */
-    protected function validateGroupFilters(Request $request): array
-    {
-        return $request->validate([
-            'query' => 'nullable|string|max:255',
-            'active_only' => 'nullable|boolean',
-            'owner_id' => 'nullable|integer|exists:users,id',
-            'created_from' => 'nullable|date',
-            'created_to' => 'nullable|date',
-            'order_by' => 'nullable|in:name,created_at',
-            'order_direction' => 'nullable|in:asc,desc',
-            'per_page' => 'nullable|integer|min:1|max:100',
-        ]);
-    }
-
-    /**
      * Validate all search filters.
+     *
+     * The accepted types come from the registry rather than a literal, so a
+     * package contributing a searchable concept does not also have to patch this
+     * rule to make it reachable.
      *
      * @return array<string, mixed>
      */
@@ -148,7 +97,7 @@ class SearchController
         return $request->validate([
             'query' => 'nullable|string|max:255',
             'types' => 'nullable|array',
-            'types.*' => 'in:users,posts,groups',
+            'types.*' => Rule::in($this->searchers->types()),
             'per_page' => 'nullable|integer|min:1|max:100',
         ]);
     }

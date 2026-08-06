@@ -8,6 +8,12 @@
         <testsuite name="Package">
             <directory>tests</directory>
         </testsuite>
+        <!-- Shipped by the testbench, not by this repository: a new boundary rule is a
+             testbench release every package picks up, rather than a fleet-wide sweep.
+             Opting out of a rule means editing this file. -->
+        <testsuite name="Boundary">
+            <directory suffix="Test.php">vendor/liberusoftware/package-testbench/tests/Boundary/Module</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>

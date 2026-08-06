@@ -2,18 +2,25 @@
 
 namespace Liberu\Foundation\Search\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
+use Liberu\PackageTestbench\PackageTestCase;
+use Liberu\PackageTestbench\TestUser;
+use Liberu\PackageTestbench\UsesTestUser;
 
-abstract class TestCase extends Orchestra
+/**
+ * The user model this package searches is a configured class, never a literal
+ * one — an application supplies its own, and the provider defaults the config to
+ * `auth.providers.users.model`. The suite supplies the testbench's actor, which
+ * is the whole reason `searchUsers()` can be tested outside a composition.
+ */
+abstract class TestCase extends PackageTestCase
 {
-    protected function getPackageProviders($app): array
-    {
-        $manifest = json_decode(
-            file_get_contents(dirname(__DIR__).'/module.json'),
-            true,
-            flags: JSON_THROW_ON_ERROR,
-        );
+    use UsesTestUser;
 
-        return [$manifest['provider']];
+    protected function defineEnvironment($app): void
+    {
+        parent::defineEnvironment($app);
+
+        $app['config']->set('search.models.user', TestUser::class);
+        $app['config']->set('auth.providers.users.model', TestUser::class);
     }
 }

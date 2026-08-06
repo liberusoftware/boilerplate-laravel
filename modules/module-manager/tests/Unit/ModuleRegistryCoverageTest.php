@@ -9,7 +9,7 @@ use Liberu\Foundation\ModuleManager\Manifest;
 use Liberu\Foundation\ModuleManager\ModuleDiscovery;
 use Liberu\Foundation\ModuleManager\ModuleRegistry;
 use Liberu\Foundation\ModuleManager\ModuleValidator;
-use Liberu\Foundation\ModuleManager\Tests\TestCase;
+use Liberu\PackageTestbench\PackageTestCase as TestCase;
 
 function makeCoverageManifest(array $overrides = [], ?string $package = null): Manifest
 {

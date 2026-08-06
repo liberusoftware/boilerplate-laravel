@@ -40,6 +40,18 @@ jobs:
       - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      # §6.2: modules/ and themes/ are Composer output that happens to be tracked. A
+      # clean install must reproduce them byte for byte — a diff here means someone
+      # edited an installed package instead of its repository, and the next install
+      # would silently discard the change.
+      - name: Installed packages match the tracked source
+        run: |
+          if ! git diff --exit-code --stat -- modules themes; then
+            echo "::error::A clean install rewrote tracked files under modules/ or themes/."
+            echo "Edit the package repository and release it; do not edit installed files here."
+            exit 1
+          fi
+
       - name: Copy environment file
         run: cp .env.testing .env
 

@@ -54,6 +54,18 @@ if [[ "$mode" == "push" && -n "$(git status --porcelain)" ]]; then
     exit 1
 fi
 
+# The script already requires gh for every mutation, and gh's own git protocol is
+# https by default — so an SSH URL asks for a key the tool never needed. Honour
+# whichever protocol gh is configured for; set META_REMOTE_PROTOCOL to override.
+remote_protocol="${META_REMOTE_PROTOCOL:-$(gh config get git_protocol 2>/dev/null || echo https)}"
+remote_url() {
+    if [[ "$remote_protocol" == "ssh" ]]; then
+        printf 'git@github.com:%s/%s.git' "$organisation" "$1"
+    else
+        printf 'https://github.com/%s/%s.git' "$organisation" "$1"
+    fi
+}
+
 ensure_repository() {
     local repository="$1" description="$2"
     gh repo view "$organisation/$repository" >/dev/null 2>&1 && return
@@ -68,8 +80,12 @@ publish_path() {
     [[ "$mode" == "create" ]] && return
     local staging
     staging="$(mktemp -d)/$repository"
-    git clone --quiet --branch "$branch" "git@github.com:$organisation/$repository.git" "$staging"
-    rsync -a --delete --exclude='.git' "$path/" "$staging/"
+    git clone --quiet --branch "$branch" "$(remote_url "$repository")" "$staging"
+    # A package whose standalone suite has been run locally has a vendor/ and a
+    # composer.lock. Both are gitignored here and neither belongs in a library
+    # repository, but rsync does not read .gitignore, so they must be named.
+    rsync -a --delete --exclude='.git' --exclude='vendor/' --exclude='composer.lock' \
+        --exclude='node_modules/' --exclude='.phpunit.result.cache' "$path/" "$staging/"
     git -C "$staging" add -A
     if ! git -C "$staging" diff --cached --quiet; then
         git -C "$staging" commit --quiet -m "Synchronize from $meta_repository"
@@ -96,6 +112,13 @@ if [[ "$only" == "all" || "$only" == "meta" ]]; then
     printf '%-48s <- .\n' "$organisation/$meta_repository"
     if [[ "$mode" != "dry-run" ]]; then
         ensure_repository "$meta_repository" "$genre meta repository"
-        [[ "$mode" == "push" ]] && git push "git@github.com:$organisation/$meta_repository.git" "HEAD:$branch"
+        # HEAD:$branch fast-forwards main from whatever is checked out, so running a
+        # publish from a feature branch would advance main without review.
+        if [[ "$mode" == "push" && "$(git rev-parse --abbrev-ref HEAD)" != "$branch" ]]; then
+            printf 'Refusing to push HEAD to %s from branch %s. Check out %s first, or use --only modules.\n' \
+                "$branch" "$(git rev-parse --abbrev-ref HEAD)" "$branch" >&2
+            exit 1
+        fi
+        [[ "$mode" == "push" ]] && git push "$(remote_url "$meta_repository")" "HEAD:$branch"
     fi
 fi

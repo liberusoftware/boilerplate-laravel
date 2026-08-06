@@ -2,14 +2,12 @@
 
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
-use Liberu\Foundation\Authorization\Models\Role;
 use Liberu\Foundation\Organizations\Models\Team;
-use Liberu\Search\Demo\Models\Group;
-use Liberu\Search\Demo\Models\Post;
+use Liberu\Foundation\RolesPermissions\Models\Role;
 
 use function Pest\Laravel\seed;
 
-it('seeds a default team, admin user with super_admin role, and sample content', function () {
+it('seeds a default team and an admin user with the super_admin role', function () {
     seed(DatabaseSeeder::class);
 
     // Default team
@@ -25,8 +23,4 @@ it('seeds a default team, admin user with super_admin role, and sample content',
     setPermissionsTeamId($team->id);
     expect(Role::where('name', 'super_admin')->exists())->toBeTrue();
     expect($admin->fresh()->hasRole('super_admin'))->toBeTrue();
-
-    // Sample content for search/demo
-    expect(Post::count())->toBeGreaterThan(0);
-    expect(Group::count())->toBeGreaterThan(0);
 });

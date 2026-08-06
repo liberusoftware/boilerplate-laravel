@@ -17,7 +17,7 @@ it('registers the theme blade directives', function () {
 
 it('renders the themeAsset directive against the active theme', function () {
     expect(Blade::render("@themeAsset('resources/css/app.css')"))
-        ->toContain('themes/'.app(ThemeManager::class)->getActiveTheme().'/resources/css/app.css');
+        ->toContain('themes/'.active_theme().'/resources/css/app.css');
 });
 
 it('resolves a shared view name through the active theme inheritance chain', function () {
@@ -38,18 +38,18 @@ it('does not throw rendering themeCss/themeJs when the theme asset is not in the
     expect(Blade::render('@themeCss @themeJs'))->toBeString();
 });
 
-it('persists a theme to session and the authenticated user', function () {
+it('persists set_theme to session and the authenticated user', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    app(ThemeManager::class)->persistTheme('dark');
+    set_theme('dark');
 
     expect(session('theme_preference'))->toBe('dark')
         ->and($user->fresh()->theme_preference)->toBe('dark');
 });
 
-it('persists a theme to session without an authenticated user', function () {
-    app(ThemeManager::class)->persistTheme('dark');
+it('set_theme without auth writes session only and does not throw', function () {
+    set_theme('dark');
 
     expect(session('theme_preference'))->toBe('dark');
 });

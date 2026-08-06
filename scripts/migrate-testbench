@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""Migrate every package onto liberusoftware/package-testbench (step 4).
+
+Each package stops shipping a test bootstrap and its two boundary test files, and
+points its phpunit.xml at the suite the testbench ships. A new boundary rule then
+becomes a testbench release every repository picks up, rather than a 44-repository
+sweep.
+
+Idempotent: re-running on a migrated package changes nothing.
+"""
+import json
+import pathlib
+import shutil
+import sys
+
+ROOT = pathlib.Path('/home/tom/code/boilerplate-laravel')
+
+# The §3.9 three, as separate workflows rather than one with three jobs. Only
+# `tests` belongs on every push: installing from nothing and resolving the lowest
+# allowed dependencies are release questions. As one workflow this was four jobs
+# per push, and a publish sweep — 44 repositories inside twenty seconds — stalled
+# the whole organisation's Actions queue.
+CALLERS = {
+    'tests.yml': """name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A publish sweep pushes every package within seconds of the others. Superseding
+# this repository's previous run keeps a re-publish from stacking on a sweep that
+# has not finished.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
+""",
+    'install.yml': """name: Install
+
+# A release question, not a per-commit one: this resolves the package from
+# nothing, the way a consumer first installs it.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+jobs:
+  install:
+    uses: liberusoftware/.github/.github/workflows/package-install.yml@main
+""",
+    'compatibility.yml': """name: Compatibility
+
+# Also a release question. --prefer-lowest proves the declared constraints admit
+# a tree that works, which only changes when the constraints do.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+jobs:
+  compatibility:
+    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main
+""",
+}
+
+BOUNDARY_SUITE = """        <!-- Shipped by the testbench, not by this repository: a new boundary rule is a
+             testbench release every package picks up, rather than a fleet-wide sweep.
+             Opting out of a rule means editing this file. -->
+        <testsuite name="Boundary">
+            <directory suffix="Test.php">vendor/liberusoftware/package-testbench/tests/Boundary/{kind}</directory>
+        </testsuite>
+"""
+
+
+def migrate(pkg: pathlib.Path, kind: str) -> str:
+    changed = []
+    tests = pkg / 'tests'
+
+    # The testbench ships these two suites; a package keeping its own copies would
+    # pin the rules of the day it was written.
+    # A package that has grown its own TestCase since the migration keeps
+    # everything: the base case supplies environment PackageTestCase cannot —
+    # settings' migration paths, localization's locale list — and Pest.php binds
+    # it. This script is idempotent and gets re-run; without this it deletes that
+    # work, and the resulting failure looks like a broken test rather than a
+    # deleted bootstrap. Only a package still on the pre-migration shape is
+    # stripped.
+    if (tests / 'TestCase.php').is_file() and (tests / 'Pest.php').is_file() \
+            and 'PackageTestbench' not in (tests / 'TestCase.php').read_text():
+        for stale in ('Architecture', 'Integration'):
+            target = tests / stale
+            if target.is_dir():
+                shutil.rmtree(target)
+                changed.append(f'-tests/{stale}/')
+        (tests / 'TestCase.php').unlink()
+        changed.append('-tests/TestCase.php')
+    elif (tests / 'TestCase.php').is_file():
+        changed.append('=tests/TestCase.php (extends PackageTestCase; kept)')
+    else:
+        for stale in ('Architecture', 'Integration'):
+            target = tests / stale
+            if target.is_dir():
+                shutil.rmtree(target)
+                changed.append(f'-tests/{stale}/')
+
+    # Git does not track an empty directory. Without this the 34 packages with no
+    # tests of their own publish with no tests/ at all, and Pest aborts before any
+    # suite runs: "The test directory [tests] does not exist."
+    keep = tests / '.gitkeep'
+    if not keep.exists():
+        keep.write_text(
+            '# Git does not track an empty directory, so without this file a package with no\n'
+            '# tests of its own publishes without tests/ at all — and Pest aborts before any\n'
+            '# suite runs with "The test directory [tests] does not exist."\n'
+        )
+        changed.append('+tests/.gitkeep')
+
+    own = sorted(d.name for d in tests.glob('*') if d.is_dir())
+    pest = tests / 'Pest.php'
+
+    # A package that has since grown its own TestCase — for environment a bare
+    # PackageTestCase cannot supply, like settings' migration paths — binds it
+    # from Pest.php itself. Rewriting that binding would silently drop the setup
+    # and leave the failure to look like a broken test.
+    if (tests / 'TestCase.php').is_file():
+        changed.append('=tests/Pest.php (package owns a TestCase)')
+    elif own:
+        binding = ', '.join(f"'{d}'" for d in own)
+        pest.write_text(
+            "<?php\n\nuse Liberu\\PackageTestbench\\PackageTestCase;\n\n"
+            f"pest()->extend(PackageTestCase::class)->in({binding});\n"
+        )
+        changed.append('~tests/Pest.php')
+    elif pest.exists():
+        # Nothing of its own left to bind; the boundary suite binds itself.
+        pest.unlink()
+        changed.append('-tests/Pest.php')
+
+    composer_file = pkg / 'composer.json'
+    composer = json.loads(composer_file.read_text())
+    # orchestra/testbench arrives through the testbench now. Anything else a package
+    # dev-requires stays: a sibling declared there is what lets an adapter boot
+    # against a real implementation of the contract it depends on.
+    wanted = dict(composer.get('require-dev', {}))
+    wanted.pop('orchestra/testbench', None)
+    # Never lower a constraint a package has already raised: a package using the
+    # testbench's actor needs ^1.6, one relying on its application key ^1.7, and
+    # this script is re-run.
+    wanted['liberusoftware/package-testbench'] = max(
+        wanted.get('liberusoftware/package-testbench', '^1.5'), '^1.5',
+        key=lambda constraint: [int(part) for part in constraint.lstrip('^').split('.')],
+    )
+    wanted['pestphp/pest'] = '^5.0'
+
+    if composer.get('require-dev') != wanted:
+        composer['require-dev'] = wanted
+        composer_file.write_text(json.dumps(composer, indent=2) + '\n')
+        changed.append('~composer.json')
+
+    phpunit_file = pkg / 'phpunit.xml'
+    phpunit = phpunit_file.read_text()
+    if 'package-testbench/tests/Boundary' not in phpunit:
+        phpunit = phpunit.replace(
+            '    </testsuites>',
+            BOUNDARY_SUITE.format(kind=kind) + '    </testsuites>',
+        )
+        phpunit_file.write_text(phpunit)
+        changed.append('~phpunit.xml')
+
+    workflows = pkg / '.github/workflows'
+    workflows.mkdir(parents=True, exist_ok=True)
+    for name, body in CALLERS.items():
+        caller = workflows / name
+        if not caller.is_file() or caller.read_text() != body:
+            caller.write_text(body)
+            changed.append('~'+name)
+
+    return ', '.join(changed) or 'already migrated'
+
+
+def main() -> int:
+    # Given paths, migrate exactly those — the six exiled packages live in their
+    # own repositories and are no longer under modules/, but need the same shape.
+    if sys.argv[1:]:
+        for arg in sys.argv[1:]:
+            pkg = pathlib.Path(arg).resolve()
+            kind = 'Theme' if (pkg / 'theme.json').is_file() else 'Module'
+            print(f'{pkg.name:<44}{migrate(pkg, kind)}')
+        return 0
+
+    for base, kind in (('modules', 'Module'), ('themes', 'Theme')):
+        for pkg in sorted((ROOT / base).iterdir()):
+            if pkg.is_dir():
+                print(f'{pkg.relative_to(ROOT)!s:<44}{migrate(pkg, kind)}')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
