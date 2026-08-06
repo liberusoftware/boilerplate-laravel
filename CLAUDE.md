@@ -221,6 +221,11 @@ and `clear-signal` are `public` themes declaring `parent: liberu-base`.
 `ThemeManager::inheritanceChain()` walks the chain with a cycle guard, and only `liberu-base`
 ships `layouts/app.blade.php`, so every public theme renders through the fallback.
 
+**Discovery is Composer-driven, like modules.** `ThemeDiscovery` merges the tracked `themes/` tree
+with `InstalledVersions::getInstalledPackagesByType('liberu-theme')`, deduping by `realpath` so a
+theme present both ways is one theme. A theme installed anywhere in `vendor/` is found, and a
+composition with no `themes/` directory discovers nothing rather than throwing.
+
 `config/theme.php` holds `default`, `fallback`, per-surface themes (`public` → `clear-signal`),
 optional caching and asset budgets. Site-wide selection lives in
 `Liberu\Foundation\Settings\Settings\SiteSettings::$active_theme`, edited from

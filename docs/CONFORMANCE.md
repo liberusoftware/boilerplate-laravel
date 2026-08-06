@@ -275,7 +275,9 @@ prototype showed a hardcoded prefix failing 43 packages under one vendor and pas
 [Which CI workflow set does a package repo need?](https://github.com/liberusoftware/boilerplate-laravel/issues/621)
 
 **Package repos get the §7 three** — `tests.yml`, `install.yml`, `compatibility.yml` — as thin
-callers of **reusable workflows in `liberusoftware/.github`**. Rule 20 (each repo owns its workflows)
+callers of **reusable workflows in `liberusoftware/.github`**. (Three separate workflow files with
+different triggers, not one workflow with three jobs — see the step-5 record below for why that
+distinction stalled the organisation's Actions queue.) Rule 20 (each repo owns its workflows)
 and CI.md (a reusable workflow owns repeated setup) reconcile: a callable Actions workflow is not a
 Composer package.
 
@@ -537,6 +539,51 @@ middleware suite. Host: 253 passed, 12 skipped.
 - **Search.** `SearchServiceTest` and the six HTTP search tests depend on the host's post and group
   fixtures — the fixtures for exactly the methods that leave for `search-demo`. Moving them first
   would relocate scaffolding for code that is about to be deleted, so search follows that task.
+
+**Both blockers are now cleared, and clearing them changed two packages' designs.**
+
+- **Theme discovery goes through Composer.** `ThemeDiscovery` merges the tracked `themes/` tree with
+  `InstalledVersions::getInstalledPackagesByType('liberu-theme')`, deduping by `realpath` before the
+  name check so a theme present both ways is one theme. That mirrors `ModuleDiscovery` and is what
+  §3.6 meant all along. It also **retires all three loosened guards** from the `theme-support` §4 row
+  above: a missing `themes/` directory is no longer a hole in discovery, so the fallback and
+  inheritance checks are strict again. The switcher tests moved to `theme-support-livewire`, verified
+  from a real resolve after `theme-support` published — not from a patched `vendor/`.
+- **Search gained a registry.** `SearcherRegistry` holds `type => callable`; `searchAll()` iterates
+  it and names nothing, and `search-api` derives its accepted `types` from the same registry. The
+  `search` package registers only `users`. Naming post and group in `searchAll()` was the actual tie
+  to the demo — deleting the methods without this would have left the coupling behind in the shape of
+  a match arm. An unregistered type is now *absent* from the result rather than present and empty, so
+  a caller can tell "this composition has no such type" from "no matches".
+
+The demo surface itself is extracted but **not delivered** — `liberusoftware/module-search-demo` is
+not checked out here — and the same holds for the exiled messaging and blog tests. Two plan
+assumptions failed on contact: those four repositories were never renamed as §3.4 predicted (still
+`module-messaging`, `module-blog-core`) and are still at 1.0.4 on the pre-testbench bootstrap.
+
+**§3.9's shape was wrong in one respect: the three are three *workflows*, not three jobs.**
+
+As authored, each package ran one `tests.yml` calling all three reusables — four jobs per push. A
+publish sweep pushes 44 repositories inside twenty seconds, so one sweep queued **176 jobs**. Fixed
+three ways: separate workflow files; only `tests` on push, with `install` and `compatibility` on
+`[0-9]+.[0-9]+.[0-9]+` tags, because resolving from nothing and resolving lowest are release
+questions rather than per-commit ones; and a `concurrency` group keyed on workflow + ref so a
+re-publish supersedes its own unfinished sweep. One sweep is now 44 jobs.
+
+**The change stands; the evidence that prompted it does not.** It was adopted after observing the
+organisation's queue stall — hundreds queued, none running, and finally pushes creating no runs at
+all. That was **not** job amplification. GitHub opened a critical Actions incident at 15:22 UTC on
+2026-08-06 and throttled webhook triggers to ~15%, which is exactly "a push creates no run", with
+roughly a third of queued jobs failing outright. Every observation behind the diagnosis falls inside
+that window. 176 jobs per sweep is still four times more than the work justifies, so the fix is kept
+on its own arithmetic — but **package CI has not been observed green on the current fleet**, and it
+cannot be until the incident clears. Nothing downstream should read a green package badge into this.
+
+`package-install.yml` also dropped `--strict` from `composer validate`. It promotes warnings to
+errors, and one warning is that a published package should omit `version` — which this fleet cannot
+do, because `ModuleValidator` compares each manifest against `Composer\InstalledVersions` and the
+boundary suite asserts `composer.json` and `module.json` agree on it. `--strict` failed all 44
+packages for carrying a field they are required to carry.
 
 ## 5. Migration sequence
 
