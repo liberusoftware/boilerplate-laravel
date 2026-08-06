@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1 - 2026-08-06
+
+- Require `package-testbench` ^1.7 and call its `defineEnvironment()`, so the suite keeps the
+  application key the base case sets.
+
 ## 1.3.0 - 2026-08-06
 
 - Adopt the host tests that belong to this package (step 5). They ran in the composition only
