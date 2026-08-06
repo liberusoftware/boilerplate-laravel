@@ -171,7 +171,7 @@ GET /api/search/all?query=developer&per_page=10
 ## Models
 
 ### Post Model
-Located at: `app/Models/Post.php`
+Located at: `src/Models/Post.php` in [liberusoftware/module-search-demo](https://github.com/liberusoftware/module-search-demo)
 
 **Relationships**:
 - `author()`: BelongsTo User
@@ -184,7 +184,7 @@ Located at: `app/Models/Post.php`
 - `search($query)`: Search by title or content
 
 ### Group Model
-Located at: `app/Models/Group.php`
+Located at: `src/Models/Group.php` in [liberusoftware/module-search-demo](https://github.com/liberusoftware/module-search-demo)
 
 **Relationships**:
 - `owner()`: BelongsTo User

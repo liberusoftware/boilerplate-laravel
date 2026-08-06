@@ -253,7 +253,7 @@ The middleware automatically uses the authenticated user's preferred language.
 You can extend the `TranslationService` to use a different translation API:
 
 ```php
-namespace App\Services;
+namespace Liberu\Foundation\Localization\MyMemory;
 
 class CustomTranslationService extends TranslationService
 {
