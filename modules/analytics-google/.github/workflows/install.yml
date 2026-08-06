@@ -1,0 +1,12 @@
+name: Install
+
+# A release question, not a per-commit one: this resolves the package from
+# nothing, the way a consumer first installs it.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+jobs:
+  install:
+    uses: liberusoftware/.github/.github/workflows/package-install.yml@main

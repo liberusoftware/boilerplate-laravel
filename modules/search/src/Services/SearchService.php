@@ -3,9 +3,12 @@
 namespace Liberu\Foundation\Search\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Liberu\Foundation\Search\Registry\SearcherRegistry;
 
 class SearchService
 {
+    public function __construct(private readonly SearcherRegistry $searchers) {}
+
     /**
      * Search users with advanced filters.
      *
@@ -52,160 +55,31 @@ class SearchService
     }
 
     /**
-     * Search posts with advanced filters.
+     * Search every registered type with a single query.
+     *
+     * The set of types is whatever the composition registered, not a list held
+     * here: naming them in this body is what tied `search` to the demo that
+     * owned posts and groups. An unrequested or unregistered type is absent from
+     * the result rather than present and empty, so a caller can tell "this
+     * composition has no such type" from "no matches".
      *
      * @param  array<string, mixed>  $filters
-     * @return LengthAwarePaginator<int, Post>
-     */
-    public function searchPosts(array $filters): LengthAwarePaginator
-    {
-        $model = $this->modelFor('post');
-
-        if ($model === null) {
-            return $this->emptyPage($filters);
-        }
-
-        $query = $model::query()->with('user');
-
-        // Search by title or content
-        if (! empty($filters['query'])) {
-            $query->search($this->toString($filters['query']));
-        }
-
-        // Filter by status
-        if (! empty($filters['status'])) {
-            $query->status($this->toString($filters['status']));
-        }
-
-        // Filter by author
-        if (! empty($filters['author_id'])) {
-            $query->byAuthor($this->toInt($filters['author_id']));
-        }
-
-        // Filter by date range
-        if (! empty($filters['published_from']) || ! empty($filters['published_to'])) {
-            $query->dateRange(
-                $filters['published_from'] ?? null,
-                $filters['published_to'] ?? null
-            );
-        }
-
-        // Drafts must never be reachable via search, regardless of caller input.
-        $query->published();
-
-        // Order by
-        $orderBy = $this->toString($filters['order_by'] ?? 'published_at');
-        $orderDirection = ($filters['order_direction'] ?? 'desc') === 'asc' ? 'asc' : 'desc';
-        $query->orderBy($orderBy, $orderDirection);
-
-        return $query->paginate($this->toInt($filters['per_page'] ?? 15));
-    }
-
-    /**
-     * Search groups with advanced filters.
-     *
-     * @param  array<string, mixed>  $filters
-     * @return LengthAwarePaginator<int, Group>
-     */
-    public function searchGroups(array $filters): LengthAwarePaginator
-    {
-        $model = $this->modelFor('group');
-
-        if ($model === null) {
-            return $this->emptyPage($filters);
-        }
-
-        $query = $model::query()->with('owner');
-
-        // Search by name or description
-        if (! empty($filters['query'])) {
-            $query->search($this->toString($filters['query']));
-        }
-
-        // Filter by active status
-        if (! empty($filters['active_only'])) {
-            $query->active();
-        }
-
-        // Only public groups are searchable; private/restricted must never appear.
-        $query->type('public');
-
-        // Filter by owner
-        if (! empty($filters['owner_id'])) {
-            $query->byOwner($this->toInt($filters['owner_id']));
-        }
-
-        // Filter by date range
-        if (! empty($filters['created_from'])) {
-            $query->where('created_at', '>=', $filters['created_from']);
-        }
-        if (! empty($filters['created_to'])) {
-            $query->where('created_at', '<=', $filters['created_to']);
-        }
-
-        // Order by
-        $orderBy = $this->toString($filters['order_by'] ?? 'created_at');
-        $orderDirection = ($filters['order_direction'] ?? 'desc') === 'asc' ? 'asc' : 'desc';
-        $query->orderBy($orderBy, $orderDirection);
-
-        return $query->paginate($this->toInt($filters['per_page'] ?? 15));
-    }
-
-    /**
-     * Search all entities (users, posts, groups) with a single query.
-     *
-     * @param  array<string, mixed>  $filters
-     * @return array<string, mixed>
+     * @return array<string, LengthAwarePaginator<int, mixed>>
      */
     public function searchAll(array $filters): array
     {
+        $requested = isset($filters['types']) ? (array) $filters['types'] : null;
+        $filters['per_page'] = $filters['per_page'] ?? 5;
+
         $results = [];
 
-        // Limit per entity type
-        $perPage = $filters['per_page'] ?? 5;
-
-        // Search users
-        if (! isset($filters['types']) || in_array('users', (array) $filters['types'])) {
-            $results['users'] = $this->searchUsers(array_merge($filters, ['per_page' => $perPage]));
-        }
-
-        // Search posts
-        if ((! isset($filters['types']) || in_array('posts', (array) $filters['types'])) && $this->modelFor('post') !== null) {
-            $results['posts'] = $this->searchPosts(array_merge($filters, ['per_page' => $perPage]));
-        }
-
-        // Search groups
-        if ((! isset($filters['types']) || in_array('groups', (array) $filters['types'])) && $this->modelFor('group') !== null) {
-            $results['groups'] = $this->searchGroups(array_merge($filters, ['per_page' => $perPage]));
+        foreach ($this->searchers->all() as $type => $searcher) {
+            if ($requested === null || in_array($type, $requested, true)) {
+                $results[$type] = $searcher($filters);
+            }
         }
 
         return $results;
-    }
-
-    /**
-     * The Eloquent class registered for a searchable type.
-     *
-     * Only `user` has a default; `post` and `group` are supplied by whichever
-     * package brings those concepts, so a composition that installs none leaves
-     * them null. Reading a null as a class name is fatal, so callers must be able
-     * to tell "no such type here" from "no results".
-     *
-     * @return class-string|null
-     */
-    private function modelFor(string $type): ?string
-    {
-        $model = config("search.models.{$type}");
-
-        return is_string($model) && class_exists($model) ? $model : null;
-    }
-
-    /**
-     * @param  array<string, mixed>  $filters
-     * @return LengthAwarePaginator<int, mixed>
-     */
-    private function emptyPage(array $filters): LengthAwarePaginator
-    {
-        return new LengthAwarePaginator([], 0, max(1, $this->toInt($filters['per_page'] ?? 15)));
     }
 
     /**

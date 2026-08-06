@@ -7,30 +7,6 @@ use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
 use Liberu\Foundation\Theme\Manifests\ThemeManifest;
 use Liberu\PackageTestbench\PackageTestCase as TestCase;
 
-function writeCoverageTheme(array $changes = [], bool $asset = true): string
-{
-    $dir = sys_get_temp_dir().'/liberu-theme-'.bin2hex(random_bytes(5));
-    mkdir($dir, 0777, true);
-    if ($asset) {
-        file_put_contents($dir.'/theme.css', '');
-    }
-    $data = array_replace([
-        'name' => 'covered', 'display_name' => 'Covered', 'version' => '1.0.0',
-        'provider' => TestCase::class, 'type' => 'shared', 'parent' => '',
-        'optimized_for' => [], 'tested_with' => [], 'required_capabilities' => ['one'],
-        'optional_capabilities' => ['two'], 'supports' => [],
-        'assets' => ['css' => ['theme.css'], 'js' => []],
-    ], $changes);
-    foreach ($changes as $key => $value) {
-        if ($value === null) {
-            unset($data[$key]);
-        }
-    }
-    file_put_contents($dir.'/theme.json', json_encode($data, JSON_THROW_ON_ERROR));
-
-    return $dir.'/theme.json';
-}
-
 it('exposes all theme manifest values', function () {
     $manifest = ThemeManifest::fromFile(writeCoverageTheme(['parent' => 'base']));
     expect($manifest->name())->toBe('covered')->and($manifest->displayName())->toBe('Covered')
@@ -45,7 +21,7 @@ it('rejects malformed theme discovery directories', function (Closure $arrange, 
     $root = sys_get_temp_dir().'/liberu-themes-'.bin2hex(random_bytes(5));
     mkdir($root, 0777, true);
     $arrange($root);
-    expect(fn () => (new ThemeDiscovery())->discover($root))->toThrow(InvalidTheme::class, $message);
+    expect(fn () => (new ThemeDiscovery([]))->discover($root))->toThrow(InvalidTheme::class, $message);
 })->with([
     'name collision' => [function (string $root) {
         $source = dirname(writeCoverageTheme());
@@ -68,18 +44,42 @@ it('rejects malformed theme discovery directories', function (Closure $arrange, 
     }, 'not autoloadable'],
 ]);
 
-// Not an error: this package is installable in an application that ships no
-// themes at all, and the provider discovers while registering. Throwing here is
-// what made the package unbootable outside the host.
-it('finds no themes when the themes directory is absent', function () {
-    expect((new ThemeDiscovery())->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5))))->toBe([]);
+it('rejects an application with no themes at all', function () {
+    expect(fn () => (new ThemeDiscovery([]))->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5))))
+        ->toThrow(InvalidTheme::class, 'No themes are installed.');
+});
+
+// What makes the guard above safe to keep: this package dev-requires two themes,
+// so its own test application has themes without having a tracked tree.
+it('finds Composer-installed themes with no tracked tree at all', function () {
+    $themes = (new ThemeDiscovery())->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5)));
+
+    expect($themes)->toHaveKeys(['dark', 'default', 'liberu-base']);
+});
+
+it('counts a theme the tracked tree and Composer both name once', function () {
+    $root = sys_get_temp_dir().'/liberu-themes-'.bin2hex(random_bytes(5));
+    mkdir($root, 0777, true);
+    rename(coverageThemePackage('covered'), $root.'/covered');
+
+    expect((new ThemeDiscovery([$root.'/covered']))->discover($root))->toHaveCount(1)->toHaveKey('covered');
+});
+
+it('rejects two different packages claiming one theme name', function () {
+    $root = sys_get_temp_dir().'/liberu-themes-'.bin2hex(random_bytes(5));
+    mkdir($root, 0777, true);
+    rename(coverageThemePackage('covered'), $root.'/covered');
+
+    expect(fn () => (new ThemeDiscovery([coverageThemePackage('covered')]))->discover($root))
+        ->toThrow(InvalidTheme::class, 'directory/name collision');
 });
 
 it('ignores tracked directories that do not contain a theme manifest', function () {
     $root = sys_get_temp_dir().'/themes-with-notes-'.bin2hex(random_bytes(5));
     mkdir($root.'/notes', 0777, true);
+    rename(coverageThemePackage('covered'), $root.'/covered');
 
-    expect((new ThemeDiscovery())->discover($root))->toBe([]);
+    expect((new ThemeDiscovery([]))->discover($root))->toHaveKeys(['covered']);
 });
 
 it('reports theme cache filesystem write and delete failures', function () {

@@ -15,7 +15,13 @@ import sys
 
 ROOT = pathlib.Path('/home/tom/code/boilerplate-laravel')
 
-CALLER = """name: Tests
+# The §3.9 three, as separate workflows rather than one with three jobs. Only
+# `tests` belongs on every push: installing from nothing and resolving the lowest
+# allowed dependencies are release questions. As one workflow this was four jobs
+# per push, and a publish sweep — 44 repositories inside twenty seconds — stalled
+# the whole organisation's Actions queue.
+CALLERS = {
+    'tests.yml': """name: Tests
 
 on:
   push:
@@ -24,16 +30,44 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# A publish sweep pushes every package within seconds of the others. Superseding
+# this repository's previous run keeps a re-publish from stacking on a sweep that
+# has not finished.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
+""",
+    'install.yml': """name: Install
 
+# A release question, not a per-commit one: this resolves the package from
+# nothing, the way a consumer first installs it.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+jobs:
   install:
     uses: liberusoftware/.github/.github/workflows/package-install.yml@main
+""",
+    'compatibility.yml': """name: Compatibility
 
+# Also a release question. --prefer-lowest proves the declared constraints admit
+# a tree that works, which only changes when the constraints do.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+jobs:
   compatibility:
     uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main
-"""
+""",
+}
 
 BOUNDARY_SUITE = """        <!-- Shipped by the testbench, not by this repository: a new boundary rule is a
              testbench release every package picks up, rather than a fleet-wide sweep.
@@ -50,14 +84,30 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
 
     # The testbench ships these two suites; a package keeping its own copies would
     # pin the rules of the day it was written.
-    for stale in ('TestCase.php', 'Architecture', 'Integration'):
-        target = tests / stale
-        if target.is_dir():
-            shutil.rmtree(target)
-            changed.append(f'-tests/{stale}/')
-        elif target.is_file():
-            target.unlink()
-            changed.append(f'-tests/{stale}')
+    # A package that has grown its own TestCase since the migration keeps
+    # everything: the base case supplies environment PackageTestCase cannot —
+    # settings' migration paths, localization's locale list — and Pest.php binds
+    # it. This script is idempotent and gets re-run; without this it deletes that
+    # work, and the resulting failure looks like a broken test rather than a
+    # deleted bootstrap. Only a package still on the pre-migration shape is
+    # stripped.
+    if (tests / 'TestCase.php').is_file() and (tests / 'Pest.php').is_file() \
+            and 'PackageTestbench' not in (tests / 'TestCase.php').read_text():
+        for stale in ('Architecture', 'Integration'):
+            target = tests / stale
+            if target.is_dir():
+                shutil.rmtree(target)
+                changed.append(f'-tests/{stale}/')
+        (tests / 'TestCase.php').unlink()
+        changed.append('-tests/TestCase.php')
+    elif (tests / 'TestCase.php').is_file():
+        changed.append('=tests/TestCase.php (extends PackageTestCase; kept)')
+    else:
+        for stale in ('Architecture', 'Integration'):
+            target = tests / stale
+            if target.is_dir():
+                shutil.rmtree(target)
+                changed.append(f'-tests/{stale}/')
 
     # Git does not track an empty directory. Without this the 34 packages with no
     # tests of their own publish with no tests/ at all, and Pest aborts before any
@@ -73,7 +123,14 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
 
     own = sorted(d.name for d in tests.glob('*') if d.is_dir())
     pest = tests / 'Pest.php'
-    if own:
+
+    # A package that has since grown its own TestCase — for environment a bare
+    # PackageTestCase cannot supply, like settings' migration paths — binds it
+    # from Pest.php itself. Rewriting that binding would silently drop the setup
+    # and leave the failure to look like a broken test.
+    if (tests / 'TestCase.php').is_file():
+        changed.append('=tests/Pest.php (package owns a TestCase)')
+    elif own:
         binding = ', '.join(f"'{d}'" for d in own)
         pest.write_text(
             "<?php\n\nuse Liberu\\PackageTestbench\\PackageTestCase;\n\n"
@@ -92,7 +149,13 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
     # against a real implementation of the contract it depends on.
     wanted = dict(composer.get('require-dev', {}))
     wanted.pop('orchestra/testbench', None)
-    wanted['liberusoftware/package-testbench'] = '^1.5'
+    # Never lower a constraint a package has already raised: a package using the
+    # testbench's actor needs ^1.6, one relying on its application key ^1.7, and
+    # this script is re-run.
+    wanted['liberusoftware/package-testbench'] = max(
+        wanted.get('liberusoftware/package-testbench', '^1.5'), '^1.5',
+        key=lambda constraint: [int(part) for part in constraint.lstrip('^').split('.')],
+    )
     wanted['pestphp/pest'] = '^5.0'
 
     if composer.get('require-dev') != wanted:
@@ -110,10 +173,13 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
         phpunit_file.write_text(phpunit)
         changed.append('~phpunit.xml')
 
-    workflow = pkg / '.github/workflows/tests.yml'
-    if workflow.read_text() != CALLER:
-        workflow.write_text(CALLER)
-        changed.append('~tests.yml')
+    workflows = pkg / '.github/workflows'
+    workflows.mkdir(parents=True, exist_ok=True)
+    for name, body in CALLERS.items():
+        caller = workflows / name
+        if not caller.is_file() or caller.read_text() != body:
+            caller.write_text(body)
+            changed.append('~'+name)
 
     return ', '.join(changed) or 'already migrated'
 

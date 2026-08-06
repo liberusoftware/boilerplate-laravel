@@ -1,0 +1,12 @@
+name: Compatibility
+
+# Also a release question. --prefer-lowest proves the declared constraints admit
+# a tree that works, which only changes when the constraints do.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+jobs:
+  compatibility:
+    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main

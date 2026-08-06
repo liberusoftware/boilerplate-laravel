@@ -19,7 +19,7 @@
       "name": "audit"
     }
   },
-  "version": "1.2.1",
+  "version": "1.2.2",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Audit\\Tests\\": "tests/"

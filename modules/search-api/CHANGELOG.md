@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 - 2026-08-06
+
+- The `posts` and `groups` endpoints leave for `search-demo`. The `all` endpoint derives its
+  accepted types from the registry, so a registered type is also a requestable one.
+- Split CI into the three workflows `CONFORMANCE.md` §3.9 asks for, rather than one calling all
+  three. Only `tests` runs on every push; installing from nothing and resolving the lowest allowed
+  dependencies are release questions and now run on tags. One caller meant four jobs per push, and
+  a 44-repository publish sweep stalled the organisation's Actions queue.
+
 ## 1.2.0 - 2026-08-06
 
 - Move the boundary suites to `liberusoftware/package-testbench`: this repository no longer

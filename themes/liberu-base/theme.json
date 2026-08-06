@@ -2,7 +2,7 @@
     "$schema": "https://schemas.liberu.dev/theme/v1.json",
     "name": "liberu-base",
     "display_name": "Liberu Base",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "provider": "Liberu\\Themes\\Base\\BaseThemeServiceProvider",
     "type": "shared",
     "parent": null,

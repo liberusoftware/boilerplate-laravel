@@ -2,13 +2,10 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Fixtures\Models\Group;
-use Tests\Fixtures\Models\Post;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    // Create test user
     $this->user = User::forceCreate([
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -16,59 +13,26 @@ beforeEach(function () {
         'email_verified_at' => now(),
     ]);
 
-    // Create test posts
-    Post::create([
-        'title' => 'Laravel Guide',
-        'content' => 'Complete Laravel tutorial',
-        'user_id' => $this->user->id,
-        'status' => 'published',
-        'published_at' => now(),
-    ]);
-
-    // Create test groups
-    Group::create([
-        'name' => 'Laravel Developers',
-        'description' => 'Laravel community group',
-        'owner_id' => $this->user->id,
-        'type' => 'public',
-    ]);
-
     $this->actingAs($this->user, 'sanctum');
 });
 
-it('can search all entities with a query', function () {
-    $response = $this->getJson('/api/search/all?query=Laravel');
+it('can search all registered entity types with a query', function () {
+    $response = $this->getJson('/api/search/all?query=Test');
 
     $response->assertStatus(200)
-        ->assertJsonStructure([
-            'users',
-            'posts',
-            'groups',
-        ]);
+        ->assertJsonStructure(['users']);
 
-    $data = $response->json();
-    expect($data['posts']['total'])->toBe(1);
-    expect($data['groups']['total'])->toBe(1);
+    expect($response->json('users.total'))->toBe(1);
 });
 
 it('can search specific entity types', function () {
-    $response = $this->getJson('/api/search/all?query=Laravel&types[]=posts');
+    $response = $this->getJson('/api/search/all?query=Test&types[]=users');
 
     $response->assertStatus(200)
-        ->assertJsonStructure(['posts'])
-        ->assertJsonMissingPath('users')
-        ->assertJsonMissingPath('groups');
+        ->assertJsonStructure(['users']);
 });
 
-it('can search multiple specific entity types', function () {
-    $response = $this->getJson('/api/search/all?query=Laravel&types[]=posts&types[]=groups');
-
-    $response->assertStatus(200)
-        ->assertJsonStructure(['posts', 'groups'])
-        ->assertJsonMissingPath('users');
-});
-
-it('validates search types', function () {
+it('rejects a type no searcher is registered for', function () {
     $response = $this->getJson('/api/search/all?types[]=invalid');
 
     $response->assertStatus(422)
@@ -76,23 +40,13 @@ it('validates search types', function () {
 });
 
 it('respects per_page limit for all searches', function () {
-    // Create multiple entities
-    for ($i = 1; $i <= 10; $i++) {
-        Post::create([
-            'title' => "Post {$i}",
-            'content' => "Content {$i}",
-            'user_id' => $this->user->id,
-            'status' => 'published',
-            'published_at' => now(),
-        ]);
-    }
+    User::factory()->count(10)->create();
 
     $response = $this->getJson('/api/search/all?per_page=3');
 
     $response->assertStatus(200);
 
-    $data = $response->json();
-    expect(count($data['posts']['data']))->toBeLessThanOrEqual(3);
+    expect(count($response->json('users.data')))->toBeLessThanOrEqual(3);
 });
 
 it('returns empty results when no matches found', function () {
@@ -100,8 +54,5 @@ it('returns empty results when no matches found', function () {
 
     $response->assertStatus(200);
 
-    $data = $response->json();
-    expect($data['users']['total'])->toBe(0);
-    expect($data['posts']['total'])->toBe(0);
-    expect($data['groups']['total'])->toBe(0);
+    expect($response->json('users.total'))->toBe(0);
 });

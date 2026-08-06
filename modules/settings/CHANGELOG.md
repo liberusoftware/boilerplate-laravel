@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.2 - 2026-08-06
+
+- Split CI into the three workflows `CONFORMANCE.md` §3.9 asks for, rather than one calling all
+  three. Only `tests` runs on every push; installing from nothing and resolving the lowest allowed
+  dependencies are release questions and now run on tags. One caller meant four jobs per push, and
+  a 44-repository publish sweep stalled the organisation's Actions queue.
+
 ## 1.3.1 - 2026-08-06
 
 - Require `package-testbench` ^1.7 and call its `defineEnvironment()`, so the suite keeps the

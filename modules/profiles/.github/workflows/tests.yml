@@ -7,12 +7,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# A publish sweep pushes every package within seconds of the others. Superseding
+# this repository's previous run keeps a re-publish from stacking on a sweep that
+# has not finished.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
-
-  install:
-    uses: liberusoftware/.github/.github/workflows/package-install.yml@main
-
-  compatibility:
-    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main

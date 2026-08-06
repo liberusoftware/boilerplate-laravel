@@ -17,7 +17,7 @@
       "name": "liberu-base"
     }
   },
-  "version": "1.2.1",
+  "version": "1.2.2",
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"

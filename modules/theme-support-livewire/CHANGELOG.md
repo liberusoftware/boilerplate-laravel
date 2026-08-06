@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 - 2026-08-06
+
+- Adopts the theme switcher tests, which needed installed themes and so could only run in a
+  composition until `theme-support` gained Composer-driven discovery.
+- Split CI into the three workflows `CONFORMANCE.md` §3.9 asks for, rather than one calling all
+  three. Only `tests` runs on every push; installing from nothing and resolving the lowest allowed
+  dependencies are release questions and now run on tags. One caller meant four jobs per push, and
+  a 44-repository publish sweep stalled the organisation's Actions queue.
+
+- Adopt the theme switcher suite from the host. It needs two themes installed, which
+  `theme-support`'s Composer-driven discovery now makes possible outside a composition, so
+  `theme-default` and `theme-dark` are development dependencies.
+
 ## 1.2.0 - 2026-08-06
 
 - Move the boundary suites to `liberusoftware/package-testbench`: this repository no longer

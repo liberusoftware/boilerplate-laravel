@@ -2,8 +2,6 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Fixtures\Models\Group;
-use Tests\Fixtures\Models\Post;
 
 uses(RefreshDatabase::class);
 
@@ -16,86 +14,30 @@ describe('unauthenticated access', function () {
         $this->getJson('/api/search/users')->assertStatus(401);
     });
 
-    it('rejects unauthenticated posts search', function () {
-        $this->getJson('/api/search/posts')->assertStatus(401);
-    });
-
-    it('rejects unauthenticated groups search', function () {
-        $this->getJson('/api/search/groups')->assertStatus(401);
-    });
-
     it('rejects unauthenticated all search', function () {
         $this->getJson('/api/search/all')->assertStatus(401);
     });
 });
 
-describe('draft posts stay hidden', function () {
-    it('never returns a draft even with include_drafts=1', function () {
-        Post::create([
-            'title' => 'Secret Draft',
-            'content' => 'Not for public eyes',
-            'user_id' => $this->user->id,
-            'status' => 'draft',
-            'published_at' => null,
-        ]);
-
+describe('user results carry no PII', function () {
+    it('projects away the email and verification timestamp', function () {
         $response = $this->actingAs($this->user, 'sanctum')
-            ->getJson('/api/search/posts?include_drafts=1&status=draft');
+            ->getJson('/api/search/users');
 
         $response->assertStatus(200)
-            ->assertJsonMissing(['title' => 'Secret Draft'])
-            ->assertJsonCount(0, 'data');
+            ->assertJsonMissing(['email' => $this->user->email]);
+
+        expect($response->json('data.0'))->toHaveKeys(['id', 'name', 'profile_photo_url'])
+            ->and($response->json('data.0'))->not->toHaveKey('email')
+            ->and($response->json('data.0'))->not->toHaveKey('email_verified_at');
     });
-});
 
-describe('non-public groups stay hidden', function () {
-    it('excludes private and restricted groups but returns public ones', function () {
-        $public = Group::create([
-            'name' => 'Public Group',
-            'description' => 'Anyone can see this',
-            'owner_id' => $this->user->id,
-            'type' => 'public',
-        ]);
-
-        Group::create([
-            'name' => 'Private Group',
-            'description' => 'Members only',
-            'owner_id' => $this->user->id,
-            'type' => 'private',
-        ]);
-
-        Group::create([
-            'name' => 'Restricted Group',
-            'description' => 'Invite only',
-            'owner_id' => $this->user->id,
-            'type' => 'restricted',
-        ]);
-
+    it('projects the aggregate search the same way', function () {
         $response = $this->actingAs($this->user, 'sanctum')
-            ->getJson('/api/search/groups');
+            ->getJson('/api/search/all');
 
-        $response->assertStatus(200)
-            ->assertJsonMissing(['name' => 'Private Group'])
-            ->assertJsonMissing(['name' => 'Restricted Group'])
-            ->assertJsonFragment(['name' => 'Public Group'])
-            ->assertJsonCount(1, 'data');
+        $response->assertStatus(200);
 
-        expect($response->json('data.0.id'))->toBe($public->id);
-    });
-
-    it('cannot be coerced to return private groups via a type param', function () {
-        $public = Group::create(['name' => 'Public Group', 'description' => 'x', 'owner_id' => $this->user->id, 'type' => 'public']);
-        Group::create(['name' => 'Private Group', 'description' => 'x', 'owner_id' => $this->user->id, 'type' => 'private']);
-
-        // The dropped `type` param must not resurrect private groups (regression guard).
-        foreach (['private', 'restricted'] as $type) {
-            $response = $this->actingAs($this->user, 'sanctum')
-                ->getJson('/api/search/groups?type='.$type);
-
-            $response->assertStatus(200)
-                ->assertJsonMissing(['name' => 'Private Group'])
-                ->assertJsonCount(1, 'data');
-            expect($response->json('data.0.id'))->toBe($public->id);
-        }
+        expect($response->json('users.data.0'))->not->toHaveKey('email');
     });
 });

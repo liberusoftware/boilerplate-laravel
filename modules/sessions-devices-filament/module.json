@@ -3,7 +3,7 @@
     "name": "sessions-devices-filament",
     "display_name": "Sessions and Devices Administration",
     "description": "Accessible account security and preferences surface for the app panel.",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\SessionsDevicesFilament\\SessionsDevicesFilamentServiceProvider",
     "requires": {

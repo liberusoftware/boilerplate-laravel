@@ -18,14 +18,16 @@
       "name": "theme-support-livewire"
     }
   },
-  "version": "1.2.1",
+  "version": "1.3.0",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\ThemeSupportLivewire\\Tests\\": "tests/"
     }
   },
   "require-dev": {
-    "liberusoftware/package-testbench": "^1.5",
+    "liberusoftware/package-testbench": "^1.7",
+    "liberusoftware/theme-dark": "^1.0",
+    "liberusoftware/theme-default": "^1.0",
     "pestphp/pest": "^5.0"
   },
   "scripts": {

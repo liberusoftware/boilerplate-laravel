@@ -1,10 +1,14 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Liberu\Foundation\ThemeSupportLivewire\Livewire\ThemeSwitcher;
 use Livewire\Livewire;
 
-uses(RefreshDatabase::class);
+/*
+ * The switcher offers whatever themes the application has, so the suite
+ * dev-requires two of them: `theme-support` discovers `liberu-theme` Composer
+ * packages, which is the only way a package that is not a composition can have
+ * themes at all.
+ */
 
 test('theme switcher renders with default theme', function () {
     Livewire::test(ThemeSwitcher::class)

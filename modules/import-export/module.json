@@ -3,7 +3,7 @@
     "name": "import-export",
     "display_name": "Import and Export",
     "description": "Schemas, mapping, dry runs, validation, queued execution, progress, error reports, authorization, and retention.",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\ImportExport\\ImportExportServiceProvider",
     "requires": {
