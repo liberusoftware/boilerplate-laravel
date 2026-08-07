@@ -1,0 +1,255 @@
+#!/usr/bin/env python3
+"""Fan a command out across the package repositories (step 9's replacement).
+
+`publish-components` pushes this monorepo *into* 48 repositories. After the
+source-of-truth flip those repositories are the source, so there is nothing to
+push out — what is needed instead is a runner over checkouts that already are
+authoritative. See issue #633 for the decision and #639 for the shape.
+
+The runner stops short of tagging. A push is recoverable; a tag is what Packagist
+publishes and what ModuleValidator pins the host to, so `tag` is a separate verb
+that refuses to guess which repositories it applies to.
+
+    fleet status                          # what is checked out, dirty, unpushed
+    fleet clone                           # ensure every repository is present
+    fleet run 'vendor/bin/pest'           # fan a command out
+    fleet run ../boilerplate-laravel/scripts/migrate-testbench .
+    fleet commit -m 'Adopt the testbench' # stage, commit, push main
+    fleet tag 1.2.0 --only search identity-core
+
+Repository names come from .liberu-meta.json, the same file publish-components
+reads. Workspace defaults to the directory holding this checkout; override with
+FLEET_WORKSPACE.
+"""
+import argparse
+import concurrent.futures
+import json
+import pathlib
+import subprocess
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+META = json.loads((ROOT / '.liberu-meta.json').read_text())
+WORKSPACE = pathlib.Path(
+    __import__('os').environ.get('FLEET_WORKSPACE', str(ROOT.parent))
+).resolve()
+
+# Four of the package repositories ship a committed vendor/ directory upstream
+# (activity-comments, clear-signal, module-manager, theme-support). A blanket
+# `git add -A` there stages an entire dependency tree, so every add excludes
+# these by pathspec rather than trusting a .gitignore the repository may lack.
+NEVER_STAGE = ['vendor', 'node_modules', 'composer.lock', '.phpunit.cache', '.phpunit.result.cache']
+
+
+def repositories() -> dict[str, str]:
+    """Map short name -> repository name, exactly as publish-components derives it."""
+    found = {}
+    for kind, spec in META['components'].items():
+        if 'repositoryPrefix' not in spec:
+            continue
+        base = ROOT / spec['path']
+        if not base.is_dir():
+            continue
+        for package in sorted(base.iterdir()):
+            if package.is_dir():
+                found[package.name] = spec['repositoryPrefix'] + package.name
+    for repository in META.get('additionalPackages', {}).values():
+        found[repository] = repository
+    return found
+
+
+def git(repo: pathlib.Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ['git', '-C', str(repo), *args],
+        capture_output=True, text=True, check=False,
+    ) if not check else subprocess.run(
+        ['git', '-C', str(repo), *args],
+        capture_output=True, text=True, check=True,
+    )
+
+
+def path_for(name: str, repository: str) -> pathlib.Path:
+    return WORKSPACE / repository
+
+
+def ensure(name: str, repository: str, dry_run: bool) -> tuple[str, str]:
+    target = path_for(name, repository)
+    if (target / '.git').is_dir():
+        return name, 'present'
+    if dry_run:
+        return name, 'would clone'
+    url = f'https://github.com/{META["organization"]}/{repository}.git'
+    result = subprocess.run(
+        ['git', 'clone', '--quiet', url, str(target)],
+        capture_output=True, text=True,
+    )
+    if result.returncode != 0:
+        return name, 'clone failed: ' + (result.stderr.strip().splitlines() or [''])[-1][:120]
+    return name, 'cloned'
+
+
+def status_of(name: str, repository: str, _dry_run: bool) -> tuple[str, str]:
+    target = path_for(name, repository)
+    if not (target / '.git').is_dir():
+        return name, 'absent'
+    dirty = git(target, 'status', '--porcelain', check=False).stdout.strip()
+    branch = git(target, 'rev-parse', '--abbrev-ref', 'HEAD', check=False).stdout.strip()
+    ahead = git(target, 'rev-list', '--count', f'origin/{branch}..HEAD', check=False).stdout.strip() or '0'
+    parts = [branch]
+    if dirty:
+        parts.append(f'{len(dirty.splitlines())} dirty')
+    if ahead != '0':
+        parts.append(f'{ahead} unpushed')
+    return name, ', '.join(parts)
+
+
+def run_command(command: str):
+    def runner(name: str, repository: str, dry_run: bool) -> tuple[str, str]:
+        target = path_for(name, repository)
+        if not (target / '.git').is_dir():
+            return name, 'absent — run `fleet clone` first'
+        if dry_run:
+            return name, f'would run: {command}'
+        result = subprocess.run(command, shell=True, cwd=target, capture_output=True, text=True)
+        output = (result.stdout + result.stderr).strip().splitlines()
+        tail = output[-1][:140] if output else ''
+        return name, ('ok  ' if result.returncode == 0 else f'FAILED({result.returncode})  ') + tail
+    return runner
+
+
+def commit_command(message: str):
+    def runner(name: str, repository: str, dry_run: bool) -> tuple[str, str]:
+        target = path_for(name, repository)
+        if not (target / '.git').is_dir():
+            return name, 'absent'
+        branch = git(target, 'rev-parse', '--abbrev-ref', 'HEAD', check=False).stdout.strip()
+        if branch != 'main':
+            return name, f'refused — on branch {branch}, not main'
+        staged = git(target, 'add', '-A', check=False)
+        if staged.returncode != 0:
+            return name, 'add failed: ' + staged.stderr.strip()[:120]
+        # Unstage rather than exclude by pathspec: in most repositories these are
+        # gitignored and never staged, but four of them ship a committed vendor/
+        # upstream, where `git add -A` really would stage a dependency tree.
+        git(target, 'reset', '--quiet', '--', *NEVER_STAGE, check=False)
+        pending = git(target, 'diff', '--cached', '--name-only', check=False).stdout.strip()
+        if not pending:
+            return name, 'nothing to commit'
+        count = len(pending.splitlines())
+        if dry_run:
+            git(target, 'reset', '--quiet', check=False)
+            return name, f'would commit {count} file(s)'
+        if git(target, 'commit', '--quiet', '-m', message, check=False).returncode != 0:
+            return name, 'commit failed'
+        pushed = git(target, 'push', 'origin', 'main', check=False)
+        if pushed.returncode != 0:
+            return name, f'committed {count} file(s), PUSH FAILED: ' + pushed.stderr.strip()[:100]
+        return name, f'committed and pushed {count} file(s)'
+    return runner
+
+
+def tag_command(version: str):
+    def runner(name: str, repository: str, dry_run: bool) -> tuple[str, str]:
+        target = path_for(name, repository)
+        if not (target / '.git').is_dir():
+            return name, 'absent'
+        # A tag is the irreversible half. Refuse anything that would publish a
+        # tree nobody has seen: uncommitted work, a non-main branch, or commits
+        # that exist only locally.
+        if git(target, 'status', '--porcelain', check=False).stdout.strip():
+            return name, 'refused — worktree is dirty'
+        branch = git(target, 'rev-parse', '--abbrev-ref', 'HEAD', check=False).stdout.strip()
+        if branch != 'main':
+            return name, f'refused — on branch {branch}, not main'
+        ahead = git(target, 'rev-list', '--count', 'origin/main..HEAD', check=False).stdout.strip()
+        if ahead not in ('', '0'):
+            return name, f'refused — {ahead} commit(s) not pushed'
+        if git(target, 'rev-parse', '-q', '--verify', f'refs/tags/{version}', check=False).returncode == 0:
+            return name, f'{version} already tagged'
+        if dry_run:
+            return name, f'would tag {version}'
+        if git(target, 'tag', '-a', version, '-m', version, check=False).returncode != 0:
+            return name, 'tag failed'
+        pushed = git(target, 'push', 'origin', version, check=False)
+        if pushed.returncode != 0:
+            return name, 'PUSH FAILED: ' + pushed.stderr.strip()[:120]
+        return name, f'tagged and pushed {version}'
+    return runner
+
+
+def sweep(runner, names: dict[str, str], dry_run: bool) -> int:
+    rows = []
+    # A failure in one repository must not abort the sweep: the report is the
+    # artifact a human reads before deciding to tag, and a partial one is worse
+    # than a slow one.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+        futures = {pool.submit(runner, name, repo, dry_run): name for name, repo in names.items()}
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                rows.append(future.result())
+            except Exception as error:  # noqa: BLE001 — report, never abort the sweep
+                rows.append((futures[future], f'ERROR {error}'))
+    for name, result in sorted(rows):
+        print(f'{name:<34}{result}')
+    failed = [name for name, result in rows if 'FAIL' in result or 'refused' in result or 'ERROR' in result]
+    if failed:
+        print(f'\n{len(failed)} of {len(rows)} need attention: {" ".join(sorted(failed))}', file=sys.stderr)
+    return 1 if failed else 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog='fleet', description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    # On the subparsers rather than the top level, so `fleet tag 1.2.0 --only x`
+    # reads the way anyone would write it. argparse only accepts a top-level
+    # option before the verb.
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument('--only', nargs='+', metavar='NAME', help='restrict to these package names')
+    common.add_argument('--dry-run', action='store_true')
+
+    sub = parser.add_subparsers(dest='verb', required=True)
+    sub.add_parser('status', parents=[common])
+    sub.add_parser('clone', parents=[common])
+    run_parser = sub.add_parser('run', parents=[common])
+    run_parser.add_argument('command')
+    commit_parser = sub.add_parser('commit', parents=[common])
+    commit_parser.add_argument('-m', '--message', required=True)
+    tag_parser = sub.add_parser('tag', parents=[common])
+    tag_parser.add_argument('version')
+    args = parser.parse_args()
+
+    known = repositories()
+    if args.only:
+        unknown = [n for n in args.only if n not in known]
+        if unknown:
+            print(f'Unknown package(s): {" ".join(unknown)}', file=sys.stderr)
+            return 2
+        known = {n: known[n] for n in args.only}
+
+    # Tagging every repository at once is never what someone means; the version
+    # a package gets is a property of what changed in it.
+    if args.verb == 'tag' and not args.only:
+        print('tag requires --only: a release wave names its packages.', file=sys.stderr)
+        return 2
+
+    runner = {
+        'status': status_of,
+        'clone': ensure,
+        'run': lambda *_: None,
+        'commit': lambda *_: None,
+        'tag': lambda *_: None,
+    }[args.verb]
+    if args.verb == 'run':
+        runner = run_command(args.command)
+    elif args.verb == 'commit':
+        runner = commit_command(args.message)
+    elif args.verb == 'tag':
+        runner = tag_command(args.version)
+
+    print(f'{len(known)} package(s), workspace {WORKSPACE}'
+          + (' — DRY RUN' if args.dry_run else '') + '\n')
+    return sweep(runner, known, args.dry_run)
+
+
+if __name__ == '__main__':
+    sys.exit(main())
