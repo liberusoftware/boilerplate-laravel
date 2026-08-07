@@ -271,7 +271,7 @@
         "spatie/laravel-passkeys": "^1.6",
         "spatie/laravel-permission": "^7.0",
         "spiral/roadrunner-cli": "^2.6.0",
-        "spiral/roadrunner-http": "^3.3.0"
+        "spiral/roadrunner-http": "^4.1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
