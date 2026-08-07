@@ -49,10 +49,9 @@ caught 48-of-48 divergence between the tracked tree and the published packages.
 Packagist names drop the `module-` prefix that the GitHub repositories carry:
 `liberusoftware/module-search` on GitHub is `liberusoftware/search` on Packagist.
 
-> `scripts/publish-components` rsynced this monorepo *into* the package repositories, which is the
-> opposite direction. It is retained only until a fleet-wide change has been released through
-> `fleet` once end to end, then archived — [step 9](https://github.com/liberusoftware/boilerplate-laravel/issues/638).
-> Do not use it to publish a change you made under `modules/`.
+> `scripts/publish-components` rsynced this monorepo *into* the package repositories, which is
+> the opposite direction. It was **removed** once the coverage-ratchet wave proved a fleet-wide
+> change could be released through `fleet` alone — see `docs/CONFORMANCE.md` §5, step 9.
 
 ## Commands
 

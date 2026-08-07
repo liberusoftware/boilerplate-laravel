@@ -12,9 +12,9 @@ genre, repository, component paths, prefixes, and additional Composer packages.
 
 - `setup.sh` performs a repeatable local or production install without destructive migrations.
 - `update.sh` updates dependencies and validates the project; `--release 1.2.3` commits, tags, pushes, and creates a GitHub release after successful checks.
-- `publish-components` creates or subtree-publishes configured components and the meta repository. Use `--only` to target one kind.
 - `submit-packagist.php` creates missing Packagist packages and refreshes existing package metadata.
-- `fleet` fans a command across the component repositories once they are the source of truth — `status`, `clone`, `run`, `commit`, and a separate `tag` that only ever acts on an explicit `--only` list. This is what replaces `publish-components` after the flip; the two are opposites, one pushing the monorepo out and the other working checkouts that are already authoritative.
+- `fleet` fans a command across the component repositories once they are the source of truth — `status`, `clone`, `run`, `commit`, and a separate `tag` that only ever acts on an explicit `--only` list. It replaced `publish-components`, which rsynced a monorepo *into* its component repositories — the opposite direction, and meaningless once those repositories are the source.
+- `set-coverage-thresholds` writes each measured figure into that package's `tests.yml`, ratcheting only upward — a package that has lost coverage keeps its threshold and is reported.
 - `measure-coverage` resolves each package from nothing and runs its own suite under pcov, writing `storage/app/coverage.tsv` — the evidence a repository sets its coverage threshold from.
 
 All commands are non-interactive and fail on errors. GitHub operations require an

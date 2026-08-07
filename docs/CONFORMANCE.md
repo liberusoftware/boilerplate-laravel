@@ -45,7 +45,7 @@ installed module files in a consuming application; changes flow module repo → 
 
 **Today:** the inverse. `CLAUDE.md` documents editing here and rsyncing out.
 
-**Changes to:** `modules/` becomes Composer output. `publish-components` becomes a one-time splitter, then archived.
+**Changes to:** `modules/` becomes Composer output. `publish-components` becomes a one-time splitter, then **removed** — done in step 9.
 
 **Enforced by:** the §6.2 clean-install zero-diff check in the host's `install.yml`.
 
@@ -85,7 +85,9 @@ push is recoverable, a tag is what Packagist publishes and what `ModuleValidator
 > **committed `vendor/` directory** upstream. Anything pushing to those repos must stage named
 > paths — `git add -A` there commits an entire dependency tree.
 >
-> Re-measure with `scripts/audit-divergence`; results land in `storage/app/divergence.tsv`.
+> Re-measured at the time with `scripts/audit-divergence`, into `storage/app/divergence.tsv`. That script
+> was removed in step 9: once `modules/` is Composer output there are no longer two copies to compare,
+> and §6.2 answers the same question continuously in CI.
 >
 > **Reconciled.** Resolved in favour of upstream, pulled down with `composer update
 > "liberusoftware/*"` rather than an rsync — Composer is the mechanism §3.1 is moving toward, and
@@ -720,7 +722,7 @@ which is why step 2 now ends in a release wave rather than a green host run.
 | **6** | Re-measure coverage; set each repo's ratchet threshold | thresholds recorded |
 | **7** | **Pilot one leaf package** end to end: split, CI green, publish, require, `composer update` | **zero `modules/` diff** |
 | **8** | Remaining waves, leaves before dependents | zero diff per wave — the §6.2 check is already enabled and green, from step 3 |
-| **9** | Archive `boilerplate-scripts` and `publish-components` — **only once `scripts/fleet` replaces them** (§3.1) | **one fleet-wide change released end to end through `fleet`** — demonstrated, not asserted |
+| **9** | Remove `publish-components` and `audit-divergence` | **one fleet-wide change released end to end through `fleet`** — **done**: the 1.4.0 coverage-ratchet wave, §6.2 clean from a real install afterwards |
 
 The pilot works because `modules/<name>` is the same path whether committed source or Composer
 output: a package flips by being published, required and `composer update`d into the path it already
@@ -732,12 +734,15 @@ Step 8 rolls back per wave, with the lockfile as authority. **Step 9 is the poin
 tested when it was priced, and upheld: the archive itself un-archives, but reversal means
 re-flattening 44 independent histories into one tree, which is the divergence audit run backwards.
 
-**What of `scripts/` survives step 9.** Only the two tools built for the monorepo publish loop go:
+**What of `scripts/` survives step 9.** Only the two tools built for the monorepo publish loop went.
+The `liberusoftware/boilerplate-scripts` **package is not archived**: decision 8 was taken when that
+package *was* the publish loop, and it now carries `fleet` — archiving it would retire the
+replacement along with the thing replaced. Released as `1.2.0` without the two tools.
 
 | | |
 | --- | --- |
-| `publish-components` | archived — it rsyncs this monorepo *into* the package repositories, the opposite direction to the flip |
-| `audit-divergence` | archived — its question, *does the tracked tree differ from what is published?*, stops being askable once `modules/` is Composer output, and §6.2 answers it continuously in CI |
+| `publish-components` | **removed** — it rsynced this monorepo *into* the package repositories, the opposite direction to the flip |
+| `audit-divergence` | **removed** — its question, *does the tracked tree differ from what is published?*, stops being askable once `modules/` is Composer output, and §6.2 answers it continuously in CI |
 | `fleet` | the replacement |
 | `migrate-testbench` | kept — takes explicit paths, so it runs against checked-out package repositories as a `fleet run` payload |
 | `submit-packagist.php` | kept — first publication is still a manual submission, unrelated to the publish loop |
