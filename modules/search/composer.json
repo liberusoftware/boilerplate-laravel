@@ -20,7 +20,7 @@
       "name": "search"
     }
   },
-  "version": "1.5.0",
+  "version": "1.5.1",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Search\\Tests\\": "tests/"

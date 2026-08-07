@@ -22,7 +22,7 @@
       "name": "identity-socialstream"
     }
   },
-  "version": "1.4.0",
+  "version": "1.4.1",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Identity\\Socialstream\\Tests\\": "tests/"

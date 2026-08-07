@@ -3,7 +3,7 @@
     "name": "settings-filament",
     "display_name": "Settings Administration",
     "description": "Optional Filament settings administration surface.",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "category": "presentation",
     "provider": "Liberu\\Foundation\\SettingsFilament\\SettingsFilamentServiceProvider",
     "requires": {

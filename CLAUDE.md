@@ -62,6 +62,7 @@ composer test                  # vendor/bin/pest
 vendor/bin/pest tests/Feature/SearchTest.php
 vendor/bin/pest --filter=SearchTest
 vendor/bin/pint                # --test to check without writing
+vendor/bin/phpstan analyse     # app/ only, at the level app/ passes
 
 npm run dev                    # vite
 npm run build                  # required once, to compile the theme bundles
@@ -305,6 +306,39 @@ the moment anything reinstalled.
 
 Note that most of `tests/Unit` is integration-shaped: it boots the app, reads host config and
 asserts across several packages. Only tests needing nothing from the host belong in a package.
+
+### Static analysis
+
+**Pint and PHPStan are shipped by `liberusoftware/package-testbench`, not by any package.** It
+carries both tools as `require` and both configs — `pint.json` and `phpstan.neon` — and every
+package already dev-requires it, so no package holds a `pint.json` or `phpstan.neon` of its own. The
+reusable `package-tests.yml` invokes them with `--config vendor/liberusoftware/package-testbench/…`.
+
+`PINT.md` asks for `pint.json` at each repository root and this deliberately deviates: the same
+document treats inconsistent package configurations as a defect, and 44 committed copies is how they
+become inconsistent. Pint has **no include mechanism**, so a shared ruleset is only reachable through
+`--config`; PHPStan's `includes` would have allowed either.
+
+**The PHPStan level is a per-package ratchet**, exactly like `coverage-threshold`: a `phpstan-level`
+input in each repository's `tests.yml`, set from a measured baseline and raised only. Unset (`-1`,
+not `0` — `0` is a real level) means the package is skipped with a notice rather than failed.
+
+```bash
+scripts/measure-phpstan                          # bisect each package's ceiling → storage/app/phpstan.tsv
+scripts/set-phpstan-levels --workspace ~/code    # write it into each repo's tests.yml, raising only
+```
+
+The host analyses **`app/` only**, at the level `app/` passes. `modules/` and `themes/` are Composer
+output, so analysing them here would use the host's resolution rather than the package's own — and a
+package is only honest when analysed against the tree a consumer installs.
+
+`phpstan.neon` carries an explicit `--memory-limit` in CI: PHPStan exhausts a 128M `php.ini` default
+and reports it as `Child process error (exit code 255) while running parallel worker`, which reads
+like a tool bug rather than a limit.
+
+**Where the fleet stands against the code-level standards is `docs/CODE-CONFORMANCE.md`** — 37
+findings over 122 audited rule clusters, ranked by consequence. It fixes nothing; each finding is a
+separate decision.
 
 ## Known upgrade blockers
 

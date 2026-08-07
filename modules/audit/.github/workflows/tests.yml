@@ -18,4 +18,5 @@ jobs:
   tests:
     uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
     with:
+      phpstan-level: 5
       coverage-threshold: 12

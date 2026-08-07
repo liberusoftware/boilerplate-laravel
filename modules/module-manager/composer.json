@@ -19,7 +19,7 @@
       "name": "module-manager"
     }
   },
-  "version": "1.4.1",
+  "version": "1.4.2",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\ModuleManager\\Tests\\": "tests/"

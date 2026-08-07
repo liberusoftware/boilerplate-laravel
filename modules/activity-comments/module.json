@@ -3,7 +3,7 @@
     "name": "activity-comments",
     "display_name": "Activity and Comments",
     "description": "Generic authorized activity timelines, mentions, subscriptions, internal comments, attachments, and visibility controls.",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "category": "foundation",
     "provider": "Liberu\\Foundation\\ActivityComments\\ActivityCommentsServiceProvider",
     "requires": {
