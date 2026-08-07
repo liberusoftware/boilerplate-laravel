@@ -17317,16 +17317,16 @@
         },
         {
             "name": "liberusoftware/boilerplate-scripts",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/boilerplate-scripts.git",
-                "reference": "58b06f1f46ecc942b3fbeeb173bdff8760c70cbb"
+                "reference": "a7461a447049879ef30202cc0a12dfe0919fa9e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/boilerplate-scripts/zipball/58b06f1f46ecc942b3fbeeb173bdff8760c70cbb",
-                "reference": "58b06f1f46ecc942b3fbeeb173bdff8760c70cbb",
+                "url": "https://api.github.com/repos/liberusoftware/boilerplate-scripts/zipball/a7461a447049879ef30202cc0a12dfe0919fa9e2",
+                "reference": "a7461a447049879ef30202cc0a12dfe0919fa9e2",
                 "shasum": ""
             },
             "require": {
@@ -17347,7 +17347,7 @@
                 "source": "https://github.com/liberusoftware/boilerplate-scripts",
                 "issues": "https://github.com/liberusoftware/boilerplate-scripts/issues"
             },
-            "time": "2026-08-01T07:40:58+00:00"
+            "time": "2026-08-07T09:23:54+00:00"
         },
         {
             "name": "mockery/mockery",
