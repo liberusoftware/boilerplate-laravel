@@ -695,8 +695,16 @@ checkable rule instead:
 - `module-module-manager-filament` keeps its stutter rather than excepting the naming rule.
 - The strict namespace rule was rejected on **merit** — it would force `Liberu\Foundation\AnalyticsCore`, corrupting what the namespace means — not to avoid work.
 
-One obligation is recorded instead of an exception: the documentation repo specifies the `liberu/`
-vendor while this repo keeps `liberusoftware/` (§3.2). That is a docs PR, not a local exception.
+One obligation was recorded instead of an exception: the documentation repo specified the `liberu/`
+vendor while this repo keeps `liberusoftware/` (§3.2). That was a docs PR, not a local exception, and
+it is now filed — [liberusoftware/documentation#16](https://github.com/liberusoftware/documentation/pull/16),
+64 references across 5 files.
+
+It turned out not to be a conflict between the standard and this repo at all. `PROMPT.md` already
+mandated `liberusoftware/` in two places, so the standards repo disagreed with **itself**; two of the
+64 named packages that only exist under `liberusoftware/`, making §10.1 unfollowable as written. And
+`liberu/` was never available to adopt — Packagist protects a vendor once anything publishes under it,
+and `liberu/laravel-gramps-xml` belongs to another account ([#627](https://github.com/liberusoftware/boilerplate-laravel/issues/627)).
 
 ## 7. Evidence
 
