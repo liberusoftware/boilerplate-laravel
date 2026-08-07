@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65bfca91cd46392de592237ddb6b393d",
+    "content-hash": "dd155dc0dfc09c28d74c4e795754597c",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -11977,16 +11977,16 @@
         },
         {
             "name": "spiral/roadrunner-http",
-            "version": "v3.6.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/roadrunner-php/http.git",
-                "reference": "a44a5f7d54d4ee8a14fe99cd22dcd128db270c88"
+                "reference": "b69cf62dcab7d4b1945fef7b40339edd4fc016c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/roadrunner-php/http/zipball/a44a5f7d54d4ee8a14fe99cd22dcd128db270c88",
-                "reference": "a44a5f7d54d4ee8a14fe99cd22dcd128db270c88",
+                "url": "https://api.github.com/repos/roadrunner-php/http/zipball/b69cf62dcab7d4b1945fef7b40339edd4fc016c8",
+                "reference": "b69cf62dcab7d4b1945fef7b40339edd4fc016c8",
                 "shasum": ""
             },
             "require": {
@@ -12055,7 +12055,7 @@
                 "docs": "https://docs.roadrunner.dev",
                 "forum": "https://forum.roadrunner.dev/",
                 "issues": "https://github.com/roadrunner-server/roadrunner/issues",
-                "source": "https://github.com/roadrunner-php/http/tree/v3.6.0"
+                "source": "https://github.com/roadrunner-php/http/tree/v4.1.0"
             },
             "funding": [
                 {
@@ -12063,7 +12063,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-31T12:42:23+00:00"
+            "time": "2026-02-26T11:41:09+00:00"
         },
         {
             "name": "spiral/roadrunner-worker",
