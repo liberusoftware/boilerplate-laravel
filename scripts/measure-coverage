@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Measure each package's line coverage standalone (step 6).
+
+The host measures the host; every package measures itself against its own
+phpunit.xml, whose <source> is already scoped to its own src/. So this resolves
+each package from nothing and runs its suite under pcov, exactly as its CI does.
+
+Writes a TSV to storage/app/coverage.tsv: package, status, percent, covered,
+total. Re-running skips a package that already has a vendor/ unless --fresh.
+
+Usage: measure-coverage [--fresh] [PATH ...]
+"""
+import concurrent.futures
+import os
+import pathlib
+import re
+import subprocess
+import sys
+
+ROOT = pathlib.Path('/home/tom/code/boilerplate-laravel')
+OUT = ROOT / 'storage/app/coverage.tsv'
+
+# Pest prints a per-file table then "Total: 12.8 %". The total is what a CI
+# threshold is set from; the per-file rows are for diagnosis, not for the gate.
+# Pest emits colour even when not attached to a terminal, and it wraps the total
+# in a bold sequence, so the escape codes have to come out before matching.
+ANSI = re.compile(r'\x1b\[[0-9;]*[A-Za-z]')
+TOTAL = re.compile(r'Total:\s+([\d.]+)\s*%')
+
+
+def run(cmd: list[str], cwd: pathlib.Path, timeout: int) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+        env={**os.environ, 'COMPOSER_NO_INTERACTION': '1'},
+    )
+
+
+def measure(pkg: pathlib.Path, fresh: bool) -> tuple[str, str, str]:
+    if fresh or not (pkg / 'vendor').is_dir():
+        install = run(['composer', 'update', '--prefer-dist', '--no-progress'], pkg, 900)
+        if install.returncode != 0:
+            tail = (install.stderr or install.stdout).strip().splitlines()
+            return pkg.name, 'install-failed', tail[-1][:160] if tail else ''
+
+    # --min=0 keeps a low number from failing the run: this measures, it does
+    # not gate. The gate is the threshold this measurement is used to set.
+    test = run(['vendor/bin/pest', '--coverage', '--min=0'], pkg, 900)
+    output = ANSI.sub('', test.stdout + test.stderr)
+    match = TOTAL.search(output)
+    if not match:
+        tail = [line for line in output.strip().splitlines() if line.strip()]
+        return pkg.name, 'no-coverage', tail[-1][:160] if tail else ''
+    return pkg.name, 'ok', match.group(1)
+
+
+def main() -> int:
+    args = [a for a in sys.argv[1:] if a != '--fresh']
+    fresh = '--fresh' in sys.argv[1:]
+
+    if args:
+        packages = [pathlib.Path(a).resolve() for a in args]
+    else:
+        packages = sorted(
+            pkg for base in ('modules', 'themes')
+            for pkg in (ROOT / base).iterdir() if pkg.is_dir()
+        )
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    rows = []
+    # Composer and Pest are both mostly IO-bound here; four at a time keeps the
+    # machine responsive without making a 44-package sweep take an hour.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {pool.submit(measure, pkg, fresh): pkg for pkg in packages}
+        for future in concurrent.futures.as_completed(futures):
+            pkg = futures[future]
+            try:
+                row = future.result()
+            except subprocess.TimeoutExpired:
+                row = (pkg.name, 'timeout', '')
+            rows.append(row)
+            print(f'{row[0]:<34}{row[1]:<16}{row[2]}', flush=True)
+
+    rows.sort()
+    OUT.write_text('\n'.join('\t'.join(r) for r in rows) + '\n')
+    print(f'\nwrote {OUT} ({len(rows)} packages)')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

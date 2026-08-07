@@ -303,6 +303,21 @@ Per `TESTING.md` §13 — "a threshold below 100% is a migration state, not a po
 sets its initial CI threshold from its **step-6** measured figure, not the pre-migration figure
 above. Do not set a 0% floor for the four Filament packages; give them a first real test instead.
 
+**The threshold is a Composer script, not `phpunit.xml`.** PHPUnit's `<coverage>` element carries
+report configuration and no minimum, so a threshold written there would be silently ignored. The gate
+is Pest's `--min`, in the `test:coverage` script `MODULES.md` §10.1 already specifies:
+
+```json
+"test:coverage": "pest --ci --coverage --min=87 --coverage-clover=build/coverage/clover.xml"
+```
+
+`phpunit.xml` still needs its `<source>` narrowed to *meaningful owned PHP* per `TESTING.md` §13 —
+today every package includes `src` whole, which counts configuration-only files and non-executable
+migrations against the number.
+
+`scripts/measure-coverage` produces the figures, resolving each package from nothing and running its
+suite under pcov exactly as its CI does. Results land in `storage/app/coverage.tsv`.
+
 ## 4. Defects that must be fixed en route
 
 Found by executing rather than reading. None is optional.
