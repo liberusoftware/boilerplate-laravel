@@ -4,7 +4,7 @@
 
 [Software](https://liberusoftware.com) · [Hosting](https://liberuhosting.com) · [Services](https://liberuservices.com) · [Liberu Group](https://liberugroup.com)
 
-[![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)](https://www.php.net/) [![Latest release](https://img.shields.io/github/v/release/liberusoftware/theme-liberu-base?sort=semver)](https://github.com/liberusoftware/theme-liberu-base/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?logo=php&logoColor=white)](https://www.php.net/) [![Latest release](https://img.shields.io/github/v/release/liberusoftware/theme-base?sort=semver)](https://github.com/liberusoftware/theme-base/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
 ## Visual scope
 
@@ -25,7 +25,7 @@ Install from the host project root:
 composer require liberusoftware/theme-base
 ```
 
-The trusted `liberusoftware/composer-installer` places the package in `/themes/liberu-base`. Composer and its lock file remain the source of version truth, and the installed theme directory is committed by the host.
+The trusted `liberusoftware/composer-installer` places the package in `/themes/base`. Composer and its lock file remain the source of version truth, and the installed theme directory is committed by the host.
 
 ## Compatibility
 
@@ -71,8 +71,8 @@ This theme is open-source software under the [MIT License](LICENSE.md). The link
 
 ## Feedback and contributing
 
-Focused issues and tested pull requests are welcome in the [GitHub repository](https://github.com/liberusoftware/theme-liberu-base). Keep visual changes accessible, document asset provenance, and update `CHANGELOG.md`.
+Focused issues and tested pull requests are welcome in the [GitHub repository](https://github.com/liberusoftware/theme-base). Keep visual changes accessible, document asset provenance, and update `CHANGELOG.md`.
 
 ## Contributors
 
-Thank you to everyone who helps improve Liberu. [View the contributors graph](https://github.com/liberusoftware/theme-liberu-base/graphs/contributors).
+Thank you to everyone who helps improve Liberu. [View the contributors graph](https://github.com/liberusoftware/theme-base/graphs/contributors).

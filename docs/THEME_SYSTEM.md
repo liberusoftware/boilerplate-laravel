@@ -38,7 +38,7 @@ themes/example/
 └── .github/workflows/tests.yml
 ```
 
-Inherit `liberu-base` unless building a shared parent. Consume semantic tokens, use translations and logical CSS properties, keep JavaScript progressive and CSP-safe, and never implement module workflows in a theme.
+Inherit `base` unless building a shared parent. Consume semantic tokens, use translations and logical CSS properties, keep JavaScript progressive and CSP-safe, and never implement module workflows in a theme.
 
 The consuming application does not need a build change: its `vite.config.js` reads every
 `themes/*/theme.json` and builds whatever `assets.css` and `assets.js` declare. Declare the

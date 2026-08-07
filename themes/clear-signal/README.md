@@ -31,7 +31,7 @@ The trusted `liberusoftware/composer-installer` places the package in `/themes/c
 ## Compatibility
 
 - Type: `public`
-- Parent: `liberu-base`
+- Parent: `base`
 - Optimised for: `liberusoftware/boilerplate-laravel:^1.0`
 - Tested with: `liberusoftware/boilerplate-laravel:^1.0`
 - Required capabilities: none

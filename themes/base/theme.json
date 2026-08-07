@@ -1,11 +1,11 @@
 {
     "$schema": "https://schemas.liberu.dev/theme/v1.json",
-    "name": "clear-signal",
-    "display_name": "Clear Signal",
-    "version": "1.5.0",
-    "provider": "Liberu\\Themes\\ClearSignal\\ClearSignalThemeServiceProvider",
-    "type": "public",
-    "parent": "base",
+    "name": "base",
+    "display_name": "Liberu Base",
+    "version": "2.0.0",
+    "provider": "Liberu\\Themes\\Base\\BaseThemeServiceProvider",
+    "type": "shared",
+    "parent": null,
     "optimized_for": [
         "liberusoftware/boilerplate-laravel:^1.0"
     ],
@@ -14,25 +14,24 @@
     ],
     "required_capabilities": [],
     "optional_capabilities": [
-        "blog.publish",
-        "foundation.localization",
-        "foundation.theme-support"
+        "foundation.localization"
     ],
     "supports": [
         "application.shell",
         "identity.auth",
-        "blog.index",
         "foundation.account"
     ],
     "assets": {
         "css": [
             "resources/css/app.css"
         ],
-        "js": []
+        "js": [
+            "resources/js/app.js"
+        ]
     },
     "colors": {
         "primary": "teal",
-        "secondary": "cyan"
+        "secondary": "slate"
     },
-    "description": "Teal signal on a quiet neutral workbench."
+    "description": "Shared semantic tokens, accessible layout, and progressive presentation primitives."
 }

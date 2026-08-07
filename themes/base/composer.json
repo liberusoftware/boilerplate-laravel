@@ -14,10 +14,10 @@
   },
   "extra": {
     "liberu": {
-      "name": "liberu-base"
+      "name": "base"
     }
   },
-  "version": "1.4.0",
+  "version": "2.0.0",
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"

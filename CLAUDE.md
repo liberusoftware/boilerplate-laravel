@@ -237,9 +237,9 @@ not use a passkey trait.
 ### Themes
 
 Themes are packages under `themes/`, each with `theme.json` (name, version, provider, `type`,
-`parent`, `assets`) and a `resources/` tree. `liberu-base` is the `shared` root; `default`, `dark`
-and `clear-signal` are `public` themes declaring `parent: liberu-base`.
-`ThemeManager::inheritanceChain()` walks the chain with a cycle guard, and only `liberu-base`
+`parent`, `assets`) and a `resources/` tree. `base` is the `shared` root; `default`, `dark`
+and `clear-signal` are `public` themes declaring `parent: base`.
+`ThemeManager::inheritanceChain()` walks the chain with a cycle guard, and only `base`
 ships `layouts/app.blade.php`, so every public theme renders through the fallback.
 
 **Discovery is Composer-driven, like modules.** `ThemeDiscovery` merges the tracked `themes/` tree

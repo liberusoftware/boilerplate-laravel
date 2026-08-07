@@ -7,9 +7,9 @@ Themes are independent `liberu-theme` Composer packages installed in tracked `/t
 | Theme | Type | Parent | Purpose |
 |---|---|---|---|
 | `liberusoftware/theme-base` | shared | none | accessible layout, semantic tokens, cascade layers and progressive JavaScript primitives |
-| `liberusoftware/theme-default` | public | `liberu-base` | neutral light presentation |
-| `liberusoftware/theme-dark` | public | `liberu-base` | dark presentation through token overrides |
-| `liberusoftware/theme-clear-signal` | public | `liberu-base` | alternate high-clarity brand palette |
+| `liberusoftware/theme-default` | public | `base` | neutral light presentation |
+| `liberusoftware/theme-dark` | public | `base` | dark presentation through token overrides |
+| `liberusoftware/theme-clear-signal` | public | `base` | alternate high-clarity brand palette |
 
 Each package includes `composer.json`, the canonical `theme.json`, provider, README, changelog and canonical `resources` tree. Child themes override only differing assets and inherit views/assets through a finite, validated parent chain.
 

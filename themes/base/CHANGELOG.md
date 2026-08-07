@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0 - 2026-08-07
+
+- Renamed the theme from `liberu-base` to `base`. The Composer package was already
+  `liberusoftware/theme-base`, so this makes the manifest, the install path and the package name
+  agree on one name, as `standards/THEMES.md` requires. A theme name is a stable manifest
+  surface, so this is a major release — see `UPGRADING.md`.
+
 ## 1.2.2 - 2026-08-06
 
 - Split CI into the three workflows `CONFORMANCE.md` §3.9 asks for, rather than one calling all

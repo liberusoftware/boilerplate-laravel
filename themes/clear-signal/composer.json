@@ -6,7 +6,7 @@
   "require": {
     "php": "^8.5",
     "liberusoftware/theme-support": "^1.0",
-    "liberusoftware/theme-base": "^1.0"
+    "liberusoftware/theme-base": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -18,7 +18,7 @@
       "name": "clear-signal"
     }
   },
-  "version": "1.4.0",
+  "version": "1.5.0",
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
     "pestphp/pest": "^5.0"

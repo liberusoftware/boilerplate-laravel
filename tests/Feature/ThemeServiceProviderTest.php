@@ -23,13 +23,13 @@ it('renders the themeAsset directive against the active theme', function () {
 it('resolves a shared view name through the active theme inheritance chain', function () {
     app(ThemeManager::class)->setTheme('dark');
     expect(View::getFinder()->find('layouts.app'))
-        ->toContain('themes/liberu-base/resources/views/layouts/app.blade.php');
+        ->toContain('themes/base/resources/views/layouts/app.blade.php');
 
     View::getFinder()->flush();
 
     app(ThemeManager::class)->setTheme('default');
     expect(View::getFinder()->find('layouts.app'))
-        ->toContain('themes/liberu-base/resources/views/layouts/app.blade.php');
+        ->toContain('themes/base/resources/views/layouts/app.blade.php');
 });
 
 it('does not throw rendering themeCss/themeJs when the theme asset is not in the Vite manifest', function () {

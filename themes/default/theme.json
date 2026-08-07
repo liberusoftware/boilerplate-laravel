@@ -1,38 +1,38 @@
 {
-  "$schema": "https://schemas.liberu.dev/theme/v1.json",
-  "name": "default",
-  "display_name": "Liberu Default",
-  "version": "1.4.0",
-  "provider": "Liberu\\Themes\\DefaultTheme\\DefaultThemeServiceProvider",
-  "type": "public",
-  "parent": "liberu-base",
-  "optimized_for": [
-    "liberusoftware/boilerplate-laravel:^1.0"
-  ],
-  "tested_with": [
-    "liberusoftware/boilerplate-laravel:^1.0"
-  ],
-  "required_capabilities": [],
-  "optional_capabilities": [
-    "foundation.localization",
-    "foundation.theme-support"
-  ],
-  "supports": [
-    "application.shell",
-    "identity.auth",
-    "foundation.account"
-  ],
-  "assets": {
-    "css": [
-      "resources/css/app.css"
+    "$schema": "https://schemas.liberu.dev/theme/v1.json",
+    "name": "default",
+    "display_name": "Liberu Default",
+    "version": "1.5.0",
+    "provider": "Liberu\\Themes\\DefaultTheme\\DefaultThemeServiceProvider",
+    "type": "public",
+    "parent": "base",
+    "optimized_for": [
+        "liberusoftware/boilerplate-laravel:^1.0"
     ],
-    "js": [
-      "resources/js/app.js"
-    ]
-  },
-  "colors": {
-    "primary": "amber",
-    "secondary": "slate"
-  },
-  "description": "Neutral public and portal defaults built on Liberu Base."
+    "tested_with": [
+        "liberusoftware/boilerplate-laravel:^1.0"
+    ],
+    "required_capabilities": [],
+    "optional_capabilities": [
+        "foundation.localization",
+        "foundation.theme-support"
+    ],
+    "supports": [
+        "application.shell",
+        "identity.auth",
+        "foundation.account"
+    ],
+    "assets": {
+        "css": [
+            "resources/css/app.css"
+        ],
+        "js": [
+            "resources/js/app.js"
+        ]
+    },
+    "colors": {
+        "primary": "amber",
+        "secondary": "slate"
+    },
+    "description": "Neutral public and portal defaults built on Liberu Base."
 }

@@ -54,7 +54,7 @@ it('rejects an application with no themes at all', function () {
 it('finds Composer-installed themes with no tracked tree at all', function () {
     $themes = (new ThemeDiscovery())->discover(sys_get_temp_dir().'/absent-'.bin2hex(random_bytes(5)));
 
-    expect($themes)->toHaveKeys(['dark', 'default', 'liberu-base']);
+    expect($themes)->toHaveKeys(['dark', 'default', 'base']);
 });
 
 it('counts a theme the tracked tree and Composer both name once', function () {
