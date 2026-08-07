@@ -140,8 +140,13 @@ def commit_command(message: str):
             line.split('\t', 1)[1] for line in staged.splitlines()
             if '\t' in line and not line.startswith('D')
         ]
-        if additions:
-            git(target, 'reset', '--quiet', '--', *additions, check=False)
+        # Chunked: a repository with a committed vendor/ tree stages ~10,000
+        # paths, and passing them to one `git reset` exceeds the argv limit —
+        # "[Errno 7] Argument list too long: 'git'". Resetting the NEVER_STAGE
+        # prefixes instead would be shorter but would also unstage deletions,
+        # which is the one thing that must survive.
+        for start in range(0, len(additions), 500):
+            git(target, 'reset', '--quiet', '--', *additions[start:start + 500], check=False)
         pending = git(target, 'diff', '--cached', '--name-only', check=False).stdout.strip()
         if not pending:
             return name, 'nothing to commit'
