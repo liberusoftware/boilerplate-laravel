@@ -310,8 +310,20 @@ packages at 0%**, 26 of 40 under 15%.
 | At 0% | 4 | **4** — the same four |
 | At 100% | — | **6** |
 
-Thresholds are set on 40 packages. The four at 0% are skipped deliberately: a zero threshold is
-indistinguishable from having no gate, so they get a first real test instead (below).
+Thresholds are set on **all 44**. The four that measured 0% were skipped from the first wave — a
+zero threshold is indistinguishable from having no gate — and earned a first real test instead:
+
+| | was | now |
+| --- | --- | --- |
+| `roles-permissions-filament` | 0% | **100%** |
+| `settings-filament` | 0% | **98.7%** |
+| `organizations-teams-filament` | 0% | **67.8%** |
+| `identity-core-filament` | 0% | **59.7%** |
+
+Each composes the smallest panel that registers the plugin its manifest declares — a Filament
+resource is only reachable through a panel, and these packages ship plugins rather than panels. The
+fixture panel is deliberately not a copy of the host's, which is tenant-scoped, Shield-gated and
+themed from site settings; reproducing it would assert on the host's composition instead.
 
 Per `TESTING.md` §13 — "a threshold below 100% is a migration state, not a policy" — each repository
 sets its initial CI threshold from its **step-6** measured figure, not the pre-migration figure

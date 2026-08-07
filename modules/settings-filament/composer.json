@@ -20,7 +20,7 @@
       "name": "settings-filament"
     }
   },
-  "version": "1.2.2",
+  "version": "1.4.0",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\SettingsFilament\\Tests\\": "tests/"
@@ -28,7 +28,9 @@
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.0",
+    "liberusoftware/theme-base": "^2.0",
+    "liberusoftware/theme-default": "^1.5"
   },
   "scripts": {
     "test": "pest"

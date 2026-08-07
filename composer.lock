@@ -5817,16 +5817,16 @@
         },
         {
             "name": "liberusoftware/identity-core-filament",
-            "version": "1.2.2",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-identity-core-filament.git",
-                "reference": "755e65ca36bad455115d9c01d4717052edd6caf5"
+                "reference": "cb6d81bf762eb4c154c557d661d661b8869a711f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-identity-core-filament/zipball/755e65ca36bad455115d9c01d4717052edd6caf5",
-                "reference": "755e65ca36bad455115d9c01d4717052edd6caf5",
+                "url": "https://api.github.com/repos/liberusoftware/module-identity-core-filament/zipball/cb6d81bf762eb4c154c557d661d661b8869a711f",
+                "reference": "cb6d81bf762eb4c154c557d661d661b8869a711f",
                 "shasum": ""
             },
             "require": {
@@ -5864,10 +5864,10 @@
             ],
             "description": "Filament administration adapter for the configured Liberu identity model.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-identity-core-filament/tree/1.2.2",
+                "source": "https://github.com/liberusoftware/module-identity-core-filament/tree/1.4.0",
                 "issues": "https://github.com/liberusoftware/module-identity-core-filament/issues"
             },
-            "time": "2026-08-06T20:42:14+00:00"
+            "time": "2026-08-07T10:01:17+00:00"
         },
         {
             "name": "liberusoftware/identity-socialstream",
@@ -6575,16 +6575,16 @@
         },
         {
             "name": "liberusoftware/organizations-teams-filament",
-            "version": "1.2.2",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-organizations-teams-filament.git",
-                "reference": "e296a4bcdfff26c367155f941d6a0840b0e38410"
+                "reference": "185d71ef79f6b45f108e80d731866d9b189fbce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-organizations-teams-filament/zipball/e296a4bcdfff26c367155f941d6a0840b0e38410",
-                "reference": "e296a4bcdfff26c367155f941d6a0840b0e38410",
+                "url": "https://api.github.com/repos/liberusoftware/module-organizations-teams-filament/zipball/185d71ef79f6b45f108e80d731866d9b189fbce1",
+                "reference": "185d71ef79f6b45f108e80d731866d9b189fbce1",
                 "shasum": ""
             },
             "require": {
@@ -6622,10 +6622,10 @@
             ],
             "description": "Filament administration adapter for organizations and teams.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-organizations-teams-filament/tree/1.2.2",
+                "source": "https://github.com/liberusoftware/module-organizations-teams-filament/tree/1.4.0",
                 "issues": "https://github.com/liberusoftware/module-organizations-teams-filament/issues"
             },
-            "time": "2026-08-06T20:42:48+00:00"
+            "time": "2026-08-07T10:01:17+00:00"
         },
         {
             "name": "liberusoftware/profiles",
@@ -6739,16 +6739,16 @@
         },
         {
             "name": "liberusoftware/roles-permissions-filament",
-            "version": "1.2.2",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-roles-permissions-filament.git",
-                "reference": "39a573806205a931c55dd820fb3405eb92620cd8"
+                "reference": "5118ca39c415074a9a93a7fbb521fbbe433a835c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-roles-permissions-filament/zipball/39a573806205a931c55dd820fb3405eb92620cd8",
-                "reference": "39a573806205a931c55dd820fb3405eb92620cd8",
+                "url": "https://api.github.com/repos/liberusoftware/module-roles-permissions-filament/zipball/5118ca39c415074a9a93a7fbb521fbbe433a835c",
+                "reference": "5118ca39c415074a9a93a7fbb521fbbe433a835c",
                 "shasum": ""
             },
             "require": {
@@ -6787,10 +6787,10 @@
             ],
             "description": "Filament Shield presentation adapter for Liberu authorization.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-roles-permissions-filament/tree/1.2.2",
+                "source": "https://github.com/liberusoftware/module-roles-permissions-filament/tree/1.4.0",
                 "issues": "https://github.com/liberusoftware/module-roles-permissions-filament/issues"
             },
-            "time": "2026-08-06T20:42:55+00:00"
+            "time": "2026-08-07T10:01:17+00:00"
         },
         {
             "name": "liberusoftware/scheduler-queues",
@@ -7123,16 +7123,16 @@
         },
         {
             "name": "liberusoftware/settings-filament",
-            "version": "1.2.2",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-settings-filament.git",
-                "reference": "899bbca78eb0486bd128f6c3e020322c23153cf0"
+                "reference": "f73d3139c0aefbac749d098544d35d0476e21ff8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-settings-filament/zipball/899bbca78eb0486bd128f6c3e020322c23153cf0",
-                "reference": "899bbca78eb0486bd128f6c3e020322c23153cf0",
+                "url": "https://api.github.com/repos/liberusoftware/module-settings-filament/zipball/f73d3139c0aefbac749d098544d35d0476e21ff8",
+                "reference": "f73d3139c0aefbac749d098544d35d0476e21ff8",
                 "shasum": ""
             },
             "require": {
@@ -7144,6 +7144,8 @@
             },
             "require-dev": {
                 "liberusoftware/package-testbench": "^1.5",
+                "liberusoftware/theme-base": "^2.0",
+                "liberusoftware/theme-default": "^1.5",
                 "pestphp/pest": "^5.0"
             },
             "type": "liberu-module",
@@ -7172,10 +7174,10 @@
             ],
             "description": "Filament administration adapter for Liberu Settings.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-settings-filament/tree/1.2.2",
+                "source": "https://github.com/liberusoftware/module-settings-filament/tree/1.4.0",
                 "issues": "https://github.com/liberusoftware/module-settings-filament/issues"
             },
-            "time": "2026-08-06T20:43:12+00:00"
+            "time": "2026-08-07T10:01:17+00:00"
         },
         {
             "name": "liberusoftware/theme-base",

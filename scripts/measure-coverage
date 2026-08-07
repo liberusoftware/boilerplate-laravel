@@ -83,9 +83,21 @@ def main() -> int:
             rows.append(row)
             print(f'{row[0]:<34}{row[1]:<16}{row[2]}', flush=True)
 
-    rows.sort()
-    OUT.write_text('\n'.join('\t'.join(r) for r in rows) + '\n')
-    print(f'\nwrote {OUT} ({len(rows)} packages)')
+    # Merge rather than overwrite. Given explicit paths this measures a subset,
+    # and replacing the file would silently discard every package not named —
+    # which is how one re-run destroyed a full sweep's results.
+    existing = {}
+    if OUT.is_file():
+        for line in OUT.read_text().splitlines():
+            if line.strip():
+                fields = line.split('\t')
+                existing[fields[0]] = fields
+    for row in rows:
+        existing[row[0]] = list(row)
+
+    merged = sorted(existing.values())
+    OUT.write_text('\n'.join('\t'.join(r) for r in merged) + '\n')
+    print(f'\nwrote {OUT} ({len(rows)} measured, {len(merged)} total)')
     return 0
 
 

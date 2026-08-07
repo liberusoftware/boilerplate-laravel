@@ -1,0 +1,31 @@
+<?php
+
+namespace Liberu\Foundation\IdentityFilament\Tests\Fixtures;
+
+use Filament\Panel;
+use Filament\PanelProvider;
+use Liberu\Foundation\IdentityFilament\IdentityFilamentPlugin;
+
+/**
+ * The panel `UserResource` needs in order to be a resource at all.
+ *
+ * This package ships a plugin; the host composes the panel. So the suite
+ * composes the smallest panel that registers the plugin the manifest declares,
+ * under the id its `presentation.filament.admin` key names.
+ *
+ * Deliberately not a copy of the host's `AdminPanelProvider`: that one is
+ * tenant-scoped to a `Team`, gated by Shield and themed from site settings, and
+ * reproducing it would assert on the host's composition rather than on this
+ * resource.
+ */
+final class TestPanelProvider extends PanelProvider
+{
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ->default()
+            ->id('admin')
+            ->path('admin')
+            ->plugins([IdentityFilamentPlugin::make()]);
+    }
+}
