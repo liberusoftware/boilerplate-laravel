@@ -2,11 +2,6 @@ name: Release
 
 on:
   push:
-    # v-prefixed, which is what this repository has always tagged (v2.0.0 through
-    # v4.4.0) and what CI.md specifies — "a protected version tag such as v1.2.3".
-    # The pattern was unprefixed, so it matched none of them and this workflow had
-    # never run once. The packages are the other convention: their tags are bare,
-    # because Composer resolves them as versions.
     tags: ['v[0-9]+.[0-9]+.[0-9]+']
   workflow_dispatch:
     inputs:
