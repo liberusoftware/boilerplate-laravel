@@ -36,7 +36,7 @@ class between them while `TESTING.md` holds a quarter of another. The full per-s
 | Class | Clusters | Audited |
 | --- | --- | --- |
 | **Boundary** — a package can check it about itself | 34 | **yes, below** |
-| **CI** — decidable by a workflow step | 30 | not yet |
+| **CI** — decidable by a workflow step | 30 | **yes, below** |
 | **Arch** — whole-graph, needs every package in view | 11 | not yet |
 | **Larastan** | 6 | not yet |
 | **Pint** | 3 | not yet |
@@ -48,39 +48,42 @@ class between them while `TESTING.md` holds a quarter of another. The full per-s
 Measured against this tree on 2026-08-07: 40 `liberu-module` packages under `modules/`, 4
 `liberu-theme` packages under `themes/`, and the host.
 
-| Standard | Boundary class | Findings |
-| --- | --- | --- |
-| `API` | no Boundary rules | — |
-| `ADOPTION` | no Boundary rules | — |
-| `BLADE` | no Boundary rules | — |
-| `CI` | no Boundary rules | — |
-| `CLASSES` | no Boundary rules | — |
-| `CONCERNS` | no Boundary rules | — |
-| `CONTRACTS` | no Boundary rules | — |
-| `CONTRIBUTING` | no Boundary rules | — |
-| `CONTROLLERS` | no Boundary rules | — |
-| `DATABASE` | audited | **1** |
-| `DOCUMENTATION` | no Boundary rules | — |
-| `DOMAIN-DRIVEN-DESIGN-PATTERNS` | no Boundary rules | — |
-| `FILAMENT` | audited | **3** |
-| `FRONTEND-TESTING` | vacuous | — no JavaScript presentation package exists |
-| `GUIDELINES` | no Boundary rules | — |
-| `JOBS` | vacuous | — the fleet ships **no job classes at all** |
-| `LARAVEL` | audited | 0 |
-| `LIVEWIRE` | audited | **1** |
-| `MODELS` | audited | 0 — see the `DATABASE` finding |
-| `OBJECT-ORIENTED-PROGRAMMING` | no Boundary rules | — |
-| `PHP` | no Boundary rules | — |
-| `PINT` | audited | 0 |
-| `PSR` | audited | 0 |
-| `QUEUES` | vacuous | — no job classes |
-| `README` | index only | — |
-| `SERVICES` | no Boundary rules | — |
-| `TESTING` | audited | **1** |
-| `THEMES` | audited | **1** |
-| `TRANSLATIONS` | no Boundary rules | — |
-| `VIEWS` | no Boundary rules | — |
-| `FLUTTER` `INERTIA` `MOBILE` `NUXT` `REACT` `REACT-NATIVE` `VUE` | **inapplicable** | this stack has no React, Vue, Nuxt, Inertia, Flutter, React Native or mobile surface. Ruled out while charting, recorded here so the seven are not re-litigated |
+`—` means the standard states no rule in that class. A blank cell would be ambiguous between "clean"
+and "nobody looked", which is the confusion this table exists to prevent.
+
+| Standard | Boundary | CI | Findings so far |
+| --- | --- | --- | --- |
+| `ADOPTION` | — | — | — |
+| `API` | — | audited | **1** |
+| `BLADE` | — | audited | 0 |
+| `CI` | — | audited | **6** |
+| `CLASSES` | — | — | — |
+| `CONCERNS` | — | — | — |
+| `CONTRACTS` | — | — | — |
+| `CONTRIBUTING` | — | audited | 0 — its heading and link rules become checkable with the Markdown linter `DOCUMENTATION` asks for |
+| `CONTROLLERS` | — | — | — |
+| `DATABASE` | audited | audited | **2** |
+| `DOCUMENTATION` | — | audited | **1** |
+| `DOMAIN-DRIVEN-DESIGN-PATTERNS` | — | — | — |
+| `FILAMENT` | audited | audited | **4** |
+| `FRONTEND-TESTING` | vacuous | vacuous | — no JavaScript presentation package exists |
+| `GUIDELINES` | — | — | — |
+| `JOBS` | vacuous | vacuous | — the fleet ships **no job classes at all** |
+| `LARAVEL` | audited | — | 0 |
+| `LIVEWIRE` | audited | vacuous | **1** — no SFC/MFC and no islands, so both CI rules have an empty population |
+| `MODELS` | audited | — | 0 — see the `DATABASE` findings |
+| `OBJECT-ORIENTED-PROGRAMMING` | — | — | — |
+| `PHP` | — | audited | 0 |
+| `PINT` | audited | audited | 0 |
+| `PSR` | audited | audited | 0 |
+| `QUEUES` | vacuous | — | — no job classes |
+| `README` | index only | — | — |
+| `SERVICES` | — | — | — |
+| `TESTING` | audited | audited | **4** |
+| `THEMES` | audited | audited | **3** |
+| `TRANSLATIONS` | — | audited | **2** |
+| `VIEWS` | — | audited | 0 |
+| `FLUTTER` `INERTIA` `MOBILE` `NUXT` `REACT` `REACT-NATIVE` `VUE` | **inapplicable** | **inapplicable** | this stack has no React, Vue, Nuxt, Inertia, Flutter, React Native or mobile surface. Ruled out while charting, recorded here so the seven are not re-litigated |
 
 ## Boundary class — findings
 
@@ -124,8 +127,69 @@ then static analysis — were both silence mistaken for health.
   bind to. Recorded rather than reported as conformance, because passing a rule with an empty
   population is not evidence of anything.
 
+## CI class — findings
+
+Rules that are mechanically decidable but by a workflow step rather than by Pint or Larastan. All 17
+findings rank **unenforced**, and that is not a coincidence — see *What the ranks did not survive*
+below.
+
+| Rule | Population | Rank | Cost |
+| --- | --- | --- | --- |
+| **Third-party actions are not pinned to full-length commit SHAs.** `CI.md`, *Workflow security*: "Pin third-party actions to full-length commit SHAs". Every reference is a mutable tag — `actions/checkout@v5`, `shivammathur/setup-php@v2`, `actions/cache@v4`, `codecov/codecov-action@v5`, four `docker/*` actions | **21 references** across 4 host workflows and 3 reusable workflows | unenforced | 7 files, one PR each; then a renewal process, because pinned SHAs need updating |
+| **All 44 package callers pin the reusable workflow to `@main`.** A push to `liberusoftware/.github` changes every repository's CI instantly, with no staging. Demonstrated in this effort: adding a `--config` flag pointing at a not-yet-tagged file would have failed all 44 builds, and needed a guard commit rather than a rollback | 44 of 44 | unenforced | 44 files to pin, or a release process for the reusable workflows |
+| **`composer validate` and `composer audit` run only at tag time for packages.** They are in `package-install.yml`, which triggers on tags and `workflow_dispatch`. `CI.md` requires them on every pull request and every push to `main` | 44 of 44 packages | unenforced | one step each in `package-tests.yml` |
+| **Host `install.yml` declares no `permissions:` block.** `CI.md`: least-privilege, "normally starting with `contents: read`". The other three host workflows and all three reusable workflows declare one | 1 of 4 host workflows | unenforced | 2 lines |
+| **No secret scanning anywhere.** `CI.md` requires "dependency, secret, container, and supported security scans". Dependency scanning exists — `composer audit --locked` in the host, `composer audit` at package release. The other two do not | host + 44 packages | unenforced | one workflow, fleet-wide via the reusable caller |
+| **`docker.yml` builds and publishes without scanning.** `CI.md` assigns it "Build, scan, and publish immutable container artifacts" | 1 host workflow | unenforced | one step |
+| **The seven translation checks named by `TRANSLATIONS.md` do not exist.** Key uniqueness, placeholder parity, missing keys, invalid plural forms, encoding, stale keys, locale coverage — the standard names them individually as CI's job | 4 locales, every module owning message keys | unenforced | unknown — no tool is chosen |
+| **No pseudo-localization or RTL browser tests.** `TRANSLATIONS.md` requires both to verify expansion, truncation, focus order and screen-reader announcements | fleet-wide | unenforced | unknown |
+| **No Markdown lint or link checking.** `DOCUMENTATION.md` §12 asks CI to "lint Markdown, check internal and external links, validate headings and code fences" | host + 44 package READMEs | unenforced | one workflow; `CONTRIBUTING.md`'s heading and link rules become checkable with it |
+| **No OpenAPI document exists.** `API.md` and `DOCUMENTATION.md` §9 require reference material generated from or checked against a versioned contract, plus drift and breaking-change detection. The fleet ships an `api-access` module | 1 module | unenforced | unknown — writing the contract is the work, not the check |
+| **No `visual.yml` in any theme.** `THEMES.md` §18.1 names four required theme workflows; all four themes ship `install.yml`, `tests.yml` and `compatibility.yml` | 4 of 4 themes | unenforced | 4 repositories + a release wave; the accessibility and visual-regression tooling is the unknown |
+| **`test:coverage` does not enforce `--min=100`.** `THEMES.md` §18 specifies the exact command with Clover and HTML output. No theme declares the script at all | 4 of 4 themes | unenforced | trivial to declare, unreachable to satisfy — theme coverage is far below 100 |
+| **The package workflow produces no coverage artifact.** `TESTING.md` §13 requires a machine-readable report for quality services and an HTML report for diagnosis, retained as protected CI artifacts. The host uploads to Codecov; no package produces anything | 44 of 44 | unenforced | two steps in `package-tests.yml` |
+| **No README coverage or CI-status badge.** `TESTING.md` §13: "The README badge must reflect the default branch and link to its maintained report". READMEs carry PHP, release and licence badges | 44 of 44 | unenforced | 44 README edits; blocked on the artifact row above |
+| **No release-scope coverage gate.** `CI.md` and `TESTING.md` §13 make 100% of release scope a release gate. Nothing checks it, and the fleet's per-package ratchet is a migration state by the standard's own words | release process | unenforced | unknown — the gate is meaningless until the ratchet approaches 100 |
+| **Nothing checks that a released migration is never edited.** `DATABASE.md` states the rule; it is mechanically decidable by diffing `database/migrations/` against the last release tag | 40 modules | unenforced | one step in `package-tests.yml` |
+| **`-filament` READMEs document almost none of the required inventory.** `FILAMENT.md` §20 names ~18 items including the panel matrix, typed configuration options, resource/page/widget inventory, and discovery namespaces. A measured README has 12 headings, none of them these | 6 of 6 `-filament` packages | unenforced | 6 READMEs; blocked on the panel matrix not existing (a Boundary finding) |
+
+## CI class — conformance
+
+| Rule | Evidence |
+| --- | --- |
+| Least-privilege `permissions:` | **3 of 4** host workflows and **3 of 3** reusable workflows declare `contents: read`; `release.yml` correctly widens to `contents: write` |
+| `composer validate` and `composer audit` at release | present in `package-install.yml`; the host runs `composer validate --strict` and `composer audit --locked` on every push. `--strict` is deliberately not used for packages — it errors on the `version` field, which this fleet requires because `ModuleValidator` compares manifests against `Composer\InstalledVersions` |
+| CI fails on unexpected `modules/` or `themes/` changes | **enforced** — the §6.2 zero-diff gate in the host's `install.yml` |
+| The release workflow tests the commit it deploys | `release.yml` triggers on the tag and uses `--verify-tag`; no rebuild from a different ref |
+| No `eval`, `unserialize`, `extract`, or bare `catch (Exception)` in owned source | **0 occurrences** across `modules/*/src`, `themes/*/src` and `app/` |
+| Framework cryptography rather than custom primitives | one `md5()` in the fleet, a cache-key hash in `localization-mymemory`, not a security primitive |
+| `@csrf` present where forms are | **7 of 7** files containing `<form>` |
+| Escaped output by default | **3** `{!! !!}` uses, all in the host: two are `$attributes->merge()` in form components, one is a translation string with link placeholders. None interpolates request input |
+| SFC/MFC filenames free of the bolt emoji (`LIVEWIRE.md` §6) | **0** — vacuous, the fleet ships no SFC/MFC |
+| Islands not placed inside loops or conditionals (`LIVEWIRE.md` §17) | **0 islands** — vacuous |
+
+## What the ranks did not survive
+
+**Every CI finding ranks *unenforced*, and the rank therefore carries no information here.** That is
+structural: this class is defined as *decidable by a workflow step*, so its failure mode is always
+"no workflow step does it", which is the definition of *unenforced*. The rank separates findings
+usefully in the Boundary class — 1 consumer, 2 promise, 3 unenforced, 1 style — and degenerates in
+this one.
+
+Two rows are also ranked lower than they deserve, both flagged when the ranks were settled:
+
+- **Unpinned actions** is a live supply-chain exposure — a moved tag executes arbitrary code in CI —
+  with no consumer-visible symptom and nothing false claimed. *Unenforced* undersells it.
+- **`@main` on the reusable workflow** has the same shape, and this effort produced the near-miss
+  that proves it.
+
+Two candidates were named when the ranks were defined as the trigger for adding a **security** rank.
+This is the second, and it is the same shape as the first. The recommendation is on the record here
+rather than acted on, because ranking is a settled decision and re-opening it is the map's call, not
+the audit's.
+
 ## Not yet audited
 
-CI (30 clusters), Arch (11), Larastan (6), Pint (3) and Prose (fleet) (38). Each is its own ticket
-under the map. Until those land, a standard marked *no Boundary rules* above has been **classified,
-not audited** — its rules live in a class this document has not reached.
+Arch (11 clusters), Larastan (6), Pint (3) and Prose (fleet) (38). Each is its own ticket under the
+map. Until those land, a standard marked *no Boundary rules* or *no CI rules* above has been
+**classified, not audited** — its rules live in a class this document has not reached.
