@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""Write each package's CI coverage threshold from its measured figure (step 6).
+
+`TESTING.md` §13: a repository not yet at 100% "sets its CI threshold from current
+evidence and raises it deliberately toward 100%". The evidence is
+`storage/app/coverage.tsv`, produced by `scripts/measure-coverage`.
+
+The threshold lives in one place — the `coverage-threshold` input of the package's
+`.github/workflows/tests.yml`, which the reusable workflow reads to decide between
+`pest` and `pest --coverage --min=N`. It is deliberately not also written into a
+Composer script: two files carrying the same number is two files that can disagree.
+
+Ratchets only upward. A package that has gained coverage since its threshold was
+set gets the higher number; one that has lost coverage keeps the old threshold and
+is reported, because that is a regression to look at rather than a floor to lower.
+
+Usage: set-coverage-thresholds [--dry-run]
+"""
+import pathlib
+import re
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+TSV = ROOT / 'storage/app/coverage.tsv'
+
+WITH_BLOCK = re.compile(r'\n    with:\n      coverage-threshold: (\d+)\n?')
+USES_LINE = re.compile(r'^(    uses: liberusoftware/\.github/\.github/workflows/package-tests\.yml@main)$', re.M)
+
+
+def apply(package: pathlib.Path, threshold: int, dry_run: bool) -> str:
+    workflow = package / '.github/workflows/tests.yml'
+    if not workflow.is_file():
+        return 'no tests.yml'
+    body = workflow.read_text()
+
+    existing = WITH_BLOCK.search(body)
+    if existing:
+        current = int(existing.group(1))
+        if threshold < current:
+            return f'kept {current} (measured {threshold} — coverage went DOWN)'
+        if threshold == current:
+            return f'already {current}'
+        body = WITH_BLOCK.sub(f'\n    with:\n      coverage-threshold: {threshold}\n', body)
+        verb = f'{current} -> {threshold}'
+    else:
+        if not USES_LINE.search(body):
+            return 'unrecognised tests.yml — not touched'
+        body = USES_LINE.sub(rf'\1\n    with:\n      coverage-threshold: {threshold}', body)
+        verb = f'set {threshold}'
+
+    if not dry_run:
+        workflow.write_text(body)
+    return ('would ' if dry_run else '') + verb
+
+
+def main() -> int:
+    dry_run = '--dry-run' in sys.argv[1:]
+    if not TSV.is_file():
+        print(f'No measurement at {TSV}. Run scripts/measure-coverage first.', file=sys.stderr)
+        return 2
+
+    for line in sorted(TSV.read_text().splitlines()):
+        if not line.strip():
+            continue
+        name, status, value = (line.split('\t') + ['', ''])[:3]
+        if status != 'ok':
+            print(f'{name:<34}skipped — {status}')
+            continue
+        measured = float(value)
+        # §3.10: the four packages at 0% get a first real test, not a 0% floor.
+        # A zero threshold is indistinguishable from having no gate at all.
+        if measured == 0:
+            print(f'{name:<34}skipped — 0%, needs a first test (§3.10)')
+            continue
+        for base in ('modules', 'themes'):
+            package = ROOT / base / name
+            if package.is_dir():
+                print(f'{name:<34}{apply(package, int(measured), dry_run)}')
+                break
+        else:
+            print(f'{name:<34}not found under modules/ or themes/')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

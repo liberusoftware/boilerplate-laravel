@@ -10,6 +10,7 @@ Idempotent: re-running on a migrated package changes nothing.
 """
 import json
 import pathlib
+import re
 import shutil
 import sys
 
@@ -177,6 +178,14 @@ def migrate(pkg: pathlib.Path, kind: str) -> str:
     workflows.mkdir(parents=True, exist_ok=True)
     for name, body in CALLERS.items():
         caller = workflows / name
+        # A package's coverage ratchet lives in this file, as the reusable
+        # workflow's coverage-threshold input. Rewriting the caller verbatim
+        # would silently reset every threshold to nothing on the next run —
+        # the same way theme-support lost a test helper to a wholesale rewrite.
+        if caller.is_file():
+            existing = re.search(r'\n    with:\n      coverage-threshold: \d+\n?', caller.read_text())
+            if existing:
+                body = body.rstrip('\n') + existing.group(0).rstrip('\n') + '\n'
         if not caller.is_file() or caller.read_text() != body:
             caller.write_text(body)
             changed.append('~'+name)

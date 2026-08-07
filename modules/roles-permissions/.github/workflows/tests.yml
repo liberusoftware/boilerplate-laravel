@@ -17,3 +17,5 @@ concurrency:
 jobs:
   tests:
     uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
+    with:
+      coverage-threshold: 12

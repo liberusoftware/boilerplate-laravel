@@ -296,27 +296,56 @@ put the §6.2 zero-diff check in `install.yml`. `deploy-staging.yml` is not adde
 
 [Measure per-package coverage](https://github.com/liberusoftware/boilerplate-laravel/issues/618)
 
-Measured baseline: fleet **15.1%** (193/1281 lines), median package **12.82%**, **4 Filament
+Pre-migration baseline: fleet **15.1%** (193/1281 lines), median package **12.82%**, **4 Filament
 packages at 0%**, 26 of 40 under 15%.
+
+**Step-6 measurement**, all 44 packages resolved from nothing and run standalone:
+
+| | pre-migration | step 6 |
+| --- | --- | --- |
+| Median package | 12.82% | **20.0%** |
+| Under 15% | 26 of 40 | **20 of 44** |
+| At 0% | 4 | **4** — the same four |
+| At 100% | — | **6** |
+
+Thresholds are set on 40 packages. The four at 0% are skipped deliberately: a zero threshold is
+indistinguishable from having no gate, so they get a first real test instead (below).
 
 Per `TESTING.md` §13 — "a threshold below 100% is a migration state, not a policy" — each repository
 sets its initial CI threshold from its **step-6** measured figure, not the pre-migration figure
 above. Do not set a 0% floor for the four Filament packages; give them a first real test instead.
 
-**The threshold is a Composer script, not `phpunit.xml`.** PHPUnit's `<coverage>` element carries
-report configuration and no minimum, so a threshold written there would be silently ignored. The gate
-is Pest's `--min`, in the `test:coverage` script `MODULES.md` §10.1 already specifies:
+**The threshold lives in the package's `tests.yml`.** Not in `phpunit.xml` — PHPUnit's `<coverage>`
+element carries report configuration and no minimum, so a threshold written there is silently
+ignored. And not in a Composer script either: the reusable workflow in `liberusoftware/.github`
+already takes a `coverage-threshold` input, defaulting to `0`, and switches between `pest` and
+`pest --coverage --min=N` on it. Two files carrying the same number is two files that can disagree.
 
-```json
-"test:coverage": "pest --ci --coverage --min=87 --coverage-clover=build/coverage/clover.xml"
+```yaml
+jobs:
+  tests:
+    uses: liberusoftware/.github/.github/workflows/package-tests.yml@main
+    with:
+      coverage-threshold: 61
 ```
 
-`phpunit.xml` still needs its `<source>` narrowed to *meaningful owned PHP* per `TESTING.md` §13 —
-today every package includes `src` whole, which counts configuration-only files and non-executable
-migrations against the number.
+**No `<source>` narrowing is needed.** All 44 packages already scope `<source>` to `src`, and no
+configuration or migration PHP lives inside it — `config/` and `database/` are siblings of `src/`,
+outside the measured tree. The measured scope is already *meaningful owned PHP* as `TESTING.md` §13
+defines it, and the low figures are honest: `feature-flags` reports 7.1% because its provider is
+covered and `Support/FlagEvaluator` has no tests at all.
 
-`scripts/measure-coverage` produces the figures, resolving each package from nothing and running its
-suite under pcov exactly as its CI does. Results land in `storage/app/coverage.tsv`.
+Two scripts do the work, and they are separate because the second must be re-runnable as coverage
+grows:
+
+- `scripts/measure-coverage` resolves each package from nothing and runs its suite under pcov exactly
+  as its CI does, writing `storage/app/coverage.tsv`.
+- `scripts/set-coverage-thresholds` writes each figure into that package's `tests.yml`. It **ratchets
+  only upward** — a package that has lost coverage keeps its old threshold and is reported, because
+  that is a regression to look at rather than a floor to lower.
+
+`scripts/migrate-testbench` rewrites `tests.yml` from a template, so it now preserves an existing
+`coverage-threshold` block. Without that, one re-run silently resets every ratchet in the fleet.
 
 ## 4. Defects that must be fixed en route
 
