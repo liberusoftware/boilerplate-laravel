@@ -26,6 +26,17 @@ There is no *breaks a test* rank. The fleet's CI is green, so anything that brok
 already be red and would be a bug report rather than an audit finding. Settled in
 [Define what a finding is, and how findings rank](https://github.com/liberusoftware/boilerplate-laravel/issues/645).
 
+**⚠ security** is a flag, not a rank. The four ranks describe *realized* consequence — what is
+broken, what is untrue, what is ungated, what is cosmetic. A supply-chain exposure has no realized
+consequence; it is risk, and *unenforced* is already the risk bucket. The flag records impact within
+that bucket without asserting a false ordering between "arbitrary code execution someday" and "a
+consumer breaks today". Settled in
+[Does the ranking need a security rank](https://github.com/liberusoftware/boilerplate-laravel/issues/651).
+
+**Rank compares across the document; cost separates within a class.** A class whose rules share one
+failure mode will legitimately show one rank — see the CI class below, where all 17 findings are
+*unenforced* and the cost column runs from "2 lines" to "unknown".
+
 ## How the audit is sliced
 
 Not per standard. Every rule in the corpus was classified by the **mechanism that could catch it**,
@@ -130,13 +141,13 @@ then static analysis — were both silence mistaken for health.
 ## CI class — findings
 
 Rules that are mechanically decidable but by a workflow step rather than by Pint or Larastan. All 17
-findings rank **unenforced**, and that is not a coincidence — see *What the ranks did not survive*
-below.
+findings rank **unenforced**, and that is not a coincidence — see *Where the ranks strained* below.
+Two carry the **⚠ security** flag.
 
 | Rule | Population | Rank | Cost |
 | --- | --- | --- | --- |
-| **Third-party actions are not pinned to full-length commit SHAs.** `CI.md`, *Workflow security*: "Pin third-party actions to full-length commit SHAs". Every reference is a mutable tag — `actions/checkout@v5`, `shivammathur/setup-php@v2`, `actions/cache@v4`, `codecov/codecov-action@v5`, four `docker/*` actions | **21 references** across 4 host workflows and 3 reusable workflows | unenforced | 7 files, one PR each; then a renewal process, because pinned SHAs need updating |
-| **All 44 package callers pin the reusable workflow to `@main`.** A push to `liberusoftware/.github` changes every repository's CI instantly, with no staging. Demonstrated in this effort: adding a `--config` flag pointing at a not-yet-tagged file would have failed all 44 builds, and needed a guard commit rather than a rollback | 44 of 44 | unenforced | 44 files to pin, or a release process for the reusable workflows |
+| **Third-party actions are not pinned to full-length commit SHAs.** `CI.md`, *Workflow security*: "Pin third-party actions to full-length commit SHAs". Every reference is a mutable tag — `actions/checkout@v5`, `shivammathur/setup-php@v2`, `actions/cache@v4`, `codecov/codecov-action@v5`, four `docker/*` actions | **21 references** across 4 host workflows and 3 reusable workflows | unenforced **⚠ security** | 7 files, one PR each; then a renewal process, because pinned SHAs need updating |
+| **All 44 package callers pin the reusable workflow to `@main`.** A push to `liberusoftware/.github` changes every repository's CI instantly, with no staging. Demonstrated in this effort: adding a `--config` flag pointing at a not-yet-tagged file would have failed all 44 builds, and needed a guard commit rather than a rollback | 44 of 44 | unenforced **⚠ security** | 44 files to pin, or a release process for the reusable workflows |
 | **`composer validate` and `composer audit` run only at tag time for packages.** They are in `package-install.yml`, which triggers on tags and `workflow_dispatch`. `CI.md` requires them on every pull request and every push to `main` | 44 of 44 packages | unenforced | one step each in `package-tests.yml` |
 | **Host `install.yml` declares no `permissions:` block.** `CI.md`: least-privilege, "normally starting with `contents: read`". The other three host workflows and all three reusable workflows declare one | 1 of 4 host workflows | unenforced | 2 lines |
 | **No secret scanning anywhere.** `CI.md` requires "dependency, secret, container, and supported security scans". Dependency scanning exists — `composer audit --locked` in the host, `composer audit` at package release. The other two do not | host + 44 packages | unenforced | one workflow, fleet-wide via the reusable caller |
@@ -168,25 +179,26 @@ below.
 | SFC/MFC filenames free of the bolt emoji (`LIVEWIRE.md` §6) | **0** — vacuous, the fleet ships no SFC/MFC |
 | Islands not placed inside loops or conditionals (`LIVEWIRE.md` §17) | **0 islands** — vacuous |
 
-## What the ranks did not survive
+## Where the ranks strained, and what was decided
 
-**Every CI finding ranks *unenforced*, and the rank therefore carries no information here.** That is
-structural: this class is defined as *decidable by a workflow step*, so its failure mode is always
-"no workflow step does it", which is the definition of *unenforced*. The rank separates findings
-usefully in the Boundary class — 1 consumer, 2 promise, 3 unenforced, 1 style — and degenerates in
-this one.
+**Every CI finding ranks *unenforced*.** That is structural, not a defect: the class is defined as
+*decidable by a workflow step*, so its only failure mode is "no workflow step does it" — which is the
+definition of *unenforced*. The same four ranks separate the Boundary class usefully (1 consumer,
+2 promise, 3 unenforced, 1 style).
 
-Two rows are also ranked lower than they deserve, both flagged when the ranks were settled:
+The obvious remedy was tested and rejected on the evidence. Splitting *unenforced* into **violated**
+(the rule is broken now) and **unguarded** (a check is absent for a property that may well be fine)
+partitions the CI class **16 to 1** — nearly every CI rule is "have this check", so not having it is
+both at once. It adds a distinction the findings do not support.
 
-- **Unpinned actions** is a live supply-chain exposure — a moved tag executes arbitrary code in CI —
-  with no consumer-visible symptom and nothing false claimed. *Unenforced* undersells it.
-- **`@main` on the reusable workflow** has the same shape, and this effort produced the near-miss
-  that proves it.
+What separates a uniform-rank class is the **cost** column, which already runs from `2 lines` to
+`unknown`. Rank compares across the document; cost compares within a class.
 
-Two candidates were named when the ranks were defined as the trigger for adding a **security** rank.
-This is the second, and it is the same shape as the first. The recommendation is on the record here
-rather than acted on, because ranking is a settled decision and re-opening it is the map's call, not
-the audit's.
+**Two rows carry ⚠ security.** Unpinned actions and the `@main` reusable-workflow reference are both
+live supply-chain exposure with no consumer-visible symptom and nothing false claimed. When the ranks
+were settled, the first was named as the precedent to point at if a second of the same shape
+appeared; the CI audit produced it. The flag, rather than a fifth rank, keeps the rank axis meaning
+realized consequence — and left 22 findings unchanged.
 
 ## Not yet audited
 
