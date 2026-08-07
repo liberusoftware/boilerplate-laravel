@@ -1,32 +1,32 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "integrations",
-    "display_name": "Integrations",
-    "description": "Provider credentials, adapter capabilities, OAuth boundaries, rotation, connection tests, sync, and reconciliation.",
-    "version": "1.2.2",
-    "category": "foundation",
-    "provider": "Liberu\\Foundation\\Integrations\\IntegrationsServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/module-manager": "^1.0"
-        }
-    },
-    "suggests": {
-        "liberusoftware/audit": "^1.0"
-    },
-    "capabilities": [
-        "foundation.integrations"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Provider credentials",
-        "Adapter capabilities",
-        "OAuth boundaries",
-        "Rotation",
-        "Connection tests",
-        "Sync",
-        "Reconciliation"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "integrations",
+  "display_name": "Integrations",
+  "description": "Provider credentials, adapter capabilities, OAuth boundaries, rotation, connection tests, sync, and reconciliation.",
+  "version": "1.4.0",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\Integrations\\IntegrationsServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/module-manager": "^1.0"
+    }
+  },
+  "suggests": {
+    "liberusoftware/audit": "^1.0"
+  },
+  "capabilities": [
+    "foundation.integrations"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Provider credentials",
+    "Adapter capabilities",
+    "OAuth boundaries",
+    "Rotation",
+    "Connection tests",
+    "Sync",
+    "Reconciliation"
+  ]
 }

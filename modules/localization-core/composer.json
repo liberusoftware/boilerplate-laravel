@@ -21,7 +21,7 @@
       "name": "localization-core"
     }
   },
-  "version": "1.3.2",
+  "version": "1.4.0",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Localization\\Tests\\": "tests/"

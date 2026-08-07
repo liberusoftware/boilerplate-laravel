@@ -1,32 +1,32 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "profiles",
-    "display_name": "Profiles",
-    "description": "Controlled names, locale, timezone, avatar, contact, and theme preferences.",
-    "version": "1.2.2",
-    "category": "foundation",
-    "provider": "Liberu\\Foundation\\Profiles\\ProfilesServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/identity-core": "^1.0"
-        }
-    },
-    "suggests": {
-        "liberusoftware/files-media": "^1.0",
-        "liberusoftware/localization-core": "^1.0"
-    },
-    "capabilities": [
-        "identity.profiles"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Controlled names",
-        "Locale",
-        "Timezone",
-        "Avatar",
-        "Contact",
-        "Theme preferences"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "profiles",
+  "display_name": "Profiles",
+  "description": "Controlled names, locale, timezone, avatar, contact, and theme preferences.",
+  "version": "1.4.0",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\Profiles\\ProfilesServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/identity-core": "^1.0"
+    }
+  },
+  "suggests": {
+    "liberusoftware/files-media": "^1.0",
+    "liberusoftware/localization-core": "^1.0"
+  },
+  "capabilities": [
+    "identity.profiles"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Controlled names",
+    "Locale",
+    "Timezone",
+    "Avatar",
+    "Contact",
+    "Theme preferences"
+  ]
 }

@@ -1,28 +1,28 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "two-factor-authentication",
-    "display_name": "Two-Factor Authentication",
-    "description": "TOTP enforcement, trusted-device policy, and single-use recovery primitives.",
-    "version": "1.2.2",
-    "category": "foundation",
-    "provider": "Liberu\\Foundation\\TwoFactor\\TwoFactorServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/identity-core": "^1.0"
-        }
-    },
-    "suggests": {
-        "liberusoftware/audit": "^1.0"
-    },
-    "capabilities": [
-        "identity.two-factor"
-    ],
-    "default_enabled": true,
-    "features": [
-        "TOTP enforcement",
-        "Trusted-device policy",
-        "Single-use recovery primitives"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "two-factor-authentication",
+  "display_name": "Two-Factor Authentication",
+  "description": "TOTP enforcement, trusted-device policy, and single-use recovery primitives.",
+  "version": "1.4.0",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\TwoFactor\\TwoFactorServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/identity-core": "^1.0"
+    }
+  },
+  "suggests": {
+    "liberusoftware/audit": "^1.0"
+  },
+  "capabilities": [
+    "identity.two-factor"
+  ],
+  "default_enabled": true,
+  "features": [
+    "TOTP enforcement",
+    "Trusted-device policy",
+    "Single-use recovery primitives"
+  ]
 }

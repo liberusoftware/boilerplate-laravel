@@ -1,32 +1,32 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "module-manager-filament",
-    "display_name": "Module Manager Administration",
-    "description": "Authorized installed-module diagnostics for the admin panel.",
-    "version": "1.2.2",
-    "category": "presentation",
-    "provider": "Liberu\\Foundation\\ModuleManagerFilament\\ModuleManagerFilamentServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/module-manager": "^1.0",
-            "liberusoftware/observability": "^1.0"
-        }
-    },
-    "suggests": [],
-    "presentation": {
-        "filament": {
-            "admin": [
-                "Liberu\\Foundation\\ModuleManagerFilament\\ModuleManagerFilamentPlugin"
-            ]
-        }
-    },
-    "capabilities": [
-        "foundation.module-manager.filament"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Authorized installed-module diagnostics for the admin panel"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "module-manager-filament",
+  "display_name": "Module Manager Administration",
+  "description": "Authorized installed-module diagnostics for the admin panel.",
+  "version": "1.4.0",
+  "category": "presentation",
+  "provider": "Liberu\\Foundation\\ModuleManagerFilament\\ModuleManagerFilamentServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/module-manager": "^1.0",
+      "liberusoftware/observability": "^1.0"
+    }
+  },
+  "suggests": [],
+  "presentation": {
+    "filament": {
+      "admin": [
+        "Liberu\\Foundation\\ModuleManagerFilament\\ModuleManagerFilamentPlugin"
+      ]
+    }
+  },
+  "capabilities": [
+    "foundation.module-manager.filament"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Authorized installed-module diagnostics for the admin panel"
+  ]
 }

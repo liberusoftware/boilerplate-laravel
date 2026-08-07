@@ -1,27 +1,27 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "localization-mymemory",
-    "display_name": "MyMemory Translation",
-    "description": "Optional cached MyMemory machine-translation provider adapter.",
-    "version": "1.2.1",
-    "category": "adapter",
-    "provider": "Liberu\\Foundation\\Localization\\MyMemory\\MyMemoryServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/localization-contracts": "^1.0"
-        },
-        "capabilities": {
-            "foundation.localization": "^1.0"
-        }
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "localization-mymemory",
+  "display_name": "MyMemory Translation",
+  "description": "Optional cached MyMemory machine-translation provider adapter.",
+  "version": "1.4.0",
+  "category": "adapter",
+  "provider": "Liberu\\Foundation\\Localization\\MyMemory\\MyMemoryServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/localization-contracts": "^1.0"
     },
-    "suggests": [],
-    "capabilities": [
-        "localization.machine-translation.mymemory"
-    ],
-    "default_enabled": false,
-    "features": [
-        "Optional cached MyMemory machine-translation provider adapter"
-    ]
+    "capabilities": {
+      "foundation.localization": "^1.0"
+    }
+  },
+  "suggests": [],
+  "capabilities": [
+    "localization.machine-translation.mymemory"
+  ],
+  "default_enabled": false,
+  "features": [
+    "Optional cached MyMemory machine-translation provider adapter"
+  ]
 }

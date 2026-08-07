@@ -1,32 +1,32 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "api-access",
-    "display_name": "API Access",
-    "description": "Token and service-identity policy, scopes, versions, rate limits, idempotency, expiry, and revocation.",
-    "version": "1.2.2",
-    "category": "foundation",
-    "provider": "Liberu\\Foundation\\ApiAccess\\ApiAccessServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/identity-core": "^1.0"
-        }
-    },
-    "suggests": {
-        "liberusoftware/audit": "^1.0"
-    },
-    "capabilities": [
-        "foundation.api-access"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Token and service-identity policy",
-        "Scopes",
-        "Versions",
-        "Rate limits",
-        "Idempotency",
-        "Expiry",
-        "Revocation"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "api-access",
+  "display_name": "API Access",
+  "description": "Token and service-identity policy, scopes, versions, rate limits, idempotency, expiry, and revocation.",
+  "version": "1.4.0",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\ApiAccess\\ApiAccessServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/identity-core": "^1.0"
+    }
+  },
+  "suggests": {
+    "liberusoftware/audit": "^1.0"
+  },
+  "capabilities": [
+    "foundation.api-access"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Token and service-identity policy",
+    "Scopes",
+    "Versions",
+    "Rate limits",
+    "Idempotency",
+    "Expiry",
+    "Revocation"
+  ]
 }

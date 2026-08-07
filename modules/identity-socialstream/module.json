@@ -1,30 +1,30 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "identity-socialstream",
-    "display_name": "Social Identity",
-    "description": "Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization.",
-    "version": "1.2.2",
-    "category": "adapter",
-    "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/identity-core": "^1.0",
-            "liberusoftware/module-manager": "^1.0",
-            "liberusoftware/organizations-teams": "^1.0"
-        }
-    },
-    "suggests": [],
-    "capabilities": [
-        "identity.socialstream"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Social provider redirects",
-        "Callbacks",
-        "Identity linking",
-        "Protected credentials",
-        "Account synchronization"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "identity-socialstream",
+  "display_name": "Social Identity",
+  "description": "Social provider redirects, callbacks, identity linking, protected credentials, and account synchronization.",
+  "version": "1.4.0",
+  "category": "adapter",
+  "provider": "Liberu\\Foundation\\Identity\\Socialstream\\Providers\\SocialstreamServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/identity-core": "^1.0",
+      "liberusoftware/module-manager": "^1.0",
+      "liberusoftware/organizations-teams": "^1.0"
+    }
+  },
+  "suggests": [],
+  "capabilities": [
+    "identity.socialstream"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Social provider redirects",
+    "Callbacks",
+    "Identity linking",
+    "Protected credentials",
+    "Account synchronization"
+  ]
 }

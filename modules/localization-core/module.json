@@ -1,32 +1,32 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "localization-core",
-    "display_name": "Localization",
-    "description": "Locale negotiation, user preference, translations, timezone context, and RTL hooks.",
-    "version": "1.3.2",
-    "category": "foundation",
-    "provider": "Liberu\\Foundation\\Localization\\LocalizationServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/localization-contracts": "^1.0",
-            "liberusoftware/module-manager": "^1.0"
-        }
-    },
-    "suggests": {
-        "liberusoftware/localization-core-livewire": "^1.0",
-        "liberusoftware/localization-mymemory": "^1.0"
-    },
-    "capabilities": [
-        "foundation.localization"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Locale negotiation",
-        "User preference",
-        "Translations",
-        "Timezone context",
-        "RTL hooks"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "localization-core",
+  "display_name": "Localization",
+  "description": "Locale negotiation, user preference, translations, timezone context, and RTL hooks.",
+  "version": "1.4.0",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\Localization\\LocalizationServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/localization-contracts": "^1.0",
+      "liberusoftware/module-manager": "^1.0"
+    }
+  },
+  "suggests": {
+    "liberusoftware/localization-core-livewire": "^1.0",
+    "liberusoftware/localization-mymemory": "^1.0"
+  },
+  "capabilities": [
+    "foundation.localization"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Locale negotiation",
+    "User preference",
+    "Translations",
+    "Timezone context",
+    "RTL hooks"
+  ]
 }

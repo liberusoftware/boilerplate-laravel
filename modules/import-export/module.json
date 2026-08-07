@@ -1,35 +1,35 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "import-export",
-    "display_name": "Import and Export",
-    "description": "Schemas, mapping, dry runs, validation, queued execution, progress, error reports, authorization, and retention.",
-    "version": "1.2.2",
-    "category": "foundation",
-    "provider": "Liberu\\Foundation\\ImportExport\\ImportExportServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/module-manager": "^1.0"
-        }
-    },
-    "suggests": {
-        "liberusoftware/files-media": "^1.0",
-        "liberusoftware/audit": "^1.0"
-    },
-    "capabilities": [
-        "foundation.import-export"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Schemas",
-        "Mapping",
-        "Dry runs",
-        "Validation",
-        "Queued execution",
-        "Progress",
-        "Error reports",
-        "Authorization",
-        "Retention"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "import-export",
+  "display_name": "Import and Export",
+  "description": "Schemas, mapping, dry runs, validation, queued execution, progress, error reports, authorization, and retention.",
+  "version": "1.4.0",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\ImportExport\\ImportExportServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/module-manager": "^1.0"
+    }
+  },
+  "suggests": {
+    "liberusoftware/files-media": "^1.0",
+    "liberusoftware/audit": "^1.0"
+  },
+  "capabilities": [
+    "foundation.import-export"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Schemas",
+    "Mapping",
+    "Dry runs",
+    "Validation",
+    "Queued execution",
+    "Progress",
+    "Error reports",
+    "Authorization",
+    "Retention"
+  ]
 }

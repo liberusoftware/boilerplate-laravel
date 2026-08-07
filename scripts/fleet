@@ -156,8 +156,18 @@ def tag_command(version: str):
         # A tag is the irreversible half. Refuse anything that would publish a
         # tree nobody has seen: uncommitted work, a non-main branch, or commits
         # that exist only locally.
-        if git(target, 'status', '--porcelain', check=False).stdout.strip():
-            return name, 'refused — worktree is dirty'
+        #
+        # Running a suite leaves an untracked vendor/ and composer.lock behind in
+        # every repository, and neither is part of what gets tagged. A *tracked*
+        # modification under those paths is different — the four repositories
+        # that ship a committed vendor/ would be publishing a dependency tree
+        # churned by whoever last resolved locally — so that still refuses.
+        dirty = [
+            line for line in git(target, 'status', '--porcelain', check=False).stdout.splitlines()
+            if not (line.startswith('??') and any(line[3:].startswith(p) for p in NEVER_STAGE))
+        ]
+        if dirty:
+            return name, f'refused — {len(dirty)} uncommitted change(s), first: {dirty[0][3:][:60]}'
         branch = git(target, 'rev-parse', '--abbrev-ref', 'HEAD', check=False).stdout.strip()
         if branch != 'main':
             return name, f'refused — on branch {branch}, not main'

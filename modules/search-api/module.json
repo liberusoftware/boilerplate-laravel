@@ -1,25 +1,25 @@
 {
-    "$schema": "https://schemas.liberu.dev/module/v1.json",
-    "name": "search-api",
-    "display_name": "Search API",
-    "description": "Authenticated, rate-limited HTTP endpoints for Search.",
-    "version": "1.3.0",
-    "category": "presentation",
-    "provider": "Liberu\\Foundation\\SearchApi\\SearchApiServiceProvider",
-    "requires": {
-        "php": "^8.5",
-        "laravel": "^13.0",
-        "packages": {
-            "liberusoftware/search": "^1.0"
-        }
-    },
-    "suggests": [],
-    "capabilities": [
-        "foundation.search.api"
-    ],
-    "default_enabled": true,
-    "features": [
-        "Authenticated",
-        "Rate-limited HTTP endpoints for Search"
-    ]
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "search-api",
+  "display_name": "Search API",
+  "description": "Authenticated, rate-limited HTTP endpoints for Search.",
+  "version": "1.4.0",
+  "category": "presentation",
+  "provider": "Liberu\\Foundation\\SearchApi\\SearchApiServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0",
+    "packages": {
+      "liberusoftware/search": "^1.0"
+    }
+  },
+  "suggests": [],
+  "capabilities": [
+    "foundation.search.api"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Authenticated",
+    "Rate-limited HTTP endpoints for Search"
+  ]
 }

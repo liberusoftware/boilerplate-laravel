@@ -1,38 +1,38 @@
 {
-    "$schema": "https://schemas.liberu.dev/theme/v1.json",
-    "name": "dark",
-    "display_name": "Liberu Dark",
-    "version": "1.2.2",
-    "provider": "Liberu\\Themes\\Dark\\DarkThemeServiceProvider",
-    "type": "public",
-    "parent": "liberu-base",
-    "optimized_for": [
-        "liberusoftware/boilerplate-laravel:^1.0"
+  "$schema": "https://schemas.liberu.dev/theme/v1.json",
+  "name": "dark",
+  "display_name": "Liberu Dark",
+  "version": "1.4.0",
+  "provider": "Liberu\\Themes\\Dark\\DarkThemeServiceProvider",
+  "type": "public",
+  "parent": "liberu-base",
+  "optimized_for": [
+    "liberusoftware/boilerplate-laravel:^1.0"
+  ],
+  "tested_with": [
+    "liberusoftware/boilerplate-laravel:^1.0"
+  ],
+  "required_capabilities": [],
+  "optional_capabilities": [
+    "foundation.localization",
+    "foundation.theme-support"
+  ],
+  "supports": [
+    "application.shell",
+    "identity.auth",
+    "foundation.account"
+  ],
+  "assets": {
+    "css": [
+      "resources/css/app.css"
     ],
-    "tested_with": [
-        "liberusoftware/boilerplate-laravel:^1.0"
-    ],
-    "required_capabilities": [],
-    "optional_capabilities": [
-        "foundation.localization",
-        "foundation.theme-support"
-    ],
-    "supports": [
-        "application.shell",
-        "identity.auth",
-        "foundation.account"
-    ],
-    "assets": {
-        "css": [
-            "resources/css/app.css"
-        ],
-        "js": [
-            "resources/js/app.js"
-        ]
-    },
-    "colors": {
-        "primary": "indigo",
-        "secondary": "purple"
-    },
-    "description": "Dark, reduced-glare presentation with system fallback."
+    "js": [
+      "resources/js/app.js"
+    ]
+  },
+  "colors": {
+    "primary": "indigo",
+    "secondary": "purple"
+  },
+  "description": "Dark, reduced-glare presentation with system fallback."
 }
