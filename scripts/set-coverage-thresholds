@@ -14,7 +14,10 @@ Ratchets only upward. A package that has gained coverage since its threshold was
 set gets the higher number; one that has lost coverage keeps the old threshold and
 is reported, because that is a regression to look at rather than a floor to lower.
 
-Usage: set-coverage-thresholds [--dry-run]
+Usage: set-coverage-thresholds [--dry-run] [--workspace DIR]
+
+--workspace targets the package checkouts (module-<name>, theme-<name>) rather
+than modules/, which is Composer output and would discard the change.
 """
 import pathlib
 import re
@@ -54,7 +57,11 @@ def apply(package: pathlib.Path, threshold: int, dry_run: bool) -> str:
 
 
 def main() -> int:
-    dry_run = '--dry-run' in sys.argv[1:]
+    args = sys.argv[1:]
+    dry_run = '--dry-run' in args
+    workspace = None
+    if '--workspace' in args:
+        workspace = pathlib.Path(args[args.index('--workspace') + 1]).resolve()
     if not TSV.is_file():
         print(f'No measurement at {TSV}. Run scripts/measure-coverage first.', file=sys.stderr)
         return 2
@@ -72,13 +79,20 @@ def main() -> int:
         if measured == 0:
             print(f'{name:<34}skipped — 0%, needs a first test (§3.10)')
             continue
-        for base in ('modules', 'themes'):
-            package = ROOT / base / name
+        # After the flip the package repository is where this belongs; modules/ is
+        # Composer output, so a threshold written there is discarded by the next
+        # composer update. --workspace targets the checkouts fleet clones.
+        if workspace:
+            candidates = [workspace / f'module-{name}', workspace / f'theme-{name}', workspace / name]
+        else:
+            candidates = [ROOT / 'modules' / name, ROOT / 'themes' / name]
+
+        for package in candidates:
             if package.is_dir():
                 print(f'{name:<34}{apply(package, int(measured), dry_run)}')
                 break
         else:
-            print(f'{name:<34}not found under modules/ or themes/')
+            print(f'{name:<34}not found in {candidates[0].parent}')
     return 0
 
 
