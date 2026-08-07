@@ -49,6 +49,14 @@ installed module files in a consuming application; changes flow module repo → 
 
 **Enforced by:** the §6.2 clean-install zero-diff check in the host's `install.yml`.
 
+**Authoring afterwards** — [decided in #633](https://github.com/liberusoftware/boilerplate-laravel/issues/633).
+A package is edited in a clone at `~/code/<repo>`, cloned on demand rather than kept as a permanent
+44-repo workspace; `modules/` is read-only Composer output. `publish-components` is replaced by
+`scripts/fleet`, which edits, tests, commits and pushes across N repositories but **never tags** — a
+push is recoverable, a tag is what Packagist publishes and what `ModuleValidator` pins the host to.
+`modules/` stays tracked, so a release wave ends in one host commit carrying the `modules/` diff and
+`composer.lock`.
+
 > **Verified failing today.** A root `composer install` deleted **110 tracked files** and modified
 > **92**. The zero-diff gate cannot be switched on until every package has been republished from
 > final source — step 8.
@@ -668,7 +676,7 @@ which is why step 2 now ends in a release wave rather than a green host run.
 | **6** | Re-measure coverage; set each repo's ratchet threshold | thresholds recorded |
 | **7** | **Pilot one leaf package** end to end: split, CI green, publish, require, `composer update` | **zero `modules/` diff** |
 | **8** | Remaining waves, leaves before dependents | zero diff per wave — the §6.2 check is already enabled and green, from step 3 |
-| **9** | Archive `boilerplate-scripts` and `publish-components` | — |
+| **9** | Archive `boilerplate-scripts` and `publish-components` — **only once `scripts/fleet` replaces them** (§3.1) | a fleet-wide change is one sweep, not 44 manual cycles |
 
 The pilot works because `modules/<name>` is the same path whether committed source or Composer
 output: a package flips by being published, required and `composer update`d into the path it already
