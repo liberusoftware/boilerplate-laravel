@@ -1,32 +1,32 @@
 {
-  "$schema": "https://schemas.liberu.dev/module/v1.json",
-  "name": "activity-comments",
-  "display_name": "Activity and Comments",
-  "description": "Generic authorized activity timelines, mentions, subscriptions, internal comments, attachments, and visibility controls.",
-  "version": "1.4.0",
-  "category": "foundation",
-  "provider": "Liberu\\Foundation\\ActivityComments\\ActivityCommentsServiceProvider",
-  "requires": {
-    "php": "^8.5",
-    "laravel": "^13.0",
-    "packages": {
-      "liberusoftware/module-manager": "^1.0"
-    }
-  },
-  "suggests": {
-    "liberusoftware/files-media": "^1.0",
-    "liberusoftware/notifications": "^1.0"
-  },
-  "capabilities": [
-    "foundation.activity-comments"
-  ],
-  "default_enabled": true,
-  "features": [
-    "Generic authorized activity timelines",
-    "Mentions",
-    "Subscriptions",
-    "Internal comments",
-    "Attachments",
-    "Visibility controls"
-  ]
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "activity-comments",
+    "display_name": "Activity and Comments",
+    "description": "Generic authorized activity timelines, mentions, subscriptions, internal comments, attachments, and visibility controls.",
+    "version": "1.4.1",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\ActivityComments\\ActivityCommentsServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/files-media": "^1.0",
+        "liberusoftware/notifications": "^1.0"
+    },
+    "capabilities": [
+        "foundation.activity-comments"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Generic authorized activity timelines",
+        "Mentions",
+        "Subscriptions",
+        "Internal comments",
+        "Attachments",
+        "Visibility controls"
+    ]
 }

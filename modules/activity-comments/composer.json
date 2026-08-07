@@ -19,7 +19,7 @@
       "name": "activity-comments"
     }
   },
-  "version": "1.4.0",
+  "version": "1.4.1",
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\ActivityComments\\Tests\\": "tests/"

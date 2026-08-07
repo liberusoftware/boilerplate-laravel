@@ -2,6 +2,7 @@
 
 namespace Liberu\Foundation\Search\Tests;
 
+use Liberu\Foundation\Search\Tests\Fixtures\SearchableUser;
 use Liberu\PackageTestbench\PackageTestCase;
 use Liberu\PackageTestbench\TestUser;
 use Liberu\PackageTestbench\UsesTestUser;
@@ -20,7 +21,7 @@ abstract class TestCase extends PackageTestCase
     {
         parent::defineEnvironment($app);
 
-        $app['config']->set('search.models.user', TestUser::class);
+        $app['config']->set('search.models.user', SearchableUser::class);
         $app['config']->set('auth.providers.users.model', TestUser::class);
     }
 }

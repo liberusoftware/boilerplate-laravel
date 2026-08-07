@@ -5075,16 +5075,16 @@
         },
         {
             "name": "liberusoftware/activity-comments",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-activity-comments.git",
-                "reference": "3d88e893a239329d879b3d8046fc292335fd1d26"
+                "reference": "4f09359a1cef03905fa71a651325f51ee8cbc484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-activity-comments/zipball/3d88e893a239329d879b3d8046fc292335fd1d26",
-                "reference": "3d88e893a239329d879b3d8046fc292335fd1d26",
+                "url": "https://api.github.com/repos/liberusoftware/module-activity-comments/zipball/4f09359a1cef03905fa71a651325f51ee8cbc484",
+                "reference": "4f09359a1cef03905fa71a651325f51ee8cbc484",
                 "shasum": ""
             },
             "require": {
@@ -5123,10 +5123,10 @@
             ],
             "description": "Generic authorized timelines, comments, mentions, subscriptions, attachments, and visibility.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-activity-comments/tree/1.4.0",
+                "source": "https://github.com/liberusoftware/module-activity-comments/tree/1.4.1",
                 "issues": "https://github.com/liberusoftware/module-activity-comments/issues"
             },
-            "time": "2026-08-07T09:00:08+00:00"
+            "time": "2026-08-07T10:12:49+00:00"
         },
         {
             "name": "liberusoftware/analytics-contracts",
@@ -6298,16 +6298,16 @@
         },
         {
             "name": "liberusoftware/module-manager",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-module-manager.git",
-                "reference": "4a854310f87b29f121d9b0ee977054a9f74600c9"
+                "reference": "429c41b05e15945cc4143355d15aa8f1a80f3712"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-module-manager/zipball/4a854310f87b29f121d9b0ee977054a9f74600c9",
-                "reference": "4a854310f87b29f121d9b0ee977054a9f74600c9",
+                "url": "https://api.github.com/repos/liberusoftware/module-module-manager/zipball/429c41b05e15945cc4143355d15aa8f1a80f3712",
+                "reference": "429c41b05e15945cc4143355d15aa8f1a80f3712",
                 "shasum": ""
             },
             "require": {
@@ -6346,10 +6346,10 @@
             ],
             "description": "Deterministic manifest discovery and runtime enablement for Liberu modules.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-module-manager/tree/1.4.0",
+                "source": "https://github.com/liberusoftware/module-module-manager/tree/1.4.1",
                 "issues": "https://github.com/liberusoftware/module-module-manager/issues"
             },
-            "time": "2026-08-07T09:00:27+00:00"
+            "time": "2026-08-07T10:12:49+00:00"
         },
         {
             "name": "liberusoftware/module-manager-filament",
@@ -6849,16 +6849,16 @@
         },
         {
             "name": "liberusoftware/search",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liberusoftware/module-search.git",
-                "reference": "ae8fe842a6e31bab5ce70d9ebd24245c837b4c99"
+                "reference": "d4231b8563cb557b84f3eb2327e600a58a673d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liberusoftware/module-search/zipball/ae8fe842a6e31bab5ce70d9ebd24245c837b4c99",
-                "reference": "ae8fe842a6e31bab5ce70d9ebd24245c837b4c99",
+                "url": "https://api.github.com/repos/liberusoftware/module-search/zipball/d4231b8563cb557b84f3eb2327e600a58a673d7a",
+                "reference": "d4231b8563cb557b84f3eb2327e600a58a673d7a",
                 "shasum": ""
             },
             "require": {
@@ -6898,10 +6898,10 @@
             ],
             "description": "Provider-neutral authorized search contracts and local Eloquent driver.",
             "support": {
-                "source": "https://github.com/liberusoftware/module-search/tree/1.4.0",
+                "source": "https://github.com/liberusoftware/module-search/tree/1.5.0",
                 "issues": "https://github.com/liberusoftware/module-search/issues"
             },
-            "time": "2026-08-07T09:00:42+00:00"
+            "time": "2026-08-07T10:12:13+00:00"
         },
         {
             "name": "liberusoftware/search-api",

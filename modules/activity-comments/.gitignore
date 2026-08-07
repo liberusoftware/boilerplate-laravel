@@ -1,0 +1,6 @@
+# A library must not ship its own dependency tree: a consumer resolves its own,
+# and a committed vendor/ only publishes whoever last ran composer update.
+/vendor/
+/composer.lock
+/.phpunit.cache
+/.phpunit.result.cache

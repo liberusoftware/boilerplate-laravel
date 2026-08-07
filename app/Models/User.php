@@ -7,7 +7,6 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +26,7 @@ use Liberu\Foundation\Organizations\Contracts\OrganizationActor;
 use Liberu\Foundation\Organizations\Models\Team;
 use Liberu\Foundation\RolesPermissions\Contracts\PrivilegedActor;
 use Liberu\Foundation\RolesPermissions\Services\AnyTeamRoleLookup;
+use Liberu\Foundation\Search\Concerns\Searchable;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
@@ -54,6 +54,10 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
     }
     use LogsActivity;
     use Notifiable;
+
+    // The scope `SearchService` calls. It used to be declared here, which meant
+    // the package could not be installed anywhere else without reimplementing it.
+    use Searchable;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
 
@@ -199,20 +203,6 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
     public function latestTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'current_team_id');
-    }
-
-    /**
-     * Scope a query to search by name or email.
-     *
-     * @param  Builder<User>  $query
-     * @return Builder<User>
-     */
-    public function scopeSearch(Builder $query, string $search): Builder
-    {
-        return $query->where(function (Builder $q) use ($search) {
-            $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
-        });
     }
 
     /**

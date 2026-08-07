@@ -81,9 +81,11 @@ push is recoverable, a tag is what Packagist publishes and what `ModuleValidator
 > with `--delete`, so running it in its current form destroys the upstream deltas across every
 > package it touches. Which side wins, per package, is an open decision.
 >
-> Incidental: `activity-comments`, `clear-signal`, `module-manager` and `theme-support` ship a
-> **committed `vendor/` directory** upstream. Anything pushing to those repos must stage named
-> paths — `git add -A` there commits an entire dependency tree.
+> Incidental: `activity-comments`, `clear-signal`, `module-manager` and `theme-support` shipped a
+> **committed `vendor/` directory** upstream — around 10,300 files each, so a five-file change
+> published as a several-hundred-file diff. **All four have since untracked it** and gitignore
+> `vendor/` and `composer.lock`; a library must not ship a dependency tree, since a consumer
+> resolves its own.
 >
 > Re-measured at the time with `scripts/audit-divergence`, into `storage/app/divergence.tsv`. That script
 > was removed in step 9: once `modules/` is Composer output there are no longer two copies to compare,

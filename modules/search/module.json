@@ -1,30 +1,30 @@
 {
-  "$schema": "https://schemas.liberu.dev/module/v1.json",
-  "name": "search",
-  "display_name": "Search",
-  "description": "Authorized search queries, filters, pagination, and replaceable model configuration.",
-  "version": "1.4.0",
-  "category": "foundation",
-  "provider": "Liberu\\Foundation\\Search\\SearchServiceProvider",
-  "requires": {
-    "php": "^8.5",
-    "laravel": "^13.0",
-    "packages": {
-      "liberusoftware/identity-core": "^1.0",
-      "liberusoftware/module-manager": "^1.0"
-    }
-  },
-  "suggests": {
-    "liberusoftware/search-api": "^1.0"
-  },
-  "capabilities": [
-    "foundation.search"
-  ],
-  "default_enabled": true,
-  "features": [
-    "Authorized search queries",
-    "Filters",
-    "Pagination",
-    "Replaceable model configuration"
-  ]
+    "$schema": "https://schemas.liberu.dev/module/v1.json",
+    "name": "search",
+    "display_name": "Search",
+    "description": "Authorized search queries, filters, pagination, and replaceable model configuration.",
+    "version": "1.5.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\Search\\SearchServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {
+            "liberusoftware/identity-core": "^1.0",
+            "liberusoftware/module-manager": "^1.0"
+        }
+    },
+    "suggests": {
+        "liberusoftware/search-api": "^1.0"
+    },
+    "capabilities": [
+        "foundation.search"
+    ],
+    "default_enabled": true,
+    "features": [
+        "Authorized search queries",
+        "Filters",
+        "Pagination",
+        "Replaceable model configuration"
+    ]
 }

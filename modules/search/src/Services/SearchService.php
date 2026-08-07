@@ -24,8 +24,10 @@ class SearchService
             $query->search($this->toString($filters['query']));
         }
 
-        // Filter by role
-        if (! empty($filters['role'])) {
+        // Filter by role. `role()` is Spatie's HasRoles scope, which this package
+        // does not require and cannot assume: a model without the trait fataled
+        // here rather than simply not offering the filter.
+        if (! empty($filters['role']) && $query->hasNamedScope('role')) {
             $query->role($this->toString($filters['role']));
         }
 

@@ -129,9 +129,19 @@ def commit_command(message: str):
         if staged.returncode != 0:
             return name, 'add failed: ' + staged.stderr.strip()[:120]
         # Unstage rather than exclude by pathspec: in most repositories these are
-        # gitignored and never staged, but four of them ship a committed vendor/
-        # upstream, where `git add -A` really would stage a dependency tree.
-        git(target, 'reset', '--quiet', '--', *NEVER_STAGE, check=False)
+        # gitignored and never staged, but some ship a committed vendor/ upstream,
+        # where `git add -A` really would stage a dependency tree.
+        #
+        # Deletions are left staged. Unstaging those too would make this refuse
+        # the one change worth making to such a repository — removing the tree
+        # from tracking — by silently reverting it, which it did once.
+        staged = git(target, 'diff', '--cached', '--name-status', '--', *NEVER_STAGE, check=False).stdout
+        additions = [
+            line.split('\t', 1)[1] for line in staged.splitlines()
+            if '\t' in line and not line.startswith('D')
+        ]
+        if additions:
+            git(target, 'reset', '--quiet', '--', *additions, check=False)
         pending = git(target, 'diff', '--cached', '--name-only', check=False).stdout.strip()
         if not pending:
             return name, 'nothing to commit'
