@@ -48,9 +48,9 @@ class between them while `TESTING.md` holds a quarter of another. The full per-s
 | --- | --- | --- |
 | **Boundary** — a package can check it about itself | 34 | **yes, below** |
 | **CI** — decidable by a workflow step | 30 | **yes, below** |
-| **Arch** — whole-graph, needs every package in view | 11 | not yet |
-| **Larastan** | 6 | not yet |
-| **Pint** | 3 | not yet |
+| **Arch** — whole-graph, needs every package in view | 11 | **yes, below** |
+| **Larastan** | 6 | **yes, below** |
+| **Pint** | 3 | **yes, below** |
 | **Prose (fleet)** — a standing property the audit can state | 38 | **yes, below** |
 | **Prose (per-change)** | 104 | **out of scope** — an obligation on the next change, with no fleet-wide fact behind it. An audit row for one cannot fail |
 
@@ -68,7 +68,7 @@ and "nobody looked", which is the confusion this table exists to prevent.
 | `API` | — | audited | **2** |
 | `BLADE` | — | audited | 0 |
 | `CI` | — | audited | **6** |
-| `CLASSES` | — | — | — |
+| `CLASSES` | — | — | **1** |
 | `CONCERNS` | — | — | 0 |
 | `CONTRACTS` | — | — | **1** |
 | `CONTRIBUTING` | — | audited | 0 — its heading and link rules become checkable with the Markdown linter `DOCUMENTATION` asks for |
@@ -81,17 +81,17 @@ and "nobody looked", which is the confusion this table exists to prevent.
 | `GUIDELINES` | — | — | — |
 | `JOBS` | vacuous | vacuous | — the fleet ships **no job classes at all** |
 | `LARAVEL` | audited | — | 0 |
-| `LIVEWIRE` | audited | vacuous | **1** — no SFC/MFC and no islands, so both CI rules have an empty population |
+| `LIVEWIRE` | audited | vacuous | **2** — no SFC/MFC and no islands, so both CI rules have an empty population |
 | `MODELS` | audited | — | 0 — see the `DATABASE` findings |
 | `OBJECT-ORIENTED-PROGRAMMING` | — | — | — |
-| `PHP` | — | audited | 0 |
+| `PHP` | — | audited | **3** |
 | `PINT` | audited | audited | 0 |
-| `PSR` | audited | audited | **1** |
+| `PSR` | audited | audited | **2** |
 | `QUEUES` | vacuous | — | — no job classes |
 | `README` | index only | — | — |
 | `SERVICES` | — | — | — |
 | `TESTING` | audited | audited | **4** |
-| `THEMES` | audited | audited | **4** |
+| `THEMES` | audited | audited | **5** |
 | `TRANSLATIONS` | — | audited | **2** |
 | `VIEWS` | — | audited | 0 |
 | `FLUTTER` `INERTIA` `MOBILE` `NUXT` `REACT` `REACT-NATIVE` `VUE` | **inapplicable** | **inapplicable** | this stack has no React, Vue, Nuxt, Inertia, Flutter, React Native or mobile surface. Ruled out while charting, recorded here so the seven are not re-litigated |
@@ -204,6 +204,40 @@ can be wrong. This is the class that needed reading rather than tooling.
 | Consent before analytics scripts (`THEMES.md` §16) | 13 references to consent across the analytics modules |
 | Create only the test suites the repository needs (`TESTING.md` §4) | the fleet uses `Feature` (9), `Unit` (8) and `Fixtures` (4) of the nine suites the standard lists. The standard says "Create only suites the repository needs"; the shared boundary suite covers the rest, per `CONFORMANCE.md` §3.7 |
 
+## Tool classes — findings
+
+Pint (3 clusters), Larastan (6) and whole-graph Arch (11), audited together because they share one
+property: **once the tool runs, the audit is a report rather than a reading**. All 44 packages now
+carry a measured PHPStan level and run both tools in CI, so these figures are continuous rather than
+a snapshot.
+
+| Rule | Population | Rank | Cost |
+| --- | --- | --- | --- |
+| **Seven packages call members their declared type does not have.** Every package capped at PHPStan level 1 fails level 2 on `property.notFound` / `method.notFound`. `jetstream-bridge` is the clearest: it type-hints `Illuminate\Foundation\Auth\User`, then calls `deleteProfilePhoto()`, `teams()`, `$connectedAccounts`, `$tokens`, `$ownedTeams` — members only the *host's* `User` has, through traits the package neither requires nor declares. A consumer whose `User` lacks them gets a fatal, not a diagnostic | 7 of 40 modules | **breaks a consumer** | per package: declare the shape it needs as a contract, or narrow the call. `search` is one line; `jetstream-bridge` is a design question |
+| **`search` still declares a return type that resolves to nothing.** `SearchService::searchUsers()` returns `Liberu\Foundation\Search\Services\User` — a bare `User` in the package's own namespace, `class.notFound`. Surfaced by the first ticket on this map and still shipping | 1 of 40 modules | **breaks a consumer** | one `use` statement, or one contract |
+| **`theme-support` cannot be analysed above level 1 because booting it throws.** `Error: Theme directory/name collision detected.` during the analysis boot. Its measured level is a floor imposed by a boot-time exception rather than a type ceiling, so its ratchet cannot move until the boot is fixed | 1 of 40 modules | **breaks a consumer** | unknown — why the collision check fires in a standalone context needs diagnosing first |
+| **`declare(strict_types=1);` is absent almost everywhere.** `PHP.md` requires it in new executable files and `PSR.md` repeats it. Measured: **3 of 216** package source files and **0 of 5** host files. Pint can enforce it, but `declare_strict_types` is **not in the `laravel` preset**, so the shared `pint.json` would have to add it | 213 of 216 package files, 5 of 5 host files | unenforced | one sweep rewrites 213 files — but strict types change coercion, so this is a **fleet-wide semantic change**, not a formatting one |
+| **18 packages stop at level 5, and the wall is missing type hints.** Level 6 is where PHPStan begins reporting them, and it is the modal ceiling across the fleet. `PHP.md` requires "typed properties, parameters, and return values" | 18 of 44 packages | unenforced | the ratchet moves one package at a time; no single change clears it |
+| **The service-locator prohibition has no rule, and is violated.** `CLASSES.md` forbids service-locator calls and static mutable state. Measured in package `src/`, excluding providers and presentation: **18** `app()`/`resolve()` call sites and **30 files** importing an `Illuminate\Support\Facades\*` class. No stock PHPStan rule catches this; a custom rule banning them in domain namespaces would | 30 of 216 files | unenforced | a custom PHPStan rule in the testbench, then the call sites |
+| **Four whole-graph properties the standards demand have no rule.** The host suite holds 8, and none covers: Livewire alias and full-page route collision (`LIVEWIRE.md` §3), a package silently claiming `/`, `/dashboard` or `/admin` (§10), the Blade-to-Livewire boundary (`BLADE.md`), or Filament's one-to-one module ownership (`FILAMENT.md` §3.1, already a Boundary finding) | host suite | unenforced | one rule each; the route-claim rule is the cheapest and catches a real class of collision |
+
+## Tool classes — conformance
+
+| Rule | Evidence |
+| --- | --- |
+| PSR-12 formatting (`PINT.md`, `PSR.md`) | **44 of 44** packages pass the shared ruleset, enforced on every push. No package carries a competing `pint.json` |
+| Every package is analysable | **44 of 44** measured, **none failed level 0** — no package has an error that no level relaxes |
+| Static analysis reaches the whole fleet | 11 packages at level 10, 1 at 9, 1 at 8, 18 at 5, 2 at 4, 1 at 3, 2 at 2, 8 at 1 — all ratcheted, none lowerable |
+| Composer owns every autoload boundary; no directory scanning | host architecture rule, passing |
+| One Composer vendor across the fleet | host architecture rule, passing |
+| Every package installs standalone | host architecture rule, passing |
+| Enablement derives from manifests, not a config list | host architecture rule, passing |
+| Every declared Filament plugin class exists | host architecture rule, passing |
+| Cross-package namespace dependencies declared in Composer | host architecture rule, passing |
+| Every declared theme parent resolves | host architecture rule, passing |
+| No dynamic properties | caught by the levels; **0** across the fleet |
+| Database access in controllers · live models in job constructors | **vacuous** — 2 controllers fleet-wide, 0 job classes |
+
 ## Where the ranks strained, and what was decided
 
 **Every CI finding ranks *unenforced*.** That is structural, not a defect: the class is defined as
@@ -225,7 +259,12 @@ were settled, the first was named as the precedent to point at if a second of th
 appeared; the CI audit produced it. The flag, rather than a fifth rank, keeps the rank axis meaning
 realized consequence — and left 22 findings unchanged.
 
-## Not yet audited
+## Audit complete
 
-Arch (11 clusters), Larastan (6) and Pint (3). Each is its own ticket under the map. Until those land, a standard marked *no Boundary rules* or *no CI rules* above has been
-**classified, not audited** — its rules live in a class this document has not reached.
+All six auditable classes are done — Boundary (34 clusters), CI (30), Prose (fleet) (38), Arch (11),
+Larastan (6) and Pint (3): **122 of 226 rule clusters**. The remaining 104 are Prose (per-change),
+ruled out of scope because an obligation on the next change has no fleet-wide fact behind it, and an
+audit row for one cannot fail.
+
+Every standard in the corpus now has a status above, clean ones included. **This document fixes
+nothing** — each finding is a decision still to take, with the measurement in hand.
