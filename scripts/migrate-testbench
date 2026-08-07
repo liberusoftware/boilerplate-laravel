@@ -14,7 +14,10 @@ import re
 import shutil
 import sys
 
-ROOT = pathlib.Path('/home/tom/code/boilerplate-laravel')
+# The meta repository this runs against. Derived, not hardcoded: this script is
+# published as part of liberusoftware/boilerplate-scripts and runs in whichever
+# repository installs it.
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # The §3.9 three, as separate workflows rather than one with three jobs. Only
 # `tests` belongs on every push: installing from nothing and resolving the lowest
