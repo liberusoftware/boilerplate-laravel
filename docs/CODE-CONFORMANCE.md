@@ -51,7 +51,7 @@ class between them while `TESTING.md` holds a quarter of another. The full per-s
 | **Arch** — whole-graph, needs every package in view | 11 | not yet |
 | **Larastan** | 6 | not yet |
 | **Pint** | 3 | not yet |
-| **Prose (fleet)** — a standing property the audit can state | 38 | not yet |
+| **Prose (fleet)** — a standing property the audit can state | 38 | **yes, below** |
 | **Prose (per-change)** | 104 | **out of scope** — an obligation on the next change, with no fleet-wide fact behind it. An audit row for one cannot fail |
 
 ## Standard status
@@ -64,17 +64,17 @@ and "nobody looked", which is the confusion this table exists to prevent.
 
 | Standard | Boundary | CI | Findings so far |
 | --- | --- | --- | --- |
-| `ADOPTION` | — | — | — |
-| `API` | — | audited | **1** |
+| `ADOPTION` | — | — | 0 |
+| `API` | — | audited | **2** |
 | `BLADE` | — | audited | 0 |
 | `CI` | — | audited | **6** |
 | `CLASSES` | — | — | — |
-| `CONCERNS` | — | — | — |
-| `CONTRACTS` | — | — | — |
+| `CONCERNS` | — | — | 0 |
+| `CONTRACTS` | — | — | **1** |
 | `CONTRIBUTING` | — | audited | 0 — its heading and link rules become checkable with the Markdown linter `DOCUMENTATION` asks for |
-| `CONTROLLERS` | — | — | — |
+| `CONTROLLERS` | — | — | 0 |
 | `DATABASE` | audited | audited | **2** |
-| `DOCUMENTATION` | — | audited | **1** |
+| `DOCUMENTATION` | — | audited | **3** |
 | `DOMAIN-DRIVEN-DESIGN-PATTERNS` | — | — | — |
 | `FILAMENT` | audited | audited | **4** |
 | `FRONTEND-TESTING` | vacuous | vacuous | — no JavaScript presentation package exists |
@@ -86,12 +86,12 @@ and "nobody looked", which is the confusion this table exists to prevent.
 | `OBJECT-ORIENTED-PROGRAMMING` | — | — | — |
 | `PHP` | — | audited | 0 |
 | `PINT` | audited | audited | 0 |
-| `PSR` | audited | audited | 0 |
+| `PSR` | audited | audited | **1** |
 | `QUEUES` | vacuous | — | — no job classes |
 | `README` | index only | — | — |
 | `SERVICES` | — | — | — |
 | `TESTING` | audited | audited | **4** |
-| `THEMES` | audited | audited | **3** |
+| `THEMES` | audited | audited | **4** |
 | `TRANSLATIONS` | — | audited | **2** |
 | `VIEWS` | — | audited | 0 |
 | `FLUTTER` `INERTIA` `MOBILE` `NUXT` `REACT` `REACT-NATIVE` `VUE` | **inapplicable** | **inapplicable** | this stack has no React, Vue, Nuxt, Inertia, Flutter, React Native or mobile surface. Ruled out while charting, recorded here so the seven are not re-litigated |
@@ -179,6 +179,31 @@ Two carry the **⚠ security** flag.
 | SFC/MFC filenames free of the bolt emoji (`LIVEWIRE.md` §6) | **0** — vacuous, the fleet ships no SFC/MFC |
 | Islands not placed inside loops or conditionals (`LIVEWIRE.md` §17) | **0 islands** — vacuous |
 
+## Prose (fleet) class — findings
+
+Judgement, but about a standing property of the fleet — so the audit can state it and the statement
+can be wrong. This is the class that needed reading rather than tooling.
+
+| Rule | Population | Rank | Cost |
+| --- | --- | --- | --- |
+| **Both analytics adapters are inert, and nothing says so.** `analytics-google` and `analytics-meta` register their destination only `if ($this->app->bound(GoogleTransport::class))` / `MetaTransport::class`. **Nothing in the fleet or the host binds either**, so enabling one registers no destination and sends nothing. Their READMEs list the contract file but never state that a consumer must implement and bind it, and `CLAUDE.md` says only that they "need third-party credentials" — they need an implementation as well | 2 of 40 modules | **breaks a promise** | 2 READMEs and one `CLAUDE.md` sentence, if documenting is the answer; a reference transport each if it is not |
+| **`CLAUDE.md` describes a domain-doc layout that does not exist.** Its *Domain docs* section declares single-context: "one root `CONTEXT.md` and one `docs/adr/`". Neither path is present. `DOCUMENTATION.md` §3 makes ADRs the source of truth for architectural decisions, and `CONFORMANCE.md` §6 resolves exceptions by pointing at ADRs that have no home | host | **breaks a promise** | either create both, or correct `CLAUDE.md`. The decision is which |
+| **11 of 23 declared interfaces have no implementation anywhere** — not in any package, not in the host. `ActivityAuthorizer`, `ExchangeRateProvider`, `GoogleTransport`, `IntegrationAdapter`, `MediaAccess`, `MediaTransformer`, `MetaTransport`, `ReadinessCheck`, `SettingDefinition`, `TransferAuthorizer`, `TwoFactorRecovery`. `CONTRACTS.md`: "Add one when substitution, testing, integration, or versioned extension is real — not for every class." Several are legitimate consumer extension points; others are provider-shaped contracts with no adapter, which `CONFORMANCE.md` §3.3 already acknowledges for `currency-context` | 11 of 23 interfaces, across 9 modules | style only | per interface: keep and document as an extension point, or delete. Each is public surface that must be versioned either way |
+| **No RFC 9457 Problem Details anywhere.** `API.md` requires "RFC 9457-compatible errors where defined by the ecosystem". `api-access` produces none, and `bootstrap/app.php` renders `api/*` exceptions in Laravel's default shape | 1 module + host | unenforced | one exception renderer; the contract shape is the decision |
+| **Theme tokens do not cover the eight required states.** `THEMES.md` §6: tokens must cover "light, dark, high-contrast, error, warning, success, disabled, and focus". `base` defines error, warning, success, disabled and focus; **high-contrast has no token**. One stylesheet in the fleet — `themes/base/resources/css/app.css` — addresses `forced-colors`, and the same single file addresses `prefers-reduced-motion` | 4 of 4 themes, inherited from `base` | unenforced | tokens in `base`; the three children inherit |
+| **100 lines exceed the 120-character limit**, across 50 files. `PSR.md` calls it a **soft** limit — "split long code where clarity improves" — so this is a reading of intent rather than a breach, and no fixer enforces it | 50 of 216 source files | style only | 100 line splits, judged individually; Pint has no line-length fixer |
+
+## Prose (fleet) class — conformance
+
+| Rule | Evidence |
+| --- | --- |
+| Optional infrastructure bound at composition time (`ADOPTION.md` rule 2) | the analytics adapters are the pattern done correctly — a guarded `bound()` check means a missing capability omits its behaviour rather than throwing. The finding above is that this is undocumented, not that it is wrong |
+| Controllers are thin (`CONTROLLERS.md`) | the whole fleet ships **2 controllers**: `SearchController` with 3 public methods, `ReadinessController` with 1 |
+| Traits are rare and justified (`CONCERNS.md`) | **2 traits fleet-wide** — `Searchable`, a published extension point, and `PasswordValidationRules`, a Fortify convention. The standard's "show at least two real owners" is a bar for adding one, and the fleet has barely added any |
+| One documented cascade-layer order (`THEMES.md` §9) | **4 of 4** themes use `@layer` |
+| Consent before analytics scripts (`THEMES.md` §16) | 13 references to consent across the analytics modules |
+| Create only the test suites the repository needs (`TESTING.md` §4) | the fleet uses `Feature` (9), `Unit` (8) and `Fixtures` (4) of the nine suites the standard lists. The standard says "Create only suites the repository needs"; the shared boundary suite covers the rest, per `CONFORMANCE.md` §3.7 |
+
 ## Where the ranks strained, and what was decided
 
 **Every CI finding ranks *unenforced*.** That is structural, not a defect: the class is defined as
@@ -202,6 +227,5 @@ realized consequence — and left 22 findings unchanged.
 
 ## Not yet audited
 
-Arch (11 clusters), Larastan (6), Pint (3) and Prose (fleet) (38). Each is its own ticket under the
-map. Until those land, a standard marked *no Boundary rules* or *no CI rules* above has been
+Arch (11 clusters), Larastan (6) and Pint (3). Each is its own ticket under the map. Until those land, a standard marked *no Boundary rules* or *no CI rules* above has been
 **classified, not audited** — its rules live in a class this document has not reached.
