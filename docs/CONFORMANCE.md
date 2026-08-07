@@ -691,7 +691,7 @@ which is why step 2 now ends in a release wave rather than a green host run.
 | **6** | Re-measure coverage; set each repo's ratchet threshold | thresholds recorded |
 | **7** | **Pilot one leaf package** end to end: split, CI green, publish, require, `composer update` | **zero `modules/` diff** |
 | **8** | Remaining waves, leaves before dependents | zero diff per wave — the §6.2 check is already enabled and green, from step 3 |
-| **9** | Archive `boilerplate-scripts` and `publish-components` — **only once `scripts/fleet` replaces them** (§3.1) | a fleet-wide change is one sweep, not 44 manual cycles |
+| **9** | Archive `boilerplate-scripts` and `publish-components` — **only once `scripts/fleet` replaces them** (§3.1) | **one fleet-wide change released end to end through `fleet`** — demonstrated, not asserted |
 
 The pilot works because `modules/<name>` is the same path whether committed source or Composer
 output: a package flips by being published, required and `composer update`d into the path it already
@@ -699,7 +699,20 @@ occupies. Provenance changes; the path does not.
 
 **Rollback.** Steps −1 to 6 are ordinary reverts; only the installer and testbench are published,
 both additive. Step 7 rolls back by removing one package from `require` and restoring its directory.
-Step 8 rolls back per wave, with the lockfile as authority. **Step 9 is the point of no return.**
+Step 8 rolls back per wave, with the lockfile as authority. **Step 9 is the point of no return** —
+tested when it was priced, and upheld: the archive itself un-archives, but reversal means
+re-flattening 44 independent histories into one tree, which is the divergence audit run backwards.
+
+**What of `scripts/` survives step 9.** Only the two tools built for the monorepo publish loop go:
+
+| | |
+| --- | --- |
+| `publish-components` | archived — it rsyncs this monorepo *into* the package repositories, the opposite direction to the flip |
+| `audit-divergence` | archived — its question, *does the tracked tree differ from what is published?*, stops being askable once `modules/` is Composer output, and §6.2 answers it continuously in CI |
+| `fleet` | the replacement |
+| `migrate-testbench` | kept — takes explicit paths, so it runs against checked-out package repositories as a `fleet run` payload |
+| `submit-packagist.php` | kept — first publication is still a manual submission, unrelated to the publish loop |
+| `setup.sh`, `update.sh` | kept — they install and release the host application, not the packages |
 
 ## 6. ADR exceptions
 

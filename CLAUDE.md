@@ -21,16 +21,38 @@ targets *and* tracked in Git (`.gitignore` negates them explicitly).
 
 Before assuming a class lives in `app/`, search `modules/`. Almost nothing is in `app/`.
 
-### The publish loop
+### Where a package is edited
 
-`modules/` and `themes/` are the source of truth. `scripts/publish-components` rsyncs each
-`modules/<name>/` and `themes/<name>/` into its own GitHub repository (`--delete`, excluding
-`.git`), which is then tagged and installed back through Composer from Packagist
-(`liberusoftware/search`, `liberusoftware/theme-dark`, …).
+**Each package's own repository is the source of truth, and `modules/`, `themes/` are Composer
+output.** A change made directly under `modules/<name>/` survives exactly until the next
+`composer update`, which fetches from the remote and overwrites it.
 
-Practical consequence: **edit packages here, in this monorepo.** A change is published by
-committing it here and running `publish-components --push`. Packagist names drop the
-`module-` prefix that the GitHub repositories carry.
+So a package is edited in a **clone**, at `~/code/<repo>` — cloned when needed rather than kept as a
+permanent 44-repo workspace. `scripts/fleet` drives that:
+
+```bash
+scripts/fleet status                          # what is checked out, dirty, unpushed
+scripts/fleet clone --only search             # ensure a repository is present
+scripts/fleet run 'vendor/bin/pest'           # fan a command across all of them
+scripts/fleet commit -m 'Fix the thing'       # stage, commit, push main
+scripts/fleet tag 1.2.0 --only search         # explicit list required; humans tag
+```
+
+**The runner deliberately stops short of tagging.** A push is recoverable; a tag is what Packagist
+publishes and what `ModuleValidator` pins the host to, so an unattended bad wave would be 44
+revert-tags. `tag` also refuses a dirty worktree, a non-`main` branch, or unpushed commits.
+
+A wave lands in the host with one commit: `composer update`, then `modules/` and `composer.lock`
+together. `modules/` stays **tracked**, and CI fails on an uncommitted diff — that check is what
+caught 48-of-48 divergence between the tracked tree and the published packages.
+
+Packagist names drop the `module-` prefix that the GitHub repositories carry:
+`liberusoftware/module-search` on GitHub is `liberusoftware/search` on Packagist.
+
+> `scripts/publish-components` rsynced this monorepo *into* the package repositories, which is the
+> opposite direction. It is retained only until a fleet-wide change has been released through
+> `fleet` once end to end, then archived — [step 9](https://github.com/liberusoftware/boilerplate-laravel/issues/638).
+> Do not use it to publish a change you made under `modules/`.
 
 ## Commands
 
@@ -129,8 +151,8 @@ check the rule can be the thing that catches the fault, not the second thing to 
 
 Every package carries `require-dev` (`liberusoftware/package-testbench ^1.5`, `pestphp/pest ^5.0`),
 its own `phpunit.xml`, and its own `.github/workflows/tests.yml` — a thin caller of the reusable
-workflows in `liberusoftware/.github`, which `publish-components` carries upstream so the split
-repositories get real CI.
+workflows in `liberusoftware/.github`, so every repository gets real CI without carrying a copy of
+the workflow body.
 
 **No package ships a test bootstrap or boundary tests of its own.** Its `phpunit.xml` declares a
 `Boundary` testsuite pointing into
