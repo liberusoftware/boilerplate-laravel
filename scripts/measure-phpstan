@@ -35,8 +35,12 @@ def run(cmd: list[str], cwd: pathlib.Path, timeout: int) -> subprocess.Completed
 
 
 def passes(pkg: pathlib.Path, level: int) -> bool:
-    result = run(['vendor/bin/phpstan', 'analyse', '-c', CONFIG,
-                  '-l', str(level), '--no-progress', '--error-format=raw', 'src'], pkg, 900)
+    # --memory-limit is explicit: PHPStan exhausts a 128M php.ini default on a
+    # package this size, and the crash reports as "Child process error (exit
+    # code 255) while running parallel worker" — which reads like a PHPStan bug
+    # and would be recorded as a failed level rather than an unmeasured one.
+    result = run(['vendor/bin/phpstan', 'analyse', '-c', CONFIG, '-l', str(level),
+                  '--memory-limit=1G', '--no-progress', '--error-format=raw', 'src'], pkg, 900)
     return result.returncode == 0
 
 
