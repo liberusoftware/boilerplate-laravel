@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Write each measured PHPStan level into that package's tests.yml (step 6).
+
+The sibling of set-coverage-thresholds, and deliberately the same shape: the
+level a package is analysed at is a property of that repository, it is set from
+measured evidence rather than aspiration, and it only ever goes up.
+
+Reads storage/app/phpstan.tsv as written by measure-phpstan and edits the
+`with:` block of each repository's .github/workflows/tests.yml. Never lowers a
+level: a package whose measurement came back worse than its current setting
+keeps the setting and is reported, because that is a regression to look at
+rather than a number to relax.
+
+    set-phpstan-levels --workspace ~/code            # the package checkouts
+    set-phpstan-levels --workspace ~/code --dry-run
+    set-phpstan-levels --workspace ~/code --only search
+
+Never point this at modules/ or themes/ in the host. Those are Composer output;
+an edit there survives until the next composer update and is then silently lost.
+"""
+import argparse
+import pathlib
+import re
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+TSV = ROOT / 'storage/app/phpstan.tsv'
+
+# The caller is a `uses:` line optionally followed by a `with:` block. Both the
+# coverage threshold and the level live in that block, so this has to add a key
+# to an existing block as often as it creates one — rewriting the file wholesale
+# is what silently reset every coverage threshold once.
+USES = re.compile(r'^(\s*)uses:\s*liberusoftware/\.github/\.github/workflows/package-tests\.yml@.*$', re.M)
+LEVEL_LINE = re.compile(r'^(\s*)phpstan-level:\s*(-?\d+)\s*$', re.M)
+
+
+def repository_for(workspace: pathlib.Path, name: str) -> pathlib.Path | None:
+    """Package name -> checkout. The GitHub repositories carry a prefix the Packagist names drop."""
+    for candidate in (f'module-{name}', f'theme-{name}', name):
+        target = workspace / candidate
+        if (target / '.git').is_dir():
+            return target
+    return None
+
+
+def apply(workflow: pathlib.Path, level: int, dry_run: bool) -> str:
+    body = workflow.read_text()
+
+    existing = LEVEL_LINE.search(body)
+    if existing:
+        current = int(existing.group(2))
+        if level <= current:
+            return f'kept {current} (measured {level})' + (' — REGRESSION' if level < current else '')
+        if dry_run:
+            return f'would raise {current} -> {level}'
+        workflow.write_text(LEVEL_LINE.sub(f'{existing.group(1)}phpstan-level: {level}', body, count=1))
+        return f'raised {current} -> {level}'
+
+    match = USES.search(body)
+    if not match:
+        return 'no package-tests.yml caller found'
+    indent = match.group(1)
+    if re.search(rf'^{indent}with:\s*$', body, re.M):
+        # A with: block already exists — coverage-threshold is usually in it.
+        addition = re.sub(rf'^({indent}with:\s*)$', rf'\1\n{indent}  phpstan-level: {level}', body, count=1, flags=re.M)
+    else:
+        addition = body[:match.end()] + f'\n{indent}with:\n{indent}  phpstan-level: {level}' + body[match.end():]
+    if dry_run:
+        return f'would set {level}'
+    workflow.write_text(addition)
+    return f'set {level}'
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog='set-phpstan-levels', description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--workspace', required=True, type=pathlib.Path,
+                        help='directory holding the package checkouts')
+    parser.add_argument('--only', nargs='+', metavar='NAME')
+    parser.add_argument('--dry-run', action='store_true')
+    args = parser.parse_args()
+
+    if not TSV.is_file():
+        print(f'{TSV} not found — run scripts/measure-phpstan first.', file=sys.stderr)
+        return 2
+
+    workspace = args.workspace.expanduser().resolve()
+    rows = []
+    for line in TSV.read_text().splitlines():
+        if not line.strip():
+            continue
+        fields = line.split('\t')
+        if len(fields) < 3 or fields[1] != 'ok':
+            rows.append((fields[0], None, fields[1] if len(fields) > 1 else 'malformed'))
+            continue
+        rows.append((fields[0], int(fields[2]), None))
+
+    if args.only:
+        rows = [r for r in rows if r[0] in args.only]
+
+    attention = []
+    for name, level, status in sorted(rows):
+        if level is None:
+            print(f'{name:<34}skipped — {status}')
+            attention.append(name)
+            continue
+        target = repository_for(workspace, name)
+        if target is None:
+            print(f'{name:<34}absent from {workspace}')
+            attention.append(name)
+            continue
+        workflow = target / '.github/workflows/tests.yml'
+        if not workflow.is_file():
+            print(f'{name:<34}no .github/workflows/tests.yml')
+            attention.append(name)
+            continue
+        result = apply(workflow, level, args.dry_run)
+        print(f'{name:<34}{result}')
+        if 'REGRESSION' in result or 'no package-tests.yml' in result:
+            attention.append(name)
+
+    if attention:
+        print(f'\n{len(attention)} of {len(rows)} need attention: {" ".join(sorted(attention))}', file=sys.stderr)
+    return 1 if attention else 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

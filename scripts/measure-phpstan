@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""Find the highest PHPStan level each package's src/ passes, standalone (step 6).
+
+The sibling of measure-coverage, and for the same reason: a package must be
+analysed against its *own* resolved dependencies, because that is the tree a
+consumer installs. Analysing modules/ from the host would use the host's
+resolution, which sees classes a standalone install does not — and a level
+measured too high becomes a ratchet that reddens CI on the first push.
+
+Bisects rather than walking up from 0: PHPStan levels are monotone, so 4 runs
+find the answer instead of up to 11.
+
+Writes storage/app/phpstan.tsv: package, status, level. Merges rather than
+overwrites, so measuring a subset does not discard a full sweep's results.
+
+Usage: measure-phpstan [--fresh] [--max LEVEL] [PATH ...]
+"""
+import argparse
+import concurrent.futures
+import os
+import pathlib
+import subprocess
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+OUT = ROOT / 'storage/app/phpstan.tsv'
+CONFIG = 'vendor/liberusoftware/package-testbench/phpstan.neon'
+
+
+def run(cmd: list[str], cwd: pathlib.Path, timeout: int) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+        env={**os.environ, 'COMPOSER_NO_INTERACTION': '1'},
+    )
+
+
+def passes(pkg: pathlib.Path, level: int) -> bool:
+    # --memory-limit is explicit: PHPStan exhausts a 128M php.ini default on a
+    # package this size, and the crash reports as "Child process error (exit
+    # code 255) while running parallel worker" — which reads like a PHPStan bug
+    # and would be recorded as a failed level rather than an unmeasured one.
+    result = run(['vendor/bin/phpstan', 'analyse', '-c', CONFIG, '-l', str(level),
+                  '--memory-limit=1G', '--no-progress', '--error-format=raw', 'src'], pkg, 900)
+    return result.returncode == 0
+
+
+def measure(pkg: pathlib.Path, fresh: bool, ceiling: int) -> tuple[str, str, str]:
+    if fresh or not (pkg / 'vendor').is_dir():
+        install = run(['composer', 'update', '--prefer-dist', '--no-progress'], pkg, 900)
+        if install.returncode != 0:
+            tail = (install.stderr or install.stdout).strip().splitlines()
+            return pkg.name, 'install-failed', tail[-1][:160] if tail else ''
+
+    if not (pkg / CONFIG).is_file():
+        return pkg.name, 'no-config', 'package-testbench does not ship phpstan.neon at this version'
+
+    # Level 0 is the floor. A package failing it has an error no level relaxes —
+    # an unresolvable class, usually — and no threshold is honest until it is fixed.
+    if not passes(pkg, 0):
+        return pkg.name, 'fails-level-0', ''
+
+    low, high = 0, ceiling
+    while low < high:
+        mid = (low + high + 1) // 2
+        if passes(pkg, mid):
+            low = mid
+        else:
+            high = mid - 1
+    return pkg.name, 'ok', str(low)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog='measure-phpstan', description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('paths', nargs='*')
+    parser.add_argument('--fresh', action='store_true', help='reinstall even when vendor/ exists')
+    parser.add_argument('--max', type=int, default=10, dest='ceiling', help='highest level to try (default 10)')
+    args = parser.parse_args()
+
+    if args.paths:
+        packages = [pathlib.Path(p).resolve() for p in args.paths]
+    else:
+        packages = sorted(
+            pkg for base in ('modules', 'themes')
+            for pkg in (ROOT / base).iterdir() if pkg.is_dir()
+        )
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    rows = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {pool.submit(measure, pkg, args.fresh, args.ceiling): pkg for pkg in packages}
+        for future in concurrent.futures.as_completed(futures):
+            pkg = futures[future]
+            try:
+                row = future.result()
+            except subprocess.TimeoutExpired:
+                row = (pkg.name, 'timeout', '')
+            rows.append(row)
+            print(f'{row[0]:<34}{row[1]:<16}{row[2]}', flush=True)
+
+    existing = {}
+    if OUT.is_file():
+        for line in OUT.read_text().splitlines():
+            if line.strip():
+                fields = line.split('\t')
+                existing[fields[0]] = fields
+    for row in rows:
+        existing[row[0]] = list(row)
+
+    merged = sorted(existing.values())
+    OUT.write_text('\n'.join('\t'.join(r) for r in merged) + '\n')
+    print(f'\nwrote {OUT} ({len(rows)} measured, {len(merged)} total)')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

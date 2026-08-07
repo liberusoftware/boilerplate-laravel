@@ -3,7 +3,7 @@
   "name": "analytics-google",
   "display_name": "Google Analytics",
   "description": "Consent-aware Google event mapping, property/stream configuration, validation, ecommerce parameters, and diagnostics.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "category": "adapter",
   "provider": "Liberu\\Analytics\\Google\\AnalyticsGoogleServiceProvider",
   "requires": {

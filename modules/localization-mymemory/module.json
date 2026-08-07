@@ -3,7 +3,7 @@
   "name": "localization-mymemory",
   "display_name": "MyMemory Translation",
   "description": "Optional cached MyMemory machine-translation provider adapter.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "category": "adapter",
   "provider": "Liberu\\Foundation\\Localization\\MyMemory\\MyMemoryServiceProvider",
   "requires": {
