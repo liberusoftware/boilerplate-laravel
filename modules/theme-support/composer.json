@@ -25,7 +25,10 @@
   "autoload-dev": {
     "psr-4": {
       "Liberu\\Foundation\\Theme\\Tests\\": "tests/"
-    }
+    },
+    "files": [
+      "tests/Helpers.php"
+    ]
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.7",
