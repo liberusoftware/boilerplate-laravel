@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Cache;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->actingAs(User::factory()->create(), 'sanctum');
+    $this->actingAs(User::factory()->create([
+        'name' => 'Authenticated Search User',
+        'email' => 'search-auth@example.test',
+    ]), 'sanctum');
 });
 
 describe('User Search', function () {
