@@ -5,9 +5,9 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "illuminate/database": "^13.0",
-    "illuminate/support": "^13.0",
-    "laravel/sanctum": "^4.0",
+    "illuminate/database": "^13.38.0",
+    "illuminate/support": "^13.38.0",
+    "laravel/sanctum": "^4.3.3",
     "liberusoftware/identity-core": "^1.0"
   },
   "autoload": {
@@ -28,7 +28,7 @@
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.3.3"
   },
   "scripts": {
     "test": "pest"

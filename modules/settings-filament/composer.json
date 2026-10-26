@@ -5,8 +5,8 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "filament/filament": "^5.1",
-    "filament/spatie-laravel-settings-plugin": "^5.0",
+    "filament/filament": "^5.11.0",
+    "filament/spatie-laravel-settings-plugin": "^5.11.0",
     "liberusoftware/settings": "^1.0",
     "liberusoftware/theme-support": "^1.0"
   },
@@ -28,7 +28,7 @@
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
-    "pestphp/pest": "^5.0",
+    "pestphp/pest": "^5.3.3",
     "liberusoftware/theme-base": "^2.0",
     "liberusoftware/theme-default": "^1.5"
   },

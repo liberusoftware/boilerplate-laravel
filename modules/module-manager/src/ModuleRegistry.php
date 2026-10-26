@@ -5,11 +5,28 @@ namespace Liberu\Foundation\ModuleManager;
 use Composer\InstalledVersions;
 use Composer\Semver\Semver;
 use Liberu\Foundation\ModuleManager\Exceptions\DependencyResolutionFailed;
+use RuntimeException;
 
 final class ModuleRegistry
 {
     /** @param array<string, Manifest> $modules */
     public function __construct(private array $modules) {}
+
+    /** @return array{modules: array<string, Manifest>} */
+    public function __serialize(): array
+    {
+        return ['modules' => $this->modules];
+    }
+
+    /** @param array<string, mixed> $data */
+    public function __unserialize(array $data): void
+    {
+        $modules = $data['modules'] ?? $data["\0".self::class."\0modules"] ?? null;
+        if (! is_array($modules) || array_filter($modules, fn (mixed $manifest): bool => ! $manifest instanceof Manifest) !== []) {
+            throw new RuntimeException('The module registry cache is invalid; run module:clear.');
+        }
+        $this->modules = $modules;
+    }
 
     public function has(string $name): bool
     {

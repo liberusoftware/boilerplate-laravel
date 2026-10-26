@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminPassword = Str::random(12);
+        $adminPassword = (string) (config('app.seed_admin_password') ?: Str::random(64));
 
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
@@ -52,6 +52,8 @@ class UserSeeder extends Seeder
         $role = Role::where('name', 'super_admin')->firstOrFail();
         $adminUser->assignRole($role);
 
-        echo "Admin password: {$adminPassword}\n";
+        if (app()->environment('local') && $adminUser->wasRecentlyCreated && blank(config('app.seed_admin_password'))) {
+            $this->command?->info("Admin password: {$adminPassword}");
+        }
     }
 }

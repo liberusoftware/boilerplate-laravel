@@ -5,7 +5,7 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "spatie/laravel-settings": "^3.0",
+    "spatie/laravel-settings": "^3.10.0",
     "liberusoftware/module-manager": "^1.0"
   },
   "autoload": {
@@ -26,7 +26,7 @@
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.7",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.3.3"
   },
   "scripts": {
     "test": "pest"

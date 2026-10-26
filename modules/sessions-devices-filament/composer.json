@@ -5,7 +5,7 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "filament/filament": "^5.0",
+    "filament/filament": "^5.11.0",
     "liberusoftware/sessions-devices": "^1.0"
   },
   "autoload": {
@@ -26,7 +26,7 @@
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.3.3"
   },
   "scripts": {
     "test": "pest"

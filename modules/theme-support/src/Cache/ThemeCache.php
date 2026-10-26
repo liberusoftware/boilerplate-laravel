@@ -4,6 +4,7 @@ namespace Liberu\Foundation\Theme\Cache;
 
 use Illuminate\Filesystem\Filesystem;
 use Liberu\Foundation\Theme\Exceptions\InvalidTheme;
+use Liberu\Foundation\Theme\Manifests\ThemeManifest;
 
 final class ThemeCache
 {
@@ -16,12 +17,26 @@ final class ThemeCache
 
     public function load(string $path): array
     {
-        $themes = unserialize($this->files->get($path), ['allowed_classes' => true]);
-        if (! is_array($themes)) {
+        $themes = unserialize($this->files->get($path), ['allowed_classes' => [ThemeManifest::class]]);
+        if (! is_array($themes) || $this->containsUnexpectedObject($themes)) {
             throw new InvalidTheme('Theme registry cache is invalid.');
         }
 
         return $themes;
+    }
+
+    private function containsUnexpectedObject(array $values): bool
+    {
+        foreach ($values as $value) {
+            if (is_array($value) && $this->containsUnexpectedObject($value)) {
+                return true;
+            }
+            if (is_object($value) && ! $value instanceof ThemeManifest) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function write(array $themes, string $path): void

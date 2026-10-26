@@ -20,7 +20,7 @@
   "version": "2.0.1",
   "require-dev": {
     "liberusoftware/package-testbench": "^1.5",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.3.3"
   },
   "autoload-dev": {
     "psr-4": {

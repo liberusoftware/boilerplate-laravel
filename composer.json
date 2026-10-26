@@ -11,198 +11,6 @@
     "license": "MIT",
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/composer-installer.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/analytics-contracts.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/localization-contracts.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/boilerplate-scripts.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-activity-comments.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-analytics-core.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-analytics-google.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-analytics-meta.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-api-access.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-application.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-audit.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-currency-context.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-developer-experience.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-feature-flags.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-files-media.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-module-manager-filament.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-identity-core.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-identity-core-filament.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-identity-socialstream.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-import-export.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-integrations.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-jetstream-bridge.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-localization-core.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-localization-core-livewire.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-localization-mymemory.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-module-manager.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-notifications.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-observability.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-organizations-teams.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-organizations-teams-filament.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-profiles.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-roles-permissions.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-roles-permissions-filament.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-scheduler-queues.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-search.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-search-api.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-sessions-devices.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-sessions-devices-filament.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-settings.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-settings-filament.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-theme-support.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-theme-support-livewire.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-two-factor-authentication.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/module-webhooks.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/theme-clear-signal.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/theme-dark.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/theme-default.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/liberusoftware/theme-base.git"
-        },
-        {
             "type": "path",
             "url": "modules/activity-comments",
             "options": {
@@ -481,23 +289,101 @@
             "options": {
                 "symlink": true
             }
+        },
+        {
+            "type": "path",
+            "url": "modules/*",
+            "options": {
+                "symlink": false,
+                "versions": {
+                    "liberusoftware/theme-support-livewire": "1.4.1",
+                    "liberusoftware/two-factor-authentication": "1.4.1",
+                    "liberusoftware/module-manager": "1.4.2",
+                    "liberusoftware/activity-comments": "1.4.2",
+                    "liberusoftware/analytics-core": "1.4.1",
+                    "liberusoftware/integrations": "1.4.1",
+                    "liberusoftware/analytics-google": "1.4.1",
+                    "liberusoftware/analytics-meta": "1.4.1",
+                    "liberusoftware/identity-core": "1.4.1",
+                    "liberusoftware/api-access": "1.4.1",
+                    "liberusoftware/application": "1.4.1",
+                    "liberusoftware/audit": "1.4.1",
+                    "liberusoftware/currency-context": "1.4.1",
+                    "liberusoftware/developer-experience": "1.4.1",
+                    "liberusoftware/feature-flags": "1.4.1",
+                    "liberusoftware/files-media": "1.4.1",
+                    "liberusoftware/organizations-teams": "1.4.1",
+                    "liberusoftware/roles-permissions": "1.4.1",
+                    "liberusoftware/identity-core-filament": "1.4.1",
+                    "liberusoftware/identity-socialstream": "1.4.1",
+                    "liberusoftware/import-export": "1.4.1",
+                    "liberusoftware/jetstream-bridge": "1.4.1",
+                    "liberusoftware/localization-core": "1.4.1",
+                    "liberusoftware/localization-core-livewire": "1.4.1",
+                    "liberusoftware/localization-mymemory": "1.4.1",
+                    "liberusoftware/observability": "1.4.1",
+                    "liberusoftware/module-manager-filament": "1.4.1",
+                    "liberusoftware/notifications": "1.4.1",
+                    "liberusoftware/organizations-teams-filament": "1.4.1",
+                    "liberusoftware/profiles": "1.4.1",
+                    "liberusoftware/roles-permissions-filament": "1.4.1",
+                    "liberusoftware/scheduler-queues": "1.4.1",
+                    "liberusoftware/search": "1.5.1",
+                    "liberusoftware/search-api": "1.4.1",
+                    "liberusoftware/sessions-devices": "1.4.1",
+                    "liberusoftware/sessions-devices-filament": "1.4.1",
+                    "liberusoftware/settings": "1.4.1",
+                    "liberusoftware/theme-support": "1.4.2",
+                    "liberusoftware/settings-filament": "1.4.1",
+                    "liberusoftware/webhooks": "1.4.1"
+                }
+            }
+        },
+        {
+            "type": "path",
+            "url": "themes/*",
+            "options": {
+                "symlink": false,
+                "versions": {
+                    "liberusoftware/theme-clear-signal": "1.5.1",
+                    "liberusoftware/theme-dark": "1.5.1",
+                    "liberusoftware/theme-default": "1.5.1",
+                    "liberusoftware/theme-base": "2.0.1"
+                }
+            }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/liberusoftware/composer-installer.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/liberusoftware/analytics-contracts.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/liberusoftware/localization-contracts.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/liberusoftware/boilerplate-scripts.git"
         }
     ],
     "require": {
         "php": "^8.5",
-        "bezhansalleh/filament-shield": "~4.0",
-        "bursteri/socialstream": "^7.0",
-        "filament/filament": "~5.1",
-        "filament/spatie-laravel-settings-plugin": "^5.0",
-        "laravel/framework": "^13.0",
-        "laravel/horizon": "^5.0",
-        "laravel/jetstream": "^5.1",
-        "laravel/octane": "^2.3",
-        "laravel/pulse": "^1.7",
-        "laravel/reverb": "^1.0",
-        "laravel/sanctum": "^4.0",
-        "laravel/socialite": "^5.0",
-        "laravel/tinker": "^3.0",
+        "bezhansalleh/filament-shield": "^4.3.1",
+        "bursteri/socialstream": "^7.0.0",
+        "filament/filament": "^5.11.0",
+        "filament/spatie-laravel-settings-plugin": "^5.11.0",
+        "laravel/framework": "^13.38.0",
+        "laravel/horizon": "^5.50.1",
+        "laravel/jetstream": "^5.5.3",
+        "laravel/octane": "^2.22.0",
+        "laravel/pulse": "^1.8.1",
+        "laravel/reverb": "^1.12.0",
+        "laravel/sanctum": "^4.3.3",
+        "laravel/socialite": "^5.31.0",
+        "laravel/tinker": "^3.0.2",
         "liberusoftware/activity-comments": "^1.0",
         "liberusoftware/analytics-contracts": "^1.0",
         "liberusoftware/analytics-core": "^1.0",
@@ -545,31 +431,31 @@
         "liberusoftware/theme-support-livewire": "^1.1",
         "liberusoftware/two-factor-authentication": "^1.0",
         "liberusoftware/webhooks": "^1.0",
-        "livewire/livewire": "^4.0",
-        "spatie/laravel-activitylog": "^5.0",
-        "spatie/laravel-backup": "^10.3",
-        "spatie/laravel-passkeys": "^1.6",
-        "spatie/laravel-permission": "^7.0",
-        "spiral/roadrunner-cli": "^2.6.0",
-        "spiral/roadrunner-http": "^3.3.0"
+        "livewire/livewire": "^4.4.8",
+        "spatie/laravel-activitylog": "^5.1.3",
+        "spatie/laravel-backup": "^10.3.3",
+        "spatie/laravel-passkeys": "^1.8.1",
+        "spatie/laravel-permission": "^8.3.2",
+        "spiral/roadrunner-cli": "^3.0.1",
+        "spiral/roadrunner-http": "^4.2.1"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "filament/upgrade": "~5.1",
-        "fruitcake/laravel-debugbar": "^4.3",
-        "larastan/larastan": "^3.0",
-        "laravel/boost": "^2.4",
-        "laravel/mcp": "^0.9.1",
-        "laravel/pint": "^1.14",
-        "laravel/sail": "^1.28",
-        "laravel/telescope": "^5.20",
+        "fakerphp/faker": "^1.24.1",
+        "filament/upgrade": "^5.11.0",
+        "fruitcake/laravel-debugbar": "^4.4.4",
+        "larastan/larastan": "^3.13.2",
+        "laravel/boost": "^2.10.3",
+        "laravel/mcp": "^1.1.2",
+        "laravel/pint": "^1.32.1",
+        "laravel/sail": "^1.69.0",
+        "laravel/telescope": "^5.26.0",
         "liberusoftware/boilerplate-scripts": "^1.1",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.8",
-        "pestphp/pest": "^5.0",
-        "pestphp/pest-plugin-laravel": "^5.0",
-        "phpunit/phpunit": "^13.1.8",
-        "spatie/laravel-ignition": "^2.4"
+        "mockery/mockery": "^1.6.15",
+        "nunomaduro/collision": "^8.9.5",
+        "pestphp/pest": "^5.3.3",
+        "pestphp/pest-plugin-laravel": "^5.0.1",
+        "phpunit/phpunit": "^13.4.3",
+        "spatie/laravel-ignition": "^2.12.1"
     },
     "autoload": {
         "psr-4": {

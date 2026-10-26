@@ -122,9 +122,12 @@ final class ThemeManager
         if (! isset($this->themes[$theme])) {
             return false;
         }
-        $available = $this->enabledCapabilities();
+        $required = $this->themes[$theme]->requiredCapabilities();
+        if ($required === []) {
+            return true;
+        }
 
-        return array_diff($this->themes[$theme]->requiredCapabilities(), $available) === [];
+        return array_diff($required, $this->enabledCapabilities()) === [];
     }
 
     /**

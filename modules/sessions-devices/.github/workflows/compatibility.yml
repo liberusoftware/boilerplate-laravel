@@ -9,4 +9,4 @@ on:
 
 jobs:
   compatibility:
-    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@main
+    uses: liberusoftware/.github/.github/workflows/package-compatibility.yml@75d1786646b095ba49360f735f27e0b2fa932b8d # main

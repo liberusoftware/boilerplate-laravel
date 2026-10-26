@@ -34,7 +34,7 @@
     "liberusoftware/package-testbench": "^1.7",
     "liberusoftware/theme-dark": "^1.0",
     "liberusoftware/theme-default": "^1.0",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.3.3"
   },
   "scripts": {
     "test": "pest"

@@ -5,8 +5,8 @@
   "license": "MIT",
   "require": {
     "php": "^8.5",
-    "illuminate/database": "^13.0",
-    "illuminate/pagination": "^13.0",
+    "illuminate/database": "^13.38.0",
+    "illuminate/pagination": "^13.38.0",
     "liberusoftware/identity-core": "^1.0",
     "liberusoftware/module-manager": "^1.0"
   },
@@ -28,7 +28,7 @@
   },
   "require-dev": {
     "liberusoftware/package-testbench": "^1.7",
-    "pestphp/pest": "^5.0"
+    "pestphp/pest": "^5.3.3"
   },
   "scripts": {
     "test": "pest"
