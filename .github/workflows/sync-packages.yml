@@ -1,0 +1,58 @@
+name: Sync modules and themes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'modules/**'
+      - 'themes/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sync-packages
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository_owner == 'liberusoftware'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: packagist
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Read the current branch so a queued run cannot restore an older snapshot.
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Test package publisher
+        run: python3 -m unittest discover -s .github/scripts -p 'test_sync_packages.py'
+
+      - name: Find the last successful sync
+        id: baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          before=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/sync-packages.yml/runs?branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // ""')
+          echo "before=$before" >> "$GITHUB_OUTPUT"
+
+      - name: Configure cross-repository authentication
+        env:
+          GH_TOKEN: ${{ secrets.MODULE_SYNC_TOKEN }}
+        run: |
+          test -n "$GH_TOKEN" || { echo '::error::Set MODULE_SYNC_TOKEN'; exit 1; }
+          gh auth setup-git
+
+      - name: Sync, release, and submit to Packagist
+        env:
+          GH_TOKEN: ${{ secrets.MODULE_SYNC_TOKEN }}
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_API_TOKEN: ${{ secrets.PACKAGIST_API_TOKEN }}
+          # Reconcile all packages manually; otherwise include canceled/failed runs.
+          SYNC_BEFORE: ${{ github.event_name == 'push' && steps.baseline.outputs.before || '' }}
+        run: python3 .github/scripts/sync-packages.py

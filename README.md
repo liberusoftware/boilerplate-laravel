@@ -206,3 +206,50 @@ Feedback and contributions are welcome. Report reproducible bugs, propose focuse
 ## Contributors
 
 Thank you to everyone who helps improve Liberu. [View the contributors graph](https://github.com/liberusoftware/boilerplate-laravel/graphs/contributors).
+
+
+### Automatic module and theme publishing
+
+`.github/workflows/sync-packages.yml` publishes packages changed under `modules/`
+or `themes/` on pushes to `main`. A manual run reconciles all tracked packages.
+Each package needs a `composer.json` with a `liberusoftware/*` name. Files are
+copied from Git into the root of `liberusoftware/module-<directory>` or
+`liberusoftware/theme-<directory>`. Where `.liberu-meta.json` defines a
+`repositoryPrefix`, that design is authoritative (for example,
+`modules/module-manager` becomes `module-module-manager`). Without a configured
+prefix, an existing `module-` or `theme-` directory prefix is kept. Destination
+history is preserved, deleted files are removed, and unchanged packages do not
+receive another commit or release. Removing an entire package leaves its public
+repository intact. This workflow makes tracked package edits publishable; install
+checks still require the project's Composer dependencies to resolve to those
+published package contents.
+
+Configure these secrets in the `packagist` GitHub environment (or as repository
+or organization secrets available to this repository):
+
+- `MODULE_SYNC_TOKEN`: organization-authorized GitHub token able to create public
+  repositories and read/write package contents and releases across the target
+  repositories. Because package snapshots include `.github/workflows`, allow
+  workflow writes too. A classic PAT needs `repo` and `workflow` scopes and an
+  organization role permitted to create repositories. The default `GITHUB_TOKEN`
+  cannot publish across these repositories.
+- `PACKAGIST_USERNAME`: Packagist account that owns or maintains these packages.
+- `PACKAGIST_API_TOKEN`: that account's **main** API token, required to submit
+  new packages as well as update existing packages.
+
+New packages start at their declared stable Composer version, or `v1.0.0`.
+Existing packages use the highest stable repository tag: a higher declared
+Composer version wins, `BREAKING CHANGE:` or `type!:` commits bump major,
+`feat:` commits bump minor, and other changes bump patch. Only commits touching
+the package since the last successful sync affect this decision. The first
+automated run and manual runs reconcile all packages, so canceled or failed
+runs cannot silently drop package changes. Tags and commits are
+pushed atomically, then a GitHub release is created and the package is submitted
+to or refreshed on Packagist. Rerunning a failed job completes publication
+without issuing another release for the same contents. Concurrent pushes from
+other projects are rejected instead of force-pushed; rerun the failed job.
+
+The source project and its lockfile are not rewritten by publication. Different
+projects publishing the same directory name share a destination repository;
+coordinate their package contents. Run the publisher's local tests with
+`python3 -m unittest discover -s .github/scripts -p 'test_sync_packages.py'`.
