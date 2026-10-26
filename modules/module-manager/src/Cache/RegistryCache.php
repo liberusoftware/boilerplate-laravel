@@ -3,6 +3,7 @@
 namespace Liberu\Foundation\ModuleManager\Cache;
 
 use Illuminate\Filesystem\Filesystem;
+use Liberu\Foundation\ModuleManager\Manifest;
 use Liberu\Foundation\ModuleManager\ModuleDiscovery;
 use Liberu\Foundation\ModuleManager\ModuleRegistry;
 use RuntimeException;
@@ -19,7 +20,7 @@ final class RegistryCache
     public function load(array $paths, bool $useCache, string $path): ModuleRegistry
     {
         if ($useCache && $this->files->isFile($path)) {
-            $registry = unserialize($this->files->get($path), ['allowed_classes' => true]);
+            $registry = unserialize($this->files->get($path), ['allowed_classes' => [ModuleRegistry::class, Manifest::class]]);
             if (! $registry instanceof ModuleRegistry) {
                 throw new RuntimeException('The module registry cache is invalid; run module:clear.');
             }

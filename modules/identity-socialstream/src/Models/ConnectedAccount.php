@@ -22,6 +22,9 @@ class ConnectedAccount extends SocialstreamConnectedAccount
         return ConnectedAccountFactory::new();
     }
 
+    /** @var list<string> */
+    protected $hidden = ['token', 'secret', 'refresh_token'];
+
     /**
      * The attributes that are mass assignable.
      *
