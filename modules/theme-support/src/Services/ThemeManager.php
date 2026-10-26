@@ -24,6 +24,9 @@ final class ThemeManager
 
     protected readonly string $themesPath;
 
+    /** @var array{registry: ModuleRegistry, enabled: array, disabled: array, capabilities: array}|null */
+    private ?array $capabilitySnapshot = null;
+
     public function __construct(?string $themesPath = null)
     {
         $this->themesPath = $themesPath ?? base_path('themes');
@@ -284,8 +287,21 @@ final class ThemeManager
     {
         if (! app()->bound(ModuleRegistry::class)) {
             return [];
-        }$resolved = app(ModuleRegistry::class)->resolve((array) config('modules.enabled', []), (array) config('modules.disabled', []));
+        }
+        $registry = app(ModuleRegistry::class);
+        $enabled = (array) config('modules.enabled', []);
+        $disabled = (array) config('modules.disabled', []);
+        if ($this->capabilitySnapshot !== null
+            && $this->capabilitySnapshot['registry'] === $registry
+            && $this->capabilitySnapshot['enabled'] === $enabled
+            && $this->capabilitySnapshot['disabled'] === $disabled) {
+            return $this->capabilitySnapshot['capabilities'];
+        }
 
-        return array_values(array_unique(array_merge(...array_map(fn ($manifest) => $manifest->capabilities(), $resolved))));
+        $resolved = $registry->resolve($enabled, $disabled);
+        $capabilities = array_values(array_unique(array_merge(...array_map(fn ($manifest) => $manifest->capabilities(), $resolved))));
+        $this->capabilitySnapshot = compact('registry', 'enabled', 'disabled', 'capabilities');
+
+        return $capabilities;
     }
 }

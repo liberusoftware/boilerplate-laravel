@@ -147,6 +147,15 @@ def publish(path, head, before):
                 composer.write_text(original)
             else:
                 composer.write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + '\n')
+            if 'version' in metadata:
+                for filename in ('module.json', 'theme.json'):
+                    manifest_path = target / filename
+                    if not manifest_path.is_file():
+                        continue
+                    manifest = json.loads(manifest_path.read_text())
+                    if manifest.get('version') != metadata['version']:
+                        manifest['version'] = metadata['version']
+                        manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
         write_metadata()
         git('add', '-A', cwd=target)
         changed = subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=target).returncode != 0

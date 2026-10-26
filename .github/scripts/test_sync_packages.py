@@ -145,6 +145,20 @@ class PublishTests(unittest.TestCase):
         metadata = json.loads(self.real_git('--git-dir=remote.git', 'show', 'main:composer.json'))
         self.assertNotIn('version', metadata)
 
+    def test_release_keeps_composer_and_manifests_in_agreement(self):
+        for filename in ('module.json', 'theme.json'):
+            (self.package / filename).write_text(json.dumps({'name': 'example', 'version': '1.0.0'}))
+        before = self.commit('fix: add package manifests')
+        self.publish()
+        (self.package / 'source.php').write_text('updated')
+        self.commit('fix: update implementation')
+        self.publish(before)
+        for filename in ('composer.json', 'module.json', 'theme.json'):
+            metadata = json.loads(self.real_git('--git-dir=remote.git', 'show', 'main:' + filename))
+            self.assertEqual(metadata['version'], '1.0.1')
+        self.publish(before)
+        self.assertEqual(list(self.releases), ['v1.0.0', 'v1.0.1'])
+
     def test_untracked_files_are_not_exported(self):
         (self.package / 'secret.env').write_text('private')
         self.publish()
