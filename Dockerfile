@@ -19,6 +19,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy composer files
 COPY composer.json composer.lock ./
 
+# Composer path repositories must exist in the dependency build stage.
+COPY modules ./modules
+COPY themes ./themes
+
 # Install composer dependencies (no autoloader yet, will optimize in final stage)
 RUN composer install \
     --no-dev \
