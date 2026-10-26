@@ -33,20 +33,20 @@ jobs:
       - name: Test package publisher
         run: python3 -m unittest discover -s .github/scripts -p 'test_sync_packages.py'
 
-      - name: Find the last successful sync
-        id: baseline
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          before=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/sync-packages.yml/runs?branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // ""')
-          echo "before=$before" >> "$GITHUB_OUTPUT"
-
       - name: Configure cross-repository authentication
         env:
           GH_TOKEN: ${{ secrets.MODULE_SYNC_TOKEN }}
         run: |
           test -n "$GH_TOKEN" || { echo '::error::Set MODULE_SYNC_TOKEN'; exit 1; }
           gh auth setup-git
+
+      - name: Find the last successful sync
+        id: baseline
+        env:
+          GH_TOKEN: ${{ secrets.MODULE_SYNC_TOKEN }}
+        run: |
+          before=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/sync-packages.yml/runs?branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // ""')
+          echo "before=$before" >> "$GITHUB_OUTPUT"
 
       - name: Sync, release, and submit to Packagist
         env:
