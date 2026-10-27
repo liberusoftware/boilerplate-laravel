@@ -1,0 +1,42 @@
+{
+    "name": "liberusoftware/users-roles",
+    "description": "Shared users, role lookup, user policies, and user factories.",
+    "type": "liberu-module",
+    "license": "MIT",
+    "version": "1.0.0",
+    "require": {
+        "php": "^8.5",
+        "illuminate/auth": "^13.0",
+        "illuminate/database": "^13.0",
+        "illuminate/support": "^13.0",
+        "spatie/laravel-permission": "^8.0",
+        "illuminate/contracts": "^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Liberu\\Foundation\\UsersRoles\\": "src/"
+        }
+    },
+    "extra": {
+        "liberu": {
+            "name": "users-roles"
+        },
+        "laravel": {
+            "providers": [
+                "Liberu\\Foundation\\UsersRoles\\UsersRolesServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "require-dev": {
+        "liberusoftware/package-testbench": "^1.5",
+        "pestphp/pest": "^5.3.3"
+    },
+    "scripts": {
+        "test": "pest"
+    }
+}

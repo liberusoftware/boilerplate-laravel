@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01194011be95ef65e6d73be2df908275",
+    "content-hash": "e02498491cb44155a689c2702818a0bf",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7773,6 +7773,56 @@
             "description": "TOTP enforcement policy and one-time recovery-code primitives.",
             "transport-options": {
                 "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "liberusoftware/users-roles",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "modules/users-roles",
+                "reference": "1b3c297a60da372bec9002275b7a873f46f98071"
+            },
+            "require": {
+                "illuminate/auth": "^13.0",
+                "illuminate/contracts": "^13.0",
+                "illuminate/database": "^13.0",
+                "illuminate/support": "^13.0",
+                "php": "^8.5",
+                "spatie/laravel-permission": "^8.0"
+            },
+            "require-dev": {
+                "liberusoftware/package-testbench": "^1.5",
+                "pestphp/pest": "^5.3.3"
+            },
+            "type": "liberu-module",
+            "extra": {
+                "liberu": {
+                    "name": "users-roles"
+                },
+                "laravel": {
+                    "providers": [
+                        "Liberu\\Foundation\\UsersRoles\\UsersRolesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Liberu\\Foundation\\UsersRoles\\": "src/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Shared users, role lookup, user policies, and user factories.",
+            "transport-options": {
+                "symlink": false,
                 "relative": true
             }
         },

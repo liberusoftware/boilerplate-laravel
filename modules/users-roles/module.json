@@ -1,0 +1,22 @@
+{
+    "name": "users-roles",
+    "display_name": "Users Roles",
+    "description": "Shared users, role lookup, user policies, and user factories.",
+    "version": "1.0.0",
+    "category": "foundation",
+    "provider": "Liberu\\Foundation\\UsersRoles\\UsersRolesServiceProvider",
+    "requires": {
+        "php": "^8.5",
+        "laravel": "^13.0",
+        "packages": {}
+    },
+    "default_enabled": true,
+    "capabilities": [
+        "foundation.users-roles"
+    ],
+    "features": [
+        "Shared user model",
+        "Team-independent role lookup",
+        "User authorization policies"
+    ]
+}

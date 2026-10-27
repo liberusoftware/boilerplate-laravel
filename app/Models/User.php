@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use JoelButcher\Socialstream\HasConnectedAccounts;
@@ -25,8 +24,8 @@ use Liberu\Foundation\Observability\Contracts\ObservabilityActor;
 use Liberu\Foundation\Organizations\Contracts\OrganizationActor;
 use Liberu\Foundation\Organizations\Models\Team;
 use Liberu\Foundation\RolesPermissions\Contracts\PrivilegedActor;
-use Liberu\Foundation\RolesPermissions\Services\AnyTeamRoleLookup;
 use Liberu\Foundation\Search\Concerns\Searchable;
+use Liberu\Foundation\UsersRoles\Models\User as Authenticatable;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
@@ -154,42 +153,6 @@ class User extends Authenticatable implements ConnectedAccountOwner, FilamentUse
     public function hasAdminAccess(): bool
     {
         return $this->hasRoleInAnyTeam([(string) config('filament-shield.super_admin.name', 'super_admin'), 'admin']);
-    }
-
-    /**
-     * True if the user holds the super_admin role in ANY team. Team-agnostic
-     * (unlike Spatie's team-scoped hasRole), so it drives the policy-bypass gate
-     * reliably even when no team context is set on the request.
-     */
-    public function isSuperAdmin(): bool
-    {
-        return $this->hasRoleInAnyTeam((string) config('filament-shield.super_admin.name', 'super_admin'));
-    }
-
-    /** The pivot columns AnyTeamRoleLookup matches this actor on. */
-    public function authorizationIdentifier(): int|string
-    {
-        return $this->getKey();
-    }
-
-    public function authorizationType(): string
-    {
-        return $this->getMorphClass();
-    }
-
-    /**
-     * Team-agnostic role check. Spatie's hasRole() is bound to the active team
-     * context, which is unset on plain web requests and when canAccessPanel()
-     * runs, so the pivot is queried directly across every team.
-     *
-     * The query itself moved into the authorization package in 1.0.4; the host
-     * delegates rather than keeping its own copy.
-     *
-     * @param  string|list<string>  $roles
-     */
-    public function hasRoleInAnyTeam(string|array $roles): bool
-    {
-        return app(AnyTeamRoleLookup::class)->hasRoleInAnyTeam($this, $roles);
     }
 
     public function getDefaultTenant(Panel $panel): ?Model
