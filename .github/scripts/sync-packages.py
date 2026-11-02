@@ -14,13 +14,96 @@ import tempfile
 import time
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
+from urllib.parse import urlencode
 
 
 SEMVER = re.compile(r"v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 
 
 def git(*args, cwd=None):
-    return subprocess.check_output(['git', *args], cwd=cwd).decode().strip()
+    return subprocess.check_output(['git', *args], cwd=cwd, stderr=subprocess.STDOUT).decode().strip()
+
+
+class PendingPublication(RuntimeError):
+    def __init__(self, package, details):
+        super().__init__(f'{package}: approval and required checks are needed for {details["url"]}')
+        self.package = package
+        self.details = details
+
+
+def ensure_quality_workflow(target, rejection):
+    contexts = [name for name in ('package-quality', 'Package / validate') if f'"{name}"' in rejection]
+    if not contexts:
+        return
+    directory = target / '.github' / 'workflows'
+    workflows = list(directory.glob('*.yml')) + list(directory.glob('*.yaml')) if directory.exists() else []
+    if workflows:
+        return
+    context = contexts[0]
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / 'package-quality.yml').write_text('''name: Package quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  package-quality:
+    name: "''' + context + '''"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+      - name: Validate Composer metadata
+        run: composer validate --no-check-lock --no-check-all
+      - name: Lint package PHP
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import subprocess
+          for directory in ('src', 'config', 'routes', 'database'):
+              for path in Path(directory).rglob('*.php'):
+                  subprocess.run(['php', '-l', str(path)], check=True)
+          PYTHON
+''')
+    git('add', '--', '.github', cwd=target)
+    git('commit', '-m', 'ci: run the required package validation check', cwd=target)
+
+
+def publication_pull_request(target, destination, branch, package, path, head, tag):
+    signature = source_signature(path, head)
+    project = os.environ['GITHUB_REPOSITORY'].split('/')[1]
+    topic = f'sync/{project}/{tag}-{signature[:12]}'
+    existing = git('ls-remote', 'origin', f'refs/heads/{topic}', cwd=target)
+    if existing:
+        git('fetch', '--quiet', 'origin', f'refs/heads/{topic}', cwd=target)
+        if git('rev-parse', 'FETCH_HEAD^{tree}', cwd=target) != git('rev-parse', 'HEAD^{tree}', cwd=target):
+            topic += '-' + git('rev-parse', 'HEAD^{tree}', cwd=target)[:8]
+            existing = git('ls-remote', 'origin', f'refs/heads/{topic}', cwd=target)
+    if not existing:
+        git('push', 'origin', f'HEAD:refs/heads/{topic}', cwd=target)
+    query = urlencode({'head': f'liberusoftware:{topic}', 'base': branch, 'state': 'open'})
+    pulls = github(f'repos/{destination}/pulls?{query}')
+    if pulls:
+        pull = pulls[0]
+    else:
+        pull = github(f'repos/{destination}/pulls', {
+            'head': topic, 'base': branch,
+            'title': f'Sync {package} {tag} from {project}',
+            'body': f'Synchronize `{path}` from https://github.com/{os.environ["GITHUB_REPOSITORY"]}/commit/{head}.\n\n'
+                    'The source Composer manifest and host application module discovery were validated before publication. '
+                    'This pull request preserves the repository approval and required-check policies.\n\n'
+                    f'Package-Release: {tag}'})
+    return {'url': pull['html_url'], 'branch': topic, 'version': tag[1:],
+            'repository': f'https://github.com/{destination}', 'path': path,
+            'source_tree': git('rev-parse', f'{head}:{path}'), 'source_signature': signature}
 
 
 def request(url, payload=None, token=None, missing_ok=False, method=None):
@@ -199,7 +282,7 @@ def publish(path, head, before):
             raise RuntimeError(f'{destination} contains a different Composer package')
         archive = subprocess.check_output(['git', 'archive', f'{head}:{path}'])
         # Only tracked paths are exported; installed vendor files and local secrets stay local.
-        git('rm', '-r', '--ignore-unmatch', '.', cwd=target)
+        git('rm', '-r', '--ignore-unmatch', '--', '.', ':(exclude).github', cwd=target)
         with tarfile.open(fileobj=io.BytesIO(archive)) as source:
             source.extractall(target, filter='data')
         declared = metadata.get('version', '')
@@ -264,8 +347,18 @@ def publish(path, head, before):
             match = re.search(r'(?m)^Package-Release: (v\d+\.\d+\.\d+)$', message)
             head_tags = git('tag', '--points-at', 'HEAD', cwd=target).splitlines()
             stable_head_tags = [t for t in head_tags if version(t)]
+            declared_tag = 'v' + previous_release.removeprefix('v') if version(previous_release) else None
             tag = match[1] if match else (max(stable_head_tags, key=version) if stable_head_tags
+                                        else declared_tag if declared_tag and declared_tag not in tags
                                         else next_version(tags, declared, ''))
+            if tag not in tags:
+                manifest_version = tag[1:]
+                if 'version' in metadata:
+                    metadata['version'] = tag[1:]
+                write_metadata()
+                git('add', '-A', cwd=target)
+                if subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=target).returncode:
+                    git('commit', '-m', f'chore: prepare {tag}\n\nPackage-Release: {tag}', cwd=target)
         sha = git('rev-parse', 'HEAD', cwd=target)
         new_tag = tag not in tags
         if tag in tags:
@@ -274,7 +367,15 @@ def publish(path, head, before):
         else:
             git('tag', '-a', tag, '-m', f'Release {tag}', cwd=target)
         # Reject concurrent updates rather than overwriting another project's push.
-        git('push', '--atomic', 'origin', f'HEAD:refs/heads/{branch}', f'refs/tags/{tag}', cwd=target)
+        try:
+            git('push', '--atomic', 'origin', f'HEAD:refs/heads/{branch}', f'refs/tags/{tag}', cwd=target)
+        except subprocess.CalledProcessError as error:
+            message = (error.output or b'').decode(errors='replace')
+            if 'GH006' not in message and not ('GH013' in message and 'pull request' in message.lower()):
+                raise
+            ensure_quality_workflow(target, message)
+            details = publication_pull_request(target, destination, branch, package, path, head, tag)
+            raise PendingPublication(package, details) from None
         indexed = False
         if not new_tag:
             try:
@@ -309,16 +410,24 @@ def package_paths(paths):
     return packages
 
 
-def record_releases(releases):
-    report = Path('.github/package-releases.json')
-    content = json.dumps(releases, indent=2, sort_keys=True) + '\n'
-    if report.exists() and report.read_text() == content:
+def record_releases(releases, pending=None):
+    reports = {'.github/package-releases.json': releases}
+    if pending is not None:
+        reports['.github/package-publication-pull-requests.json'] = pending
+    changed = []
+    for filename, data in reports.items():
+        report = Path(filename)
+        content = json.dumps(data, indent=2, sort_keys=True) + '\n'
+        if report.exists() and report.read_text() == content:
+            continue
+        report.write_text(content)
+        changed.append(filename)
+    if not changed:
         return
-    report.write_text(content)
     git('config', 'user.name', 'github-actions[bot]')
     git('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
-    git('add', '--', str(report))
-    git('commit', '-m', 'chore: record published package releases [skip actions]', '--', str(report))
+    git('add', '--', *changed)
+    git('commit', '-m', 'chore: record published package releases [skip actions]', '--', *changed)
     git('push', 'origin', 'HEAD:main')
 
 
@@ -343,6 +452,9 @@ def verify_release(package, release, metadata_cache=None):
                 continue
             if current.get('source', {}).get('reference') != release['reference']:
                 raise RuntimeError(f'{package}: published source does not match the recorded release')
+            source_url = current.get('source', {}).get('url', '').replace('git@github.com:', 'https://github.com/').removesuffix('.git').rstrip('/')
+            if release.get('repository') and source_url.casefold() != release['repository'].casefold():
+                raise RuntimeError(f'{package}: published repository does not match the recorded release')
             if current.get('dist', {}).get('type') != 'zip':
                 raise RuntimeError(f'{package}: expected a published distribution archive')
             return True
@@ -379,6 +491,33 @@ def write_json(path, metadata):
             temporary.unlink()
 
 
+def materialize_source_aliases(head):
+    root = Path.cwd().resolve()
+    aliases = [path for kind in ('modules', 'themes') if Path(kind).exists()
+               for path in Path(kind).iterdir() if path.is_symlink()]
+    if not aliases:
+        return
+    with tempfile.TemporaryDirectory(prefix='.liberu-source-copies-', dir=root) as temporary:
+        prepared = []
+        for index, alias in enumerate(aliases):
+            target = alias.resolve(strict=True)
+            if not target.is_dir() or not target.is_relative_to(root):
+                raise RuntimeError(f'{alias}: expected a tracked directory inside this repository')
+            archive = subprocess.check_output(['git', 'archive', f'{head}:{target.relative_to(root)}'])
+            copy = Path(temporary) / str(index)
+            copy.mkdir()
+            with tarfile.open(fileobj=io.BytesIO(archive)) as source:
+                source.extractall(copy, filter='data')
+            prepared.append((alias, copy, os.readlink(alias)))
+        for alias, copy, original in prepared:
+            alias.unlink()
+            try:
+                copy.replace(alias)
+            except OSError:
+                alias.symlink_to(original, target_is_directory=True)
+                raise
+
+
 def use_packagist(metadata_cache=None):
     head = git('rev-parse', 'HEAD')
     packages = package_paths(changed_packages('', head))
@@ -394,6 +533,7 @@ def use_packagist(metadata_cache=None):
             raise RuntimeError(f'{path}: source changed after publication')
     with ThreadPoolExecutor(max_workers=10) as pool:
         list(pool.map(lambda package: verify_release(package, releases[package], metadata_cache), packages))
+    materialize_source_aliases(head)
     project_file = Path('composer.json')
     project = json.loads(project_file.read_text())
     for section in ('require', 'require-dev'):
@@ -427,6 +567,8 @@ def main():
     before = os.environ.get('SYNC_BEFORE', '')
     report = Path('.github/package-releases.json')
     releases = json.loads(report.read_text()) if report.exists() else {}
+    pending_report = Path('.github/package-publication-pull-requests.json')
+    pending = json.loads(pending_report.read_text()) if pending_report.exists() else {}
     failures = []
     paths = package_paths(changed_packages(before, head))
     for package, path in sorted(paths.items(), key=lambda item: (item[0] != 'liberusoftware/tenancy', item[0])):
@@ -446,12 +588,17 @@ def main():
                 print(f'{path}: already published at {previous["version"]}')
             else:
                 releases[package] = publish(path, head, before)
-            if len(releases) % 50 == 0:
-                record_releases(releases)
+            pending.pop(package, None)
+            if (len(releases) + len(pending)) % 50 == 0:
+                record_releases(releases, pending)
+        except PendingPublication as error:
+            pending[package] = error.details
+            print(f'::notice::{error}')
+            failures.append(path)
         except Exception as error:
             print(f'::error::{path}: {error}')
             failures.append(path)
-    record_releases(releases)
+    record_releases(releases, pending)
     if failures:
         raise RuntimeError('Failed packages: ' + ', '.join(failures))
     project = json.loads(Path('composer.json').read_text())
