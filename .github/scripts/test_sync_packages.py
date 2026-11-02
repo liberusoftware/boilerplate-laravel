@@ -365,6 +365,16 @@ class PackagistTests(unittest.TestCase):
             sync.packagist('liberusoftware/example', new)
         self.assertEqual(request.call_args_list[1].kwargs, {'method': 'PUT'})
 
+    def test_explicit_same_organization_relocation_updates_registration(self):
+        old = 'https://github.com/liberusoftware/module-example'
+        new = 'https://github.com/liberusoftware/module-foundation-example'
+        with patch.dict(os.environ, {'PACKAGIST_USERNAME': 'test', 'PACKAGIST_API_TOKEN': 'token'}), \
+                patch.object(sync, 'configured_repository', return_value=new), \
+                patch.object(sync, 'request', side_effect=[{'package': {'repository': old}},
+                                                         {'status': 'success'}, {'status': 'success'}]) as request:
+            sync.packagist('liberusoftware/example', new)
+        self.assertEqual(request.call_args_list[1].kwargs, {'method': 'PUT'})
+
 
 if __name__ == '__main__':
     unittest.main()
