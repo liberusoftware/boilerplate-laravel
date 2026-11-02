@@ -1,0 +1,42 @@
+{
+  "name": "liberusoftware/tenancy",
+  "description": "Shared Filament and Jetstream team tenancy with scoped runtime context and Eloquent isolation.",
+  "type": "liberu-module",
+  "license": "MIT",
+  "version": "1.0.1",
+  "require": {
+    "php": "^8.5",
+    "illuminate/support": "^13.0",
+    "illuminate/database": "^13.0",
+    "filament/filament": "^5.0",
+    "laravel/jetstream": "^5.5",
+    "spatie/laravel-permission": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Liberu\\Foundation\\Tenancy\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Liberu\\Foundation\\Tenancy\\TenancyServiceProvider"
+      ]
+    },
+    "liberu": {
+      "name": "tenancy"
+    }
+  },
+  "require-dev": {
+    "laravel/framework": "^13.0",
+    "phpunit/phpunit": "^13.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Liberu\\Foundation\\Tenancy\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit --no-configuration --bootstrap vendor/autoload.php tests"
+  }
+}
