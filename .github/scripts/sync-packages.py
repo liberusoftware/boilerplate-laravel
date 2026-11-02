@@ -2,6 +2,8 @@
 """Publish tracked module/theme snapshots, semantic releases, and Packagist entries."""
 import io
 import hashlib
+import argparse
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 from pathlib import Path
@@ -21,7 +23,7 @@ def git(*args, cwd=None):
     return subprocess.check_output(['git', *args], cwd=cwd).decode().strip()
 
 
-def request(url, payload=None, token=None, missing_ok=False):
+def request(url, payload=None, token=None, missing_ok=False, method=None):
     headers = {'Accept': 'application/json', 'User-Agent': 'Liberu-Package-Sync'}
     if token:
         headers['Authorization'] = f'Bearer {token}'
@@ -31,7 +33,7 @@ def request(url, payload=None, token=None, missing_ok=False):
         data = json.dumps(payload).encode()
     for attempt in range(2):
         try:
-            with urlopen(Request(url, data=data, headers=headers), timeout=60) as response:
+            with urlopen(Request(url, data=data, headers=headers, method=method), timeout=60) as response:
                 return json.load(response)
         except HTTPError as error:
             if missing_ok and error.code == 404:
@@ -134,7 +136,15 @@ def packagist(package, repository):
     if existing:
         registered = existing['package']['repository'].removesuffix('.git').rstrip('/')
         if registered != repository:
-            raise RuntimeError(f'{package} already belongs to {registered}')
+            relocated = None
+            if registered.startswith('https://github.com/'):
+                relocated = github('repos/' + registered.removeprefix('https://github.com/'), missing_ok=True)
+            if not relocated or relocated.get('html_url') != repository:
+                raise RuntimeError(f'{package} already belongs to {registered}')
+            edited = request(f'https://packagist.org/api/packages/{package}', {'repository': repository},
+                             os.environ['PACKAGIST_USERNAME'] + ':' + os.environ['PACKAGIST_API_TOKEN'], method='PUT')
+            if edited.get('status') != 'success':
+                raise RuntimeError(f'Packagist repository edit failed for {package}')
     endpoint = 'update-package' if existing else 'create-package'
     response = request(f'https://packagist.org/api/{endpoint}',
                        {'repository': repository},
@@ -265,11 +275,20 @@ def publish(path, head, before):
             git('tag', '-a', tag, '-m', f'Release {tag}', cwd=target)
         # Reject concurrent updates rather than overwriting another project's push.
         git('push', '--atomic', 'origin', f'HEAD:refs/heads/{branch}', f'refs/tags/{tag}', cwd=target)
-        if new_tag or github(f'repos/{destination}/releases/tags/{tag}', missing_ok=True) is None:
-            github(f'repos/{destination}/releases', {
-                'tag_name': tag, 'name': tag,
-                'body': f'Synchronized {path} from https://github.com/{os.environ["GITHUB_REPOSITORY"]}/commit/{head}.'})
-        packagist(package, url)
+        indexed = False
+        if not new_tag:
+            try:
+                verify_release(package, {'version': tag[1:], 'reference': sha})
+                indexed = True
+            except RuntimeError as error:
+                if 'is not available from Packagist' not in str(error):
+                    raise
+        if not indexed:
+            if new_tag or github(f'repos/{destination}/releases/tags/{tag}', missing_ok=True) is None:
+                github(f'repos/{destination}/releases', {
+                    'tag_name': tag, 'name': tag,
+                    'body': f'Synchronized {path} from https://github.com/{os.environ["GITHUB_REPOSITORY"]}/commit/{head}.'})
+            packagist(package, url)
         print(f'{path}: published {destination} {tag}')
         return {'path': path, 'version': tag[1:], 'reference': sha,
                 'repository': url, 'source_tree': git('rev-parse', f'{head}:{path}'),
@@ -303,6 +322,103 @@ def record_releases(releases):
     git('push', 'origin', 'HEAD:main')
 
 
+def verify_release(package, release, metadata_cache=None):
+    cached = metadata_cache / (package.replace('/', '__') + '.json') if metadata_cache else None
+    data = json.loads(cached.read_text()) if cached and cached.exists() else None
+
+    def matching(metadata):
+        previous = {}
+        for item in (metadata or {}).get('packages', {}).get(package, []):
+            if (metadata or {}).get('minified'):
+                current = previous.copy()
+                for key, value in item.items():
+                    if value == '__unset':
+                        current.pop(key, None)
+                    else:
+                        current[key] = value
+            else:
+                current = item
+            previous = current
+            if current.get('version', '').removeprefix('v') != release['version']:
+                continue
+            if current.get('source', {}).get('reference') != release['reference']:
+                raise RuntimeError(f'{package}: published source does not match the recorded release')
+            if current.get('dist', {}).get('type') != 'zip':
+                raise RuntimeError(f'{package}: expected a published distribution archive')
+            return True
+        return False
+
+    if matching(data):
+        return
+    data = request(f'https://repo.packagist.org/p2/{package}.json', missing_ok=True)
+    if not matching(data):
+        raise RuntimeError(f'{package}: {release["version"]} is not available from Packagist')
+    if cached:
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        cached.write_text(json.dumps(data) + '\n')
+
+
+def write_json(path, metadata):
+    original = path.read_text()
+    if json.loads(original) == metadata:
+        return
+    indentation = re.search(r'\n( +)"', original)
+    if '\n' not in original.strip():
+        content = json.dumps(metadata, separators=(',', ':'), ensure_ascii=False) + '\n'
+    else:
+        content = json.dumps(metadata, indent=len(indentation[1]) if indentation else 2, ensure_ascii=False) + '\n'
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', dir=path.parent, encoding='utf-8', delete=False) as output:
+            temporary = Path(output.name)
+            output.write(content)
+        temporary.chmod(path.stat().st_mode & 0o777)
+        temporary.replace(path)
+    finally:
+        if temporary and temporary.exists():
+            temporary.unlink()
+
+
+def use_packagist(metadata_cache=None):
+    head = git('rev-parse', 'HEAD')
+    packages = package_paths(changed_packages('', head))
+    releases = json.loads(Path('.github/package-releases.json').read_text())
+    missing = set(packages) - set(releases)
+    if missing:
+        raise RuntimeError('Unpublished packages: ' + ', '.join(sorted(missing)))
+    if subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', 'modules', 'themes']).returncode:
+        raise RuntimeError('Commit module/theme changes before selecting published releases')
+    for package, path in packages.items():
+        release = releases[package]
+        if release.get('source_signature') != source_signature(path, head):
+            raise RuntimeError(f'{path}: source changed after publication')
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        list(pool.map(lambda package: verify_release(package, releases[package], metadata_cache), packages))
+    project_file = Path('composer.json')
+    project = json.loads(project_file.read_text())
+    for section in ('require', 'require-dev'):
+        for package in project.get(section, {}):
+            if package in releases:
+                project[section][package] = releases[package]['version']
+    project.pop('repositories', None)
+    for kind in ('modules', 'themes'):
+        for composer in Path(kind).glob('*/composer.json'):
+            metadata = json.loads(composer.read_text())
+            release = releases.get(metadata['name'])
+            if not release:
+                continue
+            if 'version' in metadata:
+                metadata['version'] = release['version']
+                write_json(composer, metadata)
+            manifest_file = composer.with_name('module.json' if kind == 'modules' else 'theme.json')
+            if manifest_file.exists():
+                manifest = json.loads(manifest_file.read_text())
+                manifest['version'] = release['version']
+                write_json(manifest_file, manifest)
+    write_json(project_file, project)
+    print(f'Configured {len(packages)} verified Packagist packages; module/theme copies retained')
+
+
 def main():
     for key in ('GH_TOKEN', 'PACKAGIST_USERNAME', 'PACKAGIST_API_TOKEN'):
         if not os.environ.get(key):
@@ -319,11 +435,19 @@ def main():
         declared = json.loads(Path(path, 'composer.json').read_text()).get('version', '')
         bump = version(declared) and version(declared) > (version(previous.get('version', '')) or (0, 0, 0))
         matching = previous.get('source_tree') == tree or previous.get('source_signature') == source_signature(path, head)
-        if matching and not bump:
-            print(f'{path}: already published at {releases[package]["version"]}')
-            continue
         try:
-            releases[package] = publish(path, head, before)
+            if matching and not bump:
+                try:
+                    verify_release(package, previous)
+                except RuntimeError as error:
+                    if 'is not available from Packagist' not in str(error):
+                        raise
+                    packagist(package, previous['repository'])
+                print(f'{path}: already published at {previous["version"]}')
+            else:
+                releases[package] = publish(path, head, before)
+            if len(releases) % 50 == 0:
+                record_releases(releases)
         except Exception as error:
             print(f'::error::{path}: {error}')
             failures.append(path)
@@ -338,4 +462,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--use-packagist', action='store_true')
+    parser.add_argument('--metadata-cache', type=Path)
+    arguments = parser.parse_args()
+    if arguments.use_packagist:
+        use_packagist(arguments.metadata_cache)
+    else:
+        main()
