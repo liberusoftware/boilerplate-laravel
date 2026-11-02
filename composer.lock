@@ -13648,16 +13648,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v8.1.7",
+            "version": "v8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "773ac57f20e2795bdadb65b5b1b5f4850d498283"
+                "reference": "8d1232052c9cdef170ed9608b3147bca4f61ff69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/773ac57f20e2795bdadb65b5b1b5f4850d498283",
-                "reference": "773ac57f20e2795bdadb65b5b1b5f4850d498283",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/8d1232052c9cdef170ed9608b3147bca4f61ff69",
+                "reference": "8d1232052c9cdef170ed9608b3147bca4f61ff69",
                 "shasum": ""
             },
             "require": {
@@ -13710,7 +13710,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v8.1.7"
+                "source": "https://github.com/symfony/mime/tree/v8.1.10"
             },
             "funding": [
                 {
@@ -13730,7 +13730,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-04T11:02:17+00:00"
+            "time": "2026-10-28T17:58:38+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -14886,16 +14886,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v8.1.9",
+            "version": "v8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "59a682fd049b2d4d37c444f5ac21b7d01b8c7189"
+                "reference": "08aa69fa0998bb65a089f9e148a2c0f8b391398e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/59a682fd049b2d4d37c444f5ac21b7d01b8c7189",
-                "reference": "59a682fd049b2d4d37c444f5ac21b7d01b8c7189",
+                "url": "https://api.github.com/repos/symfony/process/zipball/08aa69fa0998bb65a089f9e148a2c0f8b391398e",
+                "reference": "08aa69fa0998bb65a089f9e148a2c0f8b391398e",
                 "shasum": ""
             },
             "require": {
@@ -14927,7 +14927,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v8.1.9"
+                "source": "https://github.com/symfony/process/tree/v8.1.10"
             },
             "funding": [
                 {
@@ -14947,7 +14947,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-08T16:57:43+00:00"
+            "time": "2026-10-25T14:40:25+00:00"
         },
         {
             "name": "symfony/property-access",
@@ -16650,16 +16650,16 @@
     "packages-dev": [
         {
             "name": "brianium/paratest",
-            "version": "v7.27.4",
+            "version": "v7.27.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paratestphp/paratest.git",
-                "reference": "6d73b615611a2da7af85637d99d1b0efac9fcd00"
+                "reference": "fe4a1fd811fd79ead7476fa109c5f4ed721cc18a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paratestphp/paratest/zipball/6d73b615611a2da7af85637d99d1b0efac9fcd00",
-                "reference": "6d73b615611a2da7af85637d99d1b0efac9fcd00",
+                "url": "https://api.github.com/repos/paratestphp/paratest/zipball/fe4a1fd811fd79ead7476fa109c5f4ed721cc18a",
+                "reference": "fe4a1fd811fd79ead7476fa109c5f4ed721cc18a",
                 "shasum": ""
             },
             "require": {
@@ -16683,7 +16683,7 @@
                 "ext-pcntl": "*",
                 "ext-pcov": "*",
                 "ext-posix": "*",
-                "phpstan/phpstan": "^2.3.1",
+                "phpstan/phpstan": "^2.3.2",
                 "phpstan/phpstan-deprecation-rules": "^2.0.5",
                 "phpstan/phpstan-phpunit": "^2.1.1",
                 "phpstan/phpstan-strict-rules": "^2.1.0",
@@ -16727,7 +16727,7 @@
             ],
             "support": {
                 "issues": "https://github.com/paratestphp/paratest/issues",
-                "source": "https://github.com/paratestphp/paratest/tree/v7.27.4"
+                "source": "https://github.com/paratestphp/paratest/tree/v7.27.5"
             },
             "funding": [
                 {
@@ -16739,7 +16739,7 @@
                     "type": "paypal"
                 }
             ],
-            "time": "2026-10-22T06:15:12+00:00"
+            "time": "2026-10-29T13:58:46+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -17937,20 +17937,20 @@
         },
         {
             "name": "pestphp/pest",
-            "version": "v5.3.3",
+            "version": "v5.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "c947def97e1d56a3f3f9a3ced04c6af74b7e3caf"
+                "reference": "e7a1b483f094a5f8e9371bb6be8c70a5d98a9333"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/c947def97e1d56a3f3f9a3ced04c6af74b7e3caf",
-                "reference": "c947def97e1d56a3f3f9a3ced04c6af74b7e3caf",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/e7a1b483f094a5f8e9371bb6be8c70a5d98a9333",
+                "reference": "e7a1b483f094a5f8e9371bb6be8c70a5d98a9333",
                 "shasum": ""
             },
             "require": {
-                "brianium/paratest": "^7.26.1",
+                "brianium/paratest": "^7.27.5",
                 "nunomaduro/collision": "^8.9.5",
                 "nunomaduro/termwind": "^2.4.0",
                 "pestphp/pest-plugin": "^5.0.0",
@@ -17958,22 +17958,22 @@
                 "pestphp/pest-plugin-mutate": "^5.0.2",
                 "pestphp/pest-plugin-profanity": "^5.0.1",
                 "php": "^8.4",
-                "phpunit/phpunit": "^13.4.3",
-                "symfony/process": "^8.1.7"
+                "phpunit/phpunit": "^13.4.5",
+                "symfony/process": "^8.1.10"
             },
             "conflict": {
                 "filp/whoops": "<2.18.3",
                 "laravel/boost": "<2.6.0",
-                "phpunit/phpunit": ">13.4.3",
+                "phpunit/phpunit": ">13.4.5",
                 "sebastian/exporter": "<7.0.0",
                 "webmozart/assert": "<1.11.0"
             },
             "require-dev": {
                 "pestphp/pest-dev-tools": "^5.0.0",
-                "pestphp/pest-plugin-browser": "^5.1.2",
-                "pestphp/pest-plugin-phpstan": "^5.2.2",
+                "pestphp/pest-plugin-browser": "^5.2.0",
+                "pestphp/pest-plugin-phpstan": "^5.3.0",
                 "pestphp/pest-plugin-rector": "^5.0.6",
-                "pestphp/pest-plugin-type-coverage": "^5.0.3",
+                "pestphp/pest-plugin-type-coverage": "^5.1.0",
                 "psy/psysh": "^0.12.24"
             },
             "bin": [
@@ -18041,7 +18041,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/v5.3.3"
+                "source": "https://github.com/pestphp/pest/tree/v5.3.5"
             },
             "funding": [
                 {
@@ -18053,7 +18053,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-18T11:51:10+00:00"
+            "time": "2026-10-31T19:37:56+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
@@ -19150,16 +19150,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.4.3",
+            "version": "13.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2180c47c4229e5da117ff248753370443c074f10"
+                "reference": "941457a4f147a60fe2074d40e1fce0d08ea8d930"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2180c47c4229e5da117ff248753370443c074f10",
-                "reference": "2180c47c4229e5da117ff248753370443c074f10",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/941457a4f147a60fe2074d40e1fce0d08ea8d930",
+                "reference": "941457a4f147a60fe2074d40e1fce0d08ea8d930",
                 "shasum": ""
             },
             "require": {
@@ -19184,7 +19184,7 @@
                 "sebastian/environment": "^9.3.3",
                 "sebastian/exporter": "^8.2.1",
                 "sebastian/file-filter": "^1.0",
-                "sebastian/git-state": "^1.0",
+                "sebastian/git-state": "^1.1",
                 "sebastian/global-state": "^9.0.1",
                 "sebastian/object-enumerator": "^8.1.0",
                 "sebastian/recursion-context": "^8.0.1",
@@ -19230,7 +19230,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.3"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.5"
             },
             "funding": [
                 {
@@ -19238,7 +19238,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-16T05:56:47+00:00"
+            "time": "2026-10-27T04:16:22+00:00"
         },
         {
             "name": "rector/rector",
