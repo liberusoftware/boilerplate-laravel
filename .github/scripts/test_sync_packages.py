@@ -6,10 +6,29 @@ import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
+import io
 
 spec = importlib.util.spec_from_file_location('sync_packages', Path(__file__).with_name('sync-packages.py'))
 sync = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sync)
+
+
+class RequestTests(unittest.TestCase):
+    def test_github_rate_limit_waits_until_reset_and_retries(self):
+        error = HTTPError('https://api.github.com/test', 403, 'rate limit',
+                          {'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': '1002'}, None)
+        with patch.object(sync, 'urlopen', side_effect=[error, io.BytesIO(b'{"ok": true}')]), \
+                patch.object(sync.time, 'time', return_value=1000), patch.object(sync.time, 'sleep') as sleep:
+            self.assertEqual(sync.request('https://api.github.com/test'), {'ok': True})
+        sleep.assert_called_once_with(3)
+
+    def test_permission_denial_does_not_retry(self):
+        error = HTTPError('https://api.github.com/test', 403, 'forbidden', {}, None)
+        with patch.object(sync, 'urlopen', side_effect=error), patch.object(sync.time, 'sleep') as sleep:
+            with self.assertRaisesRegex(RuntimeError, 'HTTP 403'):
+                sync.request('https://api.github.com/test')
+        sleep.assert_not_called()
 
 
 class VersionTests(unittest.TestCase):
@@ -35,7 +54,10 @@ class VersionTests(unittest.TestCase):
         with patch.object(sync.Path, 'exists', return_value=True), patch.object(
             sync.Path, 'read_text', return_value=json.dumps({'components': {'modules': {'repositoryPrefix': 'module-'}}})
         ):
-            self.assertEqual(sync.repository_name('modules/module-manager'), 'module-module-manager')
+            self.assertEqual(sync.repository_name('modules/module-manager'), 'module-manager')
+
+    def test_declared_major_can_release_a_compatible_maintenance_version(self):
+        self.assertEqual(sync.next_version(['v1.4.1', 'v2.0.0'], '1.4.1', 'fix: repair'), 'v1.4.2')
 
 
 class PublishTests(unittest.TestCase):
@@ -89,7 +111,7 @@ class PublishTests(unittest.TestCase):
         return {'default_branch': 'main', 'private': False} if self.repo_exists else None
 
     def publish(self, before=''):
-        with patch.object(sync, 'git', self.git), patch.object(sync, 'github', self.github), patch.object(
+        with patch.object(sync, 'request', return_value=None), patch.object(sync, 'git', self.git), patch.object(sync, 'github', self.github), patch.object(
             sync, 'packagist', lambda *args: self.packagist_calls.append(args)
         ):
             sync.publish('modules/example', self.real_git('rev-parse', 'HEAD'), before)
@@ -164,6 +186,28 @@ class PublishTests(unittest.TestCase):
         self.publish()
         files = self.real_git('--git-dir=remote.git', 'ls-tree', '-r', '--name-only', 'main')
         self.assertNotIn('secret.env', files)
+
+    def test_source_signature_ignores_only_generated_versions(self):
+        head = self.real_git('rev-parse', 'HEAD')
+        original = sync.source_signature('modules/example', head)
+        composer = self.package / 'composer.json'
+        metadata = json.loads(composer.read_text())
+        metadata['version'] = '1.0.1'
+        composer.write_text(json.dumps(metadata))
+        head = self.commit('chore: record generated version')
+        self.assertEqual(original, sync.source_signature('modules/example', head))
+        (self.package / 'source.php').write_text('changed')
+        head = self.commit('fix: change implementation')
+        self.assertNotEqual(original, sync.source_signature('modules/example', head))
+
+    def test_duplicate_directories_select_the_manifest_install_path(self):
+        duplicate = self.root / 'modules' / 'module-example'
+        duplicate.mkdir()
+        metadata = {'name': 'liberusoftware/example', 'extra': {'liberu': {'name': 'example'}}}
+        for path in (self.package, duplicate):
+            (path / 'composer.json').write_text(json.dumps(metadata))
+        self.assertEqual(sync.package_paths(['modules/example', 'modules/module-example']),
+                         {'liberusoftware/example': 'modules/example'})
 
 
 class PackagistTests(unittest.TestCase):

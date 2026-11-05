@@ -28,7 +28,7 @@ it('reuses capability snapshots while refreshing them for configuration or regis
     $registry = new ModuleRegistry(['foundation' => $foundation, 'consumer' => $consumer]);
     $this->app->instance(ModuleRegistry::class, $registry);
     config(['modules.enabled' => [], 'modules.disabled' => []]);
-    $manager = new ThemeManager;
+    $manager = new ThemeManager();
     $themePath = $foundation->path.'/fixture-theme.json';
     file_put_contents($themePath, json_encode([
         'name' => 'fixture-theme', 'display_name' => 'Fixture', 'version' => '1.0.0',

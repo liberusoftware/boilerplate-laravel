@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.liberu.dev/module/v1.json",
+  "name": "tenancy",
+  "display_name": "Team Tenancy",
+  "description": "Shared Filament and Jetstream team tenancy with scoped runtime context and Eloquent isolation.",
+  "version": "1.0.1",
+  "category": "foundation",
+  "provider": "Liberu\\Foundation\\Tenancy\\TenancyServiceProvider",
+  "requires": {
+    "php": "^8.5",
+    "laravel": "^13.0"
+  },
+  "capabilities": [
+    "foundation.tenancy"
+  ],
+  "default_enabled": true,
+  "features": [
+    "Team context",
+    "Tenant model scopes",
+    "Request context",
+    "Permission team switching"
+  ]
+}
