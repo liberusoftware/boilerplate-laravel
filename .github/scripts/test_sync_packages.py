@@ -399,6 +399,8 @@ class IndependentChangeTests(unittest.TestCase):
         self.releases = {}
         self.exists = False
         self.on_push = None
+        self.renamed = {}
+        self.recorded = {}
 
     def run_git(self, *args, cwd=None):
         return subprocess.check_output(['git', *args], cwd=cwd, stderr=subprocess.STDOUT).decode().strip()
@@ -432,12 +434,18 @@ class IndependentChangeTests(unittest.TestCase):
         if path.endswith('/releases'):
             self.releases[payload['tag_name']] = payload
             return payload
+        if path in self.renamed:
+            return {'full_name': self.renamed[path]}
         return {'default_branch': 'main', 'private': False} if self.exists else None
 
-    def publish(self):
+    def publish(self, source='liberusoftware/test'):
         with patch.object(sync, 'request', return_value=None), patch.object(sync, 'git', self.git), \
-                patch.object(sync, 'github', self.github), patch.object(sync, 'packagist', lambda *args: None):
-            sync.publish('modules/example', self.run_git('rev-parse', 'HEAD'), '')
+                patch.object(sync, 'github', self.github), patch.object(sync, 'packagist', lambda *args: None), \
+                patch.dict(os.environ, {'GITHUB_REPOSITORY': source}):
+            Path('.github').mkdir(exist_ok=True)
+            Path('.github/package-releases.json').write_text(json.dumps(self.recorded.get(source, {})))
+            release = sync.publish('modules/example', self.run_git('rev-parse', 'HEAD'), '')
+        self.recorded[source] = {'liberusoftware/example': release}
 
     def in_destination(self, change, message='fix: patch the package directly'):
         checkout = self.root / f'destination-{len(list(self.root.glob("destination-*")))}'
@@ -452,11 +460,11 @@ class IndependentChangeTests(unittest.TestCase):
         return (self.run_git('--git-dir', str(self.remote), 'rev-parse', 'main'),
                 self.run_git('--git-dir', str(self.remote), 'tag', '--list'), dict(self.releases))
 
-    def assert_refused(self, *paths):
+    def assert_refused(self, *paths, source='liberusoftware/test', blames=()):
         before = self.remote_state()
         with self.assertRaisesRegex(RuntimeError, 'would overwrite') as refused:
-            self.publish()
-        for name in paths:
+            self.publish(source)
+        for name in (*paths, *blames):
             self.assertIn(name, str(refused.exception))
         self.assertEqual(self.remote_state(), before)
 
@@ -530,6 +538,67 @@ class IndependentChangeTests(unittest.TestCase):
         self.assertNotIn('v1.0.1', self.run_git('--git-dir', str(self.remote), 'tag', '--list'))
         self.assertEqual(sorted(self.releases), ['v1.0.0'])
         self.assert_refused('NOTES.md')
+
+    def test_sync_commits_name_their_source(self):
+        with patch.dict(os.environ, {'GITHUB_REPOSITORY': 'liberusoftware/app-a'}):
+            self.assertEqual(sync.sync_source('chore: sync modules/x from liberusoftware/app-b@0a1b2c\n\nPackage-Release: v1.0.0'),
+                             'liberusoftware/app-b')
+            self.assertEqual(sync.sync_source('Sync liberusoftware/x v1.2.0 from app-c (#4)\n\nbody'), 'liberusoftware/app-c')
+            self.assertIsNone(sync.sync_source('fix: mention chore: sync inline\n\nPackage-Release: v1.0.0'))
+
+    def test_another_source_change_is_refused_and_named(self):
+        self.publish('liberusoftware/app-a')
+        self.publish('liberusoftware/app-b')
+        self.write('src/Example.php', 'improved by a')
+        self.commit('fix: improve in app a')
+        self.publish('liberusoftware/app-a')
+        self.write('src/Example.php', 'first')
+        self.write('README.md', 'edited by b')
+        self.commit('docs: edit readme in app b')
+        self.assert_refused('src/Example.php', source='liberusoftware/app-b', blames=('liberusoftware/app-a',))
+
+    def test_a_first_sync_from_a_new_source_must_match_what_others_published(self):
+        self.publish('liberusoftware/app-a')
+        self.write('src/Example.php', 'different copy')
+        self.commit('fix: diverge in app b')
+        self.assert_refused('src/Example.php', source='liberusoftware/app-b', blames=('liberusoftware/app-a',))
+
+    def test_each_source_compares_against_its_own_last_sync(self):
+        self.publish('liberusoftware/app-a')
+        self.publish('liberusoftware/app-b')
+        self.write('src/Example.php', 'improved by a')
+        self.commit('fix: improve in app a')
+        self.publish('liberusoftware/app-a')
+        self.write('src/Extra.php', 'added by b')
+        self.commit('feat: adopt a and extend in app b')
+        self.publish('liberusoftware/app-b')
+        self.write('src/Example.php', 'improved again by a')
+        (self.package / 'src' / 'Extra.php').unlink()
+        self.commit('fix: improve again in app a')
+        self.assert_refused('src/Extra.php', source='liberusoftware/app-a', blames=('liberusoftware/app-b',))
+        self.write('src/Extra.php', 'added by b')
+        self.commit('feat: adopt b in app a')
+        self.publish('liberusoftware/app-a')
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:src/Example.php'), 'improved again by a')
+
+    def test_a_renamed_source_keeps_its_baseline(self):
+        self.publish('liberusoftware/old-a')
+        self.in_destination(lambda checkout: (checkout / 'NOTES.md').write_text('direct'))
+        self.write('NOTES.md', 'direct')
+        self.write('src/Example.php', 'second')
+        self.commit('fix: change after the rename')
+        self.assert_refused('src/Example.php', source='liberusoftware/app-a')
+        self.renamed['repos/liberusoftware/old-a'] = 'liberusoftware/app-a'
+        self.publish('liberusoftware/app-a')
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:src/Example.php'), 'second')
+
+    def test_an_identical_first_sync_records_a_baseline(self):
+        self.publish('liberusoftware/app-a')
+        self.publish('liberusoftware/app-b')
+        self.write('README.md', 'edited by b')
+        self.commit('docs: edit readme in app b')
+        self.publish('liberusoftware/app-b')
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:README.md'), 'edited by b')
 
 
 if __name__ == '__main__':
