@@ -249,6 +249,45 @@ def packagist(package, repository):
         raise RuntimeError(f'Packagist {endpoint} failed for {package}')
 
 
+SYNC_MARKER = r'^Package-Release: v[0-9]|^Sync liberusoftware/[^ ]+ v[0-9]+\.[0-9]+\.[0-9]+ from '
+MANIFESTS = ('composer.json', 'module.json', 'theme.json')
+
+
+def blob(target, revision, name):
+    shown = subprocess.run(['git', 'show', f'{revision}:{name}'], cwd=target, capture_output=True)
+    if shown.returncode:
+        return None
+    if name in MANIFESTS:
+        try:
+            metadata = json.loads(shown.stdout)
+        except ValueError:
+            return shown.stdout
+        if isinstance(metadata, dict):
+            metadata.pop('version', None)
+        return json.dumps(metadata, sort_keys=True).encode()
+    return shown.stdout
+
+
+def refuse_overwriting_independent_changes(target, destination, path):
+    """Three-way check: base is the last sync in the destination, ours is the staged export."""
+    if subprocess.run(['git', 'rev-parse', '--verify', '--quiet', 'HEAD'], cwd=target,
+                      stdout=subprocess.DEVNULL).returncode:
+        return
+    base = git('log', '-1', '--format=%H', '-E', f'--grep={SYNC_MARKER}', 'HEAD', cwd=target)
+    since = base or git('hash-object', '-t', 'tree', '/dev/null', cwd=target)
+    theirs = set(filter(None, git('diff', '--name-only', '--no-renames', '-z', since, 'HEAD', cwd=target).split('\0')))
+    ours = set(filter(None, git('diff', '--cached', '--name-only', '--no-renames', '-z', 'HEAD', cwd=target).split('\0')))
+    conflicts = [name for name in sorted(theirs & ours)
+                 if blob(target, since, name) != blob(target, 'HEAD', name) != blob(target, '', name)]
+    if conflicts:
+        listed = ', '.join(conflicts[:20]) + (f' and {len(conflicts) - 20} more' if len(conflicts) > 20 else '')
+        origin = f'since the last sync ({base[:12]})' if base else 'that were never synced from a source repository'
+        raise RuntimeError(
+            f'{destination} has changes {origin} that this sync would overwrite: {listed}. '
+            f'Bring them into {path} here, or revert them in {destination}, then rerun. '
+            'Nothing was pushed, tagged or released.')
+
+
 def publish(path, head, before):
     name = repository_name(path)
     destination = f'liberusoftware/{name}'
@@ -328,6 +367,7 @@ def publish(path, head, before):
                         manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
         write_metadata()
         git('add', '-A', cwd=target)
+        refuse_overwriting_independent_changes(target, destination, path)
         changed = subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=target).returncode != 0
         tags = git('tag', '--list', cwd=target).splitlines()
         declared_version = version(declared)

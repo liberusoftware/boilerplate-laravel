@@ -376,5 +376,161 @@ class PackagistTests(unittest.TestCase):
         self.assertEqual(request.call_args_list[1].kwargs, {'method': 'PUT'})
 
 
+class IndependentChangeTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.addCleanup(os.chdir, Path.cwd())
+        os.chdir(self.root)
+        self.remote = self.root / 'remote.git'
+        self.run_git('init', '-q', '-b', 'main')
+        self.identify(self.root)
+        self.run_git('init', '-q', '--bare', '-b', 'main', str(self.remote))
+        self.package = self.root / 'modules' / 'example'
+        self.package.mkdir(parents=True)
+        self.write('composer.json', json.dumps({'name': 'liberusoftware/example', 'version': '1.0.0'}))
+        self.write('src/Example.php', 'first')
+        self.write('README.md', 'readme')
+        self.commit('feat: initial package')
+        environment = patch.dict(os.environ, {'GITHUB_REPOSITORY': 'liberusoftware/test', 'GH_TOKEN': 'token'})
+        environment.start()
+        self.addCleanup(environment.stop)
+        self.releases = {}
+        self.exists = False
+        self.on_push = None
+
+    def run_git(self, *args, cwd=None):
+        return subprocess.check_output(['git', *args], cwd=cwd, stderr=subprocess.STDOUT).decode().strip()
+
+    def identify(self, directory):
+        self.run_git('config', 'user.email', 'test@example.com', cwd=directory)
+        self.run_git('config', 'user.name', 'Test', cwd=directory)
+
+    def write(self, name, content):
+        (self.package / name).parent.mkdir(parents=True, exist_ok=True)
+        (self.package / name).write_text(content)
+
+    def commit(self, message):
+        self.run_git('add', '-A', '--', 'modules')
+        self.run_git('commit', '-q', '-m', message)
+
+    def git(self, *args, cwd=None):
+        if args[0] == 'clone':
+            args = ('clone', '--quiet', str(self.remote), args[-1])
+        if args[0] == 'push' and self.on_push:
+            hook, self.on_push = self.on_push, None
+            hook()
+        return self.run_git(*args, cwd=cwd)
+
+    def github(self, path, payload=None, missing_ok=False):
+        if path == 'orgs/liberusoftware/repos':
+            self.exists = True
+            return {'default_branch': 'main', 'private': False}
+        if '/releases/tags/' in path:
+            return self.releases.get(path.rsplit('/', 1)[-1])
+        if path.endswith('/releases'):
+            self.releases[payload['tag_name']] = payload
+            return payload
+        return {'default_branch': 'main', 'private': False} if self.exists else None
+
+    def publish(self):
+        with patch.object(sync, 'request', return_value=None), patch.object(sync, 'git', self.git), \
+                patch.object(sync, 'github', self.github), patch.object(sync, 'packagist', lambda *args: None):
+            sync.publish('modules/example', self.run_git('rev-parse', 'HEAD'), '')
+
+    def in_destination(self, change, message='fix: patch the package directly'):
+        checkout = self.root / f'destination-{len(list(self.root.glob("destination-*")))}'
+        self.run_git('clone', '--quiet', str(self.remote), str(checkout))
+        self.identify(checkout)
+        change(checkout)
+        self.run_git('add', '-A', cwd=checkout)
+        self.run_git('commit', '-q', '-m', message, cwd=checkout)
+        self.run_git('push', '-q', 'origin', 'main', cwd=checkout)
+
+    def remote_state(self):
+        return (self.run_git('--git-dir', str(self.remote), 'rev-parse', 'main'),
+                self.run_git('--git-dir', str(self.remote), 'tag', '--list'), dict(self.releases))
+
+    def assert_refused(self, *paths):
+        before = self.remote_state()
+        with self.assertRaisesRegex(RuntimeError, 'would overwrite') as refused:
+            self.publish()
+        for name in paths:
+            self.assertIn(name, str(refused.exception))
+        self.assertEqual(self.remote_state(), before)
+
+    def test_source_changes_publish_when_the_destination_has_none(self):
+        self.publish()
+        self.write('src/Example.php', 'second')
+        (self.package / 'README.md').unlink()
+        self.commit('fix: change implementation')
+        self.publish()
+        files = self.run_git('--git-dir', str(self.remote), 'ls-tree', '-r', '--name-only', 'main')
+        self.assertNotIn('README.md', files)
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:src/Example.php'), 'second')
+        self.assertEqual(len(self.releases), 2)
+
+    def test_a_destination_edit_the_sync_would_revert_is_refused(self):
+        self.publish()
+        self.in_destination(lambda checkout: (checkout / 'src' / 'Example.php').write_text('hotfix'))
+        self.write('README.md', 'unrelated source change')
+        self.commit('fix: update readme')
+        self.assert_refused('src/Example.php')
+
+    def test_a_destination_only_file_is_never_deleted(self):
+        self.publish()
+        self.in_destination(lambda checkout: (checkout / 'src' / 'Added.php').write_text('added'))
+        self.assert_refused('src/Added.php')
+
+    def test_a_destination_change_brought_into_the_source_publishes(self):
+        self.publish()
+        self.in_destination(lambda checkout: (checkout / 'src' / 'Example.php').write_text('hotfix'))
+        self.write('src/Example.php', 'hotfix')
+        self.write('src/Other.php', 'more')
+        self.commit('fix: adopt the hotfix')
+        self.publish()
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:src/Other.php'), 'more')
+
+    def test_a_destination_version_bump_is_not_independent_work(self):
+        self.publish()
+
+        def bump(checkout):
+            metadata = json.loads((checkout / 'composer.json').read_text())
+            metadata['version'] = '1.1.0'
+            (checkout / 'composer.json').write_text(json.dumps(metadata))
+        self.in_destination(bump, 'chore: release 1.1.0')
+        self.write('src/Example.php', 'second')
+        self.commit('fix: change implementation')
+        self.publish()
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:src/Example.php'), 'second')
+
+    def test_history_never_synced_is_refused_unless_identical(self):
+        def seed(content):
+            def change(checkout):
+                (checkout / 'composer.json').write_text(json.dumps({'name': 'liberusoftware/example', 'version': '1.0.0'}))
+                (checkout / 'src').mkdir(exist_ok=True)
+                (checkout / 'src' / 'Example.php').write_text(content)
+                (checkout / 'README.md').write_text('readme')
+            return change
+        self.in_destination(seed('maintained elsewhere'), 'feat: initial package')
+        self.exists = True
+        self.assert_refused('src/Example.php')
+        self.in_destination(seed('first'), 'fix: match the source')
+        self.publish()
+
+    def test_a_concurrent_push_is_rejected_without_tags_or_releases(self):
+        self.publish()
+        self.write('src/Example.php', 'second')
+        self.commit('fix: change implementation')
+        self.on_push = lambda: self.in_destination(lambda checkout: (checkout / 'NOTES.md').write_text('raced'))
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.publish()
+        self.assertEqual(self.run_git('--git-dir', str(self.remote), 'show', 'main:NOTES.md'), 'raced')
+        self.assertNotIn('v1.0.1', self.run_git('--git-dir', str(self.remote), 'tag', '--list'))
+        self.assertEqual(sorted(self.releases), ['v1.0.0'])
+        self.assert_refused('NOTES.md')
+
+
 if __name__ == '__main__':
     unittest.main()
